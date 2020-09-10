@@ -1,12 +1,10 @@
-
-import Home from "./components/ExampleComponent";
 import VueRouter from "vue-router";
 
 const routes = [
     {
         path: "/",
-        component: Home,
-        name: "home"
+        name: "Home",
+        component: () => import("./views/Index/Home.vue")
     },
     
 ];
