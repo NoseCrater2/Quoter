@@ -1,5 +1,6 @@
 
 import Home from "./components/ExampleComponent";
+import Login from "./views/Index/Login";
 import VueRouter from "vue-router";
 
 const routes = [
@@ -7,6 +8,11 @@ const routes = [
         path: "/",
         component: Home,
         name: "home"
+    },
+    {
+        path: "/login",
+        component: Login,
+        name: "login"
     },
     
 ];
