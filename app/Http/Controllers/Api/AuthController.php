@@ -2,72 +2,69 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\ErrorMessages;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|max:55',
-            'email' => 'email|required|unique:users',
-            'password' => 'required|confirmed'
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
         ]);
-
-        $validatedData['password'] = bcrypt($request->password);
-
-        $user = User::create($validatedData);
-
-        $accessToken = $user->createToken('authToken')->accessToken;
-
-        return response([ 'user' => $user, 'access_token' => $accessToken]);
+        if ($validator->fails())
+        {
+            return response(['errors'=>$validator->errors()->all()], 422);
+        }
+        $request['password']=Hash::make($request['password']);
+        $request['remember_token'] = Str::random(10);
+        $user = User::create($request->toArray());
+        $token = $user->createToken('Laravel Password Grant Client')->accessToken;
+        $response = ['token' => $token];
+        return response($response, 200);
     }
 
     public function login(Request $request)
     {
-        $http = new \GuzzleHttp\Client;
-        try {
 
-            $email = $request->username;
-            $password = $request->password;
-            $request->request->add([
-                'username' => $email,
-                'password' => $password,
-                'grant_type' => 'password',
-                'client_id' => env('PASSPORT_CLIENT_ID'),
-                'client_secret' => env('PASSPORT_CLIENT_SECRET'),
-                'scope' => '*'
-            ]);
-    
-            $tokenRequest = Request::create(
-                env('APP_URL').'/oauth/token',
-                'post'
-            );
-            $response = Route::dispatch($tokenRequest);
 
-            return $response;
-
-        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
-            
-            if ($e->getCode() === 400) {
-                return response()->json('Invalid Request. Please enter a username or a password.', $e->getCode());
-            } else if ($e->getCode() === 401) {
-                return response()->json('Your credentials are incorrect. Please try again', $e->getCode());
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|string|email|max:255',
+                'password' => 'required|string|min:6',
+            ], ErrorMessages::getMessages());
+            if ($validator->fails())
+            {
+                return response($validator->errors(), 422);
             }
-
-            return response()->json('$e->getMessage()');
-        }
+            $user = User::where('email', $request->email)->first();
+            if ($user) {
+                
+                if (Hash::check($request->password, $user->password)) {
+                    $token = $user->createToken('Laravel Password Grant Client')->accessToken;
+                    $response = ['token' => $token];
+                    return response($response, 200);
+                } else {
+                    $response = ["password" => "Contraseña incorrecta"];
+                    return response($response, 422);
+                }
+            } else {
+                $response = ["email" =>'El email proporcionado no está asociado a un usuario registrado'];
+                return response($response, 422);
+            }
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        auth()->user()->tokens->each(function ($token, $key) {
-            $token->delete();
-        });
-        
-        return response()->json('Logged out successfully', 200);
+        $token = $request->user()->token();
+        $token->revoke();
+        $response = ['message' => 'You have been successfully logged out!'];
+        return response($response, 200);
     }
 }
