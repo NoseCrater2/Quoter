@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Caffeinated\Shinobi\Models\Permission;
-use Caffeinated\Shinobi\Models\Role;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Http\Request;
+use App\Http\Resources\RoleIndexResource;
 
 class RoleController extends Controller
 {
 
     public function __construct() {
-    $this->middleware('can:roles.create')->only(['create','store']);
-    $this->middleware('can:roles.index')->only('index');;
-    $this->middleware('can:roles.edit')->only(['edit','update']);;
-    $this->middleware('can:roles.show')->only('show');;
-    $this->middleware('can:roles.destroy')->only('destroy');;
+    // $this->middleware('can:roles.create')->only(['create','store']);
+    // $this->middleware('can:roles.index')->only('index');
+    // $this->middleware('can:roles.edit')->only(['edit','update']);
+    // $this->middleware('can:roles.show')->only('show');
+    // $this->middleware('can:roles.destroy')->only('destroy');
 
     }
 
@@ -25,22 +26,13 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::paginate();
-
-        return view('roles.index', compact('roles'));
+        $this->authorize('viewAny', 'Spatie\Permission\Models\Role');
+        return RoleIndexResource::collection(
+            Role::get()
+        );
     }
 
-     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $permissions = Permission::get();
-        return view('roles.create', compact('permissions'));
-    }
-
+   
     /**
      * Store a newly created resource in storage.
      *
@@ -69,17 +61,7 @@ class RoleController extends Controller
         return view('roles.show', compact('role'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Role  $role
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Role $role)
-    {
-        $permissions = Permission::get();
-        return view('roles.edit', compact('role', 'permissions'));
-    }
+   
 
     /**
      * Update the specified resource in storage.

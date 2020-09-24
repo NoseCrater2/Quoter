@@ -20,13 +20,23 @@
                 </v-toolbar>
                 <v-card-text>
                   <v-form>
+                      <v-text-field
+                     color="#3ba2a9"
+                      label="Nombre de usuario"
+                      name="Username"
+                      :error-messages="sErrors.name"
+                      v-model="credentials.name"
+                      prepend-icon="mdi-account"
+                      type="text"
+                    ></v-text-field>
+
                     <v-text-field
                      color="#3ba2a9"
                       label="Email"
                       name="Email"
-                      :error-messages="getLoginErrors.email"
+                      :error-messages="sErrors.email"
                       v-model="credentials.email"
-                      prepend-icon="mdi-account"
+                      prepend-icon="mdi-email"
                       type="text"
                     ></v-text-field>
   
@@ -34,18 +44,25 @@
                         color="#3ba2a9"
                       id="password"
                       v-model="credentials.password"
-                      :error-messages="getLoginErrors.password"
+                      :error-messages="sErrors.password"
                       label="Contraseña"
                       name="password"
                       prepend-icon="mdi-lock"
                       type="password"
                     ></v-text-field>
+
+                    <v-text-field
+                        color="#3ba2a9"
+                      id="password_confirmed"
+                      v-model="credentials.password_confirmation"
+                      :error-messages="getLoginErrors.password"
+                      label="Confirmar contraseña"
+                      name="confirmedPassword"
+                      prepend-icon="mdi-lock-alert"
+                      type="password"
+                    ></v-text-field>
                   
-                     <p   
-                   class="text-center"
-                    >
-                    ¿Quieres cotizar y no eres distribuidor? <router-link to="/signup"> Reguistrate aquí</router-link>
-                   </p>
+                   
                   </v-form>
                 </v-card-text>
                 <v-card-actions>
@@ -60,7 +77,7 @@
 
                   <v-btn
                   :loading="loading" 
-                  @click="login()"
+                  @click="signup()"
                   dark 
                  
                   color="#3ba2a9">
@@ -70,6 +87,9 @@
                   
                 </v-card-actions>
               </v-card>
+          
+         
+    
      </v-dialog>
   
   </v-app>
@@ -84,8 +104,10 @@ export default {
       dialog: true,
       loading: false,
         credentials: {
+            name: null,
             email: null,
-            password: null
+            password: null,
+            password_confirmation: null,
         },
     
     };
@@ -98,16 +120,30 @@ export default {
       ...mapGetters([
       'getLoginErrors',
       'getLoginStatus',
+      'getSignupStatus',
      ]),
+
+ ...mapState({
+      sErrors: state => state.loginModule.signupErrors,
+      loginStatus  : state => state.loginModule.loginStatus,
+      registerStatus  : state => state.loginModule.signupStatus,
+    }),
   },
   methods:{
-      login(){
+      signup(){
         this.loading = true;
-          this.$store.dispatch('retrieveToken',this.credentials).then(()=>{
-          if(this.getLoginStatus === 200){
+          this.$store.dispatch('signup',this.credentials).then(()=>{
+          if(this.registerStatus === 200){
             this.loading = false
-             this.$router.push({path:'/'})
-          this.$router.go()
+          this.$store.dispatch('retrieveToken',this.credentials).then(()=>{
+          if(this.loginStatus === 200){
+            console.log('se logeó')
+            this.$router.push({ path: '/' })
+            this.$router.go()
+         }
+        
+        })
+          
          }
          this.loading = false
         })

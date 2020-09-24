@@ -15,16 +15,23 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+    return $request->user()->roles->{'name'};
 });
 
 Route::post('login', 'Api\AuthController@login');
+Route::post('logout', 'Api\AuthController@logout');
+Route::post('register', 'Api\AuthController@register');
 
 Route::post('register', 'Api\AuthController@register');
 
 
 Route::middleware(['auth:api'])->group(function()
 {
+
+    Route::post('checkPassword' , 'UserController@checkPassword')->name('password.check');
+
+    Route::get('getMyInfo', 'UserController@getMyInfo');
+
     //Roles
     Route::resource('roles', 'RoleController');
    
@@ -38,12 +45,12 @@ Route::middleware(['auth:api'])->group(function()
     Route::get('products/{product}/edit' , 'Api\ProductController@edit')->name('products.edit')->middleware('can:products.edit');
 
     //users
-   // Route::post('products/store' , 'ProductController@store')->name('products.store')->middleware('permission:products.create');
-    Route::get('users','UserController@index')->name('users.index')->middleware('can:users.index');
+   Route::post('users' , 'UserController@store')->name('users.store');
+    Route::get('users','UserController@index')->name('users.index');
     //Route::get('products/create' , 'ProductController@create')->name('products.create')->middleware('permission:products.create');
-    Route::put('users/{user}','UserController@update')->name('users.update')->middleware('can:users.edit');
-    Route::get('users/{user}','UserController@show')->name('users.show')->middleware('can:users.show');
-    Route::delete('users/{user}','UserController@destroy')->name('users.destroy')->middleware('can:users.destroy');
-    Route::get('users/{user}/edit','UserController@edit')->name('users.edit')->middleware('can:users.edit');
+    Route::put('users/{user}','UserController@update')->name('users.update');
+    Route::get('users/{user}','UserController@show')->name('users.show');
+    Route::delete('users/{user}','UserController@destroy')->name('users.destroy');
+    Route::get('users/{user}/edit','UserController@edit')->name('users.edit');
   
 });

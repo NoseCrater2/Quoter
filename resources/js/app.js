@@ -1,15 +1,17 @@
-
 require('./bootstrap');
-
 
 import Vue from 'vue'
 import vuetify from './plugins/vuetify'
 import router from "./routes";
 import VueRouter from "vue-router";
-import App from "./components/Index";
+
+
+import Home from "./views/Index/Home";
+
 import Login from "./views/Index/Login";
 import storeDefinition from "./store/store";
 import Vuex from "vuex";
+
 
 
 window.Vue = require('vue');
@@ -24,7 +26,9 @@ const app = new Vue({
     router,
     store,
     components: {
-        "index": App,
+
+        Home,
+
         login: Login,
     }
 });

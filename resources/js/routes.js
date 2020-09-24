@@ -1,18 +1,32 @@
 
-import Home from "./components/ExampleComponent";
-import Login from "./views/Index/Login";
 import VueRouter from "vue-router";
 
 const routes = [
     {
         path: "/",
-        component: Home,
-        name: "home"
+        component: () => import("./components/Quoter"),
+        name: "quoter"
     },
     {
         path: "/login",
-        component: Login,
+        component: () => import("./views/Index/Login"),
         name: "login"
+    },
+    {
+        path: "/users",
+        component: () => import("./components/Users"),
+        name: "users"
+    },
+
+    {
+        path: "/signup",
+        component: () => import("./views/Index/Signup"),
+        name: "signup"
+    },
+    {
+        path: "/profile",
+        component: () => import("./views/Profile"),
+        name: "profile"
     },
     
 ];

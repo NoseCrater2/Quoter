@@ -18,10 +18,10 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-        ]);
+        ], ErrorMessages::getMessages());
         if ($validator->fails())
         {
-            return response(['errors'=>$validator->errors()->all()], 422);
+            return response($validator->errors(), 422);
         }
         $request['password']=Hash::make($request['password']);
         $request['remember_token'] = Str::random(10);
@@ -62,9 +62,13 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $token = $request->user()->token();
+        $token = auth('api')->user()->token();
         $token->revoke();
-        $response = ['message' => 'You have been successfully logged out!'];
+        
+        $response = [
+            
+            'message' => "Has cerrado tu sesión existosamente"
+        ];
         return response($response, 200);
     }
 }

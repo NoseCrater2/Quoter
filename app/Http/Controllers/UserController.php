@@ -3,12 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use Caffeinated\Shinobi\Models\Role;
+use App\ErrorMessages;
+
+use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\MyInfoResource;
+use App\Http\Resources\UserIndexResource;
+use Illuminate\Support\Facades\Hash;
  
 
 class UserController extends Controller
 {
+
+    public function __construct() {
+        //$this->middleware('can:viewAny,user')->only('index');
+        $this->middleware('can:create,user')->only('create');
+        $this->middleware('can:update,user')->only('update','show');
+        $this->middleware('can:delete,user')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,12 +29,39 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::paginate();
+        $this->authorize('viewAny', 'App\User');
+       return UserIndexResource::collection(
+            User::get()
+        );
 
-        return view('users.index', compact('users'));
     }
 
-   
+   public function store(Request $request)
+   {
+    $data = $request->all();
+        $rules =[
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users',
+            "roleIds"    => "required|array|min:1",
+            "roleIds.*"  => "required|exists:roles,id|distinct|min:1",
+            
+        ];
+
+        $validator= Validator::make($data,$rules, ErrorMessages::getMessages());
+        
+        if($validator->fails()){
+            return response($validator->errors(),422);
+            
+        }else{
+                $data['password'] = bcrypt('password');
+                $user = User::create($data);
+                $user->roles()->sync($request->get('roleIds'));
+        
+                return new UserIndexResource(User::findOrFail($user->id));
+            
+            
+        }
+   }
 
     /**
      * Display the specified resource.
@@ -34,17 +74,7 @@ class UserController extends Controller
         return view('users.show', compact('user'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
-    {
-        $roles = Role::get();
-        return view('users.edit', compact('user', 'roles'));
-    }
+   
 
     /**
      * Update the specified resource in storage.
@@ -55,14 +85,29 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //Actualice el usuario
-        $user->update($request->all());
+        $data = $request->all();
+        $rules = [
+            'name' => 'string',
+            'email' => 'email|unique:users,email,'.$user->id,
+            "roles"    => "required|array|min:1",
+            "roles.*"  => "required|exists:roles,name|distinct|min:1",
+            'password'  => 'min:6|confirmed|nullable'
+        ];
+       
+        $validator= Validator::make($data,$rules, ErrorMessages::getMessages());
+        if($validator->fails()){
+            return response($validator->errors(),422);
+        }else{
+            if($request->has('password')){
+                $data['password'] = bcrypt($data['password']);
+    
+            }
 
-        //Actualice los roles
-        $user->roles->sync($request->get('roles'));
+            $user->update($data);
+            $user->syncRoles($request->get('roles'));
+            return new UserIndexResource(User::findOrFail($user->id));
+        } 
 
-        return redirect()->route('users.edit',$user->id)
-            ->with('info','Usuario actualizado con éxito');
     }
 
     /**
@@ -76,6 +121,46 @@ class UserController extends Controller
         $user->delete();
 
         return back()->with('info', 'Eliminado correctamente');
+    }
+
+    public function getMyInfo(Request $request)
+    {
+        $this->authorize('view', $request->user());
+        return new MyInfoResource(User::findOrFail($request->user()->id));
+    
+    }
+
+    public function signup(Request $request)
+    {
+       
+        $data = $request->all();
+        $rules =[
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|confirmed'    
+        ];
+
+        $validator= Validator::make($data,$rules, ErrorMessages::getMessages());
+        
+        if($validator->fails()){
+            return response($validator->errors(),422);
+            
+        }else{
+            $data['password'] = bcrypt('password');
+            $user = User::create($data);
+            return new UserIndexResource(User::findOrFail($user->id));
+        }
+    }
+
+
+    public function checkPassword(Request $request)
+    {
+        $this->authorize('view', $request->user());
+        if(Hash::check($request->intent, $request->user()->password)){
+            return response(['Message' => "Acceso autorizado"],200);
+        }
+        
+        return response(['Message' => "Acceso No autorizado"],401);
     }
 
 }
