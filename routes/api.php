@@ -24,6 +24,13 @@ Route::post('register', 'Api\AuthController@register');
 
 Route::post('register', 'Api\AuthController@register');
 
+Route::resource('types', 'TypeController')->only('index','show');
+Route::resource('lines', 'LineController')->only('index','show');
+Route::resource('colors', 'ColorController')->only('index','show');
+Route::resource('manufacturers', 'ManufacturerController')->only('index','show');
+Route::resource('variants', 'VariantController')->only('index','show');
+
+Route::post('importExcel', 'VariantController@importExcel');
 
 Route::middleware(['auth:api'])->group(function()
 {

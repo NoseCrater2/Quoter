@@ -101,9 +101,11 @@
         </v-tab-item>
         <v-tab-item>
           <v-card flat>
-            <v-card-text>
-             
-            </v-card-text>
+            <v-list shaped>
+              <v-list-item-group>
+                
+              </v-list-item-group>
+            </v-list>
           </v-card>
         </v-tab-item>
       </v-tabs>

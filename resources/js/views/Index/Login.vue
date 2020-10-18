@@ -98,18 +98,26 @@ export default {
       ...mapGetters([
       'getLoginErrors',
       'getLoginStatus',
+      'loggedIn'
      ]),
+
+   
   },
   methods:{
       login(){
         this.loading = true;
           this.$store.dispatch('retrieveToken',this.credentials).then(()=>{
-          if(this.getLoginStatus === 200){
-            this.loading = false
-             this.$router.push({path:'/'})
-          this.$router.go()
-         }
-         this.loading = false
+            console.log(this.getLoginStatus)
+            if(this.getLoginStatus === 200){ 
+             // console.log(this.loggedIn) 
+             this.$router.push({name: 'home'}); 
+             //this.$router.back();       
+              //.catch( error => { console.log(error.message)});
+              //this.$router.go()
+               this.loading = false
+
+            }
+          this.loading = false
         })
 
       },

@@ -12,7 +12,7 @@
 
 <body>
     <div id="app">
-      <Home></Home>
+      <app></app>
     </div>
     
 </body>

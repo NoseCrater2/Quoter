@@ -9,13 +9,15 @@ const loginModule = {
         signupStatus: [],
         signupErrors: [],
         checkStatus: null,
+       
     },
 
 
     getters:{
-        loggedIn(state){
-            return state.token != null
-        },
+       
+        loggedIn(state) {
+            return localStorage.getItem('access_token')?true:false;
+          },
 
         getLoginErrors(state){
             return state.loginErrors
@@ -59,7 +61,8 @@ const loginModule = {
 
         setCheckStatus(state, status){
             state.checkStatus = status
-        }
+        },
+
     },
     actions:{
         retrieveToken: async function ({ commit, state }, credentials){
@@ -69,7 +72,7 @@ const loginModule = {
                 .post("/api/login",credentials)
                 commit('setStatus',request.status);
                 commit('retrieveToken',request.data.token);
-                
+               
               } catch (error) {
                 commit('setErrors',error.response.data)
                 commit('setStatus',error.response.status);
