@@ -8,7 +8,6 @@ import VueRouter from "vue-router";
 
 import Home from "./views/Index/Home";
 
-import App from "./components/Index";
 import Login from "./views/Index/Login";
 import storeDefinition from "./store/store";
 import Vuex from "vuex";
