@@ -14,7 +14,6 @@ import Stock from "./components/Stock";
 =======
 import Home from "./views/Index/Home";
 
-import App from "./components/Index";
 import Login from "./views/Index/Login";
 >>>>>>> master
 import storeDefinition from "./store/store";
