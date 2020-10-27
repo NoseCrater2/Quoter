@@ -6,10 +6,17 @@ import router from "./routes";
 import VueRouter from "vue-router";
 
 
+<<<<<<< HEAD
 
 import Index from "./views/Index/Index";
 import Stock from "./components/Stock";
 
+=======
+import Home from "./views/Index/Home";
+
+import App from "./components/Index";
+import Login from "./views/Index/Login";
+>>>>>>> master
 import storeDefinition from "./store/store";
 import Vuex from "vuex";
 
@@ -41,8 +48,15 @@ const app = new Vue({
     router,
     store,
     components: {
+<<<<<<< HEAD
     Index,
     Stock,
+=======
+
+        Home,
+
+        login: Login,
+>>>>>>> master
     }
 });
 

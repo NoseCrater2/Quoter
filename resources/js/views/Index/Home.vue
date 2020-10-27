@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div id="app">
     <v-app>
    <v-navigation-drawer app
@@ -98,10 +99,22 @@
            
           </v-toolbar-items>
            <v-btn icon class="ma-1" rounded depressed dark>
+=======
+  <div id="imageBackground" :style="{'background-image': 'url(' + image + ')'}">
+    <v-app id="inspire">
+      <div>
+        <v-app-bar dense flat color="#3ba2a9" dark>
+          <v-toolbar-title>ROLLUX</v-toolbar-title>
+
+          <v-spacer></v-spacer>
+
+          <v-btn icon class="ma-1" rounded depressed dark>
+>>>>>>> master
             <v-badge color="red" content="3" overlap>
               <v-icon>mdi-cart-outline</v-icon>
             </v-badge>
           </v-btn>
+<<<<<<< HEAD
           <v-divider v-if="!isMobile" inset vertical></v-divider>
 
           <v-menu
@@ -214,10 +227,23 @@
      
     </v-app>
 
+=======
+
+          <v-btn icon class="ma-1" rounded depressed dark>
+            <v-icon>mdi-account-circle</v-icon>
+          </v-btn>
+        </v-app-bar>
+      </div>
+      <v-card class="mx-auto my-auto" width="500" elevation="9" color="rgba(255,255,255,0.8)">
+        <Quoter></Quoter>
+      </v-card>
+    </v-app>
+>>>>>>> master
   </div>
 </template>
 
 <script>
+<<<<<<< HEAD
 
 import {mapGetters, mapActions, mapState } from 'vuex';
 export default {
@@ -251,10 +277,19 @@ beforeDestroy () {
       right: null,
       snackbar: false,
       timeout: 3000,
+=======
+import Quoter from "../../components/Quoter";
+
+export default {
+  mounted() {},
+  data() {
+    return {
+>>>>>>> master
       image: "/storage/img/Madera.jpeg",
     };
   },
   components: {
+<<<<<<< HEAD
     Quoter: () => import('../../components/Quoter'),
     //Quoter,
     Users: () => import("../../components/Users"),
@@ -292,6 +327,9 @@ beforeDestroy () {
       'getLoginStatus',
       'getUserStatus'
      ]),
+=======
+    Quoter,
+>>>>>>> master
   },
 };
 </script>

@@ -1,4 +1,9 @@
 
+<<<<<<< HEAD
+=======
+import Login from "./views/Index/Login";
+
+>>>>>>> master
 import VueRouter from "vue-router";
 import store from './store/loginModule';
 
@@ -7,6 +12,7 @@ const routes = [
    
     {
         path: "/",
+<<<<<<< HEAD
         component: () => import("./views/Index/Home2"),
         name:'home'
         // name: "login",
@@ -67,6 +73,10 @@ const routes = [
         component: () => import("./views/Index/Signup"),
         name: "signup",
        
+=======
+        name: "Home",
+        component: () => import("./views/Index/Home.vue")
+>>>>>>> master
     },
     {
         path: "/profile",
