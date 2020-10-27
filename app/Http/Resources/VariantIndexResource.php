@@ -18,7 +18,15 @@ class VariantIndexResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'price' => $this->price,
-            'line' => $this->line->name,
+             'line' => $this->line->name,
+            // 'type' => $this->type->name,
+            // 'colors' => $this->colors->map(function($color){
+            //     return $color->color;
+            // }),
+
+            // 'manufacturers' => $this->manufacturers->map(function($m){
+            //     return $m->name;
+            // }),
         ];
     }
 }

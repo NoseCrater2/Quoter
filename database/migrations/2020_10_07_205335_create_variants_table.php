@@ -17,8 +17,10 @@ class CreateVariantsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->decimal('price',5,2,true)->nullable();
-            $table->unsignedBigInteger('line_id')->required();
+            $table->unsignedBigInteger('line_id')->nullable();
             $table->foreign('line_id')->references('id')->on('lines');
+            $table->unsignedBigInteger('type_id')->nullable();
+            $table->foreign('type_id')->references('id')->on('types');
         });
     }
 

@@ -13,7 +13,7 @@
 
 <body>
     <div id="app">
-      <rollux></rollux>
+      <index></index>
     </div>
     
 </body>

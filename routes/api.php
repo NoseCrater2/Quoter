@@ -32,6 +32,8 @@ Route::resource('variants', 'VariantController')->only('index','show');
 
 Route::post('importExcel', 'VariantController@importExcel');
 
+Route::get('getRelated/{variant}' , 'VariantController@getRelated');
+
 Route::middleware(['auth:api'])->group(function()
 {
 

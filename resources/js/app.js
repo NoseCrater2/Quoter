@@ -6,8 +6,10 @@ import router from "./routes";
 import VueRouter from "vue-router";
 
 
-import App from "./views/App";
-import Rollux from "./views/Index/Home2";
+
+import Index from "./views/Index/Index";
+import Stock from "./components/Stock";
+
 import storeDefinition from "./store/store";
 import Vuex from "vuex";
 
@@ -39,8 +41,8 @@ const app = new Vue({
     router,
     store,
     components: {
-    App,
-    Rollux,
+    Index,
+    Stock,
     }
 });
 

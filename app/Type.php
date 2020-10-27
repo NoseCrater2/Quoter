@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Type extends Model
 {
     //
-    protected $fillable = ['name', 'manufacturer_id']; 
+    protected $fillable = ['name']; 
     public $timestamps = false;
 
-    public function lines()
+    public function variants()
     {
-        return $this->belongsToMany(Line::class);
+        return $this->hasMany(Variant::class);
     }
 }

@@ -90,10 +90,13 @@ class VariantController extends Controller
 
     public function importExcel(Request $request)
     {
-      
-           //$file = Excel::load($request->file('file')->getRealPath());
-           //dd($request->file('file'));
+
            Excel::import(new VariantsImport, $request->file('file'));
-     
+    }
+
+    public function getRelated(Variant $variant)
+    {
+        return Variant::orderByRaw('rand()')->where('type_id', '=', $variant->type->id)->take(4)->get();
+        
     }
 }

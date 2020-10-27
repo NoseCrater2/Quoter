@@ -18,10 +18,6 @@ class TypeIndexResurce extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'lines' => $this->lines->map(function ( $line)
-            {
-                return $line->id;
-            })
         ];
     }
 }

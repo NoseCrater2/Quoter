@@ -18,10 +18,10 @@ class VariantsImport implements OnEachRow
    
     public function onRow(Row $row)
     {
-         $rowIndex = $row->getIndex();
+        //  $rowIndex = $row->getIndex();
          $row      = $row->toArray();
 
-        Type::firstOrCreate([
+        $type = Type::firstOrCreate([
             'name' => $row[0],
         ]);
 
@@ -30,35 +30,28 @@ class VariantsImport implements OnEachRow
             'name' =>  $row[1],
         ]);
 
-        $line->variants()->firstOrCreate([
-            'name' =>  $row[3],
+        $manufacturer = Manufacturer::firstOrCreate([
+            'name' => $row[7]
         ]);
 
-
-        Color::firstOrCreate([
-            'color' => $row[4],
+        $color = Color::firstOrCreate([
+            'color' => $row[4] 
         ]);
 
-        Manufacturer::firstOrCreate([
-            'name' => $row[5],
-        ]);
-        //$type->lines()->attach($line->id);
+        $variant = Variant::firstOrCreate(
+            ['name' => $row[3]],
+            [
+                'line_id' => $line->id,
+                'type_id' => $type->id,
+            ]      
+        );
+
+        // $variant->line_id = $line->id
+
+
+        $variant->colors()->syncWithoutDetaching([$color->id]);
+        $variant->manufacturers()->syncWithoutDetaching([$manufacturer->id]);
 
     }
 
-   
-    // public function model(array $row)
-    // {
-    //     return new Variant([
-    //         'color' => $row[1],
-    //         'max_width' => $row[2],
-    //         'max_height' => $row[3],
-    //         'rotate' => $row[4],
-    //         'price' => $row[5],
-    //         'min_width' => $row[6],
-    //         'min_height' => $row[7],
-    //         'type_id' => $row[8],
-    //         'entity_id' => $row[9],
-    //     ]);
-    // }
 }

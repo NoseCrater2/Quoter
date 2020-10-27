@@ -6,21 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Line extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'matrix_id'];
     public $timestamps = false;
 
-    public function types()
-    {
-        return $this->belongsToMany(Type::class);
-    }
+ 
 
     public function variants()
     {
         return $this->hasMany(Variant::class);
     }
 
-    public function manufacturers()
+    public function Matrix()
     {
-        return $this->belongsToMany(Manufacturer::class);
+        return $this->belongsTo(Matrix::class);
     }
+
 }

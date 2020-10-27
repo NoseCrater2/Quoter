@@ -11,6 +11,7 @@ class Variant extends Model
         'name',
         'price',
         'line_id',
+        'type_id',
         
     ];
     public $timestamps = false;
@@ -27,8 +28,13 @@ class Variant extends Model
         return $this->belongsToMany(Color::class);
     }
 
-    public function limits()
+    public function manufacturers()
     {
-        return $this->belongsToMany(Limit::class);
+        return $this->belongsToMany(Manufacturer::class);
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(Type::class);
     }
 }

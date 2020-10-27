@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Color extends Model
 {
-    protected $fillable = ['color', 'image'];
+    protected $fillable = ['color', 'full_image', 'tumb_image'];
     public $timestamps = false;
 
     public function variants()

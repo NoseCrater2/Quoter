@@ -13,18 +13,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/', function () {
-    return view('welcome');
-});
-
-
-
-Route::get('/rollux', function () {
     return view('rollux');
 });
 
+Route::get('/stock', function () {
+    return view('stock');
+});
+
+
 
 Route::get('/{any?}', function () {
-    return view('welcome');
+    return view('rollux');
 })->where('any','^(?!api\/)[\/\w\.-]*');
 
 //Route::get('/home', 'HomeController@index')->name('home');

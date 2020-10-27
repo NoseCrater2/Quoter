@@ -10,13 +10,9 @@ class Manufacturer extends Model
     protected $fillable = ['name', 'short_name']; 
     public $timestamps = false;
 
-    public function lines()
+    public function variants()
     {
-        return $this->belongsToMany(Line::class);
+        return $this->belongsToMany(Variant::class);
     }
 
-    public function type()
-    {
-        return $this->belongsTo(Type::class);
-    }
 }
