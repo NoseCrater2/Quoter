@@ -15,9 +15,9 @@ class CreateLinesTable extends Migration
     {
         Schema::create('lines', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name')->required();
-            $table->unsignedBigInteger('matrix_id')->nullable();
-            $table->foreign('matrix_id')->references('id')->on('matrices');
+            $table->string('name')->nullable();
+            $table->string('slug')->nullable();
+            
         });
     }
 

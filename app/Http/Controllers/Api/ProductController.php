@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductIndexResource;
+use App\Http\Resources\VariantIndexResource;
+use App\Http\Resources\TypeIndexResurce;
+use App\Http\Resources\ColorIndexResource;
 
 class ProductController extends Controller
 {
@@ -15,9 +19,13 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::paginate();
 
-        return response($products, 200);
+        return ProductIndexResource::collection(
+            Product::get()
+        );
+        // $products = Product::paginate();
+
+        // return response($products, 200);
     }
 
     /**
@@ -93,4 +101,30 @@ class ProductController extends Controller
 
         return back()->with('info', 'Eliminado correctamente');
     }
+
+    public function getVariants(Product $product)
+    {
+
+        return VariantIndexResource::collection(
+             $product->variants
+        );
+        
+    }
+
+    public function getTypes(Product $product){
+    
+        return TypeIndexResurce::collection(
+            $product->types
+       );
+    }
+
+    public function getVariantsByProduct(Product $product)
+    {
+        return VariantIndexResource::collection(
+            $product->variants
+        );
+    }
+
+ 
+
 }

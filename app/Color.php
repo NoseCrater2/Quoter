@@ -6,11 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Color extends Model
 {
-    protected $fillable = ['color', 'full_image', 'tumb_image'];
+    protected $fillable = ['color', 'code', 'rotate'];
     public $timestamps = false;
 
     public function variants()
     {
         return $this->belongsToMany(Variant::class);
+    }
+
+    public function sunblinds()
+    {
+        return $this->belongsToMany(Sunblind::class);
     }
 }

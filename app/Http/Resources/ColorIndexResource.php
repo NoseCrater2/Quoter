@@ -17,8 +17,8 @@ class ColorIndexResource extends JsonResource
         return [
             'id' => $this->id,
             'color' => $this->color,
-            'full_image' => $this->full_image,
-            'tumb_image' => $this->tumb_image,
+            'code' => $this->code,
+            'rotate' => $this->rotate,
         ];
     }
 }

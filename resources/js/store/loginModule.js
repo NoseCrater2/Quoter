@@ -16,7 +16,8 @@ const loginModule = {
     getters:{
        
         loggedIn(state) {
-            return localStorage.getItem('access_token')?true:false;
+            
+            return state.token !== null
           },
 
         getLoginErrors(state){
@@ -70,8 +71,9 @@ const loginModule = {
             try {
                 const request = await axios
                 .post("/api/login",credentials)
-                commit('setStatus',request.status);
                 commit('retrieveToken',request.data.token);
+                commit('setStatus',request.status);
+                
                
               } catch (error) {
                 commit('setErrors',error.response.data)

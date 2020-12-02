@@ -7,6 +7,7 @@ const modelsModule = {
         lines: [],
         colors: [],
         manufacturers: [],
+        relatedColors: [],
     },
 
   
@@ -28,6 +29,17 @@ const modelsModule = {
             state.manufacturers = manufacturers
         },
 
+        setRelatedColors(state, colors){
+            state.relatedColors = colors
+        },
+
+        editModel(state,editedModel){
+            state.models.map(function(currentModel){
+              if(currentModel.id === editedModel.id){
+                Object.assign(currentModel,editedModel);
+              }
+            });
+          },
       
     },
 
@@ -43,12 +55,34 @@ const modelsModule = {
               }
         },
 
-        getTypes: async function ({ commit, state }){
+        // getTypes: async function ({ commit, state }){
+        //     try {
+        //         const response = await axios
+        //         .get("/api/types",{
+        //             headers: {Authorization: "Bearer "+localStorage.getItem('access_token')}})
+        //         commit('setTypes',response.data.data);   
+        //       } catch (error) {
+                 
+        //       }
+        // },
+
+        editModel: async function ({ commit},model){
+            try {
+              const request = await axios
+              .put("/api/variants/"+model.id,model)
+              commit('editModel',request.data.data);
+              //commit('setStatus',request.status);
+            } catch (error) {
+            //   commit('setErrors',error.response)
+            //   commit('setStatus',error.response.status);
+            }
+          },
+
+        getRelatedColors: async function ({ commit, state }, idVariant){
             try {
                 const response = await axios
-                .get("/api/types",{
-                    headers: {Authorization: "Bearer "+localStorage.getItem('access_token')}})
-                commit('setTypes',response.data.data);   
+                .get("/api/getColors/"+idVariant)
+                commit('setRelatedColors',response.data.data);   
               } catch (error) {
                  
               }

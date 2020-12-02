@@ -16,21 +16,23 @@ class DatabaseSeeder extends Seeder
         User::flushEventListeners();
 
         $this->truncateTables([
+            'products',
             'users',
             'products',
             'permissions',
             'roles',
             // 'manufacturers',
             // 'lines',
-            // 'types'
+            'types'
           ]);
           $this->call([
+            ProductsTableSeeder::class,
             UsersTableSeeder::class,
             PermissionsSeeder::class,
             RolesTableSeeder::class,
             // ManufacturerSeeder::class,
             // LineSeeder::class,
-            // TypeSeeder::class,
+            TypeSeeder::class,
           ]);
           DB::statement('SET FOREIGN_KEY_CHECKS = 1');  
     }

@@ -16,8 +16,8 @@ class CreateColorsTable extends Migration
         Schema::create('colors', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('color')->nullable();
-            $table->string('full_image')->nullable();
-            $table->string('tumb_image')->nullable();
+            $table->string('code')->nullable();
+            $table->tinyInteger('rotate')->default(0);
         });
     }
 

@@ -1,50 +1,33 @@
 <template>
     <div id="app">
-        <v-container fluid style="max-width: 1400px" class="my-4">
-        <v-row justify="space-around">
-            <v-col cols="12" md="6" sm="6" align-self="center">
+        <v-container fluid style="max-width: 1200px" class="my-4">
+        <v-row justify="space-between">
+            <v-col cols="12" md="6" sm="12" >
                 <v-card flat>
-                    <v-card-title>CUSTOMER SERVICE - CONTACT US</v-card-title>
+                    <v-card-title>CONTÁCTANOS</v-card-title>
                     <v-card-text>
-                        Transformer theme is an elegant, powerful and 
-                        fully responsive prestashop theme with modern design. 
-                        Suitable for every type of store.
+                        Ponte en contacto con nosotros, llena el formulario y un asesor
+                        se comunicará contigo a la brevedad posible.
                     </v-card-text>
                     <v-list-item>
                         <v-list-item-icon><v-icon>mdi-at</v-icon></v-list-item-icon>
-                        <v-list-item-content>support@support.com</v-list-item-content>
+                        <v-list-item-content>contacto@rollux.com.mx</v-list-item-content>
                     </v-list-item>
                     <v-list-item>
-                        <v-list-item-icon><v-icon>mdi-phone</v-icon></v-list-item-icon>
-                        <v-list-item-content>support@support.com</v-list-item-content>
-                    </v-list-item>
-                      <v-list-item>
-                        <v-list-item-icon><v-icon>mdi-clock-outline</v-icon></v-list-item-icon>
-                        <v-list-item-content>09: - 16:00</v-list-item-content>
-                    </v-list-item>
-                      <v-list-item>
-                        <v-list-item-icon><v-icon>mdi-skype</v-icon></v-list-item-icon>
-                        <v-list-item-content>Skype001</v-list-item-content>
-                    </v-list-item>
-                    <v-list-item>
-                        <v-list-item-icon><v-icon>mdi-cellphone-android</v-icon></v-list-item-icon>
-                        <v-list-item-content>1256698855</v-list-item-content>
-                    </v-list-item>
-                      <v-list-item>
-                        <v-list-item-icon><v-icon>mdi-printer</v-icon></v-list-item-icon>
-                        <v-list-item-content>+222 568954</v-list-item-content>
+                        <v-list-item-icon><v-icon>mdi-whatsapp</v-icon></v-list-item-icon>
+                        <v-list-item-content>443 471 3271</v-list-item-content>
                     </v-list-item>
                     <v-list-item>
                         <v-list-item-icon><v-icon>mdi-map-marker</v-icon></v-list-item-icon>
-                        <v-list-item-content>Collins Street West Victoria 8007</v-list-item-content>
+                        <v-list-item-content>Calzada Juárez 499 Col. Ventura Puente CP 58020 en Morelia, Mich</v-list-item-content>
                     </v-list-item>
                 </v-card>
             </v-col>
-            <v-col cols="12" md="6" sm="6" align-self="center">
+            <v-col cols="12" md="6" sm="12" align-self="center">
                 <v-card flat>
-                    <v-card-title></v-card-title>
+                    
                 <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2848.52270726363!2d-101.19171797887016!3d19.702374961885237!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2smx!4v1603230488891!5m2!1ses!2smx" 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3609.4639216929395!2d-101.1971075780396!3d19.692317650857703!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842d0dd8042d1c91%3A0x3463136d53b34e91!2sMadec!5e0!3m2!1ses!2smx!4v1606505528852!5m2!1ses!2smx"
                 width="600" 
                 height="450" 
                 frameborder="0" 

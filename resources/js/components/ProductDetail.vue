@@ -1,21 +1,24 @@
 <template>
     <div>
-        <v-container fluid style="max-width: 1400px" class="my-4">
-            <v-row>
-                <v-col cols="12" md="4" sm="12">
-                    <v-card>
+        <v-container fluid style="max-width: 1200px" class="my-4">
+            
+            <v-row v-if="details.colors">
+                <v-col cols="12" md="4" sm="12" class="mt-3">
+                    <v-card width="400" height="567">
+                         <!-- :src="`img/modelos/medium/${item.image}`" -->
                         <!-- <v-img  :aspect-ratio="16/9" height="400"  :src="details.colors[position].image"></v-img> -->
-                        <vue-h-zoom  :height="400" :width="442" :image="details.colors[position].image"  :zoom-level="2" :zoom-window-size="1"></vue-h-zoom>
+                        <vue-h-zoom  :height="458" :width="380" :image="`../../img/modelos/full/${details.colors[position].code}.jpg`"  :zoom-level="3" :zoom-window-size="1.5"></vue-h-zoom>
                         <v-card-actions>
-                            <v-sheet class="mx-auto" max-width="400">
-                                <v-slide-group v-model="model"   show-arrows >
-                                    <v-slide-item v-for="n in details.colors.length" :key="n" v-slot="{ active, toggle }"> 
+                            <v-sheet  width="370">
+                                <v-slide-group v-model="model"   show-arrows  >
+                                    <v-slide-item v-for="n in details.colors.length" :key="n" v-slot="{ }">
+                                       
                                         <v-hover   v-slot="{ hover }">
                                         <v-card
                                          :class="{'selected':hover}"
                                         outlined
                                         tile
-                                      @click="changeIndex(n-1)"
+                                      @click="openDialog(n-1)"
                                        @mouseenter="changeIndex(n-1)"
                                         class="ma-3"
                                         height="80"
@@ -26,10 +29,10 @@
                                             <template v-slot:activator="{ on, attrs}">
                                                 <div>
                                                   
-                                                    <v-img  v-bind="attrs" v-on="on"   :aspect-ratio="16/9" height="80"  :src="details.colors[n-1].image"></v-img>
+                                                    <v-img  v-bind="attrs" v-on="on"   :aspect-ratio="16/9" height="80"  :src="`../../img/modelos/medium/${details.colors[n-1].code}.jpg`"></v-img>
                                                 </div>
                                             </template>
-                                            <span>{{ details.colors[n-1].name }}</span>
+                                            <span>{{ details.colors[n-1].color }}</span>
                                         </v-tooltip>
                                         </v-card>
                                         </v-hover>
@@ -41,23 +44,33 @@
                 </v-col>
                  <v-col cols="12" md="4" sm="12">
                     <v-card  flat>
-                        <v-card-title>{{ details.name}}</v-card-title>
+                        <v-card-title style="font-size: 2.2em">{{ details.name}}</v-card-title>
                         <v-divider></v-divider>
-                        <v-card-subtitle>$ {{details.price}}</v-card-subtitle>
-                        <v-card-actions>
-                            Color
-                            <v-spacer></v-spacer>
+                        <div class="d-flex justify-center">
+                        <div class="display-1 d-inline-flex" style="color: #47a5ad">$ </div>
+                        <div  class="display-2 d-inline-flex" style="color: #47a5ad; font-weight: bolder;">{{details.price}}</div>
+                        <div class="display-1 d-inline-flex" style="color: #47a5ad">MXN </div>
+                        </div>
+                        <v-card-text>
+                            <v-row align="center" class="mx-10">
+                                <v-col>
+                                     <b> SELECCIONA MÁS COLORES:</b>
+                                </v-col>
+                               
+                            </v-row>
+                           
+                            <v-row>
                             <v-item-group v-model="selected" @change="changeIndex(selected)">
-                                <v-row>
+                                <v-row  align="center" class="mb-10 mx-12">
                                     <v-col
-                                    v-for="n in details.colors.length"
-                                    :key="n"
+                                    cols="2"
+                                    align-self="center"
+                                    v-for="n in details.colors.length" :key="n"
                                     >
-                                        <v-item v-slot="{ active, toggle}">
+                                        <v-item v-slot="{ active, toggle}" >
                                             <v-card
-                                            
                                             outlined
-                                           tile
+                                            tile
                                             class="d-flex align-center"
                                             height="20"
                                             width="20"
@@ -66,35 +79,38 @@
                                                <v-tooltip bottom>
                                                     <template v-slot:activator="{ on, attrs}">
                                                         <div :class="{'selected':active}" v-bind="attrs" v-on="on">
-                                                            <v-img  :aspect-ratio="16/9" height="20"  width="20" :src="details.colors[n-1].image"></v-img>
+                                                            <v-img  :aspect-ratio="16/9" height="20"  width="20" :src="`../../img/modelos/tumb/${details.colors[n-1].code}.jpg`"></v-img>
                                                         </div>
                                                     </template>
-                                                    <span>{{ details.colors[n-1].name }}</span>
+                                                    <span>{{ details.colors[n-1].color }}</span>
                                                 </v-tooltip>   
                                             </v-card>
                                         </v-item>
                                     </v-col>
                                 </v-row>
                             </v-item-group>
-                        </v-card-actions>
+                            </v-row>
+                        </v-card-text>
                     </v-card>
                 </v-col>
                  <v-col cols="12" md="4" sm="12">
-                     PRODUCTOS RELACIONADOS
-                     <v-row align="center" justify="center">
+                    
+                     <v-card tile flat>
+                         <v-card-title > PRODUCTOS RELACIONADOS</v-card-title>
+                        <v-divider></v-divider>
+                   
+                     <v-row justify="space-around">
                          <v-col cols="12" md="6" sm="12" v-for="r in relationed" :key="r.id">
-                                 <v-card max-width="150" height="230" color="grey lighten-4" class="mx-auto" flat>
-                            <v-img class="white--text align-end"  width="150" height="170" :aspect-ratio="16/9" :src="r.image"  >
-                            
-                              
-                          
+                                 <v-card max-width="200" height="230" color="grey lighten-4" class="mx-auto" flat >
+                            <v-img class="white--text align-end"  width="200" height="185" :aspect-ratio="16/9" :src="`../../img/modelos/medium/${r.image}.jpg`"  >
+
                                  <div
                              
                               class="d-flex transition-fast-in-fast-out  v-card--reveal white--text"
                               style="height: 100%;"
                               >
                               <v-hover v-slot="{ hover }">
-                              <v-btn :to='"/details/type/"+$route.params.type+"/product/"+r.id' depressed :outlined="!hover" tile color="white"  x-small>VER</v-btn>
+                              <v-btn :to="{name: 'Details', params: {slugDetail: r.slug}}" depressed :outlined="!hover" tile color="white"  x-small>VER</v-btn>
                               </v-hover>
                               </div>
                               
@@ -118,6 +134,7 @@
                          </v-col>
                         
                      </v-row>
+                       </v-card>
                 </v-col>
             </v-row>
 
@@ -125,62 +142,192 @@
                 <v-col cols="12">
                     <v-tabs v-model="tab" align-with-title  background-color="blue-grey lighten-4">
                     <v-tabs-slider color="#47a5ad"></v-tabs-slider>
-                        <v-tab>FICHA TÉCNICA</v-tab>
-                       
+                        <v-tab v-if="details.type_product_id === 1">FICHA TÉCNICA</v-tab>
+                       <v-tab v-if="details.type_product_id === 1">TELAS</v-tab>
+                       <v-tab v-if="details.type_product_id === 2">DESCRIPCIÓN</v-tab>
+                        <v-tab v-if="details.type_product_id === 2">CARACTERÍSTICAS</v-tab>
+                        <v-tab v-if="details.type_product_id === 2">PESOS</v-tab>
                     </v-tabs>
 
-                    <v-tabs-items v-model="tab">
-                        <v-tab-item>
+                    <v-tabs-items v-model="tab" >
+                        <v-tab-item v-if="details.type_product_id === 1">
                              <v-simple-table>
                                 <template>
                                     <tbody>
-                                        <tr
-                                        v-for="item in sheets"
-                                        :key="item.name"
-                                        >
-                                            <td> {{ item.feature  }} </td>
-                                            <td> {{ item.value }} </td>
+                                        <tr>
+                                            <td>LINEA</td>
+                                            <td> {{ details.line }} </td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>TIPO DE PRODUCTO</td>
+                                            <td> {{ details.type }} </td>
+                                        </tr>
+                                        <tr >
+                                            <td>ANCHO MÁXIMO DE TELA</td>
+                                            <td v-if="details.max_width == 0">{{ details.width }} </td>
+                                            <td v-else>{{details.max_width}}</td>
+                                             <td>ANCHO MÍNIMO DE TELA</td>
+                                            <td >{{ details.min_width }} </td>
+                                        </tr>
+                                        <tr>
+                                           <td>ALTO MÁXIMO DE TELA</td>
+                                           <td v-if="details.max_height == 0">{{ details.width }} </td>
+                                            <td v-else>{{details.max_height}}</td>
+                                           
+                                             <td>ALTO MÍNIMO DE TELA</td>
+                                            <td >{{ details.min_height }} </td>
+                                        </tr>
+
+                                        <tr v-if="details.max_width_rot !== 0">
+                                            <td>
+                                                ANCHO MÁXIMO ROTADO
+                                            </td>
+                                            <td>{{ details.max_width_rot }}</td>
+                                             <td>
+                                                ANCHO MÍNIMO ROTADO
+                                            </td>
+                                            <td>{{details.min_width_rot}}</td>
+                                        </tr>
+                                         <tr v-if="details.max_width_rot !== 0">
+                                            <td>
+                                                ALTO MÁXIMO ROTADO
+                                            </td>
+                                            <td>{{ details.max_height_rot }}</td>
+                                             <td>
+                                                ALTO MÍNIMO ROTADO
+                                            </td>
+                                            <td>{{details.min_height_rot}}</td>
                                         </tr>
                                     </tbody>
                                 </template>
                     </v-simple-table>
+                        </v-tab-item>
+
+                        <v-tab-item v-if="details.type_product_id === 1">
+                            <v-simple-table fixed-header height="300px">
+                                <template>
+                                    <thead>
+                                        <td>
+                                            COLOR
+                                        </td>
+                                        <td>
+                                                ROTABLE (90°)
+                                       </td>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="color in details.colors" :key="color.code">
+                                            <td>
+                                                {{ color.color }}
+                                            </td>
+                                            
+                                            <td v-if="color.rotate === 0"> NO </td>
+                                            <td v-else> SÍ </td>
+                                        </tr>
+                                    </tbody>
+                                </template>
+                            </v-simple-table>
+                        </v-tab-item>
+
+                        <v-tab-item v-if="details.type_product_id === 2">
+                            <v-card>
+                                <v-card-text>
+                                    {{ details.description }}
+                                </v-card-text>
+                            </v-card>
+                        </v-tab-item>
+
+                        <v-tab-item v-if="details.type_product_id === 2">
+                            <v-simple-table>
+                                <template>
+                                    <tbody>
+                                        <tr v-if="details.finished !== null">
+                                            <td>ACABADO</td>
+                                            <td>{{details.finished}}</td>
+                                        </tr>
+                                        <tr v-if="details.strip_width > 0">
+                                            <td>ANCHO</td>
+                                            <td>{{details.strip_width}}</td>
+                                        </tr>
+                                        <tr v-if="details.ceiling_price > 0">
+                                            <td>PRECIO TECHO</td>
+                                            <td>{{details.ceiling_price }}</td>
+                                        </tr>
+                                        <tr v-if="details.wall_price > 0">
+                                            <td>PRECIO MURO</td>
+                                            <td>{{details.wall_price }}</td>
+                                        </tr>
+                                        <tr v-if="details.wall_extended_price > 0">
+                                            <td>PRECIO MURO EXTENDIDO</td>
+                                            <td>{{details.wall_extended_price }}</td>
+                                        </tr>
+                                        <tr v-if="details.wall_double_price > 0">
+                                            <td>PRECIO MURO DOBLE</td>
+                                            <td>{{details.wall_double_price }}</td>
+                                        </tr>
+                                        <tr v-if="details.ceiling_wall_price > 0">
+                                            <td>PRECIO MURO TECHO</td>
+                                            <td>{{details.ceiling_wall_price }}</td>
+                                        </tr>
+                                        <tr v-if="details.curve_price > 0">
+                                            <td>PRECIO TECHO MURO CURVO</td>
+                                            <td>{{details.curve_price }}</td>
+                                        </tr>
+                                    </tbody>
+                                </template>
+                            </v-simple-table>
+                        </v-tab-item>
+                        <v-tab-item v-if="details.type_product_id === 2">
+                            <v-simple-table v-if="details.weights">
+                                <template>
+                                    <tr>
+                                        <td>CÓDIGO</td>
+                                        <td>PESO</td>
+                                        <td>ANCHO</td>
+                                    </tr>
+                                    <tr v-for="weight in details.weights"  :key="weight.code">
+                                        <td> {{weight.code }} </td>
+                                        <td> {{weight.weight}}mt </td>
+                                        <td> {{weight.width}}kg </td>
+                                    </tr>
+                                </template>
+                            </v-simple-table>
                         </v-tab-item>
                     </v-tabs-items>
                    
                 </v-col>
             </v-row>
         </v-container>
+
+        <v-dialog v-model="dialog" width="600">
+            <v-card >
+                <v-carousel hide-delimiters v-model="position" height="700">
+                    <v-carousel-item 
+                    v-for="color in details.colors" 
+                    :key="color.code"
+                    :src="`../img/modelos/full/${color.code}.jpg`"
+                    >
+                    </v-carousel-item>
+                </v-carousel>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
 <script>
 
 import VueHZoom from 'vue-h-zoom';
+import { mapActions, mapState, variantsModule, sunblindModule} from 'vuex';
 export default {
     data(){
         return{
+            dialog: false,
             wrapper:  null,
             selected: 0,
             position: 0,
-            details: {
-                name: 'SCREEN VX STUCCO',
-                price: 1400.00,
-                colors: [
-                    {name: 'White', image:'https://images-na.ssl-images-amazon.com/images/I/71jhmi4DffL._AC_SX425_.jpg'},
-                    {name: 'Ash', image:'https://cdn11.bigcommerce.com/s-r14v4z7cjw/images/stencil/256x256/attribute_value_images/2513018.preview.jpg'},
-                    {name: 'Cofee', image:'https://www.fabricfarms.com/mm5/graphics/00000001/X0763_256x256.jpg'},
-                    {name: 'Linen', image:'https://i.pinimg.com/474x/31/79/51/3179513990085c08d5253a0432ef4f92.jpg'},
-                    {name: 'Sand', image:'https://cdn11.bigcommerce.com/s-r14v4z7cjw/images/stencil/256x256/attribute_value_images/2488034.preview.jpg'},
-                ]
-            },
-            model: 1,
+            showVariant: null,
+            model: null,
             tab: null,
-            features: [
-                {title: 'PAYMENT', subtitle: 'We accept Visa, MasterCard and American Express.', icon: 'mdi-credit-card'},
-                {title: 'FREE SHIPPING', subtitle: 'All orders over $100 free super fast delivery.', icon: 'mdi-truck'},
-                {title: 'BEST PRICE', subtitle: 'The best choice for high quality at good prices.', icon: 'mdi-trophy'},
-                {title: 'SHIPPING', subtitle: 'We ship to over 100 countries worldwide through fast and reliable delivery partners.', icon: 'mdi-airplane'},
-            ],
 
             sheets: [
                 {feature: 'Ancho de tela', value: '3.00 mts'},
@@ -188,12 +335,6 @@ export default {
                 {feature: 'GIrar tela', value: '90°'},
             ],
 
-            relationed: [
-                {id:4,name: 'SUNSCREEN HQ BASIC', price: 900.00, image: 'https://i.pinimg.com/originals/4b/63/01/4b6301946bd5495ff9c200fc4308a543.jpg'},
-                {id:5,name: 'SUNSCREEN HQ SOFT', price: 990.00, image: 'https://images-na.ssl-images-amazon.com/images/I/914IWKpapWL._AC_SL1500_.jpg'},
-                {id:6,name: 'SCREEN ONE', price: 1010.00, image: 'https://www.wallpaperwarehouse.com/upload_media/product/preview/1554317253BIORTEFJ_1554414773.jpg'},
-                {id:7,name: 'SCREEN PRAGA', price: 2500.00, image: 'https://bhf-cdn.azureedge.net/bhf-blob-prod/0034928_arya-brown-fabric-texture-wallpaper_600.jpeg'},
-            ]
         }
 
         
@@ -203,18 +344,56 @@ export default {
       VueHZoom,
     },
 
-    created(){
-        console.log(this.$route.params)
-        
+    computed:{
+        ...mapState({
+        details: state => state.variantsModule.variant,
+        relationed: state => state.variantsModule.related,
+        }),
+
+        getProduct(){
+         return this.$store.state.productsModule.variants.find((variant => variant.slug === this.slugDetail)) || this.$store.state.variantsModule.variant
+        },
+    },
+
+    mounted(){
+
+        console.log(this.getProduct)
+        if(this.$route.params.id){
+                this.$store.dispatch('getVariant',this.$route.params.id).then(()=>{
+                this.$store.dispatch('getRelated', this.$route.params.id);
+            })  
+        }else{
+                this.$store.dispatch('getVariant',this.getProduct.id).then(()=>{
+                this.$store.dispatch('getRelated', this.getProduct.id);
+            })
+           
+       }
     },
 
     methods:{
         changeIndex(index){
+            if(index === undefined){
+                index = 0
+            }
            this.position = index;
         },
-        change(k){
-            console.log(k)
+
+        openDialog(index){
+            this.dialog = true
+        }
+    },
+
+    props:{
+        slugDetail: {
+           type:  String,
+           required: true
         },
+
+        isSunblind: {
+            type: Boolean,
+            required: false
+        }
+
     }
 }
 </script>

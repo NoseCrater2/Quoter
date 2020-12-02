@@ -13,46 +13,165 @@ class TypeSeeder extends Seeder
      */
     public function run()
     {
-        Type::create(['name' => 'Celular Sistema Cordon']);//NO 1
-        Type::create(['name' => 'Celular Sistema Muelle']);//NO 2
-        Type::create(['name' => 'Celular Dia&Noche']);//NO 3
-        Type::create(['name' => 'Enrollable']); // 4
-        Type::create(['name' => 'Flex Ballet']);//NO 5
-        Type::create(['name' => 'Horizontal De Alumnio 1']);//NO 6
-        Type::create(['name' => 'Horizontal De Alumnio 2']);//NO 7
-        Type::create(['name' => 'Horizontal De Madera 2']);//NO 8
-        Type::create(['name' => 'Panel Japonés']); //9
-        Type::create(['name' => 'Romana']); //10
-        Type::create(['name' => 'Romantic']);//NO 11
-        Type::create(['name' => 'Sheer']);// 12
-        Type::create(['name' => 'Triple Shade/Shangri La']);//NO 13
-        Type::create(['name' => 'Vertical']);// 14
+        Type::create([
+            'name' => 'ENROLLABLE',
+            'slug' => 'enrollable',
+            'max_width' => 0,
+            'min_width' => 0.40,
+            'max_height' => 0,
+            'product_id' => 1,
+            ]);
 
-        Type::where('name','like','Celular%')->get()[0]->lines()->sync([5]);
-        Type::where('name','like','Flex%')->get()[0]->lines()->sync([5]);
-        Type::where('name','like','Horizontal%')->get()[0]->lines()->sync([5]);
-        Type::where('name','like','Romantic%')->get()[0]->lines()->sync([5]);
-        Type::where('name','like','Triple%')->get()[0]->lines()->sync([5]);
+        Type::create([
+            'name' => 'SHEER',
+            'slug' => 'sheer',
+            'max_width' => 0,
+            'min_width' => 0.40,
+            'max_height' => 3,
+            'min_height' => 0.40,
+            'profit_margin' => 0.10,
+            'product_id' => 1,
+        ]);
 
-        Type::where('name','like','Enrollable%')->get()[0]->lines()->sync([7,2,1,4]);
+        Type::create([
+            'name' => 'ROMANA',
+            'slug' => 'romana',
+            'max_width' => 0,
+            'min_width' => 0.80,
+            'max_height' => 3,
+            'min_height' => 0.40,//POSIBLE CAMBIO
+            'profit_margin' => 0.10,
+            'product_id' => 1,
+        ]); 
 
-        Type::where('name','like','Panel%')->get()[0]->lines()->sync([7,2,1]);
+        Type::create([
+            'name' => 'PANEL JAPONES',
+            'slug' => 'panel-japones',
+            'max_width' => 5.80,
+            'min_width' => 0.80,
+            'max_height' => 3.24,
+            'min_height' => 0.50,
+            'product_id' => 1,
+        ]);
 
-        Type::where('name','like','Romana%')->get()[0]->lines()->sync([7,2,1]);
+        Type::create([
+            'name' => 'TRIPLE SHADE/SHANGRI-LA',
+            'slug' => 'triple-shade-sangri-la',
+            'max_width' => 0,
+            'min_width' => 0.60,
+            'max_height' => 3.50,
+            'min_height' => 1,
+            'profit_margin' => 0.05,
+            'product_id' => 1,   
+        ]);
 
-        Type::where('name','like','Sheer%')->get()[0]->lines()->sync([10,3]);
 
-        Type::where('name','like','Vertical%')->get()[0]->lines()->sync([6,8,9]);
+        Type::create([
+            'name' => 'ROMANTIC',
+            'slug' => 'romantic',
+            'max_width' => 2.55,
+            'min_width' => 0.60,
+            'max_height' => 3,
+            'min_height' => 0.40, //POSIBLE CAMBIO
+            'product_id' => 1, 
+        ]);
+       
+        Type::create([
+            'name' => 'FLEX BALLET',
+            'slug' => 'flex-ballet',
+            'max_width' => 5.90,
+            'min_width' => 0.50,
+            'max_height' => 4,
+            'min_height' => 0.40,//POSIBLE CAMBIO
+            'product_id' => 1,     
+        ]);
 
-        $m = Manufacturer::where('short_name','=','NV')->get()[0];
-        $m->type_id = 13;
-        $m->save();
-        $m = Manufacturer::where('short_name','=','TS')->get()[0];
-        $m->type_id = 13;
-        $m->save();
-        $m = Manufacturer::where('short_name','=','VX')->get()[0];
-        $m->type_id = 13;
-        $m->save();
+        Type::create([
+            'name' => 'HORIZONTAL DE MADERA 2\'\'',
+            'slug' => 'horizontal-madera-2',
+            'max_width' => 2.40,
+            'min_width' => 0.50,
+            'max_height' => 3,
+            'min_height' => 0.50,
+            'product_id' => 1, 
+        ]);
+
+        Type::create([
+            'name' => 'HORIZONTAL DE ALUMINIO 1\'\'',
+            'slug' => 'horizontal-aluminio-1',
+            'max_width' => 3,
+            'min_width' => 0.40,
+            'max_height' => 3,
+            'min_height' => 0.25,
+            'product_id' => 1, 
+        ]);
+
+        Type::create([
+            'name' => 'HORIZONTAL DE ALUMINIO 2\'\'',
+            'slug' => 'horizontal-aluminio-2',
+            'max_width' => 3,
+            'min_width' => 0.60,
+            'max_height' => 3,
+            'min_height' => 0.60,
+            'product_id' => 1, 
+        ]);
+
+        Type::create([
+            'name' => 'CELULAR',
+            'slug' => 'celular',
+            'max_width' => 3,
+            'min_width' => 0.60,
+            'max_height' => 3,
+            'min_height' => 1,
+            'product_id' => 1,
+        ]);
+
+
+        Type::create([
+            'name' => 'VERTICAL',
+            'slug' => 'vertical',
+            'max_width' => 3.50,
+            'min_width' => 0.60,
+            'max_height' => 3,
+            'min_height' => 0.60,
+            'product_id' => 1,
+        ]);
+
+        Type::create([
+            'name' => 'RESIDENCIAL',
+            'slug' => 'residencial',
+            'product_id' => 2,
+        ]);
+
+        Type::create([
+            'name' => 'ANTIBACTERIANA',
+            'slug' => 'antibacteriana',
+            'product_id' => 2,
+        ]);
+        Type::create([
+            'name' => 'HAWAIANA',
+            'slug' => 'hawaiana',
+            'product_id' => 2,
+        ]);
+        Type::create([
+            'name' => 'CORTINEROS',
+            'slug' => 'cortineros',
+            'product_id' => 2,
+        ]);
+
+        Type::create([
+            'name' => 'BRAZOS INVISIBLES',
+            'slug' => 'brazos-invisibles',
+            'product_id' => 3,
+        ]);
+        Type::create([
+            'name' => 'CAÍDA LIBRE',
+            'slug' => 'caida-libre',
+            'product_id' => 3,
+        ]);
+
+
+
 
     }
 }

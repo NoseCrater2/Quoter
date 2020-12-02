@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Line;
 use Illuminate\Http\Request;
 use App\Http\Resources\LineIndexResource;
+use App\Http\Resources\VariantIndexResource;
+use App\Http\Resources\WeaveIndexResource;
 
 class LineController extends Controller
 {
@@ -84,5 +86,19 @@ class LineController extends Controller
     public function destroy(Line $line)
     {
         //
+    }
+
+    public function getVariants(Line $line)
+    {
+        return VariantIndexResource::collection(
+            $line->variants
+        );
+    }
+
+    public function getWeaves(Line $line)
+    {
+        return WeaveIndexResource::collection(
+            $line->weaves
+        );
     }
 }

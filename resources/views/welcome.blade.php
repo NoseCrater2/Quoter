@@ -12,11 +12,9 @@
 
 <body>
     <div id="app">
-<<<<<<< HEAD
+
       <app></app>
-=======
-      <Home></Home>
->>>>>>> master
+
     </div>
     
 </body>

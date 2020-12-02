@@ -15,4 +15,10 @@ class Manufacturer extends Model
         return $this->belongsToMany(Variant::class);
     }
 
+    public function sunblins()
+    {
+        return $this->belongsToMany(Sunblind::class);
+    }
+    
+
 }

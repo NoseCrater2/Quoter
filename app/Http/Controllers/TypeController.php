@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Type;
 use Illuminate\Http\Request;
 use App\Http\Resources\TypeIndexResurce;
+use App\Http\Resources\LineIndexResource;
+use App\Http\Resources\VariantIndexResource;
 
 class TypeController extends Controller
 {
@@ -49,7 +51,7 @@ class TypeController extends Controller
      */
     public function show(Type $type)
     {
-        //
+        return response($type, 200);
     }
 
     /**
@@ -84,5 +86,19 @@ class TypeController extends Controller
     public function destroy(Type $type)
     {
         //
+    }
+
+    public function getLines(Type $type)
+    {
+        return LineIndexResource::collection(
+            $type->lines
+        );
+    }
+
+    public function getTypeVariants(Type $type)
+    {
+        return VariantIndexResource::collection(
+            $type->variants
+        );
     }
 }

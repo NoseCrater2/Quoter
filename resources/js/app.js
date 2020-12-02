@@ -1,45 +1,38 @@
 require('./bootstrap');
 
 import Vue from 'vue'
+import store from "./store/store";
+import router from "./router";
+
 import vuetify from './plugins/vuetify'
-import router from "./routes";
-import VueRouter from "vue-router";
-
-
-<<<<<<< HEAD
-
-import Index from "./views/Index/Index";
+import App from './App.vue';
 import Stock from "./components/Stock";
 
-=======
-import Home from "./views/Index/Home";
+// import Vuex from "vuex";
 
-import Login from "./views/Index/Login";
->>>>>>> master
-import storeDefinition from "./store/store";
-import Vuex from "vuex";
+// Vue.use(Vuex);
+// const store = new Vuex.Store(storeDefinition);
 
-
+router.beforeEach((to, from, next) => {
+  if(to.matched.some(record => record.meta.requiresAuth)){
+   
+      if (store.getters.loggedIn !== true) {
+          next({
+            name: 'login',
+          })
+        } else {
+          next()
+        }
+  }else{
+      next();
+  }
+});
 
 window.Vue = require('vue');
 
-Vue.use(Vuex);
-Vue.use(VueRouter);
-const store = new Vuex.Store(storeDefinition);
 
-router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-       if (!store.getters.loggedIn) {
-        next({
-          name: 'login',
-        })
-      } else {
-        next()
-      }
-    } else {
-      next() // make sure to always call next()!
-    }
-  })
+
+
 
 const app = new Vue({
     el: '#app',
@@ -47,16 +40,12 @@ const app = new Vue({
     router,
     store,
     components: {
-<<<<<<< HEAD
-    Index,
+      App,
+    // Index,
     Stock,
-=======
+    // Quoter
+    },
 
-        Home,
-
-        login: Login,
->>>>>>> master
-    }
 });
 
 

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Line extends Model
 {
-    protected $fillable = ['name', 'matrix_id'];
+    protected $fillable = ['name', 'slug'];
     public $timestamps = false;
 
  
@@ -16,9 +16,14 @@ class Line extends Model
         return $this->hasMany(Variant::class);
     }
 
-    public function Matrix()
+    public function weaves()
     {
-        return $this->belongsTo(Matrix::class);
+        return $this->belongsToMany(Weave::class);
+    }
+
+    public function types()
+    {
+        return $this->belongsToMany(Type::class);
     }
 
 }

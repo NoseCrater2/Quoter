@@ -13,7 +13,7 @@
                 >
                  <v-spacer></v-spacer>
 
-                 <v-img src="http://rollux.com.mx/img/rollux-persianas-enrrollables-logo-1598474161.jpg" aspect-ratio="1.7" contain></v-img>
+                 <p class="display-1 mt-4">INICIAR SESIÓN</p>
                 
                   <v-spacer></v-spacer>
                   
@@ -107,13 +107,13 @@ export default {
       login(){
         this.loading = true;
           this.$store.dispatch('retrieveToken',this.credentials).then(()=>{
-            console.log(this.getLoginStatus)
-            if(this.getLoginStatus === 200){ 
-             // console.log(this.loggedIn) 
-             this.$router.push({name: 'home'}); 
-             //this.$router.back();       
-              //.catch( error => { console.log(error.message)});
-              //this.$router.go()
+           
+            if(this.getLoginStatus === 200){
+                         
+           
+               this.$router.push({name: 'Dashboard'});
+            // 
+            
                this.loading = false
 
             }
@@ -123,7 +123,7 @@ export default {
       },
 
       cancel(){
-        this.$router.back()
+         this.$router.push({name: 'index'});
       }
   },
   components: {

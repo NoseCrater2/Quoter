@@ -1,110 +1,165 @@
 <template>
     <div id="app">
-        <v-container fluid style="max-width: 1400px" class="my-4">
-        <h1>Acerca de nosotros</h1>
-        <v-row justify="space-around" >
-            <v-col cols="12" md="4" sm="12">
-                <v-card flat>
-                    <v-card-title>OUR COMPANY</v-card-title>
-                     <v-divider></v-divider>
-                    <v-card-subtitle>
-                        Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididun.
-                    </v-card-subtitle>
-                    <v-card-text>
-                        Lorem ipsum dolor sit amet conse ctetur adipisicing elit,
-                         sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        Ut enim ad minim veniam. Lorem ipsum dolor sit amet conse ctetur adipisicing elit.
-                    </v-card-text>
-                  
-                        <v-list-item>
-                            <v-list-item-icon>
-                                <v-icon color="green">mdi-check-bold</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content color="green">Top quality products</v-list-item-content>
-                        </v-list-item>
-                        <v-divider></v-divider>
-                        <v-list-item>
-                            <v-list-item-icon>
-                                <v-icon color="green">mdi-check-bold</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content color="green">Best customer service</v-list-item-content>
-                        </v-list-item>
-                        <v-divider></v-divider>
-                        <v-list-item>
-                            <v-list-item-icon>
-                                <v-icon color="green">mdi-check-bold</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content color="green">30-days money back guarantee</v-list-item-content>
-                        </v-list-item>
-                    
-                </v-card>
-            </v-col>
-            <v-col cols="12" md="4" sm="12">
-                <v-card flat>
-                    <v-card-title>OUR TEAM</v-card-title>
-                    <v-divider></v-divider>
-                    <v-img max-width="300px" class="align-text" src="https://www.utel.edu.mx/blog/wp-content/uploads/2014/06/Copia-de-shutterstock_167031578.jpg"></v-img>
-                    <v-card-subtitle>
-                        Lorem set sint occaecat cupidatat non
-                    </v-card-subtitle>
-                    <v-card-text>
-                        Eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
-                    </v-card-text>
-                </v-card>
-            </v-col>
-            <v-col cols="12" md="4" sm="12">
-                 <v-card flat>
-                    <v-card-title>TESTIMONIALS</v-card-title>
-                    <v-divider></v-divider>
-                    <div class="polygon">
-                        <p>
-                             Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.
-                        </p>
-                    </div>
-                    <v-card-subtitle>
-                        Lorem ipsum dolor sit
-                    </v-card-subtitle>
-                    <div class="polygon">
-                        <p>
-                        Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.
-                        </p>
-                    </div>
-                    <v-card-subtitle>
-                        Lorem ipsum dolor sit
-                    </v-card-subtitle>
-                </v-card>
-            </v-col>
+        <v-parallax dark  src="../../img/nosotros/1.jpg" :height="max_height-170">
+            <v-row align="center" justify="center">
+                <v-col class="text-center" cols="11" md="7" sm="12" style="background-color: rgba(10, 10, 10, 0.5);">
+                    <h1>NOSOTROS</h1>
+                   
+                </v-col>
+            </v-row>
+        </v-parallax>
+        <v-container fluid style="max-width: 1200px" class="my-4">
+        
+        <Slogan/>
 
-        </v-row>
         </v-container>
+        <v-row style="background-color: #47a5ad;"  align="center" justify="center">
+                <v-col cols="12" md="5" sm="12" class="pa-0 " align-self="center">
+                    <v-img max-width="650" max-height="600" src="../../img/nosotros/2.jpg">
+
+                    </v-img>
+                </v-col>
+                <v-col cols="12" md="7" sm="12" class="pa-0" align-self="center">
+                    <div style="margin-left: 100px;margin-right: 100px; margin-top: 20px" >
+                    <div class="d-block" style="color: white; font-size: 1.4em; max-width: 750px">
+                        <p style="text-align: justify">
+                            <b class="especial">Rollux</b> integra en su línea de textiles para persianas
+                            Enrollables la mas amplia gama de texturas y colores de todo
+                            Mercado Nacional para el recubrimiento de ventanas, suficiente
+                            para cubrir cualquier necesidad, requerimiento y gusto.
+                        </p>
+                    </div>
+                    <br>
+                    <div class="d-block"  style="color: white; font-size: 1.4em; max-width: 750px">
+                        <p style="text-align: justify">
+                      <b class="especial">Rollux</b> es innovación y evolución por lo que costantamente nos
+                      actualizamos para brindar nuevos y mejores productos, la autorización
+                      y la tecnología de nuestros motores para persianas, cortinas y toldos
+                      están pensados siempre con el objetivo de dar mayor satisfacción.
+                      </p>
+                    </div>
+                  <br>
+                    <div class="d-block"  style="color: white; font-size: 1.7em">
+                      <p class="especial"><b>... una Satisfacción Garantizada</b></p>
+                    </div>
+                    </div>
+                </v-col>
+        </v-row>
+        <v-row>
+            <v-img src="../../img/nosotros/3.jpg" :height="max_height">
+                <v-col cols="8" >
+                    <v-img src="../../img/nosotros/4.jpg" class="white--text align-center" >
+                     <v-container fluid style="max-width: 570px">
+                        <div class="d-block">
+                            <span class="especial " style="font-size: 4.8em">Rollux es</span>
+                            <p class="especial" style="font-size: 6em; margin-top: -60px!important;">Experiencia</p>
+                        </div>
+                        <div class="d-block">
+                            <h1>
+                                Más de 25 años en el mercado marcan Garantía y Reconocimiento
+                                de la calidad de nuestros productos.
+                            </h1>
+                        </div>
+                    </v-container>
+                    </v-img>
+                </v-col>
+            </v-img>
+        </v-row>
+        <v-row class="grey lighten-3 ">
+            <v-container fluid style="max-width: 1200px" class="my-4">
+                <v-row>
+                    <v-col cols="12" md="6" sm="12" v-for="(t, index) in team" :key="index">
+                        <v-card color="transparent"  flat tile>
+                            <v-card-title>
+                                  <p style="font-size: 1.3em" class="especial">{{ t.title}}</p>
+                            </v-card-title>
+                            <v-card-text>
+                                <p style="font-size: 1.4em; text-align: justify">
+                                    {{ t.text }}
+                                </p>
+                            </v-card-text>
+                        </v-card>
+                        <div class="d-block" >
+                           
+                        </div>
+                        <div class="d-block">
+                            
+                        </div>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-row>
+
+        <v-row>
+            <v-container fluid style="max-width: 1200px" class="my-4">
+                <v-row justify="center">
+                    <v-col cols="7" align-self="center">
+                        <p style="font-size: 1.4em">
+                            Como empresa solcialmente responsable nos preocupamos
+                            por crear ambientes limpios y saludables, somos defensores
+                            activos del cuidado del ecosistema por ello, muchos de nuestros
+                            tejidos cuentan con características especiales en su composición
+                            y fabricación en pro del medio ambiente y el cuidado de la salud
+                        </p>
+                       
+                    </v-col>
+                    <v-col cols="5">
+                        <v-img max-width="500" src="../../img/nosotros/5.jpg"></v-img>
+                    </v-col>
+                    <v-col cols="12" align-self="center" >
+                         <v-img class="mx-16 mb-16 mt-n16" max-width="250" src="../../img/nosotros/6.png"></v-img>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-row>
+
+
     </div>
 </template>
 <script>
+
+import Slogan from '../components/Slogan';
 export default {
     data(){
         return{
-
+            max_height: screen.height,
+            team: [
+                {title: 'Además, proveemos...',
+                text: 'Ambientes de trabajo en el que cada individuo encuentra las condiciones perfectas para maximizar su potencial, lo que permite una mejor calidad de vida y un mejor desarrollo de ideas que se verán reflejadas en la satisfacción de nuestros clientes.'},
+                {title: 'Todos son importantes para nosotros', 
+                text: 'Nuestros clientes, proveedores, distribuidores y empleados son igual de importantes para nosotros, por lo que tenemos una filosofía de respeto y valor por igual para todos.'},
+            ],
         }
+    },
+
+    components: {
+        Slogan,
     }
 }
 </script>
 
 <style >
 
-.polygon{
- 
-position: relative;
-  display: inline-block;
-   height: 100%;
-  width: 100%;
-padding:  10px 20px;
- background: #d1d1d0;
-  top: calc(100% - 1px);
- 
-  
-  box-sizing: border-box;
-    clip-path: polygon(0 0, 100% 0, 100% 75%, 15% 75%, 10% 100%, 10% 75%, 0 75%);
+
+.divider{
+    border: none;
+    height: 5px;
+    background-color: #47a5ad;
 }
 
+.especial{
+    font-style: italic;
+    font-weight: 900;
+}
+
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  
+  50% {
+    opacity: 0;
+  }
+}
 </style>

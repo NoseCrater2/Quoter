@@ -4,7 +4,7 @@
     <v-app>
    <v-navigation-drawer app
       v-model="drawer"
-      temporary
+      
       >
 
       <v-list-item>
@@ -16,7 +16,7 @@
 
       <v-divider></v-divider>
       <v-list dense>
-        <v-list-item @click="showComponent = 3">
+        <v-list-item to="/profile">
             <v-list-item-icon>
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
@@ -68,7 +68,7 @@
 
       </v-navigation-drawer>
 
-        <div>
+        
       <v-app-bar app
         color="#3ba2a9"
         class="white--text"
@@ -81,46 +81,40 @@
          <v-spacer></v-spacer>
           
           
-          <v-toolbar-items v-if="loggedIn && !isMobile">
+          <v-toolbar-items >
        
-              <v-btn class="white--text" v-if="user.roles.includes('Administrador')" text @click="showComponent = 2">
+              <v-btn class="white--text" v-if="user.roles.includes('Administrador')" text :to="{name: 'Users'}">
                 Usuarios
               </v-btn>
               <v-divider inset vertical></v-divider>
-               <v-btn class="white--text" v-if="user.roles.includes('Administrador')" text @click="showComponent = 5">Inventario</v-btn>
+
+              <v-menu offset-y v-if="user.roles.includes('Administrador')">
+                <template v-slot:activator="{attrs, on}">
+                  <v-btn v-bind="attrs" v-on="on" class="white--text"  text  >Inventario</v-btn>
+                </template>
+                <v-list>
+                  <v-list-item v-for="product in products" :key="product.id" :to="{name: 'Stock', params: {slugProduct: product.slug}} ">
+                    <v-list-item-title v-text="product.name"></v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+
+
               <v-divider inset vertical></v-divider>
             <v-divider inset vertical></v-divider>
-            <v-btn class="white--text" v-if=" user.roles.includes('Administrador') || user.roles.includes('Distribuidor')"  text @click="showComponent = 4">Pedidos</v-btn>
+            <v-btn class="white--text" v-if=" user.roles.includes('Administrador') || user.roles.includes('Distribuidor')"  text :to="{name: 'Orders'}">Pedidos</v-btn>
             <v-divider inset vertical></v-divider>
-             <v-btn class="white--text" v-if=" user.roles.includes('Administrador') || user.roles.includes('Distribuidor')" text @click="showComponent = 1">Cotizador</v-btn>
+             <v-btn class="white--text" v-if=" user.roles.includes('Administrador') || user.roles.includes('Distribuidor')" text :to="{name: 'Quoter'}">Cotizador</v-btn>
             <v-divider inset vertical></v-divider>
 
            
            
           </v-toolbar-items>
-           <v-btn icon class="ma-1" rounded depressed dark>
-
-  <div id="imageBackground" :style="{'background-image': 'url(' + image + ')'}">
-
-  <div
-    id="imageBackground"
-    :style="{ 'background-image': 'url(' + image + ')' }"
-  >
-
-    <v-app id="inspire">
-      <div>
-        <v-app-bar
-          flat
-          color="#3ba2a9"
-          dark
-          style="position: fixed; top: 0; z-index: 1"
-        >
-          <v-toolbar-title>ROLLUX</v-toolbar-title>
-
-          <v-spacer></v-spacer>
 
 
-          <v-btn icon class="ma-1" rounded depressed dark>
+
+
+          <!-- <v-btn icon class="ma-1" rounded depressed dark> -->
 
           <v-btn icon large class="ma-2" rounded depressed dark>
 
@@ -159,7 +153,7 @@
 
           <v-list nav dense>
             <v-list-item-group color="#3ba2a9">
-              <v-list-item v-if="loggedIn" @click="showComponent = 3">
+              <v-list-item v-if="loggedIn" :to="{name: 'Profile'}">
                 <v-list-item-icon>
                   <v-icon >mdi-account</v-icon>
                 </v-list-item-icon>
@@ -192,7 +186,7 @@
           </v-list-item-group>
         </v-list>
            </v-menu>
-      </v-app-bar>
+    
 
       <v-snackbar
         v-model="snackbar"
@@ -215,56 +209,16 @@
         </template>
         </v-snackbar>
 
-    </div>
-
-    <v-main>
-      <v-container fluid><!--AQUÍ VAN TODOS LOS COMPONENTES  -->
-        
-        <div v-if="showComponent === 1">
-        <Quoter/>
-      </div>
-      <div v-if="showComponent  === 2">
-        <Users/>
-      </div>
-      <div v-if="showComponent  === 3">
-        <Profile/>
-      </div>
-      <div v-if="showComponent  === 4">
-        <Orders/>
-      </div>
-      <div v-if="showComponent  === 5">
-        <Stock/>
-      </div>
-      </v-container>
-    </v-main>
-      
-     
-    </v-app>
-
-
-
-          <v-btn icon large rounded depressed dark>
-            <v-icon>mdi-account-circle</v-icon>
-          </v-btn>
         </v-app-bar>
-      </div>
-      <v-card
-        class="mx-auto my-auto"
-        width="500"
-        elevation="9"
-        color="rgba(255,255,255,0.8)"
-        :style="classReceiveSteps"
-      >
-        <Quoter @modifyClassReceiveSteps="modifyClassReceiveSteps"></Quoter>
-      </v-card>
-      <div
-        class="d-flex flex justify-center"
-        v-if="classReceiveSteps != null"
-        id="scrollito"
-        :style="classAddingStepsSection"
-      >
-        <BlindSteps></BlindSteps>
-      </div>
+    
+
+      <v-main >
+        <v-row justify="space-around" class="ma-4">
+           <router-view :key="$route.path"></router-view>
+        </v-row>
+     
+    </v-main>
+    
     </v-app>
 
   </div>
@@ -274,7 +228,27 @@
 
 
 import {mapGetters, mapActions, mapState } from 'vuex';
+// import Quoter from "../../components/Quoter";
+// import BlindSteps from "../Index/BlindSteps";
 export default {
+
+
+   data() {
+    return {
+      isMobile: false,
+      drawer: false,
+      showComponent: 1,
+      right: null,
+      snackbar: false,
+      timeout: 3000,
+      
+      image: "/storage/img/Madera.jpeg",
+      
+
+    }
+  },
+
+
 
 beforeDestroy () {
    if (typeof window === 'undefined') return
@@ -282,6 +256,7 @@ beforeDestroy () {
       window.removeEventListener('resize', this.onResize, { passive: true })
   },
   mounted() {
+     this.$store.dispatch('getProducts') 
     this.onResize()
 
     window.addEventListener('resize', this.onResize, { passive: true })
@@ -294,54 +269,17 @@ beforeDestroy () {
         
       })
    }
-  },
+
+  //  if(this.$router.currentRoute.name !== "Quoter"){
+  //        this.$router.push({name: 'Quoter'}); 
+  //     }
+   },
 
 
-  data() {
-    return {
-      isMobile: false,
-      drawer: false,
-      showComponent: 1,
-      right: null,
-      snackbar: false,
-      timeout: 3000,
-
-import Quoter from "../../components/Quoter";
-import BlindSteps from "../Index/BlindSteps";
-//    /(^(0{0,1}|([1-9][0-9]*))((\.)([0-9]{1,3}))?$)/g
-export default {
-  updated() {
-    this.scrollToSteps();
-  },
-  mounted() {},
-  data() {
-    return {
-
-      image: "/storage/img/Madera.jpeg",
-      classReceiveSteps: null,
-      classAddingStepsSection:
-        "position: absolute; margin-left: auto; margin-right: auto; left: 0; right: 0; top: 100%; background-color: white;",
-      //r = top: 27%
-    };
-  },
-  methods: {
-    modifyClassReceiveSteps(style) {
-      this.classReceiveSteps = style;
-      this.scrollToSteps();
-      //this.changeStyle2()
-    },
-    scrollToSteps() {
-      window.scrollTo({ top: 593, behavior: "smooth" });
-    },
-  },
+ 
+ 
   components: {
-
-    Quoter: () => import('../../components/Quoter'),
-    //Quoter,
-    Users: () => import("../../components/Users"),
-    Profile: () => import("../../views/Profile"),
-    Orders: () => import("../../components/Orders"),
-    Stock: () => import("../../components/Stock"),
+      // BlindSteps,
   },
 
   methods: {
@@ -353,7 +291,8 @@ export default {
       this.$store.dispatch('destroyToken',this.credentials).then(()=>{
           if(this.getLoginStatus === 200){
            this.snackbar = true
-         this.$router.push({name:'login'});
+           
+         this.$router.push({name:'index'});
          
          }
         
@@ -364,7 +303,8 @@ export default {
 
     ...mapState({
       user: state => state.userModule.user,
-     // loggedIn: state => state.loginModule.loggedIn,
+      products: state => state.productsModule.products,
+      loggedIn: state => state.loggedIn,
     }),
 
       ...mapGetters([
@@ -374,9 +314,9 @@ export default {
       'getUserStatus'
      ]),
 
-    Quoter,
+   
 
-    BlindSteps,
+  
 
   },
 };
