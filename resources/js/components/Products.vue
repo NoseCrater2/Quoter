@@ -23,8 +23,8 @@
                         <v-subheader>PRODUCTOS DE ESTA CATEGORÍA</v-subheader>
                         <v-list-item-group v-model="selectedLine" color="#47a5ad">
                             <v-list-item 
-                            v-for="type in types" 
-                            :key="type.id" 
+                            v-for="(type, index) in types" 
+                            :key="index" 
                             :to="type.lines > 0 ?{name: 'Lines', params: {slugLine: type.slug}}
                             :{name: 'Products', params: {slugModel: type.slug}}">
                                 <v-list-item-content>
@@ -264,10 +264,10 @@ export default {
           model: null,
           search: '',
           filter: {},
-          sortDesc: false,
+          sortDesc: true,
           page: 1,
           itemsPerPage: 16,
-          sortBy: 'price',
+          sortBy: 'manufacturer',
           keys: ['name', 'price', 'created_date'],
           chargeVariants : null,
         }

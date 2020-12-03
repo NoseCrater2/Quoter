@@ -18,7 +18,7 @@
                 </h2>
                 </v-col>
                 </v-row>
-                <v-row justify="center" align="center">
+                <v-row justify="center" align="center" v-if="persianas">
                     <v-col v-for="p in persianas" :key="p.id" cols="12" md="4" sm="6">
                        <v-hover v-slot="{ hover }">
                           <v-card width="420" height="300" color="grey lighten-4"  flat >
@@ -87,9 +87,8 @@ export default {
         }
     },
 
-    mounted(){
-      
-        this.$store.dispatch('getTypes',this.getProduct.id)   
+    created(){
+         this.$store.dispatch('getTypes',this.getProduct.id)     
     },
     computed:{
          ...mapState({

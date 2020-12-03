@@ -97,16 +97,30 @@ public function collection(Collection $rows)
             $variant->manufacturers()->syncWithoutDetaching([$manufacturer->id]);
         }
 
-        // $variant->line_id = $line->id
-
-
+        $oldColor = $variant->colors->whereStrict('color', $color->color);
+       
+        if(isset($oldColor[0])){
+            if($oldColor[0]->code !== $color->code){
+                $variant->colors()->detach($oldColor[0]->id);
+                $oldColor[0]->delete();
+            }
+        }
+       
         $variant->colors()->syncWithoutDetaching([$color->id]);
 
        
     }
 }
  
+public function identifyColor($c, $variant)
+{
+  $color = $variant->colors->firstWhere('color', $c);
+  if($color !== null){
+      return $color;
+  }
 
+
+}
 
 
    public function rules(): array

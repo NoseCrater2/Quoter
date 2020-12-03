@@ -91,7 +91,7 @@ class LineController extends Controller
     public function getVariants(Line $line)
     {
         return VariantIndexResource::collection(
-            $line->variants
+            $line->variants->sortByDesc('name')
         );
     }
 

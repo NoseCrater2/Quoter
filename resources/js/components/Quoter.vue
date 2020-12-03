@@ -435,7 +435,7 @@
 <script>
 
 import Order from './Order';
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, productsModule } from 'vuex';
 export default {
   name: "Quoter",
   data() {
@@ -526,7 +526,7 @@ export default {
     chargeModels(type){
         this.loadingModels = true
        
-        this.$store.dispatch('getVariants', type.id).then(()=>{
+        this.$store.dispatch('getVariantsByType', type.id).then(()=>{
             this.loadingModels = false
             this.disabledSelectModel= false
            this.selectedColor = null
@@ -601,7 +601,7 @@ export default {
 
 
   mounted(){
-    this.$store.dispatch('getTypes')
+    this.$store.dispatch('getTypes',1) 
   },
 
   computed: {

@@ -7,10 +7,10 @@
             </v-btn>
         <v-card>
             <v-data-table
-            v-if="products"
+            v-if="products || sunblinds"
             :loading="loadingModels"
             :headers="modelsHeaders"
-            :items="products"  
+            :items="showVariants?products:sunblinds"  
             :search="search"
             :items-per-page="5"
             class="elevation-1"
@@ -172,6 +172,7 @@ export default {
             errors: null,
             errors2: null,
             loadingModels: false,
+            showVariants: null,
             modelsHeaders: [
                 {
                     text: 'id',
@@ -194,12 +195,20 @@ export default {
     },
 
     mounted(){
-        this.$store.dispatch('getVariantsByProduct',this.product.id) 
+        if(this.product.id === 3){
+            this.showVariants = false 
+            this.$store.dispatch('getAllSunblinds')
+        }else{
+            this.showVariants = true
+             this.$store.dispatch('getVariantsByProduct',this.product.id) 
+        }
+       
     },
 
     computed:{
         ...mapState({
      products: state => state.productsModule.variants,
+     sunblinds: state => state.productsModule.sunblinds,
     }),
        
     },

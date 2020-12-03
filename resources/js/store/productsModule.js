@@ -95,6 +95,14 @@ const productsModule = {
             } catch (error) {}
         },
 
+        getAllSunblinds: async function ({ commit, state }){
+            try {
+                const response = await axios
+                .get("/api/sunblinds/")
+                commit('setSunblinds',response.data.data);
+            } catch (error) {}
+        },
+
         getVariantsByType: async function ({ commit, state }, idProduct){
             try {
                 const response = await axios

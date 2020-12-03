@@ -13,6 +13,7 @@ use App\Http\Resources\VariantIndexResource;
 use App\Http\Resources\VariantShowResource;
 use App\Http\Resources\ColorIndexResource;
 use App\Imports\ModelsImport;
+use App\Sunblind;
 use Carbon\Carbon;
 use Spatie\Searchable\Search;
 use Spatie\Searchable\ModelSearchAspect;
@@ -164,6 +165,12 @@ class VariantController extends Controller
            ->addSearchableAttribute('price')
            ->with('colors');
        })
+       ->registerModel(Sunblind::class, function(ModelSearchAspect $modelSearchAspect){
+        $modelSearchAspect
+        ->addSearchableAttribute('name')
+        ->addSearchableAttribute('price')
+        ->with('colors');
+    })
        //Aquí de pueden añadir mas modelos y el array indica los atributos por los que se pueden buscar
        ->search($request->input('query'));
 

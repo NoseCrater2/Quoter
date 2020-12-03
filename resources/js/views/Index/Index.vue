@@ -1,7 +1,45 @@
 <template>
   <div id="app">
     <v-app>
-      <TheNavigationDrawer v-if="drawer" :products="products" :draw="drawer" />
+        <v-navigation-drawer app v-model="drawer" style="z-index: 8;" temporary>
+            <v-divider></v-divider>
+            <v-list dense>
+                <v-list-item :to="{name:'Home'}">
+                    <v-list-item-icon>
+                        <v-icon>mdi-home</v-icon>
+                    </v-list-item-icon>
+                </v-list-item>
+                <v-divider></v-divider>
+                <v-list-item >
+                    <v-list-item-content>
+                        <v-list-item-title>GALERÍA</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-divider></v-divider>
+                <v-list-item to="/contact">
+                    <v-list-item-content>
+                        <v-list-item-title>CONTACTO</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-divider></v-divider>
+                <v-list-item  to='/aboutus'>
+                    <v-list-item-content>
+                        <v-list-item-title>NOSOTROS</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-divider></v-divider>
+                <v-list-group  v-model="showProducts" no-action>
+                    <template v-slot:activator>
+                        <v-list-item-content>
+                            <v-list-item-title >PRODUCTOS</v-list-item-title>
+                        </v-list-item-content> 
+                    </template>
+                    <v-list-item v-for="p in products" :key="p.name" :to="{name: 'Categories', params: {slugType: p.slug}}">
+                        <v-list-item-title> {{ p.name }} </v-list-item-title>
+                    </v-list-item>
+                </v-list-group>
+            </v-list>
+      </v-navigation-drawer>
      
             <!-- COMIENZA BARRA BLANCA -->
             <v-row justify="center" class="mx-3">
@@ -110,12 +148,12 @@
               </template>
 
               <v-list three-line max-height="500" color="white">
-                <template v-for="item in items" >
+                <template v-for="(item, index) in items" >
                   <!-- Window-shutter
                   blinds
                   storefront -->
-                   <v-divider :key="item.title"></v-divider>
-                  <v-list-item :key="item.searchable.id" style="background-color: white" :to="{name: 'Details', params: {slugDetail: item.url, id: item.searchable.id}}">
+                   <!-- <v-divider :key="index"></v-divider> -->
+                  <v-list-item :key="index" style="background-color: white" :to="{name: 'Details', params: {slugDetail: item.url, id: item.searchable.id}}">
                 
                       <v-img max-width="60" :src="`../img/modelos/tumb/${item.searchable.colors[0].code}.jpg`"></v-img>
                  
@@ -124,9 +162,8 @@
                       <v-list-item-subtitle style="color: #47a5ad; font-size: 1em" >${{item.searchable.price}}MXN</v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action>
-                      <v-icon color="#47a5ad" v-if="item.searchable.type_id === 1">mdi-blinds</v-icon>
-                      <v-icon color="#47a5ad" v-if="item.searchable.type_id === 2">mdi-script</v-icon>
-                      <v-icon color="#47a5ad" v-if="item.searchable.type_id === 3">mdi-storefront</v-icon>
+                      <v-icon color="#47a5ad" v-if="item.type === 'variants'">mdi-blinds</v-icon>
+                      <v-icon color="#47a5ad" v-else>mdi-storefront</v-icon>
                     </v-list-item-action>
                   </v-list-item>
                 </template>
@@ -366,12 +403,10 @@ export default {
           drawer: false,           
           transparent: 'rgba(255, 255, 255, 0)',
           routes: [],
+           showProducts: true,
         }
     },
 
-    components:{
-      TheNavigationDrawer: () => import('../../components/Index/TheNavigationDrawer'),
-    },
 
     watch:{
       query(after, before){
@@ -432,6 +467,7 @@ export default {
     searchProducts(){
       axios.get('models/search', {params: {query: this.query}})
       .then(response => {
+        console.log(response.data)
         this.items = response.data})
       .catch(error => {})
     },

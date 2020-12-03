@@ -26,11 +26,12 @@ class VariantIndexResource extends JsonResource
             'price' => $this->type->name === 'CORTINEROS'? $this->selectPrice(): $this->price,
             'line' => $this->line?$this->line->name:null,
             'type' => $this->type->name,
-            'image' => $this->colors->random()->code,
+            'image' => $this->colors->isNotEmpty()?$this->colors->random()->code:null,
+            'colors' => $this->colors->map(function( $color ){
+                return ['color' => $color->color, 'code' => $color->code];
+            }),
             'width' => $this->width,
-            // 'manufacturers' => $this->manufacturers->map(function($m){
-            //      return $m->name;
-            // }),
+            'manufacturer' => $this->manufacturers->isNotEmpty()?$this->manufacturers[0]->name:null
         ];
     }
 

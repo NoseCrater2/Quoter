@@ -7,6 +7,8 @@ use App\Sunblind;
 use Illuminate\Http\Request;
 use App\Imports\SunblindsImport;
 use App\Http\Resources\SunblindIndexResource;
+use Spatie\Searchable\Search;
+use Spatie\Searchable\ModelSearchAspect;
 
 
 class SunblindController extends Controller
@@ -18,7 +20,9 @@ class SunblindController extends Controller
      */
     public function index()
     {
-        //
+        return SunblindIndexResource::collection(
+            Sunblind::all()
+        );
     }
 
     /**
