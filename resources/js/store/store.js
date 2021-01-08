@@ -12,6 +12,8 @@ import productsModule from './productsModule';
 import variantsModule from './variantsModule';
 import ordersModule from './ordersModule';
 import sunblindModule from './sunblindModule';
+import motorizationModule from './motorizationModule';
+import { isLoggedIn, logOut } from '../utils/auth';
 
 const store = new Vuex.Store({
 
@@ -26,14 +28,16 @@ const store = new Vuex.Store({
    variantsModule,
    ordersModule,
    sunblindModule,
+   motorizationModule,
   },
   state:{
-    token: localStorage.getItem('access_token') || null,
     loginErrors : [],
     loginStatus: [],
     signupStatus: [],
     signupErrors: [],
     checkStatus: null,
+    isLoggedIn: false,
+    user: {},
    
 },
 
@@ -60,68 +64,88 @@ getters:{
 
 },
 mutations:{
-   retrieveToken(state, token){
-    state.token = token
-   },
 
-   destroyToken(state){
-    state.token = null
-    localStorage.removeItem('access_token')
+  setUser(state, payload){
+    state.user = payload
+  },
 
-   },
+  setLoggedIn(state, payload){
+    state.isLoggedIn = payload
+  },
 
-   setSignupErrors(state, errors){
+  setSignupErrors(state, errors){
     state.signupErrors = errors
-    },
-    setSignupStatus(state, status){
-        state.signupStatus = status
-    },
+  },
+  setSignupStatus(state, status){
+    state.signupStatus = status
+  },
 
-   setErrors(state, errors){
+  setErrors(state, errors){
     state.loginErrors = errors
-    },
+  },
 
-    setStatus(state, status){
-        state.loginStatus = status
-    },
+  setStatus(state, status){
+    state.loginStatus = status
+  },
 
-    setCheckStatus(state, status){
-        state.checkStatus = status
-    },
+  setCheckStatus(state, status){
+    state.checkStatus = status
+  },
 
 },
 actions:{
-    retrieveToken: async function ({ commit, state }, credentials){
+  async loadUser({commit, dispatch}){
+    
+    if(isLoggedIn()){
+      
+      try {
+        const response = await axios.get("/user")
+        commit("setUser", response.data)
+        commit("setLoggedIn", true)
+
+      } catch (error) {
+        dispatch("logout")
+      }
+    }
+  }, 
+
+  logout({commit}){
+    commit("setUser", {})
+    commit("setLoggedIn", false)
+    logOut()
+  },
+
+  //   retrieveToken: async function ({ commit, state }, credentials){
        
-        try {
-            const request = await axios
-            .post("/api/login",credentials)
-            localStorage.setItem('access_token', request.data.token)
-            commit('retrieveToken',request.data.token);
-            commit('setStatus',request.status);
+  //       try {
+  //           const request = await axios
+  //           .post("/api/login",credentials)
+  //           localStorage.setItem('access_token', request.data.token)
+  //           commit('retrieveToken',request.data.token);
+  //           commit('setStatus',request.status);
             
            
-          } catch (error) {
-            commit('setErrors',error.response.data)
-            commit('setStatus',error.response.status);
-          }
+  //         } catch (error) {
+  //           commit('setErrors',error.response.data)
+  //           commit('setStatus',error.response.status);
+  //         }
 
-      },
+  //     },
 
-      destroyToken: async function ({ commit, state }){
+  //     destroyToken: async function ({ commit, state }){
 
-       try {
-           const response = await axios
-           .post("/api/logout", '',{
-               headers: {Authorization: "Bearer "+state.token}})
+  //      try {
+  //          const response = await axios
+  //          .post("/api/logout", '',{
+  //              headers: {Authorization: "Bearer "+state.token}})
                
-               commit('setErrors',response.data.message)
-               commit('setStatus',response.status)
-               commit('destroyToken', state)
-       } catch (error) {
+  //              commit('setErrors',response.data.message)
+  //              commit('setStatus',response.status)
+  //              commit('destroyToken', state)
+  //      } catch (error) {
            
-       }
-  },
+  //      }
+  // },
 
   signup: async function ({ commit, state }, credentials){
        

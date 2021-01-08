@@ -3,56 +3,77 @@
         <v-container fluid style="max-width: 1200px" class="my-4">
          
             <v-row justify="space-between">
-                <v-col md="3" v-if="!isMobile">
-                  <v-card flat >
-                      <v-list shaped v-if="lines">
-                        <v-subheader>PRODUCTOS DE TIPO</v-subheader>
-                        <v-list-item-group v-model="selectedType" color="#47a5ad">
-                            <v-list-item v-for="line in lines" :key="line.id" :to="{name: 'Products', params: {slugModel: line.slug}}">
+              
+                <v-col md="3" sm="12">
+                  <v-row>
+                    <v-col cols="12" md="12" sm="12">
+                    
+      
+                        <v-list-group :value="isMobile?false:true" v-if="lines">
+                       <template v-slot:activator>    
+                      <v-subheader>LINEA</v-subheader>
+                    </template>
+                        <v-list-item-group  color="#47a5ad">
+                            <v-list-item v-model="selectedLine" v-for="line in lines" :key="line.id" :to="{name: 'Products', params: {slugLine: line.slug}}">
                                 <v-list-item-content>
                                     <v-list-item-title v-text="line.name"></v-list-item-title>
                                 </v-list-item-content>
                             </v-list-item>
                         </v-list-item-group>
-                      </v-list>
-                  </v-card>
-                  <v-divider></v-divider>
-                  <v-card flat>
+                        </v-list-group>
                    
-                    <v-list shaped v-if="types" >
-                        <v-subheader>PRODUCTOS DE ESTA CATEGORÍA</v-subheader>
-                        <v-list-item-group v-model="selectedLine" color="#47a5ad">
+              
+                  <v-divider></v-divider>
+               
+                   <v-list-group :value="isMobile?false:true" v-if="types">
+                       <template v-slot:activator>    
+                      <v-subheader>TIPO</v-subheader>
+                    </template>
+                        <v-list-item-group  color="#47a5ad">
                             <v-list-item 
-                            v-for="(type, index) in types" 
-                            :key="index" 
-                            :to="type.lines > 0 ?{name: 'Lines', params: {slugLine: type.slug}}
-                            :{name: 'Products', params: {slugModel: type.slug}}">
+                            v-model="selectedType"
+                            :class="$route.path.includes(type.slug)?'v-item--active v-list-item--active':''"
+                            v-for="type in types.types" 
+                            :key="type.id" 
+                            :to="type.lines > 0 ? {name: 'Lines', params: {slugType: type.slug}}:{name: 'Products', params: {slugType: type.slug}} ">
                                 <v-list-item-content>
                                     <v-list-item-title v-text="type.name"></v-list-item-title>
                                 </v-list-item-content>
                             </v-list-item>
                         </v-list-item-group>
-                      </v-list>
-                  
-                  </v-card>
+                      </v-list-group>
+                      </v-col>
+                      </v-row>
                 </v-col>
                 <v-col cols="12" md="9" sm="12" >
-                  <h1>{{getProduct.name}}</h1>
+                  <v-row >
+                    <v-col cols="12">
+                    <h1 v-if="getProduct && type">{{ getProduct.name+' - '+ type.name}}</h1>
+                    <div v-else-if="type" class="ma-4">
+                      <h1 >{{type.name}}</h1>
+                    </div>
+                  
+                  <div v-if="getProduct">
+                      <Descriptions :nameLine="getProduct.name"/>
+                  </div>
+                  </v-col>
+                  <v-col cols="12">
                   <v-data-iterator
-                  v-if="products || sunblinds"
-                  :items="chargeVariants ? products : sunblinds"
+                  
+                  v-if="products"
+                  :items="products"
                   :items-per-page="itemsPerPage"
-                  :page="page"
+                  :page="parseInt(page)"
                   :search="search"
                   :sort-by="sortBy"
                   :sort-desc="sortDesc"
                   hide-default-footer
+                  no-data-text="No hay modelos disponibles"
                   >
                     <template v-slot:header>
                        <v-row
                         class="mt-2"
-                        align="center"
-                        justify="center"
+                        justify="space-between"
                         >
                      <v-spacer></v-spacer>
 
@@ -110,10 +131,13 @@
                         md="4"
                         lg="3"
                         >
-                        <v-hover v-slot="{ hover }">
-                          <v-card max-width="240" height="340" color="grey lighten-4" class="mx-auto" flat>
+                        <v-hover v-slot="{ hover }" v-if="item">
+                          <v-card width="240" height="340" color="grey lighten-4"  flat >
                              <!-- -->
-                            <v-img class="white--text align-end"  :class="{'escalada':hover}" width="240" height="270" :aspect-ratio="16/9"  :src="`../../img/modelos/medium/${item.image}.jpg`" :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
+                            <v-img class="white--text align-end"   :class="{'escalada':hover}" width="240" height="270" :aspect-ratio="16/9"  :src="`/../../../../img/modelos/medium/${item.image}.jpg`" :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
+                              <template v-slot:placeholder>
+                                <v-img src="/../../../../../img/modelos/medium/unavailable.jpg"></v-img>
+                              </template>
                               <v-slide-y-reverse-transition>
                                 <v-card-title v-if="!hover" class="title d-flex transition-fast-in-fast-out justify-center"> <b class="text-center">{{ item.name}}</b> </v-card-title> 
                               </v-slide-y-reverse-transition>
@@ -151,15 +175,17 @@
                             </v-card-text>
                           </v-card>
                         </v-hover>
-                          
                         </v-col>
                         
                       </v-row>
                     <v-divider></v-divider>
                     </template>
 
-                    <template v-slot:footer>
-                        
+                    <template v-slot:footer="pagination">
+                      <div style="display: none">
+                          {{pagination.options.page = page }}
+                      </div>
+                      
                         <v-row
                         class="mt-2"
                         align="center"
@@ -192,9 +218,12 @@
                     </template>
 
                     </v-data-iterator>
+                    </v-col>
+                    </v-row>
                 </v-col>
             </v-row>
             <v-dialog
+            v-if="getSelectedProduct"
             v-model="dialog"
             width="700px"
             
@@ -203,14 +232,16 @@
               <v-row justify="space-around">
                 <v-col cols="12" md="6"  sm="12">
                   <!-- :src="`img/modelos/medium/${item.image}`" -->
-                  <vue-h-zoom :width="350" :height="475" :image="`../../img/modelos/full/${getSelectedProduct.image}.jpg`"  :zoom-level="2" :zoom-window-size="1">
-
-                  </vue-h-zoom>
+                  <v-img :width="350" :height="475" :src="`../../../img/modelos/full/${getSelectedProduct.image}.jpg`" >
+                      <template v-slot:placeholder>
+                          <v-img src="../../../img/modelos/medium/unavailable.jpg"></v-img>
+                      </template>
+                  </v-img>
                
                 </v-col>
                  <v-col cols="12" md="6"  sm="12">
                   <v-card-title>
-                    <span> {{getProduct.name}} </span>
+                    <!-- <span> {{getProduct.name}} </span> -->
                     <v-spacer></v-spacer>
                     <v-tooltip top>
                       <template v-slot:activator="{ on, attrs }">
@@ -250,13 +281,14 @@
 </template>
 
 <script>
-import VueHZoom from 'vue-h-zoom';
 import { mapActions, mapState, productModule} from 'vuex';
+import Descriptions from './Descriptions.vue';
 export default {
     data(){
         return{
-          selectedLine: 1,
-          selectedType: 1,
+         
+          selectedLine: null,
+          selectedType: null,
           productName: null,
           selectedIndex: 1,
            isMobile:false, 
@@ -265,37 +297,35 @@ export default {
           search: '',
           filter: {},
           sortDesc: true,
-          page: 1,
+          page: this.$route.query.page || 1,
           itemsPerPage: 16,
           sortBy: 'manufacturer',
           keys: ['name', 'price', 'created_date'],
-          chargeVariants : null,
+          chargeBlinds : true,
         }
     },
 
-     mounted(){  
+    created(){
+        document.title = 'Catálogo de '+this.slugProduct
+    },
 
-       if(this.isWeave){
-         this.chargeVariants = false
-         this.$store.dispatch('getSunblinds',this.getProduct.id) 
-       }else if(this.getProduct.hasOwnProperty('lines')){
-         this.chargeVariants = true
-           this.$store.dispatch('getVariantsByType',this.getProduct.id) 
-        }else{
-          this.chargeVariants = true
-          this.$store.dispatch('getVariantsByLine',this.getProduct.id) 
-        }
-    
-      this.onResize()
-      window.addEventListener('resize', this.onResize, { passive: true })
+     mounted(){
 
-      console.log(this.sunblinds)
-
-     
+        this.onResize()
+        window.addEventListener('resize', this.onResize, { passive: true })
     },
 
     props:{
-        slugModel: {
+        slugLine: {
+          type: String,
+          required: false,
+        },
+         slugType: {
+          type: String,
+          required: true,
+        },
+
+        slugProduct: {
           type: String,
           required: true,
         },
@@ -306,48 +336,76 @@ export default {
     },
 
     computed:{
-      ...mapState({
-     products: state => state.productsModule.variants,
-     sunblinds: state => state.productsModule.sunblinds,
-      types: state => state.productsModule.types,
-      lines: state => state.productsModule.lines,
-    }),
+
+    products(){
+      if(this.slugLine){
+        return this.$store.state.productsModule.variants.filter((variant) => variant.type === this.slugType && variant.line === this.slugLine)
+      }else{
+         return this.$store.state.productsModule.variants.filter((variant) => variant.type === this.slugType) 
+      }
+    },
       numberOfPages(){
         return Math.ceil(this.products.length / this.itemsPerPage)
+      },
+
+      type(){
+        if(this.types){
+          return this.types.types.find( type => type.slug === this.slugType)
+        }
       },
 
       filteredKeys(){
         return this.keys.filter( key => key !== 'name')
       },
 
-      getProduct(){
-         return  this.$store.state.productsModule.lines.find((line => line.slug === this.slugModel)) ||
-                this.$store.state.productsModule.types.find((type => type.slug === this.slugModel)) ||
-                this.$store.state.productsModule.weaves.find((weave => weave.slug == this.slugModel))
+      types(){
+         return  this.$store.getters.getTypes(this.slugProduct)
       },
 
-      getSelectedProduct(){
-        return  this.$store.state.productsModule.variants.find((variant => variant.id === this.selectedIndex)) ||
-                this.$store.state.productsModule.sunblinds.find((sunblind => sunblind.id === this.selectedIndex)) || 
-                0
-      },
+      lines(){
+         return  this.$store.getters.getLines(this.slugType)
     },
+
+    getProduct(){
+     return this.$store.state.productsModule.lines.find((line) => line.slug === this.slugLine) || null
+    },
+
+      getSelectedProduct(){
+        return  this.$store.state.productsModule.variants.find((variant => variant.id === this.selectedIndex)) || 0
+      },
+
+    },
+
+    
 
 
     methods: {
       nextPage(){
-        if(this.page + 1 <= this.numberOfPages) this.page += 1
+        this.page = parseInt(this.page)
+        if(this.page + 1 <= this.numberOfPages){
+         
+         this.page += 1
+         this.$router.push({query: {...this.$route.query, page: this.page}})
+          
+        } 
+        
       },
 
       formerPage(){
-        if(this.page - 1 >= 1) this.page -= 1
+       this.page = parseInt(this.page)
+        if(this.page - 1 >= 1){
+          this.page -= 1
+          this.$router.push({query: {...this.$route.query, page: this.page}})
+         
+        } 
+       
       },
 
       updateItemsPerPage(number){
         this.itemsPerPage = number
       },
       onResize(){
-      this.isMobile = window.innerWidth < 767
+      this.isMobile = window.innerWidth < 958
     },
 
     openDialog(id){
@@ -356,10 +414,13 @@ export default {
     }
     },
     components:{
-      VueHZoom,
-    }
+      Descriptions,
+    },
+
+  
 }
 </script>
+        
 
 <style>
 

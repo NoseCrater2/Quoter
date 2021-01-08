@@ -7,10 +7,10 @@
             </v-btn>
         <v-card>
             <v-data-table
-            v-if="products || sunblinds"
+            v-if="products"
             :loading="loadingModels"
             :headers="modelsHeaders"
-            :items="showVariants?products:sunblinds"  
+            :items="products"  
             :search="search"
             :items-per-page="5"
             class="elevation-1"
@@ -195,20 +195,14 @@ export default {
     },
 
     mounted(){
-        if(this.product.id === 3){
-            this.showVariants = false 
-            this.$store.dispatch('getAllSunblinds')
-        }else{
-            this.showVariants = true
-             this.$store.dispatch('getVariantsByProduct',this.product.id) 
-        }
+ 
+        this.$store.dispatch('getVariantsByProduct',this.product.id) 
        
     },
 
     computed:{
         ...mapState({
      products: state => state.productsModule.variants,
-     sunblinds: state => state.productsModule.sunblinds,
     }),
        
     },
@@ -267,14 +261,7 @@ export default {
             
             formData.append('file',this.file);
 
-            let endpoint = null
-            if(this.product.id === 3){
-                endpoint = '/api/importSunblinds'
-            }else{
-                endpoint = '/api/importExcel'
-            }
-
-            axios.post( endpoint,
+            axios.post( '/api/importExcel',
                 formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'

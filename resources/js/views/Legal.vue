@@ -109,6 +109,10 @@ export default {
         return{
             tab: null,
         }
+    },
+
+    created(){
+        document.title = 'Aviso de privacidad'
     }
     
 }

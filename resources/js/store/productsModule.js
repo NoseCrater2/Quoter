@@ -12,9 +12,25 @@ const productsModule = {
 
     getters: {
 
-    getType: ({types, slug}) => {
-        return types.find((t) => t.slug === slug) || null
-      }
+    getVariant: (state)=> (id) => {
+            return state.variants.find((t) => t.id === id)
+    },
+
+    getTypes: (state)=> (slug) => {
+        return state.products.find((t) => t.slug === slug)
+    },
+
+    getLines: (state)=> (slug) => {
+        return state.lines.filter((line) => line.types.includes(slug))
+    },
+
+    getType: (state)=> (slug) => {
+        return state.products.find((product) => product.types === slug)
+    },
+
+    getLine: (state)=> (slug) => {
+        return state.lines.filter((line) => line.slug === slug)
+    },
         
     },
 
@@ -48,17 +64,29 @@ const productsModule = {
 
     actions: {
         getProducts: async function ({ commit, state }){
+            if(state.products.length === 0){
             try {
                 const response = await axios
                 .get("/api/products")
                 commit('setProducts',response.data.data);
             } catch (error) {}
+        }
         },
 
-        getVariantsByLine: async function ({ commit, state }, idProduct){
+        getAllVariants: async function ({ commit, state }){
+            if(state.variants.length === 0){
             try {
                 const response = await axios
-                .get("/api/getVariants/"+idProduct)
+                .get("/api/variants/")
+                commit('setVariants',response.data.data);
+            } catch (error) {}
+        }
+        },
+
+        getVariantsByLine: async function ({ commit, state }, slug){
+            try {
+                const response = await axios
+                .get("/api/getVariants/"+slug)
                 commit('setVariants',response.data.data);
             } catch (error) {}
         },
@@ -71,18 +99,20 @@ const productsModule = {
             } catch (error) {}
         },
 
-        getLines: async function ({ commit, state }, idProduct){
+        getLines: async function ({ commit, state }){
+            if(state.products.length === 0){
             try {
                 const response = await axios
-                .get("/api/getLines/"+idProduct)
+                .get("/api/lines/"+idProduct)
                 commit('setLines',response.data.data);
             } catch (error) {}
+            }
         },
 
-        getWeaves: async function ({ commit, state }, idProduct){
+        getWeaves: async function ({ commit, state }, slugLine){
             try {
                 const response = await axios
-                .get("/api/getWeaves/"+idProduct)
+                .get("/api/getWeaves/"+slugLine)
                 commit('setWeaves',response.data.data);
             } catch (error) {}
         },
@@ -103,13 +133,14 @@ const productsModule = {
             } catch (error) {}
         },
 
-        getVariantsByType: async function ({ commit, state }, idProduct){
+        getVariantsByType: async function ({ commit, state }, slug){
             try {
                 const response = await axios
-                .get("/api/getTypeVariants/"+idProduct)
+                .get("/api/getTypeVariants/"+slug)
                 commit('setVariants',response.data.data);
             } catch (error) {}
         },
+
 
         getVariantsByProduct: async function ({ commit, state }, idProduct){
             try {

@@ -23,7 +23,8 @@ class DatabaseSeeder extends Seeder
             'roles',
             // 'manufacturers',
             // 'lines',
-            'types'
+            'types',
+            'controls',
           ]);
           $this->call([
             ProductsTableSeeder::class,
@@ -33,6 +34,7 @@ class DatabaseSeeder extends Seeder
             // ManufacturerSeeder::class,
             // LineSeeder::class,
             TypeSeeder::class,
+            ControlSeeder::class,
           ]);
           DB::statement('SET FOREIGN_KEY_CHECKS = 1');  
     }

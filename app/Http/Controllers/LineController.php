@@ -88,17 +88,19 @@ class LineController extends Controller
         //
     }
 
-    public function getVariants(Line $line)
+    public function getVariants(String $slug)
     {
+        $line  = Line::where('slug', '=', $slug)->get();
         return VariantIndexResource::collection(
-            $line->variants->sortByDesc('name')
+            $line[0]->variants->sortByDesc('name')
         );
     }
 
-    public function getWeaves(Line $line)
+    public function getWeaves(String $slug)
     {
+        $line  = Line::where('slug', '=', $slug)->get();
         return WeaveIndexResource::collection(
-            $line->weaves
+            $line[0]->weaves
         );
     }
 }

@@ -1,5 +1,3 @@
-import { bind } from "lodash";
-
 
 const ordersModule = {
 
@@ -25,7 +23,15 @@ const ordersModule = {
         },
 
         totalPrice(state){
-            return state.totalPrice
+             
+            let prices = 0
+            state.orders.map(function(order){
+                let pt = parseFloat(order.price) + parseFloat(order.motor.price)
+             return prices += pt
+           })
+            
+            return prices
+            
         }
     },
     mutations:{
@@ -38,6 +44,13 @@ const ordersModule = {
               state.orders.push(item)
           },
 
+        editOrder (state, item){
+            state.orders.map(function(currentOrder) {
+                if (currentOrder.id === item.id) {
+                    Object.assign(currentOrder, item);
+                }
+            });
+        },
           incrementItemQuantity(state, item){
               item.quantity++
           },
@@ -48,21 +61,38 @@ const ordersModule = {
             state.totalPrice = currentPrice + newPrice
         },
 
+        deleteOrder(state, id) {
+
+            let  u = state.orders.find((order => order.id === id))
+            state.orders.splice(state.orders.indexOf(u),1)
+          
+           
+          },
+
     },
     actions:{
         addToOrder (context, blind){
-           
-            const orderItem = context.state.orders.find(item => item.id === blind.id)
+            blind.id = (context.state.orders.length + 1)
+            //  const orderItem = context.state.orders.find(item => item.id === blind.id)
             
-            if(!orderItem){
+            // // if(!orderItem){
                 context.commit('pushProductToCart', blind)
-                context.commit('sumTotalPrice', blind.price)
-            }else{
-                context.commit('incrementItemQuantity', orderItem)
-            }
+               // context.commit('sumTotalPrice', blind.price)
+            //  }
+             //else{
+            //     context.commit('incrementItemQuantity', orderItem)
+            // }
 
             //Aquí se puede añadir otro commit para reducir el inventario
-        }
+        },
+
+        editOrder (context, blind){
+            context.commit('editOrder', blind)
+        },
+        
+        deleteOrder(context,id){
+             context.commit('deleteOrder',id);
+        },
     },
 }
 

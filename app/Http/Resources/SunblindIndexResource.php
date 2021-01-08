@@ -21,7 +21,7 @@ class SunblindIndexResource extends JsonResource
             'slug' => $this->slug,
             'price' => $this->price,
             'isSunblind' => true,
-            'image' => $this->colors[$index-1]->code,
+            'image' => $this->colors->count()>0?$this->colors->random()->code:null,
            
         ];
     }

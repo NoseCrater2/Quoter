@@ -8,7 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductIndexResource;
 use App\Http\Resources\VariantIndexResource;
 use App\Http\Resources\TypeIndexResurce;
-use App\Http\Resources\ColorIndexResource;
+use Barryvdh\DomPDF\Facade as PDF;
+
 
 class ProductController extends Controller
 {
@@ -22,10 +23,8 @@ class ProductController extends Controller
 
         return ProductIndexResource::collection(
             Product::get()
-        );
-        // $products = Product::paginate();
+        );;
 
-        // return response($products, 200);
     }
 
     /**
@@ -123,6 +122,16 @@ class ProductController extends Controller
         return VariantIndexResource::collection(
             $product->variants
         );
+    }
+
+    public function exportPdf(Request $request)
+    {
+        //Recuperar el request en un objeto
+        $orders = $request->all();
+    //    dd($orders[0]['type']);
+        $pdf = PDF::loadView('pdf.order', compact('orders'));
+
+        return $pdf->download('order-list.pdf');
     }
 
  

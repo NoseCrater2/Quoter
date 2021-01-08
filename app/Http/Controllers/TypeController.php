@@ -88,17 +88,20 @@ class TypeController extends Controller
         //
     }
 
-    public function getLines(Type $type)
+    public function getLines(String $slug)
     {
+      $type = Type::where('slug','=', $slug)->get();
         return LineIndexResource::collection(
-            $type->lines
+            $type[0]->lines
         );
     }
 
-    public function getTypeVariants(Type $type)
+    public function getTypeVariants(String $slug)
     {
+        $type = Type::where('slug','=',$slug)->get();
+
         return VariantIndexResource::collection(
-            $type->variants
+            $type[0]->variants
         );
     }
 }

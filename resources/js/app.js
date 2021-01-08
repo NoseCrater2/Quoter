@@ -13,20 +13,21 @@ import Stock from "./components/Stock";
 // Vue.use(Vuex);
 // const store = new Vuex.Store(storeDefinition);
 
-router.beforeEach((to, from, next) => {
-  if(to.matched.some(record => record.meta.requiresAuth)){
-   
-      if (store.getters.loggedIn !== true) {
-          next({
-            name: 'login',
-          })
-        } else {
-          next()
-        }
-  }else{
-      next();
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   if(to.matched.some(record => record.meta.requiresAuth)){
+//       if (store.state.isLoggedIn === true) {
+//           next()
+//         } else {
+//           next({
+//             name: 'login',
+//           })
+//         }
+//   }else{
+//       next();
+//   }
+// });
+
+
 
 window.Vue = require('vue');
 

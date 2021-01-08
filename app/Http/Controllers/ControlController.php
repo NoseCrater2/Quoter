@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Matrix;
+use App\Control;
 use Illuminate\Http\Request;
+use App\Http\Resources\IndexControlResource;
 
-class MatrixController extends Controller
+class ControlController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +15,9 @@ class MatrixController extends Controller
      */
     public function index()
     {
-        //
+        return IndexControlResource::collection(
+            Control::get()
+        );
     }
 
     /**
@@ -41,10 +44,10 @@ class MatrixController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Matrix  $matrix
+     * @param  \App\Control  $control
      * @return \Illuminate\Http\Response
      */
-    public function show(Matrix $matrix)
+    public function show(Control $control)
     {
         //
     }
@@ -52,10 +55,10 @@ class MatrixController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Matrix  $matrix
+     * @param  \App\Control  $control
      * @return \Illuminate\Http\Response
      */
-    public function edit(Matrix $matrix)
+    public function edit(Control $control)
     {
         //
     }
@@ -64,10 +67,10 @@ class MatrixController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Matrix  $matrix
+     * @param  \App\Control  $control
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Matrix $matrix)
+    public function update(Request $request, Control $control)
     {
         //
     }
@@ -75,10 +78,10 @@ class MatrixController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Matrix  $matrix
+     * @param  \App\Control  $control
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Matrix $matrix)
+    public function destroy(Control $control)
     {
         //
     }

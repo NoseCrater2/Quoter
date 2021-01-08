@@ -14,13 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user()->roles->{'name'};
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user()->roles->{'name'};
+// });
 
 Route::post('login', 'Api\AuthController@login');
 Route::post('logout', 'Api\AuthController@logout');
 Route::post('register', 'Api\AuthController@register');
+
 
 
 
@@ -35,25 +36,43 @@ Route::resource('colors', 'ColorController')->only('index','show');
 Route::resource('manufacturers', 'ManufacturerController')->only('index','show');
 Route::resource('variants', 'VariantController')->only('index','show','update');
 Route::resource('products', 'Api\ProductController')->only('index','show');
+
+Route::resource('motorization_types', 'MotorizationTypeController')->only('index','show');
+Route::resource('motorizations', 'MotorizationController')->only('index','show');
+Route::get('getFilteredMotorizations/{type}', 'MotorizationController@getFilteredMotorizations');
+
+Route::resource('controls', 'ControlController')->only('index','show');
+Route::resource('galleries', 'GalleryController')->only('index','show');
+
 //Route::get('getVariants/{product}', 'Api\ProductController@getVariants');
 Route::get('getTypes/{product}', 'Api\ProductController@getTypes');
-Route::get('getLines/{type}', 'TypeController@getLines');
+Route::get('getLines/{slug}', 'TypeController@getLines');
 
-Route::get('getVariants/{line}', 'LineController@getVariants');
-Route::get('getWeaves/{line}', 'LineController@getWeaves');
-Route::get('getTypeVariants/{type}', 'TypeController@getTypeVariants');
+Route::get('getVariants/{slug}', 'LineController@getVariants');
+Route::get('getWeaves/{slug}', 'LineController@getWeaves');
+Route::get('getTypeVariants/{slug}', 'TypeController@getTypeVariants');
 Route::get('getVariantsByProduct/{product}', 'Api\ProductController@getVariantsByProduct');
 
 Route::get('getSunblinds/{weave}', 'WeaveController@getSunblinds');
+
+Route::get('getFilteredVariants/', 'VariantController@getFilteredVariants');
 
 
 
 
 Route::post('importModels', 'VariantController@importModels');
 Route::post('importExcel', 'VariantController@importExcel');
+
+Route::post('importMotorizations', 'MotorizationController@importMotorizations');
+Route::post('importGalleries', 'GalleryController@importGalleries');
+
+
 Route::get('exportExcel', 'VariantController@exportExcel');
 
-Route::post('importSunblinds', 'SunblindController@importSunblinds');
+// 
+
+// Route::post('importSunblinds', 'SunblindController@importSunblinds');
+
 
 
 
@@ -92,3 +111,5 @@ Route::middleware(['auth:api'])->group(function()
     Route::get('users/{user}/edit','UserController@edit')->name('users.edit');
   
 });
+
+Route::post('order-list-pdf' , 'Api\ProductController@exportPdf');

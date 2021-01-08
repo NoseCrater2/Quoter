@@ -24,6 +24,7 @@ class VariantShowResource extends JsonResource
             'slug' => $this->slug,
             'price' => $this->type->name === 'CORTINEROS'? $this->selectPrice(): $this->price,
             'line' => $this->line?$this->line->name:null,
+            'slugLine' => $this->line?$this->line->slug:null,
             'type' => $this->type->name,
             'width' => $this->width,
             'description' => $this->description,

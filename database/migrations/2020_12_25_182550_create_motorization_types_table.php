@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSunblindsTable extends Migration
+class CreateMotorizationTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateSunblindsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sunblinds', function (Blueprint $table) {
+        Schema::create('motorization_types', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('slug');
-            $table->decimal('price',7,2,true)->default(0);
-            $table->unsignedBigInteger('weave_id')->nullable();
-            $table->foreign('weave_id')->references('id')->on('weaves');
         });
     }
 
@@ -30,6 +27,6 @@ class CreateSunblindsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sunblinds');
+        Schema::dropIfExists('motorization_types');
     }
 }

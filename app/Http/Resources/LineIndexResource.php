@@ -18,7 +18,9 @@ class LineIndexResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'type' => $this->types[0]->name,
+            'types' => $this->types->map( function($type){
+                return $type->slug;
+            }),
             'weaves' => $this->weaves->count(),
         ];
     }

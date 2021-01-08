@@ -13,15 +13,15 @@
         <Slogan/>
 
         </v-container>
-        <v-row style="background-color: #47a5ad;"  align="center" justify="center">
+        <v-row style="background-color: #47a5ad;"  align="center" justify="center"  class="pa-0 ma-0">
                 <v-col cols="12" md="5" sm="12" class="pa-0 " align-self="center">
                     <v-img max-width="650" max-height="600" src="../../img/nosotros/2.jpg">
 
                     </v-img>
                 </v-col>
                 <v-col cols="12" md="7" sm="12" class="pa-0" align-self="center">
-                    <div style="margin-left: 100px;margin-right: 100px; margin-top: 20px" >
-                    <div class="d-block" style="color: white; font-size: 1.4em; max-width: 750px">
+                    <div style= "margin-top: 20px" :style="$vuetify.breakpoint.mobile?'margin-left: 15px;margin-right: 15px;':'margin-left: 100px;margin-right: 100px;'" >
+                    <div class="d-block" style="color: white; max-width: 750px" :style="$vuetify.breakpoint.mobile?'0.7':'font-size: 1.4em'">
                         <p style="text-align: justify">
                             <b class="especial">Rollux</b> integra en su línea de textiles para persianas
                             Enrollables la mas amplia gama de texturas y colores de todo
@@ -30,7 +30,7 @@
                         </p>
                     </div>
                     <br>
-                    <div class="d-block"  style="color: white; font-size: 1.4em; max-width: 750px">
+                    <div class="d-block" :style="$vuetify.breakpoint.mobile?'0.7':'font-size: 1.4em'" style="color: white; max-width: 750px">
                         <p style="text-align: justify">
                       <b class="especial">Rollux</b> es innovación y evolución por lo que costantamente nos
                       actualizamos para brindar nuevos y mejores productos, la autorización
@@ -45,17 +45,17 @@
                     </div>
                 </v-col>
         </v-row>
-        <v-row>
-            <v-img src="../../img/nosotros/3.jpg" :height="max_height">
+        <v-row class="pa-0 ma-0">
+            <v-img src="../../img/nosotros/3.jpg" :height="$vuetify.breakpoint.mobile?'400':max_height">
                 <v-col cols="8" >
                     <v-img src="../../img/nosotros/4.jpg" class="white--text align-center" >
                      <v-container fluid style="max-width: 570px">
                         <div class="d-block">
-                            <span class="especial " style="font-size: 4.8em">Rollux es</span>
-                            <p class="especial" style="font-size: 6em; margin-top: -60px!important;">Experiencia</p>
+                            <span class="especial " :style="$vuetify.breakpoint.mobile?'font-size: 1.8em':'font-size: 4.8em'">Rollux es</span>
+                            <p class="especial" :style="$vuetify.breakpoint.mobile?'font-size: 2.5em;':'font-size: 6em; margin-top: -60px!important;'">Experiencia</p>
                         </div>
                         <div class="d-block">
-                            <h1>
+                            <h1  :style="$vuetify.breakpoint.mobile?'font-size: 16px;':'font-size: 32px;'">
                                 Más de 25 años en el mercado marcan Garantía y Reconocimiento
                                 de la calidad de nuestros productos.
                             </h1>
@@ -65,8 +65,8 @@
                 </v-col>
             </v-img>
         </v-row>
-        <v-row class="grey lighten-3 ">
-            <v-container fluid style="max-width: 1200px" class="my-4">
+        <v-row class="grey lighten-3 pa-0 ma-0">
+            <v-container fluid style="max-width: 1200px; width: 1200px; min-width: 200px" class="my-4">
                 <v-row>
                     <v-col cols="12" md="6" sm="12" v-for="(t, index) in team" :key="index">
                         <v-card color="transparent"  flat tile>
@@ -90,11 +90,11 @@
             </v-container>
         </v-row>
 
-        <v-row>
-            <v-container fluid style="max-width: 1200px" class="my-4">
+        <v-row class="pa-0 ma-0">
+            <v-container fluid style="max-width: 1200px" >
                 <v-row justify="center">
-                    <v-col cols="7" align-self="center">
-                        <p style="font-size: 1.4em">
+                    <v-col cols="12" md="7" sm="12" align-self="center">
+                        <p :style="$vuetify.breakpoint.mobile?'font-size: 1em':'font-size: 1.4em'"  class="ma-4" style="text-align: justify">
                             Como empresa solcialmente responsable nos preocupamos
                             por crear ambientes limpios y saludables, somos defensores
                             activos del cuidado del ecosistema por ello, muchos de nuestros
@@ -103,11 +103,11 @@
                         </p>
                        
                     </v-col>
-                    <v-col cols="5">
+                    <v-col cols="12" md="5" sm="12">
                         <v-img max-width="500" src="../../img/nosotros/5.jpg"></v-img>
                     </v-col>
                     <v-col cols="12" align-self="center" >
-                         <v-img class="mx-16 mb-16 mt-n16" max-width="250" src="../../img/nosotros/6.png"></v-img>
+                         <v-img class="ma-16" max-width="250" src="../../img/nosotros/6.png"></v-img>
                     </v-col>
                 </v-row>
             </v-container>
@@ -134,6 +134,10 @@ export default {
 
     components: {
         Slogan,
+    },
+
+     created(){
+        document.title = 'Rollux Nosotros'
     }
 }
 </script>
@@ -151,6 +155,8 @@ export default {
     font-style: italic;
     font-weight: 900;
 }
+
+
 
 
 @keyframes blink {

@@ -9,9 +9,9 @@ class Weave extends Model
     protected $fillable = ['name', 'slug', 'description'];
     public $timestamps = false;
 
-    public function sunblinds()
+    public function variants()
     {
-        return $this->hasMany(Sunblind::class);
+        return $this->hasMany(Variant::class);
     }
 
     public function lines()

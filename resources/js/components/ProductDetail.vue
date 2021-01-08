@@ -4,143 +4,60 @@
             
             <v-row v-if="details.colors">
                 <v-col cols="12" md="4" sm="12" class="mt-3">
-                    <v-card width="400" height="567">
-                         <!-- :src="`img/modelos/medium/${item.image}`" -->
-                        <!-- <v-img  :aspect-ratio="16/9" height="400"  :src="details.colors[position].image"></v-img> -->
-                        <vue-h-zoom  :height="458" :width="380" :image="`../../img/modelos/full/${details.colors[position].code}.jpg`"  :zoom-level="3" :zoom-window-size="1.5"></vue-h-zoom>
-                        <v-card-actions>
-                            <v-sheet  width="370">
-                                <v-slide-group v-model="model"   show-arrows  >
-                                    <v-slide-item v-for="n in details.colors.length" :key="n" v-slot="{ }">
-                                       
-                                        <v-hover   v-slot="{ hover }">
-                                        <v-card
-                                         :class="{'selected':hover}"
-                                        outlined
-                                        tile
-                                      @click="openDialog(n-1)"
-                                       @mouseenter="changeIndex(n-1)"
-                                        class="ma-3"
-                                        height="80"
-                                        width="60"
-                                        
-                                        >
-                                        <v-tooltip bottom>
-                                            <template v-slot:activator="{ on, attrs}">
-                                                <div>
-                                                  
-                                                    <v-img  v-bind="attrs" v-on="on"   :aspect-ratio="16/9" height="80"  :src="`../../img/modelos/medium/${details.colors[n-1].code}.jpg`"></v-img>
-                                                </div>
-                                            </template>
-                                            <span>{{ details.colors[n-1].color }}</span>
-                                        </v-tooltip>
-                                        </v-card>
-                                        </v-hover>
-                                    </v-slide-item>
-                                </v-slide-group>
-                            </v-sheet>
+                    <v-card width="400" height="567" >
+                        <v-img  :height="458" :width="380" :src="`/../../../img/modelos/full/${details.colors[position].code}.jpg`"  >
+                            <template v-slot:placeholder>
+                                <v-img src="/../../../img/modelos/medium/unavailable.jpg"></v-img>
+                            </template>
+                        </v-img>
+                        <v-card-actions v-if="$vuetify.breakpoint.mobile">
+                             <ItemColors @changeIndex="changeIndex" :colors="details.colors" />
+                        </v-card-actions>
+                        <v-card-actions v-else>
+                             <SlideColors @openDialog="openDialog" @changeIndex="changeIndex" :colors="details.colors" />
                         </v-card-actions>
                     </v-card>
+
                 </v-col>
-                 <v-col cols="12" md="4" sm="12">
+                 <v-col cols="12" md="8" sm="12">
                     <v-card  flat>
                         <v-card-title style="font-size: 2.2em">{{ details.name}}</v-card-title>
                         <v-divider></v-divider>
-                        <div class="d-flex justify-center">
+                        <div class="d-inline">
                         <div class="display-1 d-inline-flex" style="color: #47a5ad">$ </div>
                         <div  class="display-2 d-inline-flex" style="color: #47a5ad; font-weight: bolder;">{{details.price}}</div>
                         <div class="display-1 d-inline-flex" style="color: #47a5ad">MXN </div>
                         </div>
+                  
+                        <div  class="d-inline ml-4" >
+                             <div class="display-1 d-inline-flex" style="color: #47a5ad">
+                                
+                                 <v-btn 
+                                 dark
+                                 color= "#47a5ad" 
+                                 depressed 
+                                 :to="{name:'Quoter', query:{type: this.slugType, line: details.slugLine ,variant: details.id, color: details.colors[selected]}}">
+                                     COTIZAR ESTE PRODUCTO
+                                 </v-btn>
+                             </div>
+                        </div>
                         <v-card-text>
-                            <v-row align="center" class="mx-10">
+                            <v-row align="center">
                                 <v-col>
                                      <b> SELECCIONA MÁS COLORES:</b>
                                 </v-col>
                                
                             </v-row>
                            
+                            <v-row v-if="!$vuetify.breakpoint.mobile">
+                                <ItemColors @changeIndex="changeIndex" :colors="details.colors" />
+                            </v-row>
                             <v-row>
-                            <v-item-group v-model="selected" @change="changeIndex(selected)">
-                                <v-row  align="center" class="mb-10 mx-12">
-                                    <v-col
-                                    cols="2"
-                                    align-self="center"
-                                    v-for="n in details.colors.length" :key="n"
-                                    >
-                                        <v-item v-slot="{ active, toggle}" >
-                                            <v-card
-                                            outlined
-                                            tile
-                                            class="d-flex align-center"
-                                            height="20"
-                                            width="20"
-                                            @click="toggle"
-                                            >
-                                               <v-tooltip bottom>
-                                                    <template v-slot:activator="{ on, attrs}">
-                                                        <div :class="{'selected':active}" v-bind="attrs" v-on="on">
-                                                            <v-img  :aspect-ratio="16/9" height="20"  width="20" :src="`../../img/modelos/tumb/${details.colors[n-1].code}.jpg`"></v-img>
-                                                        </div>
-                                                    </template>
-                                                    <span>{{ details.colors[n-1].color }}</span>
-                                                </v-tooltip>   
-                                            </v-card>
-                                        </v-item>
-                                    </v-col>
-                                </v-row>
-                            </v-item-group>
+                                <h1>{{ details.colors[position].code}}</h1> 
                             </v-row>
                         </v-card-text>
                     </v-card>
-                </v-col>
-                 <v-col cols="12" md="4" sm="12">
-                    
-                     <v-card tile flat>
-                         <v-card-title > PRODUCTOS RELACIONADOS</v-card-title>
-                        <v-divider></v-divider>
-                   
-                     <v-row justify="space-around">
-                         <v-col cols="12" md="6" sm="12" v-for="r in relationed" :key="r.id">
-                                 <v-card max-width="200" height="230" color="grey lighten-4" class="mx-auto" flat >
-                            <v-img class="white--text align-end"  width="200" height="185" :aspect-ratio="16/9" :src="`../../img/modelos/medium/${r.image}.jpg`"  >
-
-                                 <div
-                             
-                              class="d-flex transition-fast-in-fast-out  v-card--reveal white--text"
-                              style="height: 100%;"
-                              >
-                              <v-hover v-slot="{ hover }">
-                              <v-btn :to="{name: 'Details', params: {slugDetail: r.slug}}" depressed :outlined="!hover" tile color="white"  x-small>VER</v-btn>
-                              </v-hover>
-                              </div>
-                              
-                            
-                               <v-card-text style="padding: 0px; padding-left: 5px; font-size: 0.8rem !important;" class="title" >{{ r.name}}</v-card-text> 
-                            </v-img>
-                            
-
-                            <v-card-text
-                            
-                            style="position: relative"
-                            >
-
-                            <h2 class=" font-weight-light black--text text-center">
-                             ${{ r.price}}
-                            </h2>
-                           
-                            </v-card-text>
-                          </v-card>
-                             
-                         </v-col>
-                        
-                     </v-row>
-                       </v-card>
-                </v-col>
-            </v-row>
-
-            <v-row>
-                <v-col cols="12">
-                    <v-tabs v-model="tab" align-with-title  background-color="blue-grey lighten-4">
+                    <v-tabs v-model="tab" align-with-title  background-color="#47a5ad" dark>
                     <v-tabs-slider color="#47a5ad"></v-tabs-slider>
                         <v-tab v-if="details.type_product_id === 1">FICHA TÉCNICA</v-tab>
                        <v-tab v-if="details.type_product_id === 1">TELAS</v-tab>
@@ -205,7 +122,7 @@
                         </v-tab-item>
 
                         <v-tab-item v-if="details.type_product_id === 1">
-                            <v-simple-table fixed-header height="300px">
+                            <v-simple-table fixed-header height="220px">
                                 <template>
                                     <thead>
                                         <td>
@@ -216,7 +133,7 @@
                                        </td>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="color in details.colors" :key="color.code">
+                                        <tr v-for="color in details.colors" :key="color.id">
                                             <td>
                                                 {{ color.color }}
                                             </td>
@@ -294,7 +211,83 @@
                             </v-simple-table>
                         </v-tab-item>
                     </v-tabs-items>
+                </v-col>
+                 <!-- <v-col cols="12" md="4" sm="12">
+                    
                    
+                </v-col> -->
+            </v-row>
+
+            <v-row v-else>
+                 <v-col cols="12" md="4" sm="12" class="mt-3">
+                <v-skeleton-loader
+                height="567"
+                width="400"
+                v-bind="attrs"
+                type="image, actions"
+                 ></v-skeleton-loader>
+                 </v-col>
+
+                 <v-col cols="12" md="8" sm="12">
+                     <v-skeleton-loader
+                    v-bind="attrs"
+                    type="date-picker"
+                    ></v-skeleton-loader>
+                 </v-col>
+            </v-row>
+
+            <v-row>
+                <v-col cols="12">
+                      <v-card tile flat>
+                         <v-card-title > PRODUCTOS RELACIONADOS</v-card-title>
+                        <v-divider></v-divider>
+                   
+                     <v-row justify="space-around" v-if="relationed">
+                         <v-col cols="12" md="3" sm="12" v-for="r in relationed" :key="r.id">
+                                 <v-card max-width="200" height="230" color="grey lighten-4" class="mx-auto" flat >
+                            <v-img class="white--text align-end"  width="200" height="185" :aspect-ratio="16/9" :src="`/../../../img/modelos/medium/${r.image}.jpg`"  >
+                            <template v-slot:placeholder>
+                                <v-img src="/../../../img/modelos/medium/unavailable.jpg"></v-img>
+                            </template>
+
+                                 <div
+                             
+                              class="d-flex transition-fast-in-fast-out  v-card--reveal white--text"
+                              style="height: 100%;"
+                              >
+                              <v-hover v-slot="{ hover }">
+                              <v-btn :to="{name: 'Details', params: {slugDetail: r.slug}}" depressed :outlined="!hover" tile color="white"  x-small>VER</v-btn>
+                              </v-hover>
+                              </div>
+                              
+                            
+                               <v-card-text style="padding: 0px; padding-left: 5px; font-size: 0.8rem !important;" class="title" >{{ r.name}}</v-card-text> 
+                            </v-img>
+                            
+
+                            <v-card-text
+                            
+                            style="position: relative"
+                            >
+
+                            <h2 class=" font-weight-light black--text text-center">
+                             ${{ r.price}}
+                            </h2>
+                           
+                            </v-card-text>
+                          </v-card>
+                             
+                         </v-col>
+                        
+                     </v-row>
+                     <v-row v-else>
+                          <v-skeleton-loader
+                           height="230"
+                              v-bind="attrs"
+                              type="image, article"
+                            ></v-skeleton-loader>
+                     </v-row>
+                       </v-card>
                 </v-col>
             </v-row>
         </v-container>
@@ -305,7 +298,7 @@
                     <v-carousel-item 
                     v-for="color in details.colors" 
                     :key="color.code"
-                    :src="`../img/modelos/full/${color.code}.jpg`"
+                    :src="`/../../../img/modelos/full/${color.code}.jpg`"
                     >
                     </v-carousel-item>
                 </v-carousel>
@@ -316,11 +309,18 @@
 
 <script>
 
-import VueHZoom from 'vue-h-zoom';
 import { mapActions, mapState, variantsModule, sunblindModule} from 'vuex';
+import SlideColors from '../components/CustomCards/SlideColors';
+import ItemColors from '../components/CustomCards/ItemColors';
+
 export default {
     data(){
         return{
+            attrs: {
+            class: 'mb-6',
+            boilerplate: true,
+            elevation: 2,
+            },
             dialog: false,
             wrapper:  null,
             selected: 0,
@@ -340,9 +340,6 @@ export default {
         
     },
 
-    components:{
-      VueHZoom,
-    },
 
     computed:{
         ...mapState({
@@ -351,23 +348,27 @@ export default {
         }),
 
         getProduct(){
-         return this.$store.state.productsModule.variants.find((variant => variant.slug === this.slugDetail)) || this.$store.state.variantsModule.variant
+         return this.$store.state.productsModule.variants.find((variant => variant.slug === this.slugDetail && variant.type === this.slugType))
         },
+
+
     },
 
     mounted(){
-
-        console.log(this.getProduct)
-        if(this.$route.params.id){
+        if(this.getProduct){
+             if(this.$route.params.id){
+                 document.title = this.getProduct.name
                 this.$store.dispatch('getVariant',this.$route.params.id).then(()=>{
                 this.$store.dispatch('getRelated', this.$route.params.id);
             })  
         }else{
-                this.$store.dispatch('getVariant',this.getProduct.id).then(()=>{
-                this.$store.dispatch('getRelated', this.getProduct.id);
-            })
-           
-       }
+             document.title = this.getProduct.name
+             this.$store.dispatch('getVariant',this.getProduct.id).then(()=>{
+            this.$store.dispatch('getRelated', this.getProduct.id);
+            }) 
+        }
+        }
+       
     },
 
     methods:{
@@ -389,12 +390,28 @@ export default {
            required: true
         },
 
-        isSunblind: {
-            type: Boolean,
-            required: false
-        }
+        slugType: {
+           type:  String,
+           required: true
+        },
 
-    }
+    },
+
+    watch:{
+      getProduct(after, before){
+          if(this.getProduct){
+                document.title = this.getProduct.name
+                this.$store.dispatch('getVariant',this.getProduct.id).then(()=>{
+                this.$store.dispatch('getRelated', this.getProduct.id);
+            })
+          }
+      }
+    },
+
+    components:{
+        SlideColors,
+        ItemColors,
+    },
 }
 </script>
 

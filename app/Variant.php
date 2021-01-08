@@ -62,7 +62,8 @@ class Variant extends Model implements Searchable
 
     public function getSearchResult(): SearchResult
     {
-        $url = route('variants.show', $this->id);
         return new SearchResult($this, $this->name, $this->slug);
     }
+
+
 }

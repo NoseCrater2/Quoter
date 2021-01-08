@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\ErrorMessages;
 use App\Exports\VariantsExport;
 use App\Variant;
@@ -161,17 +162,11 @@ class VariantController extends Controller
        $results = (new Search())
        ->registerModel(Variant::class, function(ModelSearchAspect $modelSearchAspect){
            $modelSearchAspect
+           
            ->addSearchableAttribute('name')
            ->addSearchableAttribute('price')
-           ->with('colors');
+           ->with(['colors:code','type.product:id,slug']);
        })
-       ->registerModel(Sunblind::class, function(ModelSearchAspect $modelSearchAspect){
-        $modelSearchAspect
-        ->addSearchableAttribute('name')
-        ->addSearchableAttribute('price')
-        ->with('colors');
-    })
-       //Aquí de pueden añadir mas modelos y el array indica los atributos por los que se pueden buscar
        ->search($request->input('query'));
 
        return response()->json($results);

@@ -55,7 +55,7 @@ class TypeSeeder extends Seeder
         ]);
 
         Type::create([
-            'name' => 'TRIPLE SHADE/SHANGRI-LA',
+            'name' => 'TRIPLE SHADE - SHANGRI LA',
             'slug' => 'triple-shade-sangri-la',
             'max_width' => 0,
             'min_width' => 0.60,
@@ -87,7 +87,7 @@ class TypeSeeder extends Seeder
         ]);
 
         Type::create([
-            'name' => 'HORIZONTAL DE MADERA 2\'\'',
+            'name' => 'HORIZONTAL DE MADERA 2',
             'slug' => 'horizontal-madera-2',
             'max_width' => 2.40,
             'min_width' => 0.50,
@@ -97,7 +97,7 @@ class TypeSeeder extends Seeder
         ]);
 
         Type::create([
-            'name' => 'HORIZONTAL DE ALUMINIO 1\'\'',
+            'name' => 'HORIZONTAL DE ALUMINIO 1',
             'slug' => 'horizontal-aluminio-1',
             'max_width' => 3,
             'min_width' => 0.40,
@@ -107,7 +107,7 @@ class TypeSeeder extends Seeder
         ]);
 
         Type::create([
-            'name' => 'HORIZONTAL DE ALUMINIO 2\'\'',
+            'name' => 'HORIZONTAL DE ALUMINIO 2',
             'slug' => 'horizontal-aluminio-2',
             'max_width' => 3,
             'min_width' => 0.60,
@@ -164,14 +164,13 @@ class TypeSeeder extends Seeder
             'slug' => 'brazos-invisibles',
             'product_id' => 3,
         ]);
+
+
         Type::create([
             'name' => 'CAÍDA LIBRE',
             'slug' => 'caida-libre',
             'product_id' => 3,
         ]);
-
-
-
-
+        
     }
 }

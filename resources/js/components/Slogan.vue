@@ -1,6 +1,6 @@
 <template>
     <div >
-       <v-row justify="space-between" >
+       <v-row  class="ma-0" >
             <v-col cols="12" align-self="center" class="text-center">
 
                       <div class="d-inline-flex">
@@ -90,7 +90,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .divider{
     border: none;
     height: 5px;
@@ -99,17 +99,14 @@ export default {
 
 .especial{
     font-style: italic;
-    font-weight: 900;
 }
 
 .word{
     font-size: 32px;
-    margin: auto;
-  
 }
 
 .word::after{
-    font-size: 32px;
+font-size: 32px;
 content: "|";
 opacity: 1;
 
@@ -117,4 +114,19 @@ margin-left: 2.5px;
 display: inline-block;
 animation: blink 0.7s infinite;
 }
+
+@media only screen and (max-width: 778px) {
+  h1 {
+    font-size:16px;
+  }
+  .word {
+    font-size:16px;
+  }
+
+  .word::after{
+    font-size: 16px;
+    }
+}
+
+
 </style>

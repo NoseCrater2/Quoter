@@ -1,6 +1,9 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,15 +19,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/stock', function () {
-    return view('stock');
+Auth::routes();
+
+Route::middleware('auth')->get('/user',function (Request $request){
+    return $request->user();
 });
 
-Route::get('models/search', 'VariantController@getSearch');
-
-// Route::get('/quoter', function () {
-//     return view('quoter');
-// });
+Route::get('/models/search', 'VariantController@getSearch');
 
 
 

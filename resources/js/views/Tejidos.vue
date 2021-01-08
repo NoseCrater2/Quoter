@@ -51,12 +51,12 @@
                      </p>
                    
                 </v-col> -->
-                <v-col cols="12" align-self="center" class="text-center" >
-                   <v-row  justify="center" align="center" v-if="getProduct.type === 'BRAZOS INVISIBLES'">
+                <v-col cols="12" align-self="center" class="text-center" v-if="getProduct">
+                   <v-row  justify="center" align="center" v-if="getProduct.types.includes('brazos-invisibles')">
                        <v-col cols="12" md="4" sm="6"  v-for="weave in weaves" :key="weave.id">
                            <v-hover v-slot="{ hover }">
-                           <v-card height="340" width="380" tile flat>
-                                <v-img :src="`../../img/weaves/${weave.slug}.png`" class="align-end"  height="340" width="380" :class="{'opacado':hover}">
+                           <v-card height="340" width="380" tile flat :to="{name: 'Products', params: {slugLine: getProduct.slug, isWeave: true}}">
+                                <v-img :src="`/../../../img/weaves/${weave.slug}.png`" class="align-end"  height="340" width="380" :class="{'opacado':hover}">
                                     <div class="weave d-flex justify-center"  > 
                                         <h3 class="text-center">{{ weave.name}}</h3> 
                                     </div> 
@@ -71,7 +71,7 @@
                        <v-col cols="12" md="4" sm="6"  v-for="weave in weaves" :key="weave.id">
                             <v-hover v-slot="{ hover }">
                                 <v-card height="340" width="380" class="ma-4">
-                                    <v-img class="white--text align-end"  :class="{'escalada':hover}" width="390" height="340" :aspect-ratio="16/9"  :src="`../../img/weaves/${weave.slug}.jpg`" :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
+                                    <v-img class="white--text align-end"  :class="{'escalada':hover}" width="390" height="340" :aspect-ratio="16/9"  :src="`/../../../img/weaves/${weave.slug}.jpg`" :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
                                         <v-slide-y-reverse-transition>
                                             <div v-if="!hover" class="title d-flex transition-fast-in-fast-out justify-center"  > 
                                                 <h3 class="text-center">{{ weave.name}}</h3> 
@@ -84,7 +84,7 @@
                                             style="height: 100%;"
                                             >
                                                 <v-hover v-slot="{ hover }">
-                                                    <v-btn :to="{name: 'Products', params: {slugModel: weave.slug, isWeave: true}}" :outlined="!hover" depressed  tile color="white" >
+                                                    <v-btn :to="{name: 'Products', params: {slugLine: getProduct.slug, isWeave: true}}" :outlined="!hover" depressed  tile color="white" >
                                                         {{ weave.name }}
                                                     </v-btn>
                                                 </v-hover>
@@ -126,8 +126,12 @@ export default {
         }
     },
 
+    created(){
+        document.title = this.slugLine
+    },
+
     mounted(){
-        this.$store.dispatch('getWeaves',this.getProduct.id)
+        this.$store.dispatch('getWeaves',this.slugLine)
     },
     computed:{
         ...mapState({
@@ -136,12 +140,12 @@ export default {
         }),
 
         getProduct(){
-            return  this.$store.state.productsModule.lines.find((line => line.slug === this.slugWeave))
+            return  this.$store.state.productsModule.lines.find((line => line.slug === this.slugLine))
         }   
     },
 
     props:{
-        slugWeave:{
+        slugLine:{
             type: String,
             required: true,
         }

@@ -14,8 +14,9 @@ class Color extends Model
         return $this->belongsToMany(Variant::class);
     }
 
-    public function sunblinds()
+    public function galleries()
     {
-        return $this->belongsToMany(Sunblind::class);
+        return $this->belongsToMany(Gallery::class);
     }
+
 }

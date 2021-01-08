@@ -29,6 +29,11 @@ class Type extends Model
         return $this->hasMany(Variant::class);
     }
 
+    public function galleries()
+    {
+        return $this->hasMany(Gallery::class);
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class);
@@ -37,6 +42,11 @@ class Type extends Model
     public function lines()
     {
         return $this->belongsToMany(Line::class);
+    }
+
+    public function motorizations()
+    {
+        return $this->hasMany(Motorization::class);
     }
 
    

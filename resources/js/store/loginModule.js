@@ -3,12 +3,12 @@
 const loginModule = {
 
     state:{
-        token: localStorage.getItem('access_token') || null,
         loginErrors : [],
         loginStatus: [],
         signupStatus: [],
         signupErrors: [],
         checkStatus: null,
+        isLoggedIn: false,
        
     },
 

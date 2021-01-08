@@ -8,6 +8,8 @@ use App\Line;
 use App\Color;
 use App\Manufacturer;
 use App\Weight;
+use App\Weave;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -17,6 +19,7 @@ use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
+
 use Throwable;
 
 class VariantsImport implements WithHeadingRow, ToCollection, SkipsOnError, WithValidation, SkipsOnFailure
@@ -27,16 +30,29 @@ class VariantsImport implements WithHeadingRow, ToCollection, SkipsOnError, With
 
 public function collection(Collection $rows)
 {
+    if($rows[0]->has('tipo')){
+
+        $type = Type::firstOrCreate([
+            'name' => $rows[0]['tipo'],
+        ]);
+
+        DB::table('variants')->where('type_id', '=', $type->id)->delete();
+    }
+
    
     foreach ($rows as $row) {
         
         $line = null;
+        $tejido = null;
+
+        if($row->has('tipo') && $row['tipo']){
         $type = Type::firstOrCreate([
             'name' => $row['tipo'],
         ]);
 
 
        if($row->has('linea') && $row['linea']){
+
             $line =  Line::firstOrCreate([
                 'name' =>  $row['linea'],
             ],[
@@ -44,13 +60,26 @@ public function collection(Collection $rows)
             ]);
 
             $type->lines()->syncWithoutDetaching([$line->id]);
+
+          
+            if($row->has('tejido') && $row['tejido']){
+            $tejido = Weave::firstOrCreate([
+                'name' => $row['tejido']
+                ],[
+                 'slug' => str_replace(" ", '-', strtolower($row['tejido'])),
+                ]);
+        
+            $line->weaves()->syncWithoutDetaching([$tejido->id]);
+        }
+
+
        }
        
        
 
         $color = Color::firstOrCreate([
-           
             'code' => $row['codigo'],
+            'color' => $row['color'],
         ],
             [
                 'color' => $row['color'],
@@ -59,10 +88,14 @@ public function collection(Collection $rows)
         );
 
         $variant = Variant::firstOrCreate(
-            ['name' => $row['modelo']],
+            [
+                'name' => $row['modelo'],
+                'type_id' => $type->id,
+                'line_id' => $line?$line->id:null,
+            ],
             [
                 'slug' => str_replace(" ", '-',$row['modelo']),
-                'width' => $row->has('ancho')?$row['ancho']:1,
+                'width' => $row->has('ancho') && $row['ancho']?$row['ancho']:1,
                 'finished' => $row->has('acabado') ? $row['acabado'] : null,
                 'strip_width' => $row->has('tira') ? $row['tira'] : 0,
                 'ceiling_price' => $row->has('precio_techo') ? $row['precio_techo'] : 0,
@@ -73,6 +106,7 @@ public function collection(Collection $rows)
                 'curve_price' => $row->has('precio_doble') ? $row['precio_doble'] : 0,
                 'price' => $row->has('precio')?$row['precio']:0,
                 'description' => $row->has('descripcion')?$row['descripcion']:null,
+                'weave_id'=> $tejido != null ? $tejido->id : null,
                 'line_id' => $line != null ? $line->id : null,
                 'type_id' => $type->id,
             ]      
@@ -85,7 +119,7 @@ public function collection(Collection $rows)
                     'weight' => $row['peso'],
                     'width' => $row['ancho_cortinero'],
                     'variant_id' => $variant->id,
-                ],
+                ]
             );
         }
 
@@ -100,68 +134,46 @@ public function collection(Collection $rows)
         $oldColor = $variant->colors->whereStrict('color', $color->color);
        
         if(isset($oldColor[0])){
-            if($oldColor[0]->code !== $color->code){
+           if($oldColor[0]->code !== $color->code){
                 $variant->colors()->detach($oldColor[0]->id);
                 $oldColor[0]->delete();
-            }
+           }
         }
        
         $variant->colors()->syncWithoutDetaching([$color->id]);
 
-       
+    }
     }
 }
  
-public function identifyColor($c, $variant)
-{
-  $color = $variant->colors->firstWhere('color', $c);
-  if($color !== null){
-      return $color;
-  }
-
-
-}
 
 
    public function rules(): array
    {
        return [
-           '*.tipo' => ['required', 'string'],
-           '*.linea' => ['nullable', 'string'],
-           '*.fabricante' => ['nullable','string'],
-           '*.codigo' => ['nullable','string'],
-           '*.codigo_cortinero' => ['numeric'],
-           '*.ancho_cortinero' => ['nullable','numeric', 'min:0'],
-           '*.color' => ['nullable'],
-           '*.rotacion' => ['nullable','in:0,1'],
-           '*.modelo' => ['required','string'],
-           '*.ancho' => ['nullable','numeric', 'min:0'],
-           '*.terminado' => ['nullable','string'],
-           '*.tira' => ['nullable','numeric', 'min:0'],
-           '*.precio' => ['nullable','numeric','min:0'],
-           '*.peso' => ['nullable','numeric','min:0'],
-           '*.ancho_cortinero' => ['nullable','numeric','min:0'],
-           '*.descripcion' => ['nullable','string'],
-           '*.acabado' => ['nullable','string'],
-           '*.peso' => ['nullable','numeric','min:0'],
-           '*.precio_techo' => ['nullable','numeric','min:0'],
-           '*.precio_pared' => ['nullable','numeric','min:0'],
-           '*.precio_pared_extendido' => ['nullable','numeric','min:0'],
-           '*.precio_pared_doble' => ['nullable','numeric','min:0'],
-           '*.precio_techo_pared' => ['nullable','numeric','min:0'],
-           '*.precio_doble' => ['nullable','numeric','min:0'],
+        //    '*.tipo' => ['string'],
+        //    '*.linea' => ['nullable', 'string'],
+        //    '*.fabricante' => ['nullable','string'],
+        //    '*.codigo' => ['nullable','string'],
+        //    '*.codigo_cortinero' => ['numeric'],
+        //    '*.ancho_cortinero' => ['nullable','numeric', 'min:0'],
+        //    '*.color' => ['nullable'],
+        //    '*.rotacion' => ['nullable','in:0,1'],
+        //    '*.modelo' => ['required','string'],
+        //    '*.ancho' => ['nullable','numeric', 'min:0'],
+        //    '*.terminado' => ['nullable','string'],
+        //    '*.tira' => ['nullable','numeric', 'min:0'],
+        //    '*.precio' => ['nullable','numeric','min:0'],
+        //    '*.peso' => ['nullable','numeric','min:0'],
+        //    '*.descripcion' => ['nullable','string'],
+        //    '*.acabado' => ['nullable','string'],
+        //    '*.peso' => ['nullable','numeric','min:0'],
+        //    '*.precio_techo' => ['nullable','numeric','min:0'],
+        //    '*.precio_pared' => ['nullable','numeric','min:0'],
+        //    '*.precio_pared_extendido' => ['nullable','numeric','min:0'],
+        //    '*.precio_pared_doble' => ['nullable','numeric','min:0'],
+        //    '*.precio_techo_pared' => ['nullable','numeric','min:0'],
+        //    '*.precio_doble' => ['nullable','numeric','min:0'],
        ];
    }
-
-//    'description',
-//   'finished',
-//    'weight',
-//    'ceiling_price',
-//    'wall_price',
-//    'wall_extended_price',
-//    'wall_double_price',
-//    'ceiling_wall_price',
-//    'curve_price',
-
-  
 }

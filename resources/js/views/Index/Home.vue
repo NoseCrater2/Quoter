@@ -32,7 +32,7 @@
               <v-list-item-title>Cotizador</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item v-if="user.roles.includes('Administrador') || user.roles.includes('Distribuidor')" @click="showComponent = 4">
+          <v-list-item  @click="showComponent = 4">
             <v-list-item-icon>
               <v-icon>mdi-truck</v-icon>
             </v-list-item-icon>
@@ -40,7 +40,7 @@
               <v-list-item-title>Pedidos</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item v-if="user.roles.includes('Administrador')" @click="showComponent = 5">
+          <v-list-item  @click="showComponent = 5">
             <v-list-item-icon>
               <v-icon>mdi-clipboard-list</v-icon>
             </v-list-item-icon>
@@ -48,7 +48,7 @@
               <v-list-item-title>Inventario</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item v-if="user.roles.includes('Administrador')" @click="showComponent = 2">
+          <v-list-item  @click="showComponent = 2">
             <v-list-item-icon>
               <v-icon>mdi-account-multiple</v-icon>
             </v-list-item-icon>
@@ -83,12 +83,12 @@
           
           <v-toolbar-items >
        
-              <v-btn class="white--text" v-if="user.roles.includes('Administrador')" text :to="{name: 'Users'}">
+              <v-btn class="white--text"  text :to="{name: 'Users'}">
                 Usuarios
               </v-btn>
               <v-divider inset vertical></v-divider>
 
-              <v-menu offset-y v-if="user.roles.includes('Administrador')">
+              <v-menu offset-y >
                 <template v-slot:activator="{attrs, on}">
                   <v-btn v-bind="attrs" v-on="on" class="white--text"  text  >Inventario</v-btn>
                 </template>
@@ -96,15 +96,18 @@
                   <v-list-item v-for="product in products" :key="product.id" :to="{name: 'Stock', params: {slugProduct: product.slug}} ">
                     <v-list-item-title v-text="product.name"></v-list-item-title>
                   </v-list-item>
+                  <v-list-item :to="{name: 'Motorization'}">
+                    <v-list-item-title>MOTORIZACIÓN</v-list-item-title>
+                  </v-list-item>
+                   <v-list-item :to="{name: 'Galleries'}">
+                    <v-list-item-title>GALERÍAS</v-list-item-title>
+                  </v-list-item>
                 </v-list>
               </v-menu>
-
-
-              <v-divider inset vertical></v-divider>
             <v-divider inset vertical></v-divider>
-            <v-btn class="white--text" v-if=" user.roles.includes('Administrador') || user.roles.includes('Distribuidor')"  text :to="{name: 'Orders'}">Pedidos</v-btn>
+            <v-btn class="white--text" text>Pedidos</v-btn>
             <v-divider inset vertical></v-divider>
-             <v-btn class="white--text" v-if=" user.roles.includes('Administrador') || user.roles.includes('Distribuidor')" text :to="{name: 'Quoter'}">Cotizador</v-btn>
+             <v-btn class="white--text"  text :to="{name: 'Quoter'}">Cotizador</v-btn>
             <v-divider inset vertical></v-divider>
 
            
@@ -248,7 +251,9 @@ export default {
     }
   },
 
-
+async  beforeCreate(){
+  this.$store.dispatch("loadUser")
+},
 
 beforeDestroy () {
    if (typeof window === 'undefined') return
@@ -260,15 +265,15 @@ beforeDestroy () {
     this.onResize()
 
     window.addEventListener('resize', this.onResize, { passive: true })
-   if(this.loggedIn){
+  //  if(this.loggedIn){
      
-     this.$store.dispatch('getUser').then(()=>{
-          if(this.getUserStatus === 200){
+  //    this.$store.dispatch('getUser').then(()=>{
+  //         if(this.getUserStatus === 200){
           
-         }
+  //        }
         
-      })
-   }
+  //     })
+  //  }
 
   //  if(this.$router.currentRoute.name !== "Quoter"){
   //        this.$router.push({name: 'Quoter'}); 
@@ -302,7 +307,7 @@ beforeDestroy () {
  computed:{
 
     ...mapState({
-      user: state => state.userModule.user,
+      user: state => state.user,
       products: state => state.productsModule.products,
       loggedIn: state => state.loggedIn,
     }),
