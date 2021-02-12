@@ -4,24 +4,25 @@
             
             <v-row v-if="details.colors">
                 <v-col cols="12" md="4" sm="12" class="mt-3">
-                    <v-card width="400" height="567" >
-                        <v-img  :height="458" :width="380" :src="`/../../../img/modelos/full/${details.colors[position].code}.jpg`"  >
+                    <v-card width="400" max-height="700" >
+                        <v-img  :height="458" :width="380" :src="`/img/modelos/full/${details.colors[position].code}.jpg`"  >
                             <template v-slot:placeholder>
-                                <v-img src="/../../../img/modelos/medium/unavailable.jpg"></v-img>
+                                <v-img src="/img/modelos/medium/unavailable.jpg"></v-img>
                             </template>
                         </v-img>
-                        <v-card-actions v-if="$vuetify.breakpoint.mobile">
+                        <v-card-actions  v-if="$vuetify.breakpoint.mobile">
                              <ItemColors @changeIndex="changeIndex" :colors="details.colors" />
+                            
                         </v-card-actions>
                         <v-card-actions v-else>
                              <SlideColors @openDialog="openDialog" @changeIndex="changeIndex" :colors="details.colors" />
                         </v-card-actions>
                     </v-card>
-
+                     <i style="font-family: Roboto, sans-serif; font-size: 8px">*El color puede variar dependiendo de tu dispositivo</i>
                 </v-col>
                  <v-col cols="12" md="8" sm="12">
                     <v-card  flat>
-                        <v-card-title style="font-size: 2.2em">{{ details.name}}</v-card-title>
+                        <v-card-title :style="$vuetify.breakpoint.mobile?'font-size: 1.1em':'font-size: 2.2em'">{{ details.name}}</v-card-title>
                         <v-divider></v-divider>
                         <div class="d-inline">
                         <div class="display-1 d-inline-flex" style="color: #47a5ad">$ </div>
@@ -80,14 +81,14 @@
                                             <td>TIPO DE PRODUCTO</td>
                                             <td> {{ details.type }} </td>
                                         </tr>
-                                        <tr >
+                                        <tr v-if="details.type != 'HORIZONTAL DE MADERA 2'">
                                             <td>ANCHO MÁXIMO DE TELA</td>
                                             <td v-if="details.max_width == 0">{{ details.width }} </td>
                                             <td v-else>{{details.max_width}}</td>
                                              <td>ANCHO MÍNIMO DE TELA</td>
                                             <td >{{ details.min_width }} </td>
                                         </tr>
-                                        <tr>
+                                        <tr v-if="details.type != 'HORIZONTAL DE MADERA 2'">
                                            <td>ALTO MÁXIMO DE TELA</td>
                                            <td v-if="details.max_height == 0">{{ details.width }} </td>
                                             <td v-else>{{details.max_height}}</td>
@@ -96,7 +97,7 @@
                                             <td >{{ details.min_height }} </td>
                                         </tr>
 
-                                        <tr v-if="details.max_width_rot !== 0">
+                                        <tr v-if="!details.max_width_rot == 0 && !details.type =='HORIZONTAL DE MADERA 2'">
                                             <td>
                                                 ANCHO MÁXIMO ROTADO
                                             </td>
@@ -106,7 +107,7 @@
                                             </td>
                                             <td>{{details.min_width_rot}}</td>
                                         </tr>
-                                         <tr v-if="details.max_width_rot !== 0">
+                                         <tr v-if="!details.max_width_rot == 0 && !details.type =='HORIZONTAL DE MADERA 2'">
                                             <td>
                                                 ALTO MÁXIMO ROTADO
                                             </td>

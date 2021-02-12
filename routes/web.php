@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +19,10 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::get('/clear-all-cache', function() {
+    Artisan::call('config:clear');
+    echo "Cleared all caches successfully.";
+  });
 Auth::routes();
 
 Route::middleware('auth')->get('/user',function (Request $request){

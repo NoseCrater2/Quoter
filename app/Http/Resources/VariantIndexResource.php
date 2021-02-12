@@ -23,7 +23,7 @@ class VariantIndexResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            // 'product' => $this->type->product->slug,
+            'weave' => isset($this->weave)?$this->weave->slug:null,
             'price' => $this->type->name === 'CORTINEROS'? $this->selectPrice(): $this->price,
             'line' => $this->line?$this->line->slug:null,
             'type' => $this->type->slug,

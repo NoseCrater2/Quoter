@@ -24,6 +24,7 @@ class Variant extends Model implements Searchable
         'ceiling_wall_price',//CORTINERO
         'curve_price',//CORTINERO
         'line_id',
+        'weave_id',
         'type_id',
         
     ];

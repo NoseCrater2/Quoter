@@ -134,12 +134,16 @@
                         <v-hover v-slot="{ hover }" v-if="item">
                           <v-card width="240" height="340" color="grey lighten-4"  flat >
                              <!-- -->
-                            <v-img class="white--text align-end"   :class="{'escalada':hover}" width="240" height="270" :aspect-ratio="16/9"  :src="`/../../../../img/modelos/medium/${item.image}.jpg`" :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
+                            <v-img class="white--text align-end"   :class="{'escalada':hover}" width="240" height="270" :aspect-ratio="16/9"  :src="`/img/modelos/medium/${item.image}.jpg`" :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
                               <template v-slot:placeholder>
-                                <v-img src="/../../../../../img/modelos/medium/unavailable.jpg"></v-img>
+                                <v-img src="/img/modelos/medium/unavailable.jpg"></v-img>
                               </template>
                               <v-slide-y-reverse-transition>
-                                <v-card-title v-if="!hover" class="title d-flex transition-fast-in-fast-out justify-center"> <b class="text-center">{{ item.name}}</b> </v-card-title> 
+                                <v-card-title v-if="!hover" class="title d-flex transition-fast-in-fast-out">
+                                  <b class="text-center" style="font-size: 12px; line-height: 20px;" >
+                                    {{ item.name}}
+                                  </b> 
+                                </v-card-title> 
                               </v-slide-y-reverse-transition>
                               <v-slide-x-transition>
                                  <div
@@ -148,7 +152,7 @@
                               style="height: 100%;"
                               >
                               <v-hover v-slot="{ hover }">
-                              <v-btn :to="item.isSunblind?{name: 'SunblindDetails', params: {slugDetail2: item.slug}}:{name: 'Details', params: {slugDetail: item.slug}}" depressed :outlined="!hover" tile color="white"  small>Detalles del producto</v-btn>
+                              <v-btn :to="{name: 'Details', params: {slugWeave:item.weave, slugDetail: item.slug}}" depressed :outlined="!hover" tile color="white"  small>Detalles del producto</v-btn>
                               </v-hover>
                               </div>
                               </v-slide-x-transition>
@@ -232,9 +236,9 @@
               <v-row justify="space-around">
                 <v-col cols="12" md="6"  sm="12">
                   <!-- :src="`img/modelos/medium/${item.image}`" -->
-                  <v-img :width="350" :height="475" :src="`../../../img/modelos/full/${getSelectedProduct.image}.jpg`" >
+                  <v-img :width="350" :height="475" :src="`/img/modelos/full/${getSelectedProduct.image}.jpg`" >
                       <template v-slot:placeholder>
-                          <v-img src="../../../img/modelos/medium/unavailable.jpg"></v-img>
+                          <v-img src="/img/modelos/medium/unavailable.jpg"></v-img>
                       </template>
                   </v-img>
                
@@ -313,6 +317,7 @@ export default {
 
         this.onResize()
         window.addEventListener('resize', this.onResize, { passive: true })
+       
     },
 
     props:{
@@ -330,15 +335,19 @@ export default {
           required: true,
         },
 
-        isWeave:{
-           type: Boolean,
+        slugWeave:{
+            type: String,
+            required: false,
         }
     },
 
     computed:{
 
     products(){
-      if(this.slugLine){
+      if(this.slugWeave){
+         return this.$store.state.productsModule.variants.filter((variant) => variant.type === this.slugType && variant.line === this.slugLine && variant.weave === this.slugWeave)
+      }
+      else if(this.slugLine){
         return this.$store.state.productsModule.variants.filter((variant) => variant.type === this.slugType && variant.line === this.slugLine)
       }else{
          return this.$store.state.productsModule.variants.filter((variant) => variant.type === this.slugType) 
@@ -434,7 +443,11 @@ width: 100%;
 }
 
 .title{
-  background-color: #47a5ad; padding: 5px; font-size: 1rem; word-break: break-word !important;
+  background-color: #47a5ad; 
+  padding: 5px; 
+  word-break: break-word !important;
+  line-height: 12px;
+  font-size: 12px !important;
 }
 
 .escalada{

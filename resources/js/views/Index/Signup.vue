@@ -137,7 +137,6 @@ export default {
             this.loading = false
           this.$store.dispatch('retrieveToken',this.credentials).then(()=>{
           if(this.loginStatus === 200){
-            console.log('se logeó')
             this.$router.push({ path: '/' })
             this.$router.go()
          }

@@ -117,7 +117,7 @@ class TypeSeeder extends Seeder
         ]);
 
         Type::create([
-            'name' => 'CELULAR',
+            'name' => 'PERSIANAS CELULARES',
             'slug' => 'celular',
             'max_width' => 3,
             'min_width' => 0.60,

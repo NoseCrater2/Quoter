@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\ErrorMessages;
-
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\MyInfoResource;
 use App\Http\Resources\UserIndexResource;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\UserSaved;
  
 
 class UserController extends Controller
@@ -40,10 +41,15 @@ class UserController extends Controller
    {
     $data = $request->all();
         $rules =[
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users',
-            "roleIds"    => "required|array|min:1",
-            "roleIds.*"  => "required|exists:roles,id|distinct|min:1",
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'last_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:15',
+            'address' => 'required|max:255',
+            'zip_code' => 'required|max:10',
+            'discount_percent' => 'required|numeric|min:0|max:99',
+            // "roleIds"    => "required|array|min:1",
+            // "roleIds.*"  => "required|exists:roles,id|distinct|min:1",
             
         ];
 
@@ -53,11 +59,16 @@ class UserController extends Controller
             return response($validator->errors(),422);
             
         }else{
-                $data['password'] = bcrypt('password');
-                $user = User::create($data);
-                $user->roles()->sync($request->get('roleIds'));
+           $pass = User::make_password();
+
+            $data['password'] = $pass;
+            $user = User::make($data);
+            Mail::to($user)->send(new UserSaved($user));
+            $user->password = bcrypt($user->password);
+            $user->save();
+            // $user->roles()->sync($request->get('roleIds'));
         
-                return new UserIndexResource(User::findOrFail($user->id));
+            return new UserIndexResource(User::findOrFail($user->id));
             
             
         }

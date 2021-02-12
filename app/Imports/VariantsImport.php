@@ -30,7 +30,7 @@ class VariantsImport implements WithHeadingRow, ToCollection, SkipsOnError, With
 
 public function collection(Collection $rows)
 {
-    if($rows[0]->has('tipo')){
+    if(isset($rows[0]) && $rows[0]->has('tipo')){
 
         $type = Type::firstOrCreate([
             'name' => $rows[0]['tipo'],
@@ -94,7 +94,7 @@ public function collection(Collection $rows)
                 'line_id' => $line?$line->id:null,
             ],
             [
-                'slug' => str_replace(" ", '-',$row['modelo']),
+                'slug' =>  preg_replace("[\W]", "-", $row['modelo']),
                 'width' => $row->has('ancho') && $row['ancho']?$row['ancho']:1,
                 'finished' => $row->has('acabado') ? $row['acabado'] : null,
                 'strip_width' => $row->has('tira') ? $row['tira'] : 0,

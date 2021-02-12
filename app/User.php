@@ -24,11 +24,15 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 'email', 'password',
-        'fiscal_address',
-        'shipping_address',
-        'phone_number',
-        'movil_number',
+        'last_name',
+        'company',
+        'address',
+        'city',
+        'state',
+        'zip_code',
+        'phone',
         'logo',
+        'comments',
         'discount_percent',
     ];
 
@@ -49,4 +53,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function make_password(){
+        $pass = '';
+        $pass = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 8);
+        return $pass;
+    }
 }

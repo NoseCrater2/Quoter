@@ -1,7 +1,8 @@
 <template>
     <div id="app">
-         <v-carousel :hide-delimiters="isMobile?false:true" :show-arrows="!isMobile" height="50vh" style="min-height: 350px" continuous  cycle  > 
+         <v-carousel  :hide-delimiters="isMobile?false:true" :show-arrows="!isMobile" height="50vh" style="min-height: 350px" continuous  cycle  > 
             <v-carousel-item
+            eager
             :to="{name: 'Categories', params: {slugProduct: 'PERSIANAS'}}"
             v-for="(item, i) in persianas"
             :key="i">

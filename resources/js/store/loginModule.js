@@ -3,6 +3,7 @@
 const loginModule = {
 
     state:{
+        registerErrors: [],
         loginErrors : [],
         loginStatus: [],
         signupStatus: [],
@@ -45,9 +46,14 @@ const loginModule = {
 
        },
 
+        setRegisterErrors(state, errors){
+        state.registerErrors = errors
+        },
+
        setSignupErrors(state, errors){
         state.signupErrors = errors
         },
+
         setSignupStatus(state, status){
             state.signupStatus = status
         },
@@ -109,6 +115,16 @@ const loginModule = {
             commit('setSignupStatus',error.response.status);
           }
 
+      },
+
+      registerClient: async function ({ commit, state },  data){
+           
+        try {
+            const request = await axios
+            .post("/api/registerClient", data)
+        } catch (error) {
+            commit('setRegisterErrors',error.response.data)
+        }
       },
 
       checkPasword: async function ({ commit, state }, intent){

@@ -1,5 +1,4 @@
 <template>
-  <div id="app">
     <v-app>
         <v-navigation-drawer app v-model="drawer" style="z-index: 8;" temporary>
             <v-divider></v-divider>
@@ -9,16 +8,17 @@
                         <v-icon>mdi-home</v-icon>
                     </v-list-item-icon>
                 </v-list-item>
-                <!-- <v-divider></v-divider>
-                <v-list-item >
-                    <v-list-item-content>
-                        <v-list-item-title>GALERÍA</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item> -->
+                
                 <v-divider></v-divider>
                 <v-list-item to="/contact">
                     <v-list-item-content>
                         <v-list-item-title>CONTACTO</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-divider></v-divider>
+                <v-list-item :to="{name: 'Register'}">
+                    <v-list-item-content>
+                        <v-list-item-title>INTERIORISTAS</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
                 <v-divider></v-divider>
@@ -49,7 +49,7 @@
          
 
             <!-- COMIENZA BARRA DE NAVEGACIÓN -->         
-            <v-app-bar ref="mybar" :color="isMobile?'white':'#47a5ad'" style="position: sticky; top:0; z-index: 7">
+            <v-app-bar ref="mybar" :color="isMobile?'white':'#47a5ad'" style="position: sticky; top:0; z-index: 7; max-height: 64px">
              
                  <v-app-bar-nav-icon v-if="isMobile" @click="drawer = true">
                  </v-app-bar-nav-icon>
@@ -116,6 +116,7 @@
                     <v-icon size="30">mdi-home</v-icon>
                 </v-btn>
                 <v-btn color="white" text height="65px" to="/aboutus" >Nosotros</v-btn>
+                <v-btn color="white" text height="65px" to="/client-register">Interioristas</v-btn>
                 <!-- <v-btn color="white" text height="65px">Galería</v-btn> -->
                 <v-btn color="white" text height="65px" to="/contact">Contáctanos</v-btn>
                 <v-spacer  ></v-spacer>
@@ -168,9 +169,9 @@
 
              <v-main>
                 <!-- <v-btn max-width="500" tile left fixed style="z-index: 100"> -->
-                  <v-container  style="width: 1200px; margin: auto" class="pa-0">
+                 <!--  <v-container  style="width: 1200px; margin: auto" class="pa-0">
                 
-                 <!-- <v-breadcrumbs 
+                 <v-breadcrumbs 
                :items="breadCrumbs"
                divider=">"
                class="pa-3"
@@ -190,35 +191,40 @@
                     </router-link>
                   </template>
                 
-               </v-breadcrumbs> -->
-               </v-container>
-                  <btnCotizador/>
+               </v-breadcrumbs>
+               </v-container> -->
+                  <btnCotizador />
                   <btnMail @clicked="btnMailCliked"></btnMail>               
              
                   <router-view :key="$route.path"></router-view>
               
                <!-- <btnSocialMedia/> -->
             </v-main>
-
+            <!-- <DialogInvite/>
+             <FakeNotification/> -->
              <!-- EMPIEZA FOOTER -->
-             <theFooter :isMobile="isMobile"/>
+             <theFooter v-if="!$route.path.includes('quoter')"  :isMobile="isMobile"/>
              <!-- TERMINA FOOTER -->
-
              <mailDialog @clickCloseDialog="closeDialog" :openDialog="dialog"/>
-       
-                   
+             
+             <div class="d-flex justify-center" style="background-color: black; color: #616161; font-size: 10px">
+               <span>Rollux México® {{(new Date()).getFullYear()}}  |  Hecho por Grupo Lidhber®</span>
+             </div>
+
+             
         </v-app>
-    </div>
 </template>
 
 <script>
 
-import { mapActions, mapState, productModule} from 'vuex';
+import {mapState} from 'vuex';
 import btnCotizador from '../../components/Index/TheCuoterButton';
 import btnMail from '../../components/Index/TheMailButton';
 import whiteBar from '../../components/Index/TheWhiteBar';
 import theFooter from '../../components/Index/TheFooter';
 import mailDialog from '../../components/Index/TheMailDialog';
+// import DialogInvite from '../../components/DialogInvite';
+// import FakeNotification from '../../components/FakeNotification';
 
 
 export default {    
@@ -242,6 +248,8 @@ export default {
       whiteBar,
       theFooter,
       mailDialog,
+      // DialogInvite,
+      // FakeNotification,
     },
     watch:{
       query(after, before){

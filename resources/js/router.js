@@ -71,6 +71,7 @@ const routes = [
                 }
 
             },
+            
         ]
 
     },
@@ -93,13 +94,23 @@ const routes = [
                 meta: { breadCrumb: 'Home' },
             },
             {
+                path: "compressor",
+                component: () => import("./views/Compressor"),
+                name: "Compressor",
+            },
+            {
                 /* webpackChunkName: Aboutus*/
                 path: 'aboutus',
                 component: () => import("./views/Nosotros"),
                 name: 'About us',
-                meta: { hierarchy: 1 },
 
 
+            },
+            {
+                path: 'client-register',
+                component: () => import("./views/Register"),
+                name: 'Register',
+  
             },
             {
                 /* webpackChunkName: Aboutus*/
@@ -134,34 +145,14 @@ const routes = [
                 name: 'Lines',
                 props: true,
             },
-
-
-            {
-                path: '/:slugProduct/:slugType/:slugLine?',
-                // alias: [
-                //     '/:slugProduct/:slugType/tejido/:slugWave/:slugLine',
-                //     '/:slugProduct/:slugType'
-                // ],
-                component: { template:`<router-view :key="$route.path" ></router-view>`},
-                props: true,
-                children: [
-                    {
-                        path: '',
-                        name: 'Products',
-                        props: true,
-                        component: () => import("./components/Products"),
-                    }
-                ]
-            },
             {
                 path: '/:slugProduct/:slugType/tejidos/:slugLine',
                 name: 'Tejidos',
                 props: true,
                 component: () => import("./views/Tejidos"),
             },
-
             {
-                path: '/:slugProduct/:slugType/:slugLine?/detalles/:slugDetail',
+                path: '/:slugProduct/:slugType/:slugLine?/:slugWeave?/detalles/:slugDetail',
                 name: 'Details',
                 component: () => import("./components/ProductDetail"),
                 meta: {
@@ -169,6 +160,27 @@ const routes = [
                 },
                 props: true,
             },
+            {
+                path: '/:slugProduct/:slugType/:slugLine?/:slugWeave?',
+                // alias: [
+                //     '/:slugProduct/:slugType/tejido/:slugWave/:slugLine',
+                //     '/:slugProduct/:slugType'
+                // ],
+                name: 'Products',
+                component: () => import("./components/Products"),
+                props: true,
+                // children: [
+                //     {
+                //         path: '',
+                //         
+                //         props: true,
+                //         component: () => import("./components/Products"),
+                //     }
+                // ]
+            },
+            
+
+            
            
         ],
     },

@@ -2,6 +2,8 @@
 
 const usersModule = {
     state: {
+        registerErrors: [],
+        registerStatus: 0,
         users: [],
         usersStatus: null,
         usersErrors: [], 
@@ -14,6 +16,14 @@ const usersModule = {
     },
 
     mutations: {
+        setRegisterErrors(state, errors){
+            state.registerErrors = errors
+        },
+
+        setRegisterStatus(state, status){
+            state.registerStatus = status
+        },
+
         setUsers(state, users){
             state.users = users
         },
@@ -79,8 +89,7 @@ const usersModule = {
            
             try {
                 const response = await axios
-                .post("/api/users/",newUser,{
-                    headers: {Authorization: "Bearer "+localStorage.getItem('access_token')}})
+                .post("/api/users/",newUser)
                 
                 commit('setUsersStatus',response.status);
                 commit('saveUser',response.data.data);
@@ -90,6 +99,20 @@ const usersModule = {
                  commit('setUsersStatus',error.response.status);
               }
           },
+
+          registerClient: async function ({ commit, state },  data){
+           
+            try {
+                const request = await axios
+                .post("/api/register-client", data)
+                commit('setRegisterStatus', request.status)
+            } catch (error) {
+                commit('setRegisterErrors',error.response.data)
+                commit('setRegisterStatus', error.response.status)
+            }
+          },
+
+        
     }
 }
 

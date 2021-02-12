@@ -50,23 +50,89 @@
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col cols="12">
-                      <v-text-field v-model="editedItem.name" label="Nombre" :error-messages="errors.name"></v-text-field>
+                    <v-col class="pb-0" cols="12" md="6" sm="12">
+                      <v-text-field dense outlined v-model="editedItem.name" label="Nombre" :error-messages="errors.name"></v-text-field>
                     </v-col>
-                    <v-col cols="12">
-                      <v-text-field v-model="editedItem.email" label="Email" :error-messages="errors.email"></v-text-field>
+                    <v-col class="pb-0" cols="12" md="6" sm="12">
+                      <v-text-field
+                      dense
+                      outlined
+                      v-model="editedItem.last_name"
+                      label="Apellido(s)"
+                      ></v-text-field>
                     </v-col>
-                    <v-col cols="12" >
-                      <v-select
-                      :error-messages="errors.roleIds"
-                        v-model="editedItem.roles"
-                        :items="roles"
-                        item-value="name"
-                        item-text="name"
-                        label="Roles"
-                        multiple
-                        chips
-                      ></v-select>
+                  </v-row>
+                 
+                  <v-row>
+                     <v-col class="pb-0" cols="12" md="6" sm="12">
+                      <v-text-field
+                      dense
+                      outlined
+                      v-model="editedItem.phone"
+                      label="Teléfono"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col class="pb-0" cols="12" md="6" sm="12">
+                      <v-text-field dense outlined v-model="editedItem.email" label="Email" :error-messages="errors.email"></v-text-field>
+                    </v-col>
+                    
+                  </v-row>
+                  <v-row>
+                    <v-col class="pb-0" cols="12" md="6" sm="12">
+                      <v-text-field
+                      dense
+                      outlined
+                      v-model="editedItem.address"
+                      label="Dirección"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col class="pb-0" cols="12" md="6" sm="12">
+                      <v-text-field
+                      dense
+                      outlined
+                      v-model="editedItem.city"
+                      label="Ciudad"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    
+                    <v-col class="pb-0" cols="12" md="6" sm="12">
+                      <v-text-field
+                      dense
+                      outlined 
+                      v-model="editedItem.state"
+                      label="Estado"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col class="pb-0" cols="12" md="6" sm="12">
+                      <v-text-field
+                      dense
+                      outlined
+                      v-model="editedItem.zip_code"
+                      label="Código Postal"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+               
+                  <v-row>
+                     <v-col class="pb-0" cols="12" md="6" sm="12">
+                      <v-text-field
+                      dense
+                      outlined
+                      v-model="editedItem.company"
+                      label="Empresa"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col class="pb-0" cols="12" md="6" sm="12">
+                      <v-text-field
+                      prefix="%"
+                      v-model="editedItem.discount_percent"
+                      dense
+                      type="number"
+                      outlined
+                      label="Descuento"
+                      ></v-text-field>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -136,7 +202,7 @@ export default {
     data(){
         return {
           loadingTable: false,
-            usersDialog: false,
+            usersDialog: Object.keys(this.$route.query).length == 0?false:true,
             tab: null,
             search: "",
             searchRole: "",
@@ -170,15 +236,28 @@ export default {
 
       editedIndex: -1,
     editedItem: {
-      name: '',
-      email: '',
-      roles: '',
-      
+        name: this.$route.query.name || null,
+        last_name: this.$route.query.last_name || null,
+        email: this.$route.query.email || null,
+        phone: this.$route.query.phone || null,
+        address: this.$route.query.address || null,
+        company: this.$route.query.company || null,
+        city: this.$route.query.city || null,
+        state: this.$route.query.state || null,
+        zip_code: this.$route.query.zip_code || null,
+        discount_percent: 0,
     },
     defaultItem: {
-      name: '',
-      email: '',
-      roles: '',
+      name: null,
+      last_name: null,
+      email: null,
+      phone: null,
+      address: null,
+      company: null,
+      city: null,
+      state: null,
+      zip_code: null,
+      ddiscount_percent: 0,
     },
      
         }
@@ -191,13 +270,13 @@ export default {
             this.loadingTable = false
          }
          this.loadingTable = false
-        }),
-        this.$store.dispatch('getroles').then(()=>{
-          if(this.getRolesStatus === 200){
-           
-         }
-        
         })
+        // this.$store.dispatch('getroles').then(()=>{
+        //   if(this.getRolesStatus === 200){
+           
+        //  }
+        
+        // })
 
     },
 

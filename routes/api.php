@@ -20,7 +20,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login', 'Api\AuthController@login');
 Route::post('logout', 'Api\AuthController@logout');
+// registerClient
 Route::post('register', 'Api\AuthController@register');
+Route::post('register-client', 'Api\AuthController@registerClient');
 
 
 
@@ -81,7 +83,7 @@ Route::get('getRelatedBlinds/{sunblind}' , 'SunblindController@getRelatedBlinds'
 
 
 Route::get('getColors/{variant}' , 'VariantController@getColors');
-
+Route::post('users' , 'UserController@store')->name('users.store');
 Route::middleware(['auth:api'])->group(function()
 {
 
@@ -102,7 +104,7 @@ Route::middleware(['auth:api'])->group(function()
     // Route::get('products/{product}/edit' , 'Api\ProductController@edit')->name('products.edit')->middleware('can:products.edit');
 
     //users
-   Route::post('users' , 'UserController@store')->name('users.store');
+  
     Route::get('users','UserController@index')->name('users.index');
     //Route::get('products/create' , 'ProductController@create')->name('products.create')->middleware('permission:products.create');
     Route::put('users/{user}','UserController@update')->name('users.update');
