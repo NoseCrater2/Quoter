@@ -35,6 +35,13 @@ const routes = [
             },
 
             {
+                path: "orders",
+                component: () => import("./views/Users/Orders"),
+                name: "Orders",
+
+            },
+
+            {
                 path: "stock/:slugProduct",
                 component: () => import("./components/Stock"),
                 name: "Stock",
@@ -186,21 +193,6 @@ const routes = [
     },
 
 
-    
-
-
-
-   
-
-
-    {
-        path: "/signup",
-        component: () => import("./views/Index/Signup"),
-        name: "signup",
-
-
-    },
-
     {
         path: "/404",
         alias: "*",
@@ -218,6 +210,21 @@ const router = new VueRouter({
         return {x:0, y:0}
     }
 });
+
+router.beforeEach((to, from, next) => {
+    if(to.matched.some(record => record.meta.requiresAuth)){
+        if(store.state.isLoggedIn == 'false' || store.state.isLoggedIn == false){
+            console.log(store.state.isLoggedIn)
+            next({
+                name: 'login'
+            })
+        }else{
+            next()
+        }
+    }else{
+        next();
+    }
+})
 
 
 

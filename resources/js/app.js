@@ -6,7 +6,6 @@ import router from "./router";
 
 import vuetify from './plugins/vuetify'
 import App from './App.vue';
-import Stock from "./components/Stock";
 
 // import Vuex from "vuex";
 
@@ -30,6 +29,17 @@ import Stock from "./components/Stock";
 
 
 window.Vue = require('vue');
+window.axios.interceptors.response.use(
+  response => {
+    return response
+  }, 
+  error => {
+    if(401 === error.response.status){
+      store.dispatch("logout")
+    }
+    return Promise.reject(error)
+  }
+)
 
 
 
@@ -42,10 +52,10 @@ const app = new Vue({
     store,
     components: {
       App,
-    // Index,
-    Stock,
-    // Quoter
     },
+    async beforeCreate() {
+      this.$store.dispatch("loadStoredState");
+  },
 
 });
 

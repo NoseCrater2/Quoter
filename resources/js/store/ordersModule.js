@@ -4,16 +4,14 @@ const ordersModule = {
     state:{
       orders:[],
       totalPrice: 0,
+      quotedOrders: [],
+      quotedOrder: [],
        
     },
 
 
     getters:{
        
-        getPrice(state) {
-            
-            return 0
-          },
 
         countBlinds(state){
             return state.orders.length
@@ -32,7 +30,10 @@ const ordersModule = {
             
             return prices
             
-        }
+        },
+
+
+
     },
     mutations:{
         saveOrder(state,newOrder){
@@ -40,6 +41,14 @@ const ordersModule = {
             //state.newUserId = newUser.id;
           },
 
+          setQuotedOrders(state, orders){
+            state.quotedOrders = orders
+            //state.newUserId = newUser.id;
+          },
+          setQuotedOrder(state, order){
+            state.quotedOrder = order
+            //state.newUserId = newUser.id;
+          },
           pushProductToCart (state, item){
               state.orders.push(item)
           },
@@ -92,6 +101,32 @@ const ordersModule = {
         
         deleteOrder(context,id){
              context.commit('deleteOrder',id);
+        },
+
+        saveOrders: async function ({ commit}, orders){
+            console.log(orders)
+            try {
+                const response = await axios
+                .post("/api/orders", {'orders':orders})
+                // commit('setProducts',response.data.data);
+            } catch (error) {}
+        
+        },
+
+        getQuotedOrders: async function ({ commit, state }){
+            try {
+                const response = await axios
+                .get("/api/orders/")
+                commit('setQuotedOrders',response.data.data);
+            } catch (error) {}
+        },
+
+        getQuotedOrder: async function ({ commit, state },id){
+            try {
+                const response = await axios
+                .get("/api/orders/"+id)
+                commit('setQuotedOrder',response.data.data);
+            } catch (error) {}
         },
     },
 }

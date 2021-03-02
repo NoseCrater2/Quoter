@@ -76,7 +76,7 @@ public function collection(Collection $rows)
        }
        
        
-
+    
         $color = Color::firstOrCreate([
             'code' => $row['codigo'],
             'color' => $row['color'],
@@ -95,7 +95,7 @@ public function collection(Collection $rows)
             ],
             [
                 'slug' =>  preg_replace("[\W]", "-", $row['modelo']),
-                'width' => $row->has('ancho') && $row['ancho']?$row['ancho']:1,
+                'width' => $row->has('ancho') && $row['ancho']?floatval(preg_replace("[\,]",'.',$row['ancho'])):1,
                 'finished' => $row->has('acabado') ? $row['acabado'] : null,
                 'strip_width' => $row->has('tira') ? $row['tira'] : 0,
                 'ceiling_price' => $row->has('precio_techo') ? $row['precio_techo'] : 0,
@@ -116,6 +116,7 @@ public function collection(Collection $rows)
            Weight::firstOrCreate(
                 ['code' => $row['codigo_cortinero']],
                 [
+                    'code' => $row[''],
                     'weight' => $row['peso'],
                     'width' => $row['ancho_cortinero'],
                     'variant_id' => $variant->id,
@@ -175,5 +176,24 @@ public function collection(Collection $rows)
         //    '*.precio_techo_pared' => ['nullable','numeric','min:0'],
         //    '*.precio_doble' => ['nullable','numeric','min:0'],
        ];
+   }
+
+   function addZeros($code){
+    if($code[strlen($code)-1] == 'T'){
+        if(strlen($code) < 12){
+         
+          return $this->addZeros('0'.$code);
+          
+        }else{
+            return $code;
+        }
+        
+    }else{
+        if(strlen($code) < 11){
+         return $this->addZeros('0'.$code);
+        }else{
+            return $code;
+        }
+    }	
    }
 }

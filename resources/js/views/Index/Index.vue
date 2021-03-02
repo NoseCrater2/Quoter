@@ -140,19 +140,19 @@
                 <!-- '/:slugProduct/:slugType/:slugLine?/detalles/:slugDetail' -->
                 <template v-for="(item, index) in items" >
                   <v-list-item :key="index" style="background-color: white" 
-                  :to="{name: 'Details', params: {slugProduct:item.searchable.type.product.slug,slugType:item.searchable.type.slug,slugDetail: item.url, id: item.searchable.id}}"
+                  :to="{name: 'Details', params: {slugProduct:item.product,slugType:item.type,slugDetail: item.slug, id: item.id}}"
                   >
-                      <v-img max-width="60" :src="item.searchable.colors.length > 0?`../img/modelos/tumb/${item.searchable.colors[0].code}.jpg`:null"></v-img>
+                      <v-img max-width="60" :src="`../img/modelos/tumb/${item.image}.jpg`"></v-img>
                  
                     <v-list-item-content class="ma-1">
-                      <v-list-item-title style="font-size: 1em;" >{{item.searchable.name}}</v-list-item-title>
-                      <v-list-item-subtitle style="color: #47a5ad; font-size: 1em" >${{item.searchable.price}}MXN</v-list-item-subtitle>
+                      <v-list-item-title style="font-size: 1em;" >{{item.name}}</v-list-item-title>
+                      <v-list-item-subtitle style="color: #47a5ad; font-size: 1em" >${{item.price}}MXN</v-list-item-subtitle>
                     </v-list-item-content>
-                    <v-list-item-action>
+                    <!-- <v-list-item-action>
                       <v-icon color="#47a5ad" v-if="item.searchable.type.product.slug === 'PERSIANAS'">mdi-blinds</v-icon>
                       <v-icon color="#47a5ad" v-else-if="item.searchable.type.product.slug === 'CORTINAS'" >mdi-script</v-icon>
                        <v-icon color="#47a5ad" v-else>mdi-storefront</v-icon>
-                    </v-list-item-action>
+                    </v-list-item-action> -->
                   </v-list-item>
                 </template>
               </v-list>
@@ -231,7 +231,7 @@ export default {
     data(){
         return{
           query: null,
-        
+        items: [],
           showSearch: false,
           dialog: false,
           isMobile:false,
@@ -248,6 +248,7 @@ export default {
       whiteBar,
       theFooter,
       mailDialog,
+      
       // DialogInvite,
       // FakeNotification,
     },
@@ -279,7 +280,7 @@ export default {
     computed:{
       ...mapState({
       products: state => state.productsModule.products,
-      items: state => state.variantsModule.searchedVariants,
+      // items: state => state.variantsModule.searchedVariants,
     }),
 
 
@@ -312,7 +313,7 @@ export default {
     },
 
     searchProducts(){
-     this.$store.dispatch('getSearchedVariants',this.query) 
+     this.items = this.$store.state.productsModule.variants.filter((t) => t.name.includes(this.query))
     },
 
     btnMailCliked(value){

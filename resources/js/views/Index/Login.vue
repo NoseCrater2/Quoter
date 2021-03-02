@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <v-app id="inspire">
+
+    <v-app style="background-color:#3ba2a9 " >
       <v-dialog v-model="dialog" persistent max-width="500px">
         <v-card class="elevation-4">
           <v-toolbar color="#3ba2a9" dark flat>
@@ -33,7 +33,7 @@
 
               <p class="text-center">
                 ¿Quieres cotizar y no eres distribuidor?
-                <router-link to="/signup"> Reguistrate aquí</router-link>
+                <router-link :to="{name:'Register', hash: '#formulary'}"> Reguistrate aquí</router-link>
               </p>
             </v-form>
           </v-card-text>
@@ -53,7 +53,7 @@
         </v-card>
       </v-dialog>
     </v-app>
-  </div>
+ 
 </template>
 
 <script>
@@ -92,8 +92,10 @@ export default {
 
         logIn()
 
-        this.$store.dispatch("loadUser")
-        this.$router.push({name: "Dashboard"})
+        this.$store.dispatch("loadUser").then(()=>{
+          this.$router.push({name: "Dashboard"})
+        })
+        
       } catch (error) {
         this.getLoginErrors = error.response && error.response.data.errors
       }
@@ -113,7 +115,7 @@ export default {
     // },
 
     cancel() {
-      this.$router.push({ name: "Home" });
+      this.$router.back()
     },
   },
   components: {},

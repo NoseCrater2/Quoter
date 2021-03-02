@@ -4,7 +4,7 @@
             
             <v-row v-if="details.colors">
                 <v-col cols="12" md="4" sm="12" class="mt-3">
-                    <v-card width="400" max-height="700" >
+                    <v-card width="400"  >
                         <v-img  :height="458" :width="380" :src="`/img/modelos/full/${details.colors[position].code}.jpg`"  >
                             <template v-slot:placeholder>
                                 <v-img src="/img/modelos/medium/unavailable.jpg"></v-img>
@@ -22,7 +22,11 @@
                 </v-col>
                  <v-col cols="12" md="8" sm="12">
                     <v-card  flat>
-                        <v-card-title :style="$vuetify.breakpoint.mobile?'font-size: 1.1em':'font-size: 2.2em'">{{ details.name}}</v-card-title>
+                        <v-card-title >
+                            <b class="text-center" :style="$vuetify.breakpoint.mobile?'font-size: 1.1em':'font-size: 2em'">
+                                  {{ details.name}}
+                            </b>
+                            </v-card-title>
                         <v-divider></v-divider>
                         <div class="d-inline">
                         <div class="display-1 d-inline-flex" style="color: #47a5ad">$ </div>

@@ -73,7 +73,7 @@
             <v-container class="pa-0" fluid style="max-width: 950px; margin: auto">
                 
             
-                <v-form ref="form" class="mb-16" >
+                <v-form ref="form" id="formulary" class="mb-16" >
                     <div class="justify-center" >
                         <h1 class="text-center">DATOS BÁSICOS</h1> 
                     </div>

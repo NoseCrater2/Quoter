@@ -36,7 +36,7 @@ const store = new Vuex.Store({
     signupStatus: [],
     signupErrors: [],
     checkStatus: null,
-    isLoggedIn: false,
+    isLoggedIn: localStorage.getItem('isLoggedIn') || false,
     user: {},
    
 },
@@ -104,7 +104,8 @@ actions:{
         commit("setLoggedIn", true)
 
       } catch (error) {
-        dispatch("logout")
+          dispatch("logout")
+        
       }
     }
   }, 
@@ -176,6 +177,10 @@ actions:{
       }
 
   },
+
+  loadStoredState(context) {
+    context.commit("setLoggedIn", isLoggedIn());
+},
 
       
 },

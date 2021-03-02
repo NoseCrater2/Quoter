@@ -59,4 +59,9 @@ class User extends Authenticatable
         $pass = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 8);
         return $pass;
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

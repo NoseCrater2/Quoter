@@ -76,7 +76,9 @@
       >
         <v-app-bar-nav-icon v-if="isMobile" @click="drawer = true"></v-app-bar-nav-icon>
   
-        <v-toolbar-title>ROLLUX</v-toolbar-title>
+        
+          <v-img v-if="user" max-width="128" :src="`/img/${user.logo}`"></v-img>
+        
   
          <v-spacer></v-spacer>
           
@@ -105,7 +107,7 @@
                 </v-list>
               </v-menu>
             <v-divider inset vertical></v-divider>
-            <v-btn class="white--text" text>Pedidos</v-btn>
+            <v-btn class="white--text" text :to="{name: 'Orders'}">Pedidos</v-btn>
             <v-divider inset vertical></v-divider>
              <v-btn class="white--text"  text :to="{name: 'Quoter'}">Cotizador</v-btn>
             <v-divider inset vertical></v-divider>
@@ -231,6 +233,7 @@
 
 
 import {mapGetters, mapActions, mapState } from 'vuex';
+import { logOut } from '../../utils/auth';
 // import Quoter from "../../components/Quoter";
 // import BlindSteps from "../Index/BlindSteps";
 export default {
@@ -293,15 +296,14 @@ beforeDestroy () {
     },
 
     logout(){
-      this.$store.dispatch('destroyToken',this.credentials).then(()=>{
-          if(this.getLoginStatus === 200){
-           this.snackbar = true
-           
-         this.$router.push({name:'index'});
-         
-         }
-        
-        })
+     try {
+       axios.post("/logout");
+       this.$store.dispatch("logout").then(()=>{
+         this.$router.push({name: "Home"})
+       });
+     } catch (error) {
+       this.$store.dispatch("logout");
+     }
     }
   },
  computed:{

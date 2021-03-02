@@ -8,6 +8,7 @@ const modelsModule = {
         colors: [],
         manufacturers: [],
         relatedColors: [],
+        relatedColors2: [],
     },
 
   
@@ -31,6 +32,9 @@ const modelsModule = {
 
         setRelatedColors(state, colors){
             state.relatedColors = colors
+        },
+        setRelatedColors2(state, colors){
+            state.relatedColors2 = colors
         },
 
         editModel(state,editedModel){
@@ -83,6 +87,16 @@ const modelsModule = {
                 const response = await axios
                 .get("/api/getColors/"+idVariant)
                 commit('setRelatedColors',response.data.data);   
+              } catch (error) {
+                 
+              }
+        },
+
+        getRelatedColors2: async function ({ commit, state }, idVariant){
+            try {
+                const response = await axios
+                .get("/api/getColors/"+idVariant)
+                commit('setRelatedColors2',response.data.data);   
               } catch (error) {
                  
               }

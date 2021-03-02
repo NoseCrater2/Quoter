@@ -48,8 +48,7 @@ class UserController extends Controller
             'address' => 'required|max:255',
             'zip_code' => 'required|max:10',
             'discount_percent' => 'required|numeric|min:0|max:99',
-            // "roleIds"    => "required|array|min:1",
-            // "roleIds.*"  => "required|exists:roles,id|distinct|min:1",
+
             
         ];
 

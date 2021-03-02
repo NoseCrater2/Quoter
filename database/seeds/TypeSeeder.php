@@ -77,8 +77,8 @@ class TypeSeeder extends Seeder
         ]);
        
         Type::create([
-            'name' => 'FLEX BALLET',
-            'slug' => 'flex-ballet',
+            'name' => 'FLEXIBALET',
+            'slug' => 'flexibalet',
             'max_width' => 5.90,
             'min_width' => 0.50,
             'max_height' => 4,

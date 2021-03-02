@@ -21,7 +21,7 @@
                 <v-col cols="12" align-self="center" class="text-center" >
                    <v-row  justify="center" align="center">
                        <v-col cols="12" md="4" sm="6"  v-for="line in lines" :key="line.id">
-                          <LineProductDetail :line="line"/>
+                          <LineProductDetail :type="slugType" :line="line"/>
                        </v-col>
                    </v-row>
                    

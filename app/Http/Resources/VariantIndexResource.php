@@ -28,6 +28,7 @@ class VariantIndexResource extends JsonResource
             'line' => $this->line?$this->line->slug:null,
             'type' => $this->type->slug,
             'image' => $this->colors->isNotEmpty()?$this->colors->random()->code:null,
+            'product' => $this->type->product->slug,
             // 'colors' => $this->colors->map(function( $color ){
             //     return ['color' => $color->color, 'code' => $color->code];
             // }),

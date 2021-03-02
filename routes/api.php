@@ -84,7 +84,7 @@ Route::get('getRelatedBlinds/{sunblind}' , 'SunblindController@getRelatedBlinds'
 
 Route::get('getColors/{variant}' , 'VariantController@getColors');
 Route::post('users' , 'UserController@store')->name('users.store');
-Route::middleware(['auth:api'])->group(function()
+Route::middleware(['auth:sanctum'])->group(function()
 {
 
     Route::post('checkPassword' , 'UserController@checkPassword')->name('password.check');
@@ -93,6 +93,8 @@ Route::middleware(['auth:api'])->group(function()
 
     //Roles
     Route::resource('roles', 'RoleController');
+
+    Route::resource('orders', 'OrderController')->only('index','show', 'store', 'destroy');
    
     //Products
     // Route::post('products/store' , 'Api\ProductController@store')->name('products.store')->middleware('can:products.create');
