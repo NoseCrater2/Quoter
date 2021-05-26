@@ -37,7 +37,7 @@ const store = new Vuex.Store({
     signupErrors: [],
     checkStatus: null,
     isLoggedIn: localStorage.getItem('isLoggedIn') || false,
-    user: {},
+    user: null,
    
 },
 

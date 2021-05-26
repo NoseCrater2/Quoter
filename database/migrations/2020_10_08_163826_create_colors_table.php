@@ -17,7 +17,6 @@ class CreateColorsTable extends Migration
             $table->bigIncrements('id');
             $table->string('color')->nullable();
             $table->string('code')->nullable();
-            $table->tinyInteger('rotate')->default(0);
         });
     }
 

@@ -29,7 +29,7 @@ class CreateVariantsTable extends Migration
             $table->decimal('wall_double_price',7,2,true)->default(0);
             $table->decimal('ceiling_wall_price',7,2,true)->default(0);
             $table->decimal('curve_price',7,2,true)->default(0);
-
+            $table->tinyInteger('rotate')->default(0);
             $table->unsignedBigInteger('weave_id')->nullable();
             $table->foreign('weave_id')->references('id')->on('weaves');
 

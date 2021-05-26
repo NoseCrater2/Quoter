@@ -131,10 +131,12 @@
                         md="4"
                         lg="3"
                         >
+                          <v-img class="d-flex tag" width="70px" v-if="item.rotate == 1" src="/img/modelos/rotable.png"></v-img>
                         <v-hover v-slot="{ hover }" v-if="item">
                           <v-card width="240" height="340" color="grey lighten-4"  flat >
                              <!-- -->
                             <v-img class="white--text align-end"   :class="{'escalada':hover}" width="240" height="270" :aspect-ratio="16/9"  :src="`/img/modelos/medium/${item.image}.jpg`" :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
+                            
                               <template v-slot:placeholder>
                                 <v-img src="/img/modelos/medium/unavailable.jpg"></v-img>
                               </template>
@@ -167,6 +169,7 @@
                               </v-hover>
                               </div>
                             </v-expand-transition>
+                            
                             </v-img>
                             <v-card-text
                             
@@ -285,7 +288,6 @@
 </template>
 
 <script>
-import { mapActions, mapState, productModule} from 'vuex';
 import Descriptions from './Descriptions.vue';
 export default {
     data(){
@@ -300,10 +302,10 @@ export default {
           model: null,
           search: '',
           filter: {},
-          sortDesc: true,
+          sortDesc: false,
           page: this.$route.query.page || 1,
           itemsPerPage: 16,
-          sortBy: 'manufacturer',
+          sortBy: 'price',
           keys: ['name', 'price', 'created_date'],
           chargeBlinds : true,
         }
@@ -440,6 +442,12 @@ justify-content: center;
 position: absolute;
 width: 100%;
 
+}
+.tag{
+    z-index: 1;
+    margin-top: -20px;
+    margin-left: 128px;
+    position: absolute;
 }
 
 .title{

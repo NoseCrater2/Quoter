@@ -2,7 +2,7 @@
 const ordersModule = {
 
     state:{
-      orders:[],
+      orders: JSON.parse(localStorage.getItem('orders')) || [],
       totalPrice: 0,
       quotedOrders: [],
       quotedOrder: [],
@@ -21,11 +21,16 @@ const ordersModule = {
         },
 
         totalPrice(state){
-             
             let prices = 0
             state.orders.map(function(order){
-                let pt = parseFloat(order.price) + parseFloat(order.motor.price)
-             return prices += pt
+                let pt = parseFloat(order.price) +
+                parseFloat(order.motor.price) +
+                parseFloat(order.motor.flexiballetPrice) + 
+                parseFloat(order.motor.galleryPrice) + 
+                parseFloat(order.motor.manufacturerPrice) + 
+                parseFloat(order.motor.stringPrice)
+                
+                return prices += pt
            })
             
             return prices
@@ -50,13 +55,17 @@ const ordersModule = {
             //state.newUserId = newUser.id;
           },
           pushProductToCart (state, item){
+           
               state.orders.push(item)
+              localStorage.setItem('orders', JSON.stringify(state.orders))
+            //   state.orders.push(item)
           },
 
         editOrder (state, item){
             state.orders.map(function(currentOrder) {
                 if (currentOrder.id === item.id) {
                     Object.assign(currentOrder, item);
+                    localStorage.setItem('orders', JSON.stringify(state.orders))
                 }
             });
         },
@@ -67,13 +76,14 @@ const ordersModule = {
           sumTotalPrice(state, price){
               let currentPrice = parseFloat(state.totalPrice)
               let newPrice = parseFloat(price)
-            state.totalPrice = currentPrice + newPrice
+                state.totalPrice = currentPrice + newPrice
         },
 
         deleteOrder(state, id) {
 
             let  u = state.orders.find((order => order.id === id))
             state.orders.splice(state.orders.indexOf(u),1)
+            localStorage.setItem('orders', JSON.stringify(state.orders))
           
            
           },
@@ -81,7 +91,13 @@ const ordersModule = {
     },
     actions:{
         addToOrder (context, blind){
-            blind.id = (context.state.orders.length + 1)
+            
+            if(context.state.orders.length == 0){
+                blind.id = 1
+            }else{
+                blind.id = context.state.orders[context.state.orders.length - 1].id + 1
+            }
+           
             //  const orderItem = context.state.orders.find(item => item.id === blind.id)
             
             // // if(!orderItem){

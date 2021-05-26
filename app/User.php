@@ -27,6 +27,8 @@ class User extends Authenticatable
         'last_name',
         'company',
         'address',
+        'ship_address',
+        'second_ship_address',
         'city',
         'state',
         'zip_code',

@@ -70,11 +70,16 @@ const usersModule = {
           },
 
           editUser: async function ({ commit, state }, editUser){
-           
+            console.log(editUser)
+            let u = new FormData();
+            for (const prop in editUser) {
+                u.append(prop, editUser[prop])
+            }
+            u.append('_method', 'put')
+
             try {
                 const response = await axios
-                .put("/api/users/"+editUser.id,editUser,{
-                    headers: {Authorization: "Bearer "+localStorage.getItem('access_token')}})
+                .post("/api/users/"+editUser.id,u)
                 
                 commit('setUsersStatus',response.status);
                 commit('editUser',response.data.data);

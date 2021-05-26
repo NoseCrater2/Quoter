@@ -51,7 +51,7 @@ class MotorizationImport implements WithHeadingRow, ToCollection, SkipsOnError, 
                 [
                     'canvas' => $row->has('lienzo') && $row['lienzo']?$row['lienzo']:0,
                     'system' => $row->has('sistema') && $row['sistema']?$row['sistema']:null,
-                    'description' => $row['descripcion'],
+                    'description' => null,
                     'width' => $row->has('ancho') && $row['ancho']?$row['ancho']:0,
                     'height' => $row->has('alto') && $row['alto']?$row['alto']:0,
                     'price'=> $row['precio'],

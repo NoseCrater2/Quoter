@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Color extends Model
 {
-    protected $fillable = ['color', 'code', 'rotate'];
+    protected $fillable = ['color', 'code'];
     public $timestamps = false;
 
     public function variants()

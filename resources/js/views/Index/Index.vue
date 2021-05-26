@@ -269,10 +269,12 @@ export default {
         })
     },
 
+
+
     mounted(){ 
-  
         this.$store.dispatch('getProducts') 
-         this.$store.dispatch('getAllVariants')
+        this.$store.dispatch('getAllVariants')
+        this.$store.dispatch('getManufacturers')
         this.onResize()
         window.addEventListener('resize', this.onResize, { passive: true })
     },

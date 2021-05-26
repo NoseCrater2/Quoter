@@ -123,7 +123,10 @@
 
           <v-btn icon large class="ma-2" rounded depressed dark>
 
-            <v-badge color="red" content="3" overlap>
+            <v-badge color="red" 
+            :content="orders.length"
+            :value="orders.length" 
+            overlap>
               <v-icon>mdi-cart-outline</v-icon>
             </v-badge>
           </v-btn>
@@ -217,12 +220,9 @@
         </v-app-bar>
     
 
-      <v-main >
-        <v-row justify="space-around" class="ma-4">
-           <router-view :key="$route.path"></router-view>
-        </v-row>
-     
-    </v-main>
+      <v-main>
+        <router-view :key="$route.path"></router-view>
+      </v-main>
     
     </v-app>
 
@@ -234,8 +234,6 @@
 
 import {mapGetters, mapActions, mapState } from 'vuex';
 import { logOut } from '../../utils/auth';
-// import Quoter from "../../components/Quoter";
-// import BlindSteps from "../Index/BlindSteps";
 export default {
 
 
@@ -268,19 +266,6 @@ beforeDestroy () {
     this.onResize()
 
     window.addEventListener('resize', this.onResize, { passive: true })
-  //  if(this.loggedIn){
-     
-  //    this.$store.dispatch('getUser').then(()=>{
-  //         if(this.getUserStatus === 200){
-          
-  //        }
-        
-  //     })
-  //  }
-
-  //  if(this.$router.currentRoute.name !== "Quoter"){
-  //        this.$router.push({name: 'Quoter'}); 
-  //     }
    },
 
 
@@ -312,6 +297,7 @@ beforeDestroy () {
       user: state => state.user,
       products: state => state.productsModule.products,
       loggedIn: state => state.loggedIn,
+      orders: state => state.ordersModule.orders,
     }),
 
       ...mapGetters([

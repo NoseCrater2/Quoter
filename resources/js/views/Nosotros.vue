@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <v-parallax dark  src="../../img/nosotros/1.jpg" :height="max_height-170">
+        <v-parallax dark  src="/img/nosotros/1.jpg" :height="max_height-170">
             <v-row align="center" justify="center">
                 <v-col class="text-center" cols="11" md="7" sm="12" style="background-color: rgba(10, 10, 10, 0.5);">
                     <h1>NOSOTROS</h1>
@@ -11,7 +11,9 @@
         <v-container fluid style="max-width: 1200px" class="my-4">
         
         <Slogan/>
+        <!-- <iframe width="100%" height="500" style="z-index: 99" src="http://test.siilkaab.com/bookings/1" frameborder="0">
 
+        </iframe> -->
         </v-container>
         <v-row style="background-color: #47a5ad;"  align="center" justify="center"  class="pa-0 ma-0">
                 <v-col cols="12" md="5" sm="12" class="pa-0 " align-self="center">

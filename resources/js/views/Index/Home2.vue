@@ -3,7 +3,7 @@
          <v-carousel  :hide-delimiters="isMobile?false:true" :show-arrows="!isMobile" height="50vh" style="min-height: 350px" continuous  cycle  > 
             <v-carousel-item
             eager
-            :to="{name: 'Categories', params: {slugProduct: 'PERSIANAS'}}"
+            :to="item.to"
             v-for="(item, i) in persianas"
             :key="i">
                 <v-img  :src="item.src" height="50vh" min-height="50vh" max-height="600"  position="center center" eager>
@@ -39,16 +39,19 @@ export default {
             isMobile:false,
             persianas: [
                 {
-                    src: 'img/home/PERSIANAS/RolluxSlide1.jpg',
+                    src: 'img/home/PERSIANAS/RolluxSlide1.jpg', to:{name:'Categories', params: {slugProduct: 'PERSIANAS'}}
                 },
                 {
-                    src: 'img/home/PERSIANAS/RolluxSlide2.jpg',
+                    src: 'img/home/PERSIANAS/2-Persiana-Motorizada.jpg', to:{name:'Motorized'}
                 },
                 {
-                    src: 'img/home/PERSIANAS/RolluxSlide3.jpg',
+                    src: 'img/home/PERSIANAS/RolluxSlide2.jpg', to:{name:'Categories', params: {slugProduct: 'PERSIANAS'}}
                 },
                 {
-                    src: 'img/home/PERSIANAS/RolluxSlide4.jpg',
+                    src: 'img/home/PERSIANAS/RolluxSlide3.jpg', to:{name:'Categories', params: {slugProduct: 'PERSIANAS'}}
+                },
+                {
+                    src: 'img/home/PERSIANAS/RolluxSlide4.jpg', to:{name:'Categories', params: {slugProduct: 'PERSIANAS'}}
                 },
             ],
         }
@@ -63,6 +66,7 @@ export default {
     created(){
         document.title = 'Rollux México'
     },
+  
 
     mounted(){
         this.onResize()

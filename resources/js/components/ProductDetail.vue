@@ -22,10 +22,10 @@
                 </v-col>
                  <v-col cols="12" md="8" sm="12">
                     <v-card  flat>
-                        <v-card-title >
-                            <b class="text-center" :style="$vuetify.breakpoint.mobile?'font-size: 1.1em':'font-size: 2em'">
+                        <v-card-title class="text-center font-weight-black" :style="$vuetify.breakpoint.mobile?'font-size: 1.1em':'font-size: 1.6em'" >
+                          
                                   {{ details.name}}
-                            </b>
+                          
                             </v-card-title>
                         <v-divider></v-divider>
                         <div class="d-inline">

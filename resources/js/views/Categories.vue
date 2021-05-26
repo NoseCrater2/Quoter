@@ -28,8 +28,8 @@
          <v-row justify="center" align="center" class="ma-4">
                     <v-col v-for="n in options.length" :key="n" cols="6" align-self="center" md="3" sm="6">
                         <v-hover v-slot="{hover}">
-                            <v-btn rounded :outlined="hover?false:true" :style="hover?'color: white':''" block color="#47a5ad">
-                                {{options[n-1]}}
+                            <v-btn :to="options[n-1].route" rounded :outlined="hover?false:true" :style="hover?'color: white':''" style="font-weight: bolder;" block color="#47a5ad">
+                                {{options[n-1].name}}
                             </v-btn>
                         </v-hover>
                     </v-col>
@@ -48,10 +48,10 @@ export default {
            // slug: this.$route.params.slugType,
             widths: [500,380,380,420,420,420,420,420,420,420,420],
             options: [
-                'Galería/Facsia',
-                'Motorización',
-                'Accesorios',
-                'Muestrario'
+               { name: 'Galería/Fascia', route: {name:'Home'}},
+                {name: 'Motorización', route: {name:'Motorized'}},
+                {name: 'Accesorios', route: {name:'Home'}},
+                {name: 'Muestrario', route: {name:'Home'}},
             ]
         }
     },

@@ -6,21 +6,22 @@ Vue.use(VueRouter)
 
 const routes = [
     {
+        
         path: "/dashboard",
-        component: () => import("./views/Index/Home"),
+        component: () => import('./views/Index/Home.vue'),
         name: "Dashboard",
         meta: {
             requiresAuth: true,
         },
         children: [
             {
-                path: "quoter",
-                redirect: {name: 'Quoter'}
+                path: "quoting",
+                component: () => import("./components/Quoter.vue"),
 
             },
             {
                 path: "users",
-                component: () => import("./components/Users"),
+                component: () => import("./components/Users.vue"),
                 name: "Users",
                 meta: {
                     requiresAuth: true,
@@ -29,21 +30,21 @@ const routes = [
             },
             {
                 path: "profile",
-                component: () => import("./views/Profile"),
+                component: () => import("./views/Profile.vue"),
                 name: "Profile",
 
             },
 
             {
                 path: "orders",
-                component: () => import("./views/Users/Orders"),
+                component: () => import("./views/Users/Orders.vue"),
                 name: "Orders",
 
             },
 
             {
                 path: "stock/:slugProduct",
-                component: () => import("./components/Stock"),
+                component: () => import("./components/Stock.vue"),
                 name: "Stock",
                 props: true,
                 meta: {
@@ -53,7 +54,7 @@ const routes = [
             },
             {
                 path: "motorization",
-                component: () => import("./components/ProductsTables/ImportMotorization"),
+                component: () => import("./components/ProductsTables/ImportMotorization.vue"),
                 name: "Motorization",
                 meta: {
                     requiresAuth: true,
@@ -62,7 +63,7 @@ const routes = [
             },
             {
                 path: "galleries",
-                component: () => import("./components/ProductsTables/ImportGalleries"),
+                component: () => import("./components/ProductsTables/ImportGalleries.vue"),
                 name: "Galleries",
                 meta: {
                     requiresAuth: true,
@@ -71,7 +72,7 @@ const routes = [
             },
             {
                 path: "orders",
-                component: () => import("./components/Orders"),
+                component: () => import("./components/Orders.vue"),
                 name: "Orders",
                 meta: {
                     requiresAuth: true,
@@ -83,85 +84,100 @@ const routes = [
 
     },
     {
+        path: "/pdf-preview",
+        name: 'PreviewPDF',
+        component: () => import('./views/PreviewPDF.vue'),
+    },
+    {
         path: "/auth/login",
-        component: () => import("./views/Index/Login"),
+        component: () => import("./views/Index/Login.vue"),
         name: 'login',
 
     },
 
     {
         path: "/",
-        component: () => import("./views/Index/Index"),
+        component: () => import("./views/Index/Index.vue"),
         meta: { breadCrumb: 'Home' },
         children: [
             {
                 path: "",
-                component: () => import("./views/Index/Home2"),
+                component: () => import("./views/Index/Home2.vue"),
                 name: 'Home',
                 meta: { breadCrumb: 'Home' },
             },
             {
                 path: "compressor",
-                component: () => import("./views/Compressor"),
+                component: () => import("./views/Compressor.vue"),
                 name: "Compressor",
             },
             {
                 /* webpackChunkName: Aboutus*/
                 path: 'aboutus',
-                component: () => import("./views/Nosotros"),
+                component: () => import("./views/Nosotros.vue"),
                 name: 'About us',
 
 
             },
             {
                 path: 'client-register',
-                component: () => import("./views/Register"),
+                component: () => import("./views/Register.vue"),
                 name: 'Register',
   
             },
             {
                 /* webpackChunkName: Aboutus*/
                 path: 'legal',
-                component: () => import("./views/Legal"),
+                component: () => import("./views/Legal.vue"),
                 name: 'Legal',
             },
 
             {
                 path: "quoter",
-                component: () => import("./components/Quoter"),
+                component: () => import("./components/Quoter.vue"),
                 name: "Quoter",
 
             },
 
             {
                 path: 'contact',
-                component: () => import("./views/Contact"),
+                component: () => import("./views/Contact.vue"),
                 name: 'Contact',
             },
-
+            {
+                path: 'motorized',
+                component: () => import("./views/Motorized.vue"),
+                name: 'Motorized',
+            },
             {
                 path: '/:slugProduct',
-                component: () => import("./views/Categories"),
+                component: () => import("./views/Categories.vue"),
                 name: 'Categories',
                 props: true,
             },
 
             {
                 path: '/:slugProduct/lineas/:slugType',
-                component: () => import("./views/Lines"),
+                component: () => import("./views/Lines.vue"),
                 name: 'Lines',
+                props: true,
+            },
+            {
+                path: '/:slugProduct/:slugType/galleries',
+                component: () => import("./views/Galleries.vue"),
+                name: 'Gallery',
                 props: true,
             },
             {
                 path: '/:slugProduct/:slugType/tejidos/:slugLine',
                 name: 'Tejidos',
                 props: true,
-                component: () => import("./views/Tejidos"),
+                component: () => import("./views/Tejidos.vue"),
             },
             {
                 path: '/:slugProduct/:slugType/:slugLine?/:slugWeave?/detalles/:slugDetail',
                 name: 'Details',
-                component: () => import("./components/ProductDetail"),
+                component: () => import("./components/ProductDetail.vue"),
                 meta: {
                     name: 'Details'
                 },
@@ -174,7 +190,7 @@ const routes = [
                 //     '/:slugProduct/:slugType'
                 // ],
                 name: 'Products',
-                component: () => import("./components/Products"),
+                component: () => import("./components/Products.vue"),
                 props: true,
                 // children: [
                 //     {
@@ -192,12 +208,13 @@ const routes = [
         ],
     },
 
+   
 
     {
         path: "/404",
         alias: "*",
         name: 'notFound',
-        component: () => import('./views/NotFound'),
+        component: () => import('./views/NotFound.vue'),
     },
 
 
@@ -214,9 +231,9 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     if(to.matched.some(record => record.meta.requiresAuth)){
         if(store.state.isLoggedIn == 'false' || store.state.isLoggedIn == false){
-            console.log(store.state.isLoggedIn)
             next({
-                name: 'login'
+                name: 'login',
+                query: {redirect: to.fullPath}
             })
         }else{
             next()

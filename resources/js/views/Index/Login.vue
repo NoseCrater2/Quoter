@@ -29,6 +29,7 @@
                 name="password"
                 prepend-icon="mdi-lock"
                 type="password"
+                
               ></v-text-field>
 
               <p class="text-center">
@@ -57,7 +58,6 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapGetters } from "vuex";
 import {logIn, logOut} from "../../utils/auth"
 export default {
   data() {
@@ -93,7 +93,9 @@ export default {
         logIn()
 
         this.$store.dispatch("loadUser").then(()=>{
-          this.$router.push({name: "Dashboard"})
+          const redirectPath = this.$route.query.redirect || '/dashboard';
+
+          this.$router.push(redirectPath)
         })
         
       } catch (error) {

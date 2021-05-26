@@ -1,24 +1,36 @@
 <template>
     <div>
         <v-card tile flat>
-          <v-row no-gutters>
-          <v-col cols="12" class="ma-0 pa-0" >
-            <v-tabs v-model="tab" background-color="white" show-arrows>
-                <v-tab  v-for="o in orders" :key="o.id"> PERSIANA {{ o.id }} </v-tab>
+            <v-tabs v-model="tab" background-color="white" show-arrows color="#47a5ad" >
+                <v-tab   v-for="o in orders" :key="o.id"> PERSIANA {{ o.id }} </v-tab>
             </v-tabs>
-          </v-col>
-            </v-row>
         </v-card>
-        <v-tabs-items v-model="tab">
+        <v-tabs-items  v-model="tab" >
+         
             <v-tab-item v-for="o in orders" :key="o.id">
-                <v-card tile flat>
+               <v-progress-linear
+               v-if="$store.state.productsModule.variants.length == 0"
+              color="#47a5ad"
+              indeterminate
+              rounded
+              height="6"
+              ></v-progress-linear>
+                <v-card tile flat v-else>
                   <v-toolbar dense>
                     <v-toolbar-title>
-                       {{mxCurrencyFormat.format(o.price)}} MXN
+                      TOTAL: {{
+                        mxCurrencyFormat.format(
+                          o.price + 
+                          o.motor.price +
+                          o.motor.flexiballetPrice +
+                          o.motor.galleryPrice +
+                          o.motor.manufacturerPrice +
+                          o.motor.stringPrice
+                        )}} MXN
                     </v-toolbar-title>
                     <v-spacer> </v-spacer>
                       <v-tooltip bottom> 
-                      <template v-slot:activator=" on, attrs">
+                      <template v-slot:activator=" {on, attrs}">
                         <v-btn @click="edit(o.id)" v-bind="attrs" v-on="on" icon>
                           <v-icon>mdi-pencil</v-icon>
                         </v-btn>
@@ -27,7 +39,7 @@
                       </v-tooltip>
 
                       <v-tooltip bottom> 
-                      <template v-slot:activator=" on, attrs">
+                      <template v-slot:activator=" {on, attrs}">
                         <v-btn @click="eliminate(o.id)" v-bind="attrs" v-on="on" icon>
                           <v-icon>mdi-delete</v-icon>
                         </v-btn>
@@ -40,7 +52,7 @@
                   <v-row no-gutters>
                     <v-col :cols="o.variant2 != null?'6':'12'">
                       <v-card flat>
-                        <v-card-title class="py-2 px-4 justify-center" style="line-height: normal; font-size: 0.7em; font-weight: bolder">
+                        <v-card-title  class="py-2 px-4 justify-center" style="line-height: normal; font-size: 0.7em; font-weight: bolder">
                           {{$store.getters.getVariant(o.variant).name}}
                         </v-card-title>
                         <v-divider ></v-divider>
@@ -127,6 +139,12 @@
                   <v-card-title class="py-1 px-4 justify-center" style="line-height: normal; font-size: 0.7em; font-weight: bolder">
                     CARACTERISTICAS DE PERSIANA:
                   </v-card-title>
+                  <v-list-item class="overline" dense>
+                    <v-list-item-title>PRECIO</v-list-item-title>
+                    <v-list-item-subtitle class="text-right">
+                      ${{o.price}} MXN
+                    </v-list-item-subtitle>
+                  </v-list-item>
                   <v-list-item class="overline" v-if="o.cloth_holder" dense>
                     <v-list-item-title>CON PORTATELA</v-list-item-title>
                   </v-list-item>
@@ -185,19 +203,25 @@
                     ACCIONAMIENTO: {{o.motor_type}}
                   </v-card-title>
                   <v-list-item class="overline" v-if="o.motor.side_control != null" dense>
-                    <v-list-item-title>Lado del motor</v-list-item-title>
+                    <v-list-item-title v-if="o.motor_type == 'Motorizado'">Lado del motor</v-list-item-title>
+                    <v-list-item-title v-if="o.motor_type == 'Manual'">Lado del control</v-list-item-title>
                     <v-list-item-subtitle class="text-right">
                       {{o.motor.side_control}}
                     </v-list-item-subtitle>
                   </v-list-item>
                   <v-list-item class="overline" v-if="o.motor.manufacturer != null" dense>
-                    <v-list-item-title>Fabricante del motor</v-list-item-title>
+                    <v-list-item-title v-if="o.motor_type == 'Motorizado'">Fabricante del motor</v-list-item-title>
+                    <v-list-item-title v-if="o.motor_type == 'Manual'">Fabricante del control</v-list-item-title>
                     <v-list-item-subtitle class="text-right">
                       {{o.motor.manufacturer}}
                     </v-list-item-subtitle>
+                      <v-list-item-subtitle v-if="o.motor.manufacturerPrice > 0" class="text-right">
+                      ${{o.motor.manufacturerPrice}}
+                    </v-list-item-subtitle>
                   </v-list-item>
                   <v-list-item class="overline" v-if="o.motor.control_color != null &&  o.motor.control_color != 0" dense>
-                    <v-list-item-title>Color del motor</v-list-item-title>
+                    <v-list-item-title v-if="o.motor_type == 'Motorizado'">Color del motor</v-list-item-title>
+                    <v-list-item-title v-if="o.motor_type == 'Manual'">Color del control</v-list-item-title>
                     <v-list-item-subtitle class="text-right">
                       {{o.motor.control_color}}
                     </v-list-item-subtitle>
@@ -206,6 +230,15 @@
                     <v-list-item-title>Tipo de cadena</v-list-item-title>
                     <v-list-item-subtitle class="text-right">
                       {{o.motor.string_type}}
+                    </v-list-item-subtitle>
+                    <v-list-item-subtitle v-if="o.motor.stringPrice > 0" class="text-right">
+                      ${{o.motor.stringPrice}}
+                    </v-list-item-subtitle>
+                  </v-list-item>
+                  <v-list-item class="overline" v-if="o.motor.height_control != null" dense>
+                    <v-list-item-title>Altura de mando</v-list-item-title>
+                    <v-list-item-subtitle class="text-right">
+                      {{o.motor.height_control}} mts
                     </v-list-item-subtitle>
                   </v-list-item>
                   <v-list-group  no-action v-if="o.motor.gallery != null"  :value="true">
@@ -220,7 +253,8 @@
                     </v-list-item>
                      <v-list-item class="overline" dense>
                       <v-list-item-title>Precio</v-list-item-title>
-                      <v-list-item-subtitle class="text-right">{{mxCurrencyFormat.format(o.motor.gallery.price)}}MXN</v-list-item-subtitle>
+                      <v-list-item-subtitle v-if="o.motor.galleryPrice > 0" class="text-right">{{mxCurrencyFormat.format(o.motor.galleryPrice)}}MXN</v-list-item-subtitle>
+                      <v-list-item-subtitle v-else class="text-right">{{mxCurrencyFormat.format(o.motor.gallery.price)}}MXN</v-list-item-subtitle>
                     </v-list-item>
                     <v-list-item class="overline" dense v-if="o.motor.gallery_color != null">
                       <v-list-item-title>Color</v-list-item-title>
@@ -234,10 +268,10 @@
                         <v-list-item-title>MOTOR</v-list-item-title>
                       </v-list-item-content>
                     </template>
-                    <v-list-item class="overline" dense>
+                    <!-- <v-list-item class="overline" dense>
                       <v-list-item-title>Descripción</v-list-item-title>
                       <v-list-item-subtitle class="text-right">{{$store.getters.getMotor(o.motor.motor).description}}</v-list-item-subtitle>
-                    </v-list-item>
+                    </v-list-item> -->
                     <v-list-item class="overline" dense>
                       <v-list-item-title>Sistema</v-list-item-title>
                       <v-list-item-subtitle class="text-right">{{$store.getters.getMotor(o.motor.motor).system}}</v-list-item-subtitle>
@@ -269,6 +303,11 @@
                     </v-list-item>
                   </v-list-group>
 
+                  <v-list-item class="overline" dense v-if="o.motor.flexiballetPrice > 0">
+                      <v-list-item-title>EXTRA</v-list-item-title>
+                      <v-list-item-subtitle class="text-right">${{o.motor.flexiballetPrice}} MXN</v-list-item-subtitle>
+                    </v-list-item>
+
                     <v-alert
                       text
                       dense
@@ -279,22 +318,48 @@
                     >
                       COMENTARIOS: {{o.motor.comment}}
                     </v-alert>
-
-         
         </v-card>
       </v-tab-item>
     </v-tabs-items>
-    
-
+    <v-dialog v-model="editConformDialog" persistent max-width="290">
+        <v-card>
+          <v-card-title>
+            ¿Editar esta persiana?
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-btn text  @click="editConformDialog = false">CANCELAR</v-btn>
+            <v-spacer></v-spacer>
+            <v-btn text @click="confirmEdit"  color="#47a5ad">EDITAR</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="deletetConfirmDialog" persistent max-width="290">
+        <v-card>
+          <v-card-title class="red--text">
+            ¿Eliminar esta persiana?
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-btn text  @click="deletetConfirmDialog = false">CANCELAR</v-btn>
+            <v-spacer></v-spacer>
+            <v-btn text @click="confirmDelete"  color="red">ELIMINAR</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import {jsPDF} from 'jspdf';
+// import VueHtml2pdf from 'vue-html2pdf'
+// import {jsPDF} from 'jspdf';
 export default {
   data() {
     return {
+      blindId: 0,
+      editConformDialog: false,
+      deletetConfirmDialog: false,
       tab: null,
       mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
       headers: [
@@ -307,6 +372,8 @@ export default {
       ]
     }
   },
+
+  
   methods:{
     saveOrders(){
       if(this.user == null){
@@ -316,53 +383,68 @@ export default {
       }
     },
     edit(id){
-      this.$emit('editOrder', id)
+      this.editConformDialog = true
+      this.blindId = id
     },
+
+    confirmEdit(){
+      this.$emit('editOrder', this.blindId)
+      this.editConformDialog = false
+    },
+
     eliminate(id){
-      this.$emit('deleteOrder', id)
-    },
-    exportPDF(){
-      let d = new Date()
+      this.deletetConfirmDialog = true
+      this.blindId = id
      
-      let doc = new jsPDF()
+    },
+    confirmDelete(){
+      this.$emit('deleteOrder', this.blindId)
+       this.deletetConfirmDialog = false
+    },
 
-      doc.addImage('/img/logo.png',"JPEG", 0, 8, 70, 22)//x,y,width,height 
-      doc.setLineWidth(1);
-      doc.line(72,2,72,28)//x1, y1,x2,y2
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(10);
-      doc.text("ROLLUX S.A de C.V", 75, 7);
-       doc.setFont("helvetica", "normal");
-      doc.text("CALZADA JUÁREZ 499", 75, 11);
-      doc.text("COL. VENTURA PUENTE", 75, 15);
-      doc.text("MORELIA", 75, 19);
-      doc.text("MICHOACÁN, C.P. 58020", 75, 23);
-      doc.text("Teléfono: 4434713271",75, 27);
+    exportPDF(){
+      this.$refs.html2Pdf.generatePdf()
+      // let d = new Date()
+     
+      // let doc = new jsPDF()
 
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(20);
-      doc.text("Cotización", 125, 9);
-      doc.setFontSize(16);
-      doc.text("Folio C17942", 125, 15);
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(10);
-      doc.text("Fecha: ", 125, 19);
-      doc.setFont("helvetica", "normal");
-      doc.text(d.toLocaleDateString('en-US')+" "+d.toLocaleTimeString('en-US'), 137,19)
+      // doc.addImage('/img/logo.png',"JPEG", 0, 8, 70, 22)//x,y,width,height 
+      // doc.setLineWidth(1);
+      // doc.line(72,2,72,28)//x1, y1,x2,y2
+      // doc.setFont("helvetica", "bold");
+      // doc.setFontSize(10);
+      // doc.text("ROLLUX S.A de C.V", 75, 7);
+      //  doc.setFont("helvetica", "normal");
+      // doc.text("CALZADA JUÁREZ 499", 75, 11);
+      // doc.text("COL. VENTURA PUENTE", 75, 15);
+      // doc.text("MORELIA", 75, 19);
+      // doc.text("MICHOACÁN, C.P. 58020", 75, 23);
+      // doc.text("Teléfono: 4434713271",75, 27);
 
-      doc.setFont("helvetica", "bold");
-      doc.text("Asesor: ", 125, 23);
-      doc.setFont("helvetica", "normal");
-      doc.text('ANDRÉS LÓPEZ', 139,23)
+      // doc.setFont("helvetica", "bold");
+      // doc.setFontSize(20);
+      // doc.text("Cotización", 125, 9);
+      // doc.setFontSize(16);
+      // doc.text("Folio C17942", 125, 15);
+      // doc.setFont("helvetica", "bold");
+      // doc.setFontSize(10);
+      // doc.text("Fecha: ", 125, 19);
+      // doc.setFont("helvetica", "normal");
+      // doc.text(d.toLocaleDateString('en-US')+" "+d.toLocaleTimeString('en-US'), 137,19)
 
-      doc.setFont("helvetica", "bold");
-      doc.text("Asesor telefonico: ", 125, 27);
-      doc.setFont("helvetica", "normal");
-      doc.text('ANDRÉS LÓPEZ', 157,27)
+      // doc.setFont("helvetica", "bold");
+      // doc.text("Asesor: ", 125, 23);
+      // doc.setFont("helvetica", "normal");
+      // doc.text('ANDRÉS LÓPEZ', 139,23)
 
-      //  doc.autoPrint({variant: 'non-conform'});
-      doc.table(1,35,this.data, this.headers, {margin:{top:2},})
-      doc.save('autoprint.pdf');
+      // doc.setFont("helvetica", "bold");
+      // doc.text("Asesor telefonico: ", 125, 27);
+      // doc.setFont("helvetica", "normal");
+      // doc.text('ANDRÉS LÓPEZ', 157,27)
+
+      // //  doc.autoPrint({variant: 'non-conform'});
+      // doc.table(1,35,this.data, this.headers, {margin:{top:2},})
+      // doc.save('autoprint.pdf');
     },
 
   
@@ -374,7 +456,10 @@ export default {
       orders: (state) => state.ordersModule.orders,
       user: (state) => state.user,
     }),
+    
   },
+
+
 }
 </script>
 

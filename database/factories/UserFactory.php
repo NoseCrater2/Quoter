@@ -23,6 +23,8 @@ $factory->define(User::class, function (Faker $faker) {
         'last_name' => $faker->lastName,
         'address' => $faker->streetAddress,
         'phone' => $faker->e164PhoneNumber,
+        'ship_address' => $faker->address,
+        'second_ship_address' => $faker->address,
         'company' => $faker->company,
         'city' => $faker->city,
         'state' => $faker->state,

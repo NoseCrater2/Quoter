@@ -29,7 +29,7 @@ class VariantController extends Controller
     public function index()
     {
         return VariantIndexResource::collection(
-            Variant::get()
+            Variant::orderBy('price','desc')->get()
         );
     }
 

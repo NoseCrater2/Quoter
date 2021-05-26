@@ -1,198 +1,234 @@
 <template>
     <div id="app">
-      
-            <v-tabs v-model="tab" fixed-tabs color="#17767c" background-color="white" >
-                <v-tabs-slider></v-tabs-slider>
-                <v-tab>Usuarios</v-tab>
-                <v-tab>Roles</v-tab>
-            </v-tabs>
-
-            <v-tabs-items v-model="tab">
-                <v-tab-item >
-                  <v-row justify="center"> 
-                     <v-card >
-                      <v-card-title>
-                        <v-text-field
-                          v-model="search"
-                          append-icon="mdi-magnify"
-                          label="Buscar Usuario"
-                          single-line
-                          hide-details
-                        ></v-text-field>
-                      </v-card-title>
-
-                        <v-data-table
-                        :headers="headers"
-                        :items="users"
-                        :search="search"
-                        :loading="loadingTable"
-                        color="#3ba2a9"
-                        >
-                        <template v-slot:top>
-        <v-toolbar flat color="white">
-         
-          <v-spacer></v-spacer>
-          <v-dialog v-model="usersDialog" max-width="500px">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                color="black"
-                dark
-                class="mb-2"
-                v-bind="attrs"
-                v-on="on"
-              >NUEVO</v-btn>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
-              </v-card-title>
-  
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col class="pb-0" cols="12" md="6" sm="12">
-                      <v-text-field dense outlined v-model="editedItem.name" label="Nombre" :error-messages="errors.name"></v-text-field>
-                    </v-col>
-                    <v-col class="pb-0" cols="12" md="6" sm="12">
-                      <v-text-field
-                      dense
-                      outlined
-                      v-model="editedItem.last_name"
-                      label="Apellido(s)"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                 
-                  <v-row>
-                     <v-col class="pb-0" cols="12" md="6" sm="12">
-                      <v-text-field
-                      dense
-                      outlined
-                      v-model="editedItem.phone"
-                      label="Teléfono"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col class="pb-0" cols="12" md="6" sm="12">
-                      <v-text-field dense outlined v-model="editedItem.email" label="Email" :error-messages="errors.email"></v-text-field>
-                    </v-col>
-                    
-                  </v-row>
-                  <v-row>
-                    <v-col class="pb-0" cols="12" md="6" sm="12">
-                      <v-text-field
-                      dense
-                      outlined
-                      v-model="editedItem.address"
-                      label="Dirección"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col class="pb-0" cols="12" md="6" sm="12">
-                      <v-text-field
-                      dense
-                      outlined
-                      v-model="editedItem.city"
-                      label="Ciudad"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    
-                    <v-col class="pb-0" cols="12" md="6" sm="12">
-                      <v-text-field
-                      dense
-                      outlined 
-                      v-model="editedItem.state"
-                      label="Estado"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col class="pb-0" cols="12" md="6" sm="12">
-                      <v-text-field
-                      dense
-                      outlined
-                      v-model="editedItem.zip_code"
-                      label="Código Postal"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-               
-                  <v-row>
-                     <v-col class="pb-0" cols="12" md="6" sm="12">
-                      <v-text-field
-                      dense
-                      outlined
-                      v-model="editedItem.company"
-                      label="Empresa"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col class="pb-0" cols="12" md="6" sm="12">
-                      <v-text-field
-                      prefix="%"
-                      v-model="editedItem.discount_percent"
-                      dense
-                      type="number"
-                      outlined
-                      label="Descuento"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-  
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                <v-btn color="blue darken-1" text @click="save">Save</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-toolbar>
-      </template>
-                        <template v-slot:item.actions="{ item }">
-                          <v-icon small class="mr-2" @click="editItem(item)">
-                            mdi-pencil
-                          </v-icon>
-                          <v-icon small @click="deleteItem(item)">
-                            mdi-delete
-                          </v-icon>
-                        </template> 
-                        </v-data-table>
-                    </v-card>
-                  </v-row>
-                </v-tab-item>
-
-                <v-tab-item >
-                   <v-row justify="center"> 
-                     <v-card >
-                      <v-card-title>
-                        <v-text-field
-                          v-model="search"
-                          append-icon="mdi-magnify"
-                          label="Buscar Rol"
-                          single-line
-                          hide-details
-                        ></v-text-field>
-                      </v-card-title>
-
-                        <v-data-table
-                        :headers="headersRoles"
-                        :items="roles"
-                        :search="search"
-                        >
-                        <template v-slot:item.actions="{ item }">
-                          <v-icon small class="mr-2" @click="editItem(item)">
-                            mdi-pencil
-                          </v-icon>
-                          <v-icon small @click="deleteItem(item)">
-                            mdi-delete
-                          </v-icon>
-                        </template> 
-                        </v-data-table>
-                    </v-card>
-                  </v-row>
-                </v-tab-item>
-            </v-tabs-items>
-
-       
+        <v-tabs v-model="tab" fixed-tabs color="#17767c" background-color="white" >
+            <v-tab>Usuarios</v-tab>
+		</v-tabs>
+		<v-tabs-items v-model="tab">
+            <v-tab-item >
+              	<v-row justify="center"> 
+                 	<v-card >
+                  		<v-card-title>
+                    		<v-text-field
+                    		v-model="search"
+                    		append-icon="mdi-magnify"
+                    		label="Buscar Usuario"
+                    		single-line
+                    		hide-details
+                    		></v-text-field>
+                  		</v-card-title>
+                    	<v-data-table
+                    	:headers="headers"
+                    	:items="users"
+                    	:search="search"
+                    	:loading="loadingTable"
+                    	color="#3ba2a9"
+                    	>
+                    		<template v-slot:item.name="{ item }">
+                    		  {{item.name+' '+item.last_name}}
+                    		</template>
+                    		<template v-slot:top>
+        						<v-toolbar flat color="white">
+									<v-spacer></v-spacer>
+        							<v-dialog v-model="usersDialog" max-width="500px">
+        							  	<template v-slot:activator="{ on, attrs }">
+        							  	  	<v-btn
+        							  	  	color="black"
+        							  	  	dark
+        							  	  	class="mb-2"
+        							  	  	v-bind="attrs"
+        							  	  	v-on="on"
+        							  	  	>NUEVO</v-btn>
+        							  	</template>
+        								<v-card>
+        							    	<v-card-title>
+        							    	  	<span class="headline">{{ formTitle }}</span>
+        							    	</v-card-title>
+							
+        							    	<v-card-text>
+        							      		<v-container>
+        							        		<v-row>
+        							          			<v-col class="pb-0" cols="12" md="6" sm="12">
+        							          			  	<v-text-field dense hide-details outlined v-model="editedItem.name" label="Nombre" :error-messages="errors.name"></v-text-field>
+        							          			</v-col>
+        							          			<v-col class="pb-0" cols="12" md="6" sm="12">
+        							          			  	<v-text-field
+															hide-details
+        							          			  	dense
+        							          			  	outlined
+        							          			  	v-model="editedItem.last_name"
+        							          			  	label="Apellido(s)"
+        							          			  	></v-text-field>
+        							          			</v-col>
+        							        		</v-row>
+							
+        							        		<v-row>
+        							        		   <v-col class="pb-0" cols="12" md="6" sm="12">
+        							        		    	<v-text-field
+															hide-details
+        							        		    	dense
+        							        		    	outlined
+        							        		    	v-model="editedItem.phone"
+        							        		    	label="Teléfono"
+        							        		    	></v-text-field>
+        							        		  	</v-col>
+        							        		  	<v-col class="pb-0" cols="12" md="6" sm="12">
+        							        		    	<v-text-field dense hide-details outlined v-model="editedItem.email" label="Email" :error-messages="errors.email"></v-text-field>
+        							        		  	</v-col>
+        							        		</v-row>
+        							        		<v-row>
+        							        		  	<v-col class="pb-0" cols="12" md="6" sm="12">
+        							        		    	<v-text-field
+															hide-details
+        							        		    	dense
+        							        		    	outlined
+        							        		    	v-model="editedItem.address"
+        							        		    	label="Dirección"
+        							        		    	></v-text-field>
+        							        		  		</v-col>
+        							        		  	<v-col class="pb-0" cols="12" md="6" sm="12">
+        							        		  	  	<v-text-field
+															hide-details
+        							        		  	  	dense
+        							        		  	  	outlined
+        							        		  	  	v-model="editedItem.city"
+        							        		  	  	label="Ciudad"
+        							        		  	  	></v-text-field>
+        							        		  	</v-col>
+        							        		</v-row>
+        							        		<v-row>
+        							          			<v-col class="pb-0" cols="12" md="6" sm="12">
+        							          			  	<v-text-field
+															hide-details
+        							          			  	dense
+        							          			  	outlined 
+        							          			  	v-model="editedItem.state"
+        							          			  	label="Estado"
+        							          			  	></v-text-field>
+        							          			</v-col>
+        							          			<v-col class="pb-0" cols="12" md="6" sm="12">
+        							          			  	<v-text-field
+															hide-details
+        							          			  	dense
+        							          			  	outlined
+        							          			  	v-model="editedItem.zip_code"
+        							          			  	label="Código Postal"
+        							          			  	></v-text-field>
+        							          			</v-col>
+        							        		</v-row>
+        							        		<v-row>
+        							           			<v-col class="pb-0" cols="12" md="6" sm="12">
+        							            			<v-text-field
+															hide-details
+        							            			dense
+        							            			outlined
+        							            			v-model="editedItem.company"
+        							            			label="Empresa"
+        							            			></v-text-field>
+        							          			</v-col>
+        							          			<v-col class="pb-0" cols="12" md="6" sm="12">
+        							          			  	<v-text-field
+															hide-details
+        							          			  	prefix="%"
+        							          			  	v-model="editedItem.discount_percent"
+        							          			  	dense
+        							          			  	type="number"
+        							          			  	outlined
+        							          			  	label="Descuento"
+        							          			  	></v-text-field>
+        							          			</v-col>
+        							        		</v-row>
+													<v-row>
+        							           			<v-col class="pb-0" cols="12">
+        							            			<v-text-field
+															hide-details
+        							            			dense
+        							            			outlined
+        							            			v-model="editedItem.ship_address"
+        							            			label="Dirección de envío"
+        							            			></v-text-field>
+        							          			</v-col>
+        							          			<v-col class="pb-0" cols="12">
+        							          			  	<v-text-field
+															hide-details
+        							          			  	v-model="editedItem.second_ship_address"
+        							          			  	dense
+        							          			  	outlined
+        							          			  	label="Dirección de envío alterna"
+        							          			  	></v-text-field>
+        							          			</v-col>
+        							        		</v-row>
+													<v-row no-gutters align="center">
+														<v-col cols="12">
+															<input type="file" ref="btnUploadImage" style="display:none" @change="selectImage($event)" accept="image/*"/>
+															<v-card max-width="100%" max-height="100%" class="d-flex justify-center" @click="$refs.btnUploadImage.click()">
+															<v-img v-if="editedItem.logo != null" width="100%" height="100%" :src="urlTemporal === null ? `/img/${editedItem.logo}` : urlTemporal">
+															</v-img>
+															<div v-else>
+																<v-avatar class="d-block" tile size="50" style="margin: auto">
+																<v-icon size="50">mdi-image</v-icon>
+															</v-avatar>
+															
+															</div>
+															
+															</v-card>
+															<v-card-text class="d-block">
+																Haz clic sobre el recuadro para subir el logo
+															</v-card-text>
+														</v-col>
+													</v-row>
+        							      		</v-container>
+        							    	</v-card-text>
+        							    	<v-card-actions>
+        							    	  	<v-spacer></v-spacer>
+        							    	  	<v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
+        							    	  	<v-btn color="blue darken-1" text @click="save">Guardar</v-btn>
+        							    	</v-card-actions>
+        								</v-card>
+        							</v-dialog>
+        						</v-toolbar>
+      						</template>
+                    		<template v-slot:item.actions="{ item }">
+                    		  	<v-icon small class="mr-2" @click="editItem(item)">
+                    		    	mdi-pencil
+                    		  	</v-icon>
+                    		  	<v-icon small @click="deleteItem(item)">
+                    		  	  	mdi-delete
+                    		  	</v-icon>
+                    		</template> 
+                    	</v-data-table>
+                	</v-card>
+              	</v-row>
+            </v-tab-item>
+            <!-- <v-tab-item >
+               <v-row justify="center"> 
+                 <v-card >
+                  <v-card-title>
+                    <v-text-field
+                      v-model="search"
+                      append-icon="mdi-magnify"
+                      label="Buscar Rol"
+                      single-line
+                      hide-details
+                    ></v-text-field>
+                  </v-card-title>
+                    <v-data-table
+                    :headers="headersRoles"
+                    :items="roles"
+                    :search="search"
+                    >              
+                    <template v-slot:item.actions="{ item }">
+                      <v-icon small class="mr-2" @click="editItem(item)">
+                        mdi-pencil
+                      </v-icon>
+                      <v-icon small @click="deleteItem(item)">
+                        mdi-delete
+                      </v-icon>
+                    </template> 
+                    </v-data-table>
+                </v-card>
+              </v-row>
+            </v-tab-item> -->
+        </v-tabs-items>
     </div>
 </template>
 
@@ -201,6 +237,8 @@ import { mapActions, mapState, mapGetters } from 'vuex';
 export default {
     data(){
         return {
+			urlTemporal: null,
+      		currentLogo: null,
           loadingTable: false,
             usersDialog: Object.keys(this.$route.query).length == 0?false:true,
             tab: null,
@@ -215,24 +253,26 @@ export default {
         },
         { text: 'Nombre', value: 'name' },
         { text: 'Email', value: 'email' },
+        { text: 'Compañia', value: 'company' },
+        { text: 'Descuento(%)', value: 'discount_percent' },
         { text: 'Rol(es)', value: 'roles' },
         { text: 'Acciones', value: 'actions', sortable: false },
 
       ],
-       headersRoles: [
-        {
-          text: 'ID',
-          align: 'start',
-          sortable: false,
-          value: 'id',
-        },
-        { text: 'Nombre', value: 'name' },
-        { text: 'Url amigable', value: 'slug' },
-        { text: 'Descripción', value: 'description' },
-        { text: 'Permiso(s)', value: 'permissions' },
-        { text: 'Acciones', value: 'actions', sortable: false },
+      //  headersRoles: [
+      //   {
+      //     text: 'ID',
+      //     align: 'start',
+      //     sortable: false,
+      //     value: 'id',
+      //   },
+      //   { text: 'Nombre', value: 'name' },
+      //   { text: 'Url amigable', value: 'slug' },
+      //   { text: 'Descripción', value: 'description' },
+      //   { text: 'Permiso(s)', value: 'permissions' },
+      //   { text: 'Acciones', value: 'actions', sortable: false },
 
-      ],
+      // ],
 
       editedIndex: -1,
     editedItem: {
@@ -300,6 +340,19 @@ export default {
   },
 
   methods:{
+
+	selectImage(event){
+    	this.currentLogo = event.target.files[0]
+    	this.editedItem.logo = this.currentLogo
+		
+    	const reader = new FileReader();
+    	reader.readAsDataURL(this.currentLogo)
+    		reader.onload = (e) => {
+    			this.urlTemporal = e.target.result;
+				
+			};
+    	this.currentLogo = null
+   	},
      editItem (item) {
       this.editedIndex = this.users.indexOf(item)
       this.editedItem = Object.assign({}, item)

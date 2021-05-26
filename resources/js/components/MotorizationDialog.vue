@@ -2,14 +2,20 @@
     <div>
           <v-card height="auto" width="auto" max-width="600" min-width="300">
              <v-card-title  v-if="action === 'Motorizado'">
-                  <strong style="font-style: italic; color:#47a5ad ">Persiana Motorizada</strong>
-                </v-card-title>
+                  <strong v-if="typeName == 'PANEL JAPONES'" style="font-style: italic; color:#47a5ad ">Panel Japones Motorizado</strong>
+                  <strong v-else style="font-style: italic; color:#47a5ad ">Persiana Motorizada</strong>
+
+              </v-card-title>
                  <v-card-title  v-else-if="action === 'Manual'">
-                  <strong style="font-style: italic; color:#47a5ad ">Persiana Manual</strong>
+                    <strong v-if="typeName == 'PANEL JAPONES'" style="font-style: italic; color:#47a5ad ">Panel Japones Manual</strong>
+                  <strong v-else style="font-style: italic; color:#47a5ad ">Persiana Manual</strong>
                 </v-card-title>
+                <v-card-subtitle style="color:red" v-if="(typeName == 'SHEER' || typeName == 'VERTICAL' || typeName == 'HORIZONTAL DE MADERA 2')  && motor.gallery">
+                  Se agregó {{motor.gallery.model}} con valor de ${{motor.gallery.price }} MXN
+                </v-card-subtitle>
             <v-form ref="formMotor" v-model="valid2" lazy-validation>
               <v-col cols="12" class="my-0 py-0">
-                  <span class="mx-2">5. Seleccione lado del motor</span>
+                  <span class="mx-2">5. Seleccione el lado del mando o motor</span>
                   <v-radio-group
                   row
                   :mandatory="false"
@@ -18,6 +24,22 @@
                 <v-radio color="#47a5ad" label="Izquierdo" value="Izquierdo"></v-radio>
                 <v-radio color="#47a5ad" v-if="(typeName != 'FLEXIBALET' || action != 'Motorizado')" label="Derecho" value="Derecho"></v-radio>
               </v-radio-group>
+                </v-col>
+                <v-col cols="6" class="my-0 py-0" v-if="typeName.includes('ALUMINIO')">
+                  <span class="mx-2">6. Seleccione altura del mando</span>
+                  <v-text-field
+                  color="#47a5ad"
+                  class="ma-1"
+                  dense
+                  placeholder="0.5 a 99"
+                  hide-details
+                  label="Altura"
+                  outlined
+                  type="number"
+                  suffix="mts"
+                  :rules="[(v) => !!v && (v >= 0.5 && v <= 99 )|| 'Requerido']"
+                  v-model="motor.height_control"
+                  ></v-text-field>
                 </v-col>
 
            
@@ -130,6 +152,7 @@
                   8 .Marco
                 </span>
                 <v-radio-group
+                @change="addGallery()"
                 :rules="[(v) => !!v || 'Requerido']"
                 row
                 :mandatory="false"
@@ -170,6 +193,7 @@
                   8 .Marco
                 </span>
                 <v-radio-group
+                @change="addGallery()"
                 :rules="[(v) => !!v || 'Requerido']"
                 row
                 :mandatory="false"
@@ -191,6 +215,7 @@
                   8 .Marco
                 </span>
                 <v-radio-group
+                @change="addGallery()"
                 :rules="[(v) => !!v || 'Requerido']"
                 row
                 :mandatory="false"
@@ -206,7 +231,7 @@
             
 
               <v-row
-               v-if="(action == 'Motorizado') && (typeName === 'ENROLLABLE' || typeName === 'ROMANA')"
+               v-if="(action == 'Motorizado') && (typeName === 'ENROLLABLE' || typeName === 'ROMANA' || typeName === 'PANEL JAPONES')"
                 class="ma-0 pa-0">
 
                 <span class="mx-2"  >6. Seleccione características de motor</span>
@@ -222,6 +247,7 @@
                     v-model="motor.type"
                   >
                     <v-radio
+                    v-if="typeName != 'PANEL JAPONES'"
                       color="#47a5ad"
                       label="Recargable (batería)"
                       value="RECARGABLE"
@@ -284,7 +310,7 @@
                       expand
                     >
                       <v-list-item-group
-                        v-if="filteredControls"
+                        v-if="filteredControls.length > 0"
                         mandatory
                         v-model="motor.motor"
                         active-class="teal--text"
@@ -317,6 +343,13 @@
                           ></v-divider>
                         </template>
                       </v-list-item-group>
+                         <v-list-item v-else>
+                              <v-list-item-content>
+                                <v-list-item-title >
+                                  No hay motores disponibles
+                                </v-list-item-title>
+                              </v-list-item-content>
+                          </v-list-item>
                     </v-list>
                   </v-card>
                 </v-col>
@@ -326,7 +359,14 @@
               <v-row class="ma-2" v-if="(action == 'Manual') && (typeName === 'ENROLLABLE' || typeName === 'ROMANA')">
 
                 <v-col cols="12" class="my-0">
-                  <span>7. Seleccione Marca</span>
+                  <div>
+                    7. Seleccione Marca
+                      
+                        <v-chip v-if="addManufacturerPrice > 0" label outlined color="orange" class="ma-2 font-weight-black">
+                          Se agregará un cargo extra de $ {{addManufacturerPrice}}
+                        </v-chip>
+                     
+                    </div>
                   <v-radio-group
                     row
                     :mandatory="false"
@@ -353,7 +393,11 @@
                   ></v-select>
                 </v-col>
                 <v-col cols="6" class="my-0" >
-                  <span>9. Seleccione tipo de Cadena</span>
+                  <span>9. Seleccione tipo de Cadena
+                      <v-chip v-if="addStringPrice > 0" label outlined color="orange" class="ma-2 font-weight-black">
+                        Se agregará un cargo extra de ${{addStringPrice}}
+                      </v-chip>
+                  </span>
                   <v-radio-group
                     class="my-1 py-1"
                     v-model="motor.string_type"
@@ -379,8 +423,14 @@
               <v-col 
               cols="12" 
               class="my-0" 
-              v-if="filteredGalleries && typeName != 'PANEL JAPONES' && typeName != 'FLEXIBALET' && typeName != 'HORIZONTAL DE MADERA 2' && typeName != 'VERTICAL' && ((action == 'Manual') || (typeName != 'ENROLLABLE' && typeName != 'ROMANA' ))" >
-                  <span>10. Seleccione GALERÍA/FASCIA</span>
+              v-if="filteredGalleries && (action == 'Manual' && (typeName == 'ENROLLABLE' || typeName == 'ROMANA' || typeName == 'PANEL JAPONES' ))" >
+                  <span>10. Seleccione GALERÍA/FASCIA
+                    <!-- <div v-if="galleryPrice > 0" style="color: #47a5ad" class="d-inline">+${{galleryPrice}} -->
+                      <v-chip v-if="addGalleryPrice > 0" label outlined color="orange" class="ma-2 font-weight-black">
+                        Se agregará un cargo extra de ${{addGalleryPrice}}
+                      </v-chip>
+                    <!-- </div> -->
+                  </span>
                   <v-select
                     dense
                     v-model="motor.gallery"
@@ -392,7 +442,7 @@
                     label="Galería/Fascia"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" class="my-0" v-if="motor.gallery">
+                <v-col cols="12" class="my-0" v-if="motor.gallery && (typeName != 'SHEER' && typeName != 'VERTICAL' && typeName != 'HORIZONTAL DE MADERA 2')" >
                   <span>11. Seleccione color (opcional)</span>
                   <v-select
                     dense
@@ -405,7 +455,6 @@
                   ></v-select>
                 </v-col>
               <v-col cols="12" class="my-0" >
-                  
                   <v-textarea
                     v-model="motor.comment"
                     color="#47a5ad"
@@ -433,83 +482,93 @@ import { mapState } from "vuex";
 export default {
     data(){
         return{
-            valid2: true,
-            motor: {
-                side_control: null,
-                price: 0,
-                type: null,
-                canvas: 0,
-                manufacturer: null,
-                control: null,
-                motor: 0,
-                panels: 0,
-                control_color: 0,
-                selected_panel: 0,
-                string_type: null,
-                gallery: null,
-                gallery_color: null,
-                comment: null,//nueva
-                instalation_side: null,//nueva
-                frame: null,//nueva
-                rail_color: null,//nueva
-                drive: null,
+          valid2: true,
+          motor: {
+            height_control: null,
+            side_control: null,
+            price: 0,
+            type: null,
+            canvas: 0,
+            manufacturer: null,
+            control: null,
+            motor: 0,
+            panels: 0,
+            control_color: 0,
+            selected_panel: 0,
+            string_type: null,
+            gallery: null,
+            gallery_color: null,
+            comment: null,//nueva
+            instalation_side: null,//nueva
+            frame: null,//nueva
+            rail_color: null,//nueva
+            drive: null,
+            flexiballetPrice: 0,
+            galleryPrice: 0,
+            manufacturerPrice: 0,
+            stringPrice: 0,
+          },
+          defaultMotor: {
+            height_control: null,
+            side_control: null,
+            price: 0,
+            type: null,
+            canvas: 0,
+            manufacturer: null,
+            control: null,
+            motor: 0,
+            panels: 0,
+            control_color: 0,
+            selected_panel: 0,
+            string_type: null,
+            gallery: null,
+            gallery_color: null,
+            comment: null,
+            instalation_side: null,
+            frame: null,
+            rail_color: null,
+            drive: null,
+            flexiballetPrice: 0,
+            galleryPrice: 0,
+            manufacturerPrice: 0,
+            stringPrice: 0,
+          },
+          controlColors: ["BLANCO", "IVORY", "GRIS", "CHOCOLATE", "NEGRO"],
+          verticales: [
+            { title: "Normal", img: "/img/cotizador/verticales/normal.png" },
+            { title: "Inverso", img: "/img/cotizador/verticales/inverso.png" },
+            { title: "Extremos", img: "/img/cotizador/verticales/extremos.png" },
+            {title: "Extemos Inverso",img: "/img/cotizador/verticales/extremos-inverso.png",},
+          ],
+          flexballets: [
+            { title: "Izquierda", img: "/img/cotizador/flexballet/izquierda.png" },
+            { title: "Derecha", img: "/img/cotizador/flexballet/derecha.png" },
+            { title: "Central", img: "/img/cotizador/flexballet/central.png" },
+            {title: "Exterior",img: "/img/cotizador/flexballet/exterior.png",},
+          ],
+          paneles: [2, 3, 4, 5, 6, 8, 9],
+          panelesj: [
+            {
+              title: "Lateral",
+              img: "/img/cotizador/paneles/lateral.png",
+              matches: [2, 3, 4, 5],
             },
-            defaultMotor: {
-                side_control: null,
-                price: 0,
-                type: null,
-                canvas: 0,
-                manufacturer: null,
-                control: null,
-                motor: 0,
-                panels: 0,
-                control_color: 0,
-                selected_panel: 0,
-                string_type: null,
-                gallery: null,
-                gallery_color: null,
-                comment: null,
-                instalation_side: null,
-                frame: null,
-                rail_color: null,
-                drive: null,
+            {
+              title: "Ambos Lados",
+              img: "/img/cotizador/paneles/ambos-lados.png",
+              matches: [4, 5, 6, 8, 9],
             },
-            controlColors: ["BLANCO", "IVORY", "GRIS", "CHOCOLATE", "NEGRO"],
-             verticales: [
-                { title: "Normal", img: "/img/cotizador/verticales/normal.png" },
-                { title: "Inverso", img: "/img/cotizador/verticales/inverso.png" },
-                { title: "Extremos", img: "/img/cotizador/verticales/extremos.png" },
-                {title: "Extemos Inverso",img: "/img/cotizador/verticales/extremos-inverso.png",},
-            ],
-            flexballets: [
-                { title: "Izquierda", img: "/img/cotizador/flexballet/izquierda.png" },
-                { title: "Derecha", img: "/img/cotizador/flexballet/derecha.png" },
-                { title: "Central", img: "/img/cotizador/flexballet/central.png" },
-                {title: "Exterior",img: "/img/cotizador/flexballet/exterior.png",},
-            ],
-            paneles: [2, 3, 4, 5, 6, 8, 9],
-             panelesj: [
-                {
-                  title: "Lateral",
-                  img: "/img/cotizador/paneles/lateral.png",
-                  matches: [2, 3, 4, 5],
-                },
-                {
-                  title: "Ambos Lados",
-                  img: "/img/cotizador/paneles/ambos-lados.png",
-                  matches: [4, 5, 6, 8, 9],
-                },
-                {
-                  title: "Opuesto",
-                  img: "/img/cotizador/paneles/opuesto.png",
-                  matches: [2, 3, 4, 5],
-                },
-                {
-                  title: "Centro",
-                  img: "/img/cotizador/paneles/centro.png",
-                  matches: [3, 5],
-                },
-            ],
+            {
+              title: "Opuesto",
+              img: "/img/cotizador/paneles/opuesto.png",
+              matches: [2, 3, 4, 5],
+            },
+            {
+              title: "Centro",
+              img: "/img/cotizador/paneles/centro.png",
+              matches: [3, 5],
+            },
+          ],
         }
     },
 
@@ -530,14 +589,51 @@ export default {
           type: Number,
           required: true,
         },
+        canvases:{
+          type: Array,
+          required: true,
+        },
+        line:{
+          type: String,
+          required: false,
+        },
     },
 
-    created(){
-        this.motor = Object.assign({}, this.parentMotor);
-        this.$store.dispatch("getGalleries");
+    mounted(){
+      this.motor = Object.assign({}, this.parentMotor);
+        this.$store.dispatch("getGalleries").then(()=>{
+        });
+        
+
+    },
+    
+    updated(){
+      if(this.typeName == 'FLEXIBALET'){
+          this.motor.flexiballetPrice = 25500
+      }
+      // else if(this.typeName == 'SHEER'){
+      //     this.motor.gallery = this.galleries.find(g => g.type == 'SHEER')
+      // }else if(this.typeName == 'VERTICAL'){
+      //   if(this.line == 'tela-vertical'){
+      //     this.motor.gallery = this.galleries.find(g => g.model == 'GALERIA CON PORTATELA')
+      //   }else if(this.line == 'pvc-vertical'){
+      //     this.motor.gallery = this.galleries.find(g => g.model == 'GALERIA PVC CON CUBREPOLVO')
+      //   }
+      // }
     },
 
     methods:{
+
+      addGallery(){
+        if(this.typeName == 'HORIZONTAL DE MADERA 2'){
+          if(this.motor.frame == 'fuera'){
+            this.motor.gallery = this.galleries.find(g => g.model == 'INTERNA')
+          }else if(this.motor.frame == 'adentro'){
+            this.motor.gallery = this.galleries.find(g => g.model == 'EXTERNA')
+          }
+        }
+      },
+
         close(){
              this.motor = Object.assign({}, this.defaultMotor);
              this.$refs.formMotor.reset();
@@ -545,22 +641,18 @@ export default {
         },
 
         save(){
-          if(this.action === 'Motorizado'){
-            if(this.$refs.formMotor.validate() && this.motor.motor > 0){
-              this.motor.price = this.motorizationPrice
-              this.$emit('saveMotorization', this.motor)
-              this.close()
-            }
-          }else if(this.action === 'Manual'){
-            if(this.$refs.formMotor.validate()){
-              this.motor.price = this.motorizationPrice
-              this.$emit('saveMotorization', this.motor)
-              this.close()
-            }
+        
+          if(this.$refs.formMotor.validate()){
+            this.motor.galleryPrice = this.addGalleryPrice
+            this.motor.manufacturerPrice = this.addManufacturerPrice
+            this.motor.stringPrice = this.addStringPrice
+            this.motor.price = this.motorizationPrice
+
+            this.$emit('saveMotorization', this.motor)
+            this.close()
           }
           
-           
-        }
+        },
     },
 
     computed:{
@@ -571,10 +663,44 @@ export default {
             motorizations: (state) => state.motorizationModule.motorizations,
         }),
 
-         filteredControls() {
-              let m =  this.motorizations.filter((c) => c.canvas == this.canvas && c.manufacturer == this.motor.manufacturer && c.motorizationType == this.motor.type);
-              return m
+        addGalleryPrice(){
+          let galleryPrice = 0
+          if(this.motor.gallery != null){
+            if(this.motor.gallery.model  == 'LAMBREQUIN 20 CM'){
+             this.canvases.forEach(canvas => {
+               galleryPrice += (Math.ceil(canvas.width) * 400)
+             });
+          }
+          }
+          
+          return galleryPrice
+        },
 
+        addStringPrice(){
+          let stringPrice = 0
+          if(this.motor.string_type == 'metal' && this.typeName == 'ENROLLABLE'){
+             this.canvases.forEach(canvas => {
+               if(canvas.height >= 2){
+                 stringPrice += 100
+               }else{
+                 stringPrice += 50
+               }
+             });
+          }
+          return stringPrice
+        },
+
+        addManufacturerPrice(){
+          if(this.motor.manufacturer == 'vtx' && this.typeName == 'ENROLLABLE'){
+             return 250;
+          }else{
+            return 0;
+          }
+        },
+
+         filteredControls() {
+          let m =  this.motorizations.filter((c) =>  c.manufacturer == this.motor.manufacturer && c.motorizationType == this.motor.type && c.type == this.typeName);
+          return m
         },
 
         filteredGalleries() {
@@ -602,12 +728,18 @@ export default {
               return parseFloat(
                 this.motorizations.find((m) => m.id === this.motor.motor).price
               );
-            } else if (this.motor.gallery != null) {
+            } else if (this.motor.gallery != null && this.motor.gallery.model != 'LAMBREQUIN 20 CM'){
               return parseFloat(this.motor.gallery.price);
             } else {
               return 0;
             }
         },
-    }
+    },
+
+    // watch:{
+    //   typeName: function(newVal, oldVal) { // watch it
+    //       console.log('Prop changed: ', newVal, ' | was: ', oldVal)
+    //     }
+    // }
 }
 </script>

@@ -30,8 +30,7 @@
 
                 </v-col>
                 <v-col cols="12"  class="text-center">
-                    <v-btn rounded color="#47a5ad" x-large dark>Ver Galería</v-btn>
-                   
+                    <v-btn rounded color="#47a5ad" :to="{name:'Gallery', props: {slugProduct: slugProduct, slugType: slugType}}" x-large dark>Ver Galería</v-btn>
                 </v-col>
                
             </v-row>
@@ -67,7 +66,6 @@
 </template>
 
 <script>
-import { mapActions, mapState, productModule} from 'vuex';
 import LineProductDetail from '../components/CustomCards/LineProductCard';
 import Descriptions from '../components/Descriptions';
 export default {

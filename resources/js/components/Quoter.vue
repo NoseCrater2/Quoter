@@ -1,10 +1,11 @@
 <template>
- 
-  <v-container>
+  <v-container id="quoter">
     <v-row justify="center" align="center">
       <v-card style="background-color: #ffffffc2">
-        <v-card-title style="background-color: #404042; color: white">
+        <v-card-title style="color: white" :style="editable?'background-color: red;':'background-color: #404042;'">
           {{ cardTitle }}
+          {{ typeof order.id == 'undefined'?'':order.id }}
+          
           <v-spacer></v-spacer>
           <div>
             TOTAL: {{mxCurrencyFormat.format(totalPrice) }} MXN
@@ -15,11 +16,25 @@
             <v-col class="pa-1" cols="6">
               <span style="font-size: 1em"> 1.Seleccione tipo de persiana</span>
               <v-autocomplete
-                :rules="[(v) => !!v || 'Requerido']"
-                @change="chargeModels()"
+              :rules="[(v) => !!v || 'Requerido']"
                 hide-details
                 dense
-                :items="getProduct ? getProduct.types : null"
+                :items="manufacturers"
+                item-text="name"
+                item-value="id"
+                v-model="manufacturer"
+                label="Selecciona marca"
+                outlined
+                color="#47a5ad"
+                background-color="white"
+                class="ma-1"
+              ></v-autocomplete>
+              <v-autocomplete
+                :rules="[(v) => !!v || 'Requerido']"
+                @change="chargeTypeModels()"
+                hide-details
+                dense
+                :items="getProduct ? getProduct.types : []"
                 item-text="name"
                 item-value="slug"
                 v-model="order.type"
@@ -29,7 +44,7 @@
                 background-color="white"
                 class="ma-1"
               ></v-autocomplete>
-              <div v-if="order.type == null || order.type != 'celular'">
+              <div v-if="order.type != 'celular' && order.type != 'horizontal-madera-2' ">
               <v-autocomplete
                 v-if="getType && getType.lines > 0"
                 :rules="[(v) => !!v || 'Requerido']"
@@ -101,32 +116,32 @@
               ></v-switch>
               <div v-if="order.type=='flexibalet'">
                 <span style="font-size: 1em">3.Seleccione las medidas.</span>
-                <v-select
+                <v-text-field
                 color="#47a5ad"
                 class="ma-1"
                 dense
                 hide-details
-                :items="[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]"
                 label="Ancho"
                 outlined
-                placeholder="1.00 a 22.00"
-                :rules="[(v) => !!v || 'Requerido']"
+                :placeholder="widthMargins"
+                :rules="[
+                  ...flexiballetWidthRules()]"
                 suffix="mts"
                 v-model="order.canvas[0].width"
-                ></v-select>
-                <v-select
+                ></v-text-field>
+                <v-text-field
                 color="#47a5ad"
                 class="ma-1"
                 dense
                 hide-details=""
-                :items="createHeights(order.canvas[0].width)"
                 label="Ancho"
                  outlined
-                placeholder="1.00 a 22.00"
-                :rules="[(v) => !!v || 'Requerido']"
+                 :placeholder="heightMargins"
+                :rules="[
+                  ...flexiballetHeightRules()]"
                 suffix="mts"
                 v-model="order.canvas[0].height"
-                ></v-select>
+                ></v-text-field>
               </div>
 
               
@@ -203,12 +218,11 @@
                <span v-else style="font-size: 1em">
                 4.Seleccione modo de accionamiento (opcional)
               </span>
-              
               <v-radio-group
+              :disabled="(order.canvas[0].height != null && order.canvas[0].width != null)?false:true"
               row
               :mandatory="false"
               v-model="order.motor_type"
-              
               >
                 <v-radio @click="openMotorizationDialog" label="Manual"  color="#47a5ad" value="Manual"></v-radio>
                 <v-radio
@@ -220,9 +234,9 @@
                 </v-radio>
               </v-radio-group>
               </div>
-               <div v-else>
+               <div  v-else-if="order.type == 'celular'">
                 <v-item-group  v-model="order.celular_type" @change="showMargins" >
-                    <span>2. Haz clic en la imagen para seleccionar una opción</span>
+                    <span>2. Selecciona el tipo de persiana celular que quieres</span>
                     <v-row >
                       <v-col
                         cols="12"
@@ -235,9 +249,9 @@
                          
                             <v-card
                            
-                              width="100"
+                              width="120"
                               flat
-                              height="100"
+                              height="120"
                               :style="active?'border: 2px solid #47a5ad':''"
                             >
                             <div class="d-flex  justify-space-around">
@@ -275,9 +289,148 @@
                 </v-radio-group>
               </div>
 
-             
-             
-            
+              <div v-else-if="order.type == 'horizontal-madera-2'">
+                <v-alert dense outlined color="orange" v-if="order.motor_type == 'Motorizado'">
+                  Para persiana motorizada el accionamiento solo es posible con escalerilla.
+                  </v-alert>
+                 <span>2. Seleccione modo de accionamiento</span>
+                 <v-radio-group
+                 @change="chargeWoodPrices"
+                row
+                :mandatory="false"
+                v-model="order.motor_type"
+              >
+                <v-radio  label="Manual"  color="#47a5ad" value="Manual"></v-radio>
+                <v-radio
+                label="Motorizado"  
+                color="#47a5ad" 
+                value="Motorizado">
+                </v-radio>
+              </v-radio-group>
+
+                  <span style="font-size: 1em" >
+                  3. Selecciona accionamiento
+                  </span>
+                  <v-radio-group
+                  :rules="[(v) => !!v || 'Requerido']"
+                  row
+                  :mandatory="false"
+                  v-model="order.motor.drive">
+                    <v-radio label="Escalerilla"  color="#47a5ad" value="escalerilla"></v-radio>
+                    <v-radio v-if="order.motor_type != 'Motorizado'" label="Cinta"  color="#47a5ad" value="cinta"></v-radio>
+                  </v-radio-group>
+
+                  <span >4. Seleccione el lado del mando o motor</span>
+                  <v-radio-group
+                  row
+                  @change="disabledWoodText = false"
+                  :mandatory="false"
+                  :rules="[(v) => !!v || 'Requerido']"
+                  v-model="order.motor.side_control">
+                <v-radio color="#47a5ad" label="Izquierdo" value="Izquierdo"></v-radio>
+                <v-radio color="#47a5ad" label="Derecho" value="Derecho"></v-radio>
+              </v-radio-group>
+              <span style="font-size: 1em">
+                  5.Seleccione las medidas</span>
+                <v-text-field                
+                dense
+                type="number"
+                label="Ancho"
+                class="ma-1"
+                hide-details
+                :disabled="disabledWoodText"
+                :placeholder="widthMargins"
+                outlined
+                color="#47a5ad"
+                background-color="white"
+                v-model="order.canvas[0].width"
+                :rules="[
+                  ...widthWoodRules(),
+                ]"
+                ></v-text-field>
+
+                <v-text-field
+                class="ma-1"
+                hide-details
+                :disabled="disabledWoodText"
+                :rules="[
+                  ...heightWoodRules(),
+                ]"
+                dense
+                type="number"
+                label="Alto"
+                background-color="white"
+                :placeholder="heightMargins"
+                outlined
+                color="#47a5ad"
+                v-model="order.canvas[0].height"
+                ></v-text-field>
+                 <span style="font-size: 1em">
+                  6.Marco
+                </span>
+                <v-radio-group
+                
+                :rules="[(v) => !!v || 'Requerido']"
+                row
+                :mandatory="false"
+                v-model="order.motor.frame"
+              
+                >
+                  <v-radio label="Fuera"  color="#47a5ad" value="fuera"></v-radio>
+                  <v-radio label="Adentro"  color="#47a5ad" value="adentro"></v-radio>
+                </v-radio-group>
+                <v-autocomplete
+                v-if="getType && getType.lines > 0"
+                :rules="[(v) => !!v || 'Requerido']"
+                @change="chargeModels()"
+                hide-details
+                dense
+                :items="lines"
+                item-text="name"
+                item-value="slug"
+                v-model="order.line"
+                label="Selecciona Material"
+                outlined
+                color="#47a5ad"
+                background-color="white"
+                class="ma-1"
+                
+              ></v-autocomplete>
+               <span style="font-size: 1em"> 7.Seleccione características</span>
+              <v-autocomplete
+                class="ma-1"
+                hide-details
+                :rules="[(v) => !!v || 'Requerido']"
+                :loading="loadingModels"
+                dense
+                v-model="order.variant"
+                :items="variants"
+                item-text="name"
+                item-value="id"
+                @change="chargeColors()"
+                outlined
+                color="#47a5ad"
+                background-color="white"
+                label="Modelo"
+              ></v-autocomplete>
+              <v-autocomplete
+                class="ma-1"
+                hide-details
+                :rules="[(v) => !!v || 'Requerido']"
+                :loading="loadingColors"
+                :disabled="disabledSelectColor"
+                dense
+                return-object
+                v-model="order.color"
+                :items="colors"
+                item-text="color"
+                outlined
+                @change="selectColor(order.color)"
+                color="#47a5ad"
+                background-color="white"
+                label="Color"
+              ></v-autocomplete>
+              </div>
             </v-col>
            
             <v-col class="pa-1" cols="6">
@@ -309,15 +462,37 @@
 
                </v-hover>
 
-              <v-list dense>
+               <div class="ma-2">
+               <div class="d-flex  justify-center">
+                PERSIANA 
+                
+               </div>
+               <div v-if="order.type == 'horizontal-madera-2'" class="d-flex  justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;">
+                  {{mxCurrencyFormat.format(findWoodPrice)}} MXN
+               </div>
+
+                <div v-else class="d-flex  justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
+                    {{mxCurrencyFormat.format(unitaryPrice)}} MXN
+                 </div>
+
+               <v-divider></v-divider>
+               <div class="d-flex  justify-center ">
+                 MOTOR y CONTROL/GALERÍA:
+                 
+               </div>
+               <div class="d-flex justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
+                    {{mxCurrencyFormat.format(order.motor.price)}}
+                      MXN
+                 </div>
+                 </div>
+              <!-- <v-list dense>
                 <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title>PERSIANA:</v-list-item-title>
                   </v-list-item-content>
                   <v-list-item-action>
                     <v-list-item-action-text>
-                      {{mxCurrencyFormat.format(unitaryPrice)}}
-                      MXN
+                     
                     </v-list-item-action-text>
                   </v-list-item-action>
                 </v-list-item>
@@ -327,12 +502,11 @@
                   </v-list-item-content>
                   <v-list-item-action>
                     <v-list-item-action-text>
-                      {{mxCurrencyFormat.format(order.motor.price)}}
-                      MXN
+                      
                     </v-list-item-action-text>
                   </v-list-item-action>
                 </v-list-item>
-              </v-list>
+              </v-list> -->
               <div
                 v-for="(c, index) in order.canvas"
                 :key="index"
@@ -417,28 +591,41 @@
           <v-row no-gutters>
             <v-col cols="12" md="4" sm="12">
               <v-btn
-                  block
-                  color="#d87c01"
-                  @click="addBlind()"
-                  depressed
-                  dark
-                  >{{ btnOrderTitle }}
-                  </v-btn>
+              color="#d87c01"
+              @click="addBlind()"
+              depressed
+              dark
+              block
+              tile
+              class="mb-1"
+              >{{ btnOrderTitle }}
+              </v-btn>
+              <v-btn
+              class="mt-1"
+              tile
+              v-if="editable"
+              color="red"
+              small
+              @click="cancelEdit()"
+              depressed
+              dark
+              >CANCELAR EDICIÓN
+              </v-btn>
             </v-col>
             <v-col cols="12" md="4" sm="12" class="my-1 text-center">
                <v-tooltip top>
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
-                   
+                      :disabled="orders.length > 0 ? false: true"
+
                       small
                       v-bind="attrs"
                       v-on="on"
                       color="#47a5ad"
-                      dark
                       fab
-                      @click="exportPDF"
+                      @click="openPDFView"
                     >
-                      <v-icon>mdi-printer</v-icon>
+                      <v-icon color="white">mdi-printer</v-icon>
                     </v-btn>
                   </template>
                   <span>Imprimir</span>
@@ -446,16 +633,12 @@
 
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs }">
-                    <v-btn  small v-bind="attrs" v-on="on" color="#47a5ad" dark fab>
+                    <v-btn   small v-bind="attrs" v-on="on" color="#47a5ad" dark fab>
                       <v-icon>mdi-email-send</v-icon>
                     </v-btn>
                   </template>
                   <span>Enviar por Email</span>
                 </v-tooltip>
-           
-           
-             
-           
             </v-col>
             <v-col cols="12" md="4" sm="12">
                <v-btn
@@ -470,7 +653,7 @@
           </v-row>
         </v-form>
         
-        <v-dialog v-if="getType" v-model="dialogMotorization" persistent max-width="600" >
+        <v-dialog v-if="getType && order.motor_type" v-model="dialogMotorization" persistent max-width="600" >
           <MotorizationDialog 
           @saveMotorization="saveMotorization"  
           @CloseMotorizationDialog="CloseMotorizationDialog" 
@@ -478,10 +661,10 @@
           :parentMotor="order.motor"
           :action="order.motor_type"
           :canvas="order.canvas.length"
+          :canvases="order.canvas"
+          :line="order.line"
           />
         </v-dialog >
-        
-       
         <QuotedBlinds 
         @editOrder="editOrder"
         @deleteOrder="deleteOrder"
@@ -526,9 +709,7 @@
                             </v-input>
                            
                           </v-col>
-                        </v-row>
-                      
-                           
+                        </v-row> 
                      <v-row no-gutters>
                        <v-col cols="3" offset="5">
                          <v-input style="margin-top: 15px;">
@@ -540,12 +721,9 @@
                     </v-img>
                     </div>
                       </v-col>
-
                       <v-col cols="12" md="6" sm="12" style="margin-top: auto" >
                         <div >
-                       
                         <v-text-field
-                        
                           :placeholder="heightMargins"
                           v-model="order.canvas[c - 1].height"
                           :rules="[
@@ -625,16 +803,28 @@
               </div>
               
             </v-card-subtitle>
-            <v-row class="mx-3" v-if="order.celular_type == 'Muelle' || order.celular_type == 'Cordón'" >
+            <v-row class="mx-3" v-if="order.celular_type == 'Muelle/Cordón'" >
+
               <v-col class="pa-0" cols="6" >
+                <div v-if="order.celular_drive == 'Muelle'">
+                  <span class="ma-1 font-weight-black">Muelle implica operación manual</span>
+                  <v-img 
+                  src="/img/cotizador/celulares/Sistema Muelle.png"
+                  max-height="328"
+                  max-width="328">
+                  </v-img>
+                  <div class="font-italic font-weight-thin text--disabled" style="font-family: Arial; font-size: 12px">
+                    Imagen ilustrativa, NO se selecciona.
+                  </div>
+                </div>
                 <div v-if="order.celular_drive == 'Motor' || order.celular_drive == 'Cordón'">
-                <span>5. Selecciona lado del motor</span>
+                <span>5. Seleccione el lado del mando o motor</span>
                 <v-radio-group :rules="[(v) => !!v || 'Requerido']" row v-model="order.motor.side_control">
                 <v-radio  label="Izquierdo"  color="#47a5ad" value="Izquierdo"></v-radio>
                 <v-radio  label="Derecho"  color="#47a5ad" value="Derecho"></v-radio>
               </v-radio-group>
               </div>
-              <span style="font-size: 1em"> 6.Seleccione características</span>
+              <div class="mt-6" style="font-size: 1em"> 6.Seleccione características</div>
               <v-autocomplete
                 class="ma-1"
                 hide-details
@@ -713,13 +903,13 @@
             <v-row class="mx-3" v-if="order.celular_type == 'Día y Noche' ">
               <v-col class="pa-0" >
                 <div v-if="order.celular_drive == 'Motor' || order.celular_drive == 'Cordón'">
-                <span>5. Selecciona lado del motor</span>
+                <span>5. Seleccione el lado del mando o motor</span>
                 <v-radio-group :rules="[(v) => !!v || 'Requerido']" row v-model="order.motor.side_control">
                 <v-radio  label="Izquierdo"  color="#47a5ad" value="Izquierdo"></v-radio>
                 <v-radio  label="Derecho"  color="#47a5ad" value="Derecho"></v-radio>
               </v-radio-group>
               </div>
-                <span style="font-size: 1em"> 6.Seleccione características</span>
+                <span  style="font-size: 1em"> 6.Seleccione características</span>
                 <v-autocomplete
                   class="ma-1"
                   hide-details
@@ -873,20 +1063,86 @@
           </v-card>
         </v-form>
       </v-dialog>
+
+       <v-dialog v-model="flexibaletExtraDialog" persistent max-width="390">
+        <v-card>
+          <v-card-subtitle style="color: #47a5ad" class="pa-4">
+            Motorizar las persianas FLEXIBALET añadirá un costo extra de $25,500.00 MXN a la cotización.
+          </v-card-subtitle>
+          <v-card-title class="px-4 py-0 justify-center">
+            ¿DESEA CONTINUAR?
+          </v-card-title>
+          
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-btn text color="red" @click="flexibaletExtraDialog = false">NO</v-btn>
+            <v-spacer></v-spacer>
+            <v-btn text @click="openMotorizationDialogConfirm()"  color="#47a5ad">SÍ</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+       <v-dialog v-model="beforePrint" persistent max-width="390">
+        <v-card>
+          <v-card-title class="px-4 py-0 justify-center">
+           No has iniciado sesión
+          </v-card-title>
+          <v-card-subtitle style="color: #47a5ad; text-align: center" class="pa-4" >
+            ¿Iniciar sesión para generar una impresión personalizada?
+          </v-card-subtitle>
+          <v-divider></v-divider>
+          <v-card-actions>
+            
+            <!-- <v-btn text color="red" @click="flexibaletExtraDialog = false">NO</v-btn>
+            <v-spacer></v-spacer>-->
+            <v-btn block text @click="redirectToLogin"  color="#47a5ad">INICIAR SESIÓN</v-btn> 
+          </v-card-actions>
+           <v-divider></v-divider>
+          <v-card-actions>
+          <v-btn block text @click="printRolluxQuoting">IMPRIMIR SIN INICIAR SESIÓN</v-btn> 
+            <!-- <v-btn text color="red" @click="flexibaletExtraDialog = false">NO</v-btn>
+            <v-spacer></v-spacer>
+            <v-btn text @click="openMotorizationDialogConfirm()"  color="#47a5ad">SÍ</v-btn> -->
+          </v-card-actions>
+           <v-divider></v-divider>
+          <v-card-actions>
+          <v-btn block text @click="beforePrint = false"  color="red">CANCELAR</v-btn>
+            <!-- <v-btn text color="red" @click="flexibaletExtraDialog = false">NO</v-btn>
+            <v-spacer></v-spacer>
+            <v-btn text @click="openMotorizationDialogConfirm()"  color="#47a5ad">SÍ</v-btn> -->
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      
     </v-row>
+    <PreviewPDF></PreviewPDF>
+    <PreviewPdfRollux></PreviewPdfRollux>
+         
   </v-container>
 </template>
 
 <script>
+
+// import VueHtml2pdf from 'vue-html2pdf'
 import { mapState } from "vuex";
 import QuotedBlinds from './QuotedBlinds';
 import MotorizationDialog from './MotorizationDialog';
 import watermark from 'watermarkjs';
+import woodMatrix from '../utils/woodMatrixOne';
+import woodMotorized from '../utils/woodMatrixTwo';
+import PreviewPDF from '../views/PreviewPDF';
+import PreviewPdfRollux from '../views/PreviewPdfRollux';
 
 export default {
   name: "Quoter",
   data() {
     return {
+      manufacturer: null,
+      beforePrint: false,
+      pdfComponentKey: 1,
+      disabledWoodText: true,
+      dialogKey :false,
+      flexibaletExtraDialog: false,
       mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
       disabledCelularText: true,
       disabledDriveRadio: true,
@@ -900,8 +1156,7 @@ export default {
       celularDialog: false,
       celulares: [
         { title: "Día y Noche", img: "/img/cotizador/celulares/dianoche.png" },
-        { title: "Muelle", img: "/img/cotizador/celulares/Muelle.png" },
-        { title: "Cordón", img: "/img/cotizador/celulares/Cordon.png" },
+        { title: "Muelle/Cordón", img: "/img/cotizador/celulares/Muelle.png" },
       ],
       flexibaletHeights:[],
       showButtonDialog: false,
@@ -913,7 +1168,6 @@ export default {
       dialogMotorization: false,
       scHeight: screen.height,
       alertSuccess: false,
-      dialog: false,
       editable: false,
       order: {
         type: this.$route.query.type || null,
@@ -934,6 +1188,7 @@ export default {
         rotate: false,
         motor_type: null,
         motor: {
+          
           side_control: null,
           price: 0,
           action: null,
@@ -953,6 +1208,12 @@ export default {
           frame: null,
           rail_color: null,
           drive: null,
+          extra: 0,
+          height_control: null,
+          flexiballetPrice: 0,
+          galleryPrice: 0,
+          manufacturerPrice: 0,
+          stringPrice: 0,
         },
       },
       defaultOrder: {
@@ -992,6 +1253,12 @@ export default {
           frame: null,
           rail_color: null,
           drive: null,
+          extra: 0,
+          height_control: null,
+          flexiballetPrice: 0,
+          galleryPrice: 0,
+          manufacturerPrice: 0,
+          stringPrice: 0,
         },
       },
       heightMargins: null,
@@ -1022,11 +1289,50 @@ export default {
         frame: null,
         rail_color: null,
         drive: null,
+        extra: 0,
+        flexiballetPrice: 0,
+        galleryPrice: 0,
+        manufacturerPrice: 0,
+        stringPrice: 0,
       },
 
     };
   },
   methods: {
+
+    redirectToLogin(){
+      this.$router.push({name: 'login', query: {redirect: '/quoter'}})
+    },
+
+	  printRolluxQuoting(){
+       this.$children[6].$refs.html2Pdf.generatePdf()
+       this.beforePrint = false
+    },
+
+    openPDFView(){
+      if(this.$store.state.isLoggedIn == true){
+        this.$children[5].$refs.html2Pdf2.generatePdf()
+      }else{
+        this.beforePrint = true
+      }
+     
+    },
+
+    chargeWoodPrices(){
+		  if (this.order.motor_type == 'Manual') {
+		  	    this.widthMargins = woodMatrix[0].width + ' a ' + woodMatrix[10].width
+        		this.heightMargins = woodMatrix[0].height + ' a ' + woodMatrix[woodMatrix.length-1].height
+		  }else if(this.order.motor_type == 'Motorizado'){
+        this.widthMargins = woodMotorized[0].width + ' a ' + woodMotorized[8].width
+        this.heightMargins = woodMotorized[0].height + ' a ' + woodMotorized[woodMotorized.length-1].height
+      }
+    },
+
+    cancelEdit(){
+       this.order = Object.assign({}, this.defaultOrder);
+       this.editable = false
+    },
+
     exportPDF(){
 
     },
@@ -1085,13 +1391,9 @@ export default {
     showMargins(){
       this.disabledDriveRadio = false
       this.disabledCelularText = false
-      if(this.order.celular_type == 'Día y Noche' || this.order.celular_type == 'Muelle'){
-        this.heightMargins = 1+' a '+1.90
-        this.widthMargins = 0.60+' a '+2.20
-      }else if(this.order.celular_type == 'Cordón'){
-        this.heightMargins = 1+' a '+3.00
-        this.widthMargins = 0.60+' a '+3.00
-      }
+
+      this.heightMargins = 1+' a '+3.00
+      this.widthMargins = 0.60+' a '+3.00
     },
 
     createHeights(width){
@@ -1133,8 +1435,7 @@ export default {
       });
 
     },
-
-
+    
 
     buttonCanvasRules(max, index){
        let n = parseFloat(this.order.canvas[index].width);
@@ -1174,8 +1475,6 @@ export default {
       this.order.motor = Object.assign({}, motor);
     },
 
-    
-
     CloseMotorizationDialog() {
       if (this.editable) {
         this.dialogMotorization = false;
@@ -1186,9 +1485,20 @@ export default {
     },
 
     openMotorizationDialog() {
-      this.dialogMotorization = true;
-      // this.$store.dispatch('getFilteredMotorizations', this.getType.id)
+      if(this.order.motor_type == 'Motorizado' && this.order.type == 'flexibalet'){
+        this.flexibaletExtraDialog = true
+      }else{
+        this.dialogMotorization = true;
+        this.$store.dispatch("getControls");
+      }
+    
+    },
+
+    openMotorizationDialogConfirm(){
+       this.dialogMotorization = true;
       this.$store.dispatch("getControls");
+      this.flexibaletExtraDialog = false
+      
     },
 
     closeDialog() {
@@ -1199,9 +1509,13 @@ export default {
       if(this.order.celular_drive != null && !this.$refs.celularForm.validate()){
           this.celularDialog = true
         }else{
-          if (this.$refs.form.validate()) {
-        
-        this.order.price = this.unitaryPrice;
+        if (this.$refs.form.validate()) {
+          if(this.order.type == 'horizontal-madera-2'){
+            this.order.price = this.findWoodPrice
+          }else{
+             this.order.price = this.unitaryPrice;
+          }
+       
 
          //this.order.motor.price = this.motorizationPrice;
         if (this.editable) {
@@ -1224,10 +1538,15 @@ export default {
     },
 
     editOrder(value) {
-      let order = this.orders.find((item) => item.id === value);
-      this.order = Object.assign({}, order);
+      this.$vuetify.goTo(0, this.options)
+      let result = this.orders.find((item) => item.id === value);
+      this.order = Object.assign({}, result);
       this.editable = true;
-      this.dialog = false;
+      this.$store.dispatch("getRelatedColors", this.order.variant).then(() => {
+        this.loadingColors = false;
+        this.disabledSelectColor = false;
+        this.disabledSelectSize = false;
+      });
     },
 
     deleteOrder(id) {
@@ -1251,53 +1570,109 @@ export default {
       );
     },
 
-    widthCelularRules(type){
+    flexiballetWidthRules(){
       let n = parseFloat(this.order.canvas[0].width);
-      if(type == 'Día y Noche' || type == 'Muelle'){
+      return (
+        (!isNaN(n) && n >= 1 && n <= 22) ||
+        "Requerido"
+      );
+    },
+
+    flexiballetHeightRules(){
+      let w = parseFloat(this.order.canvas[0].width);
+      let h = parseFloat(this.order.canvas[0].height);
+      if(w >= 1 && w <= 1.99){
+        this.heightMargins = 1+' a '+22
+        return ((!isNaN(h) && h >= 1 && h <= 22));
+      }else if(w >= 2 && w <= 2.99){
+        this.heightMargins = 1+' a '+11
+        return ((!isNaN(h) && h >= 1 && h <= 11));
+      }else if(w >= 3 && w <= 3.99){
+        this.heightMargins = 1+' a '+5
+        return ((!isNaN(h) && h >= 1 && h <= 5));
+      }else if(w >= 4 && w <= 5.99){
+        this.heightMargins = 1+' a '+4
+        return ((!isNaN(h) && h >= 1 && h <= 4));
+      }else if(w >= 6 && w <= 7.99){
+        this.heightMargins = 1+' a '+3
+        return ((!isNaN(h) && h >= 1 && h <= 3));
+      }else if(w >= 8 && w <= 11.99){
+        this.heightMargins = 1+' a '+2
+        return ((!isNaN(h) && h >= 1 && h <= 2));
+      }else if(w >= 12 && w <= 22){
+        this.heightMargins = 1+' a '+1
+        return ((!isNaN(h) && h >= 1 && h <= 1));
+      }
+      
+
+      return true
+      
+    },
+
+    widthWoodRules(){
+      let n = parseFloat(this.order.canvas[0].width);
+      if(this.order.motor_type == 'Manual'){
         return (
-          (!isNaN(n) && n >= 0.60 && n <= 2.20) ||
+          (!isNaN(n) && n >= 0.60 && n <= 2.4) ||
           "Requerido"
         );
-      }else if(type == 'Cordón'){
+      }else if(this.order.motor_type == 'Motorizado'){
         return (
-          (!isNaN(n) && n >= 0.60 && n <= 3) ||
+          (!isNaN(n) && n >= 0.80 && n <= 2.4) ||
           "Requerido"
         );
       }else{
         return true
-      }
+      }  
+    },
+
+    heightWoodRules(){
+      let n = parseFloat(this.order.canvas[0].height);
+        return (
+          (!isNaN(n) && n >= 0.80 && n <= 3) ||
+          "Requerido"
+        );
+     
+    },
+
+    widthCelularRules(type){
+      let n = parseFloat(this.order.canvas[0].width);
+        return (
+          (!isNaN(n) && n >= 0.60 && n <= 3) ||
+          "Requerido"
+        );
       
        
     },
     
     heightCelularRules(type){
       let n = parseFloat(this.order.canvas[0].height);
-       if(type == 'Día y Noche' || type == 'Muelle'){
-        return (
-        (!isNaN(n) && n >= 1 && n <= 1.90) ||
-        "Requerido"
-      );
-      }else if(type == 'Cordón'){
+     
         return (
           (!isNaN(n) && n >= 1 && n <= 3) ||
           "Requerido"
-        );
-      }else{
-        return true
-      }
+        )
     },
 
     chargeModels() {
+      this.selectedColor = null;
+      this.heightMargins = null;
+      this.widthMargins = null;
+
+    },
+
+    chargeTypeModels() {
       this.order.line = null
       this.order.celular_type = null
       this.order.celular_drive = null
       this.disabledDriveRadio = true
       this.disabledCelularText = true
       this.disabledSelectModel = false;
-
-      this.selectedColor = null;
-      this.heightMargins = null;
-      this.widthMargins = null;
+      this.chargeModels()
+      if(this.order.type == 'flexibalet'){
+        this.widthMargins = '1.00 a 22'
+      }
+      this.order.canvas = [{width: null, height: null}]
     },
 
     chargeColors() {
@@ -1327,18 +1702,51 @@ export default {
 
   mounted() {
     this.$store.dispatch("getMotorizations");
+
     if (this.order.variant) {
       this.chargeColors();
     }
+
   },
 
+
+
   computed: {
-    
+
+    findWoodPrice(){
+      let result = 'Medida no válida'
+      if(this.order.motor_type == 'Manual'){
+         result  =  woodMatrix.filter((m) => m.width >= this.order.canvas[0].width && m.height >= this.order.canvas[0].height)
+      }else if(this.order.motor_type == 'Motorizado'){
+         result  =  woodMotorized.filter((m) => m.width >= this.order.canvas[0].width && m.height >= this.order.canvas[0].height)
+      }
+     
+      if(result[0]){
+        if(this.order.motor_type == 'Manual' && this.order.motor.drive == 'cinta'){
+          return result[0].price + (result[0].price * 0.15)
+        }else{
+          return result[0].price
+        } 
+      }
+    },
+
+    options () {
+      return {
+        duration: 1000,
+        offset: 0,
+        easing: 'easeInOutQuint',
+      }
+    },
     btnOrderTitle() {
-      return this.editable ? "terminar edición" : "agregar a la orden";
+      if(this.order.type == 'panel-japones'){
+        return this.editable ? "terminar edición" : "terminar panel japonés";
+      }else{
+        return this.editable ? "terminar edición" : "terminar persiana";
+      }
+      
     },
     btnMotorTitle() {
-      return this.editable ? "editar motorización" : "agregar motorización";
+      return this.editable ? "editar motorización" : "terminar motorización";
     },
 
     cardTitle() {
@@ -1410,11 +1818,11 @@ export default {
       if (this.order.type && this.order.line) {
         return this.$store.state.productsModule.variants.filter(
           (variant) =>
-            variant.type === this.order.type && variant.line === this.order.line
+            variant.type === this.order.type && variant.line === this.order.line && variant.manufacturer_id === this.manufacturer
         );
       } else if (this.order.type) {
         return this.$store.state.productsModule.variants.filter(
-          (variant) => variant.type === this.order.type
+          (variant) => variant.type === this.order.type && variant.manufacturer_id === this.manufacturer
         );
       }
     },
@@ -1445,7 +1853,9 @@ export default {
     ...mapState({
       colors: (state) => state.modelsModule.relatedColors,
       colors2: (state) => state.modelsModule.relatedColors2,
-       orders: (state) => state.ordersModule.orders,
+      orders: (state) => state.ordersModule.orders,
+      user: (state) => state.user,
+      manufacturers: (state) => state.modelsModule.manufacturers,
     }),
       
 
@@ -1459,25 +1869,23 @@ export default {
       return this.$store.getters.getTypes("PERSIANAS");
     },
 
-    
-
     unitaryPrice() {
-      if(this.order.variant2 != null){
+        if(this.order.variant2 != null){
         let partialHeight  = this.order.canvas[0].height / 2
         let price = 0
         if (
             this.order.canvas[0].width > 1 &&
             partialHeight > 1
           ) {
-            return parseInt( (this.variant.price * this.order.canvas[0].width * partialHeight) +
+            return parseFloat( (this.variant.price * this.order.canvas[0].width * partialHeight) +
              (this.variantTwo.price * this.order.canvas[0].width * partialHeight));
           } else if (this.order.canvas[0].width > 1) {
-            price =  parseInt(
+            price =  parseFloat(
               (this.variant.price * this.order.canvas[0].width) + (this.variantTwo.price * this.order.canvas[0].width)
             );
             return price
           } else if (partialHeight > 1) {
-            price =  parseInt(
+            price =  parseFloat(
               (this.variant.price * partialHeight) + (this.variantTwo.price * partialHeight)
             );
             return price;
@@ -1495,21 +1903,21 @@ export default {
             this.order.canvas[index].width > 1 &&
             this.order.canvas[index].height > 1
           ) {
-            price += parseInt(
+            price += parseFloat(
               this.variant.price *
                 this.order.canvas[index].width *
                 this.order.canvas[index].height
             );
           } else if (this.order.canvas[index].width > 1) {
-            price += parseInt(
+            price += parseFloat(
               this.variant.price * this.order.canvas[index].width
             );
           } else if (this.order.canvas[index].height > 1) {
-            price += parseInt(
+            price += parseFloat(
               this.variant.price * this.order.canvas[index].height
             );
           } else {
-            price += parseInt(this.variant.price);
+            price += parseFloat(this.variant.price);
           }
         }
 
@@ -1519,14 +1927,18 @@ export default {
       } else {
         return 0;
       }
+      
+
     },
 
     
   },
 
   components: {
+    PreviewPDF,
     QuotedBlinds,
     MotorizationDialog,
+    PreviewPdfRollux,
   },
 
 };
@@ -1563,4 +1975,80 @@ export default {
   min-height: 30px !important;
   height: 30px !important;
 }
+.row {
+  box-sizing: border-box;
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.cell {
+  display: table-cell;
+  flex: 1;
+  flex-direction: column;
+  position: relative;
+}
+
+@supports (display: flex) {
+  .row {
+    display: flex;
+  }
+
+  .cell {
+    display: block;
+  }
+
+  .cell-valign-middle,
+.cell-valign-bottom {
+    display: flex;
+  }
+}
+.cell-min {
+  width: 1%;
+  flex: none auto;
+}
+
+.cell-max {
+  width: 100%;
+  flex: 1 100%;
+}
+
+.row {
+  border-collapse: seperate;
+  border-spacing: 8px 0;
+  padding: 4px;
+}
+
+.cell {
+  border-radius: 6px;
+}
+.cell.cell-1-5 {
+  flex: none;
+  width: 20%;
+}
+.cell.cell-nowrap {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.cell.cell-valign-middle {
+  vertical-align: middle;
+  justify-content: center;
+}
+.cell.cell-valign-bottom {
+  vertical-align: bottom;
+  justify-content: flex-end;
+}
+.cell.cell-align-center {
+  text-align: center;
+}
+.cell.cell-align-right {
+  text-align: right;
+}
+.cell.cell-100px {
+  flex: none;
+  width: 100px;
+  max-width: 100px;
+}
+
+
 </style>

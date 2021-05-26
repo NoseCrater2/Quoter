@@ -31,7 +31,9 @@ class GalleryImport implements WithHeadingRow, ToCollection, SkipsOnError, WithV
                 ]);
 
             $gallery = Gallery::firstOrCreate(
-                ['model' => $row['modelo']],
+                ['model' => $row['modelo'],
+                 'type_id' => $type->id,
+                ],
                 [
                     'price' => $row['precio'],
                     'type_id' =>  $type->id,

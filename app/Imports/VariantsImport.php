@@ -82,8 +82,7 @@ public function collection(Collection $rows)
             'color' => $row['color'],
         ],
             [
-                'color' => $row['color'],
-                'rotate' =>$row->has('rotacion')?$row['rotacion']:0
+                'color' => $row['color']
             ]
         );
 
@@ -106,6 +105,7 @@ public function collection(Collection $rows)
                 'curve_price' => $row->has('precio_doble') ? $row['precio_doble'] : 0,
                 'price' => $row->has('precio')?$row['precio']:0,
                 'description' => $row->has('descripcion')?$row['descripcion']:null,
+                'rotate' =>$row->has('rotacion')?$row['rotacion']:0,
                 'weave_id'=> $tejido != null ? $tejido->id : null,
                 'line_id' => $line != null ? $line->id : null,
                 'type_id' => $type->id,
