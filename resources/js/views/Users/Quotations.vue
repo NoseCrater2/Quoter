@@ -23,66 +23,89 @@
 
             <template v-slot:default="props">
                 <v-row>
-                    <v-col v-for="item in props.items" :key="item.id" cols="12" sm="6" md="4" lg="3">
-                        <v-hover v-slot="{ hover }">
-                            <v-card class="mx-auto" :color="hover?'#3ba2a9':'white'"  :dark="hover?true:false" >
-                              
-                                <v-list-item three-line>
-                                    <v-list-item-content>
-                                        <div class="overline mb-4">{{ item.blinds}} PERSIANA(S)</div>
-                                        <v-list-item-title class="headline mb-1">
-                                            {{item.state}}
-                                        </v-list-item-title>
-                                    </v-list-item-content>
-                                    <v-list-item-avatar  tile size="80">
-                                        <v-icon size="80" :color="hover?'white':'#3ba2a9'"  v-if="item.state=='Orden recibida'">
-                                           mdi-clipboard-check
-                                        </v-icon>
-                                        <v-icon size="80" :color="hover?'white':'#CDDC39'"  v-else-if="item.state=='Orden en proceso'">
-                                           mdi-progress-wrench
-                                        </v-icon>
-                                        <v-icon size="80" :color="hover?'white':'#8BC34A'"  v-else-if="item.state=='Orden en envío'">
-                                           mdi-truck-fast
-                                        </v-icon>
-                                        <v-icon size="80" :color="hover?'white':'#4CAF50'"  v-else-if="item.state=='Orden entregada'">
-                                           mdi-truck-check
-                                        </v-icon>
-                                    </v-list-item-avatar>
-                                </v-list-item>
-                                <!-- <v-list-item>
-                                    <v-list-item-content class="text-decoration-line-through" style="font-size: 1.5rem">
-                                        {{mxCurrencyFormat.format(item.subtotal)}}
-                                    </v-list-item-content>
-                                </v-list-item> -->
-
-                                <v-list-item>
-                                    <v-list-item-content  style="font-size: 1.8rem">
-                                      {{mxCurrencyFormat.format(item.total)}}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item>
-                                    <v-list-item-content >
-                                        Fecha de creación: 
-                                    </v-list-item-content>
-                                    <v-list-item-icon>
-                                        {{item.created_at}}
-                                    </v-list-item-icon>
-                                </v-list-item>
-                                <v-list-item>
-                                    <v-list-item-content >
-                                        Última actualización: 
-                                    </v-list-item-content>
-                                    <v-list-item-icon>
-                                        {{item.updated_at}}
-                                    </v-list-item-icon>
-                                </v-list-item>
-
-                                <v-card-actions>
-                                    <v-btn outlined rounded text @click="openDetailsDialog(item.id)">Ver detalles</v-btn>
-                                    <v-spacer></v-spacer>
-                                </v-card-actions>
-                            </v-card>
-                        </v-hover>
+                    <v-col v-for="item in props.items" :key="item.id" cols="12" sm="6" md="4">
+                        <v-card class="mx-auto"  outlined >
+                            <div class="text-right">
+                              <v-menu offset-y>
+                                <template v-slot:activator="{ on, attrs }">
+                                  <v-btn
+                                    icon
+                                   color="#3ba2a9"
+                                    dark
+                                    v-bind="attrs"
+                                    v-on="on"
+                                  >
+                                  <v-icon>mdi-dots-vertical</v-icon>
+                                  </v-btn>
+                                </template>
+                                <v-list>
+                                  <v-list-item link @click="openDetailsDialog(item.id)">
+                                    <v-list-item-icon><v-icon>mdi-clipboard-list</v-icon></v-list-item-icon>
+                                    <v-list-item-title>Ver detalles</v-list-item-title>
+                                  </v-list-item>
+                                  <v-list-item link @click="changeQuotation(item.id)">
+                                    <v-list-item-icon><v-icon>mdi-truck</v-icon></v-list-item-icon>
+                                    <v-list-item-title>Hacer orden</v-list-item-title>
+                                  </v-list-item>
+                                   <v-list-item link @click="editQuotation(item.id)">
+                                    <v-list-item-icon><v-icon>mdi-pencil</v-icon></v-list-item-icon>
+                                    <v-list-item-title>Ver en cotizador</v-list-item-title>
+                                  </v-list-item>
+                                   <v-list-item link @click="deleteQuotation(item.id)">
+                                    <v-list-item-icon><v-icon>mdi-delete</v-icon></v-list-item-icon>
+                                    <v-list-item-title>Eliminar</v-list-item-title>
+                                  </v-list-item>
+                                </v-list>
+                              </v-menu>
+                            </div>
+                            <v-list-item three-line>
+                                <v-list-item-content>
+                                    <v-list-item-title class="headline mb-1">
+                                      {{ item.blinds}} PERSIANA(S)
+                                    </v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content  style="font-size: 1.8rem">
+                                  TOTAL: {{mxCurrencyFormat.format(item.total)}}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content >
+                                    Fecha de creación: 
+                                </v-list-item-content>
+                                <v-list-item-icon>
+                                    {{item.created_at}}
+                                </v-list-item-icon>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content >
+                                    Última actualización: 
+                                </v-list-item-content>
+                                <v-list-item-icon>
+                                    {{item.updated_at}}
+                                </v-list-item-icon>
+                            </v-list-item>
+                            <!-- <v-card-actions>
+                                <v-hover v-slot="{ hover }">
+                                    <v-btn :outlined="hover?false:true" :class="hover?'white--text':''" rounded color="#3ba2a9"  >
+                                        Ver detalles
+                                        <v-icon>mdi-clipboard-list</v-icon>
+                                    </v-btn>
+                                </v-hover>
+                                <v-spacer></v-spacer>
+                                    <v-btn outlined rounded color="#3ba2a9" >
+                                        Editar
+                                        <v-icon right>mdi-calculator</v-icon>
+                                    </v-btn>
+                                <v-spacer></v-spacer>
+                                    <v-btn outlined rounded color="#3ba2a9" >
+                                        Eliminar
+                                        <v-icon right>mdi-delete</v-icon>
+                                    </v-btn>
+                            </v-card-actions> -->
+                        </v-card>
+                        
                     </v-col>
                 </v-row>
             </template>
@@ -118,14 +141,14 @@
         </v-data-iterator>
         <v-row justify="center">
             <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
-                <v-card>
+                <v-card flat>
                     <v-toolbar dark>
                         <v-btn icon dark @click="dialog = false">
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </v-toolbar>
-                    <v-row justify="center" align="center">
-                                 <v-col cols="12" v-for="blind in order.blinds" :key="blind.id">
+                    <v-row align="center" justify="center" >
+                        <v-col cols="12" v-for="blind in order.blinds" :key="blind.id">
 
                             <v-card height="300" >
                                 <div style="border: 1px solid black; height: 85%; width: 90%; margin: auto" class="d-flex">
@@ -313,12 +336,15 @@ export default {
             return Math.ceil(this.orders.length / this.itemsPerPage)
         },
         ...mapState({
-            orders: state => state.ordersModule.quotedOrders,
-            order: state => state.ordersModule.quotedOrder,
+            orders: state => state.ordersModule.quotingOrders,
+            order: state => state.ordersModule.quotingOrder,
         }),
     },
 
     methods:{
+        causeError(event){
+            console.log(event)
+        },
         updateItemsPerPage (number) {
             this.itemsPerPage = number
         },
@@ -329,15 +355,33 @@ export default {
             if (this.page - 1 >= 1) this.page -= 1
         },
         openDetailsDialog(id){
-            this.$store.dispatch('getQuotedOrder',id).then(()=>{
+            this.$store.dispatch('getQuotingOrder',id).then(()=>{
                  this.dialog = true
             });
            
+        },
+        deleteQuotation(id){
+            this.$store.dispatch('deleteQuotingOrder',id).then(()=>{
+                //  this.dialog = true
+            });
+        },
+
+        editQuotation(id){
+            this.$store.dispatch('editQuotingOrder',id).then(()=>{
+                 this.$router.push({name: 'Quoter', params:{order_id: id}})
+            });
+        },
+
+        changeQuotation(id){
+            this.$store.dispatch('changeToOrder',id).then(()=>{
+                 
+            });
         }
     },
 
     mounted(){
-        this.$store.dispatch('getQuotedOrders');
+        this.$store.dispatch('getQuotingOrders');
+        
     }
 }
 </script>

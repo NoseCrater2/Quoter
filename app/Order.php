@@ -9,8 +9,7 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'state',
-        'subtotal',
-        'total',
+        'is_quotation'
     ];
 
     public function user()

@@ -51,7 +51,8 @@ class UserController extends Controller
             'discount_percent' => 'required|numeric|min:0|max:99',
             'ship_address' => 'string|nullable',
             'second_ship_address' => 'string|nullable',
-            
+            'role' => 'required|exists:roles,name',
+            'logo' => 'nullable|image'
         ];
 
         $validator= Validator::make($data,$rules, ErrorMessages::getMessages());
@@ -61,11 +62,18 @@ class UserController extends Controller
             
         }else{
            $pass = User::make_password();
+           if($request->hasFile('logo')){
+                $data['logo'] = $request->logo->store('logos');
+            }
 
             $data['password'] = $pass;
             $user = User::make($data);
-            Mail::to($user)->send(new UserSaved($user));
+
+            $user->assignRole($data['role']);
+
+            Mail::to($user->email)->send(new UserSaved($user));
             $user->password = bcrypt($user->password);
+            
             $user->save();
             // $user->roles()->sync($request->get('roleIds'));
         
@@ -108,8 +116,7 @@ class UserController extends Controller
             'ship_address' => 'string|nullable',
             'second_ship_address' => 'string|nullable',
             'email' => 'email|unique:users,email,'.$user->id,
-            // "roles"    => "required|array|min:1",
-            // "roles.*"  => "required|exists:roles,name|distinct|min:1",
+            'role' => 'exists:roles,name',
             'password'  => 'min:6|confirmed|nullable'
         ];
        
@@ -127,7 +134,9 @@ class UserController extends Controller
             }
 
             $user->update($data);
-            // $user->syncRoles($request->get('roles'));
+
+            $user->syncRoles($data['role']);
+
             return new UserIndexResource(User::findOrFail($user->id));
         } 
 

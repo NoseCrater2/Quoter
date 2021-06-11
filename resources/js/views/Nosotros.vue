@@ -11,7 +11,7 @@
         <v-container fluid style="max-width: 1200px" class="my-4">
         
         <Slogan/>
-        <!-- <iframe width="100%" height="500" style="z-index: 99" src="http://test.siilkaab.com/bookings/1" frameborder="0">
+        <!-- <iframe width="100%" height="500"  src="http://test.siilkaab.com/bookings/1" frameborder="0">
 
         </iframe> -->
         </v-container>

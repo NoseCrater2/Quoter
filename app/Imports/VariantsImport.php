@@ -46,9 +46,10 @@ public function collection(Collection $rows)
         $tejido = null;
 
         if($row->has('tipo') && $row['tipo']){
-        $type = Type::firstOrCreate([
-            'name' => $row['tipo'],
-        ]);
+        $type = Type::firstOrCreate(['name' => $row['tipo'],
+            ],[
+                'slug' => str_replace(" ", '-', strtolower($row['tipo'])),
+            ]);
 
 
        if($row->has('linea') && $row['linea']){

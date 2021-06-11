@@ -14,8 +14,8 @@ class Canvas extends Model
         'blind_id',
     ];
 
-    // public function control()
-    // {
-    //     return $this->belongsTo(Control::class);
-    // }
+    public function blind()
+    {
+        return $this->belongsTo(Blind::class);
+    }
 }

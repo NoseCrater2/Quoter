@@ -157,19 +157,34 @@
         							          			  	></v-text-field>
         							          			</v-col>
         							        		</v-row>
-													<v-row no-gutters align="center">
+
+													<v-row>
+														<v-col cols="12">
+															<v-select
+															hide-details
+															v-model="editedItem.role"
+        							          			  	:items="roles"
+															item-value="name"
+															item-text="name"
+        							          			  	dense
+        							          			  	outlined
+        							          			  	label="Tipo de usuario"
+        							          			  	></v-select>
+														</v-col>
+													</v-row>
+
+													<v-row class="my-2" align="center">
 														<v-col cols="12">
 															<input type="file" ref="btnUploadImage" style="display:none" @change="selectImage($event)" accept="image/*"/>
-															<v-card max-width="100%" max-height="100%" class="d-flex justify-center" @click="$refs.btnUploadImage.click()">
-															<v-img v-if="editedItem.logo != null" width="100%" height="100%" :src="urlTemporal === null ? `/img/${editedItem.logo}` : urlTemporal">
-															</v-img>
-															<div v-else>
-																<v-avatar class="d-block" tile size="50" style="margin: auto">
-																<v-icon size="50">mdi-image</v-icon>
-															</v-avatar>
-															
-															</div>
-															
+															<v-card width="100%" class="d-flex justify-center align-center" height="100"  @click="$refs.btnUploadImage.click()">
+																<v-img v-if="urlTemporal != null"  width="100%" height="100%" :src="urlTemporal">
+																</v-img>
+
+																<v-img v-else-if="editedItem.logo != null && editedItem.logo != Object"  width="100%" height="100%" :src="`/img/${editedItem.logo}`">
+																</v-img>
+																<div v-else >
+																	<v-icon size="50">mdi-image</v-icon>
+																</div>
 															</v-card>
 															<v-card-text class="d-block">
 																Haz clic sobre el recuadro para subir el logo
@@ -233,7 +248,7 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 export default {
     data(){
         return {
@@ -255,7 +270,7 @@ export default {
         { text: 'Email', value: 'email' },
         { text: 'Compañia', value: 'company' },
         { text: 'Descuento(%)', value: 'discount_percent' },
-        { text: 'Rol(es)', value: 'roles' },
+        { text: 'Rol', value: 'role' },
         { text: 'Acciones', value: 'actions', sortable: false },
 
       ],
@@ -285,6 +300,8 @@ export default {
         city: this.$route.query.city || null,
         state: this.$route.query.state || null,
         zip_code: this.$route.query.zip_code || null,
+		role: null,
+		logo: null,
         discount_percent: 0,
     },
     defaultItem: {
@@ -297,27 +314,24 @@ export default {
       city: null,
       state: null,
       zip_code: null,
-      ddiscount_percent: 0,
+	  role: null,
+	  logo: null,
+      discount_percent: 0,
     },
      
         }
     },
 
     mounted(){
-      this.loadingTable = true,
-     this.$store.dispatch('getusers').then(()=>{
-          if(this.getUsersStatus === 200){
-            this.loadingTable = false
-         }
-         this.loadingTable = false
-        })
-        // this.$store.dispatch('getroles').then(()=>{
-        //   if(this.getRolesStatus === 200){
-           
-        //  }
-        
-        // })
+      	this.loadingTable = true,
+     	this.$store.dispatch('getusers').then(()=>{
+          	if(this.getUsersStatus === 200){
+            	this.loadingTable = false
+         	}
 
+			this.loadingTable = false
+        })
+        this.$store.dispatch('getroles')
     },
 
     computed:{
@@ -344,7 +358,6 @@ export default {
 	selectImage(event){
     	this.currentLogo = event.target.files[0]
     	this.editedItem.logo = this.currentLogo
-		
     	const reader = new FileReader();
     	reader.readAsDataURL(this.currentLogo)
     		reader.onload = (e) => {
@@ -370,6 +383,7 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
       })
+	  this.urlTemporal = null
     },
 
     save () {

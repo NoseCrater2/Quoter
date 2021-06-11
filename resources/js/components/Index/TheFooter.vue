@@ -63,10 +63,6 @@
                              <v-list-item-icon><v-icon>mdi-chevron-right</v-icon></v-list-item-icon>
                                <v-list-item-content>PERSIANAS </v-list-item-content>
                         </v-list-item>
-                        <v-list-item class="mt-n4" dark>
-                             <v-list-item-icon><v-icon>mdi-chevron-right</v-icon></v-list-item-icon>                          
-                             <v-list-item-content>CORTINAS </v-list-item-content>
-                        </v-list-item> 
                         <v-list-item class="mt-n4" dark> 
                              <v-list-item-icon><v-icon>mdi-chevron-right</v-icon></v-list-item-icon>                          
                              <v-list-item-content>TOLDOS </v-list-item-content>  

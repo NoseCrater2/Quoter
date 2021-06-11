@@ -39,7 +39,6 @@
 </template>
 <script>
 
-import { mapActions, mapState, productModule} from 'vuex';
 import TypeProductCard from '../components/CustomCards/TypeProductCard';
 
 export default {

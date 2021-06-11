@@ -77,7 +77,7 @@ const productsModule = {
             if(state.variants.length === 0){
             try {
                 const response = await axios
-                .get("/api/variants/")
+                .get("/api/variants")
                 commit('setVariants',response.data.data);
             } catch (error) {}
         }
@@ -141,14 +141,15 @@ const productsModule = {
             } catch (error) {}
         },
 
-
-        getVariantsByProduct: async function ({ commit, state }, idProduct){
+        getVariantsByProduct: async function ({ commit }, idProduct){
             try {
                 const response = await axios
                 .get("/api/getVariantsByProduct/"+idProduct)
                 commit('setVariants',response.data.data);
             } catch (error) {}
         },
+
+        
     }
 }
 

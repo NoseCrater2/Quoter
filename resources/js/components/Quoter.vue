@@ -15,20 +15,7 @@
           <v-row>
             <v-col class="pa-1" cols="6">
               <span style="font-size: 1em"> 1.Seleccione tipo de persiana</span>
-              <v-autocomplete
-              :rules="[(v) => !!v || 'Requerido']"
-                hide-details
-                dense
-                :items="manufacturers"
-                item-text="name"
-                item-value="id"
-                v-model="manufacturer"
-                label="Selecciona marca"
-                outlined
-                color="#47a5ad"
-                background-color="white"
-                class="ma-1"
-              ></v-autocomplete>
+              
               <v-autocomplete
                 :rules="[(v) => !!v || 'Requerido']"
                 @change="chargeTypeModels()"
@@ -39,6 +26,20 @@
                 item-value="slug"
                 v-model="order.type"
                 label="Selecciona tu persiana"
+                outlined
+                color="#47a5ad"
+                background-color="white"
+                class="ma-1"
+              ></v-autocomplete>
+              <v-autocomplete
+                :rules="[(v) => !!v || 'Requerido']"
+                hide-details
+                dense
+                :items="manufacturers"
+                item-text="manufacturer"
+                item-value="manufacturer_id"
+                v-model="order.manufacturer"
+                label="Selecciona marca"
                 outlined
                 color="#47a5ad"
                 background-color="white"
@@ -441,14 +442,14 @@
                  v-if="order.color"
                   max-height="328"
                   max-width="328"
-                  :src=" `/img/modelos/medium/${order.color.code }.jpg`"
+                  :src=" `/img/modelos/medium/${order.type}/${order.manufacturer}/${order.color.code}.jpg`"
                 >
                   <template v-slot:placeholder>
-                    <v-img src="/img/modelos/medium/unavailable.jpg"></v-img>
+                    <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
                   </template>
                   <v-slide-y-transition>
                     <div v-if="hover && order.color.code" style="background-color: rgba(0,0,0,0.2)" class=" d-flex transition-fast-in-fast-out justify-center"  > 
-                       <v-btn icon dark @click="downloadImage(order.color.code)">
+                       <v-btn icon dark @click="downloadImage(order.type, order.manufacturer, order.color.code)">
                          <v-icon>mdi-cloud-download</v-icon>
                       </v-btn>
                     </div> 
@@ -457,7 +458,7 @@
                 <v-img 
                  max-height="328"
                   max-width="328"
-                v-else src="/img/modelos/medium/unavailable.jpg">
+                v-else src="/img/modelos/medium-unavailable.jpg">
                 </v-img>
 
                </v-hover>
@@ -641,14 +642,12 @@
                 </v-tooltip>
             </v-col>
             <v-col cols="12" md="4" sm="12">
-               <v-btn
-               block
-            @click="saveOrders"
-            dark
-            depressed 
-            color="#3ca927"
-            >Realizar pedido
-            </v-btn>
+               <v-btn class="mb-2"  block @click="saveOrders" dark depressed  color="#3ca927">
+                 Realizar pedido
+              </v-btn>
+              <v-btn class="mt-2"  block @click="saveQuotations" dark depressed outlined color="#3ca927">
+                 Guardar cotización
+              </v-btn>
             </v-col>
           </v-row>
         </v-form>
@@ -879,14 +878,14 @@
                     v-if="order.color"
                     max-height="328"
                     max-width="328"
-                    :src=" `/img/modelos/medium/${order.color.code }.jpg`"
+                    :src=" `/img/modelos/medium/${order.type}/${order.manufacturer}/${order.color.code }.jpg`"
                   >
                     <template v-slot:placeholder>
-                      <v-img src="/img/modelos/medium/unavailable.jpg"></v-img>
+                      <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
                     </template>
                     <v-slide-y-transition>
                       <div v-if="hover && order.color.code" style="background-color: rgba(0,0,0,0.2)" class=" d-flex transition-fast-in-fast-out justify-center"  > 
-                         <v-btn icon dark @click="downloadImage(order.color.code)">
+                         <v-btn icon dark @click="downloadImage(order.type, order.manufacturer, order.color.code)">
                            <v-icon>mdi-cloud-download</v-icon>
                         </v-btn>
                       </div> 
@@ -895,7 +894,7 @@
                   <v-img 
                     max-height="328"
                     max-width="328"
-                    v-else src="/img/modelos/medium/unavailable.jpg">
+                    v-else src="/img/modelos/medium-unavailable.jpg">
                   </v-img>
                </v-hover>
               </v-col>
@@ -952,14 +951,14 @@
                     v-if="order.color"
                     max-height="328"
                     max-width="328"
-                    :src=" `/img/modelos/medium/${order.color.code }.jpg`"
+                    :src=" `/img/modelos/medium/${order.type}/${order.manufacturer}/${order.color.code }.jpg`"
                   >
                     <template v-slot:placeholder>
-                      <v-img src="/img/modelos/medium/unavailable.jpg"></v-img>
+                      <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
                     </template>
                     <v-slide-y-transition>
                       <div v-if="hover && order.color.code" style="background-color: rgba(0,0,0,0.2)" class=" d-flex transition-fast-in-fast-out justify-center"  > 
-                         <v-btn icon dark @click="downloadImage(order.color.code)">
+                         <v-btn icon dark @click="downloadImage(order.type, order.manufacturer, order.color.code)">
                            <v-icon>mdi-cloud-download</v-icon>
                         </v-btn>
                       </div> 
@@ -968,7 +967,7 @@
                   <v-img 
                     max-height="328"
                     max-width="328"
-                    v-else src="/img/modelos/medium/unavailable.jpg">
+                    v-else src="/img/modelos/medium-unavailable.jpg">
                   </v-img>
                </v-hover>
                
@@ -1002,14 +1001,14 @@
                     v-if="order.second_color"
                     max-height="328"
                     max-width="328"
-                    :src=" `/img/modelos/medium/${order.second_color.code }.jpg`"
+                    :src=" `/img/modelos/medium/${order.type}/${order.manufacturer}/${order.second_color.code }.jpg`"
                   >
                     <template v-slot:placeholder>
-                      <v-img src="/img/modelos/medium/unavailable.jpg"></v-img>
+                      <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
                     </template>
                     <v-slide-y-transition>
                       <div v-if="hover && order.second_color.code" style="background-color: rgba(0,0,0,0.2)" class=" d-flex transition-fast-in-fast-out justify-center"  > 
-                         <v-btn icon dark @click="downloadImage(order.second_color.code)">
+                         <v-btn icon dark @click="downloadImage(order.type, order.manufacturer, order.second_color.code)">
                            <v-icon>mdi-cloud-download</v-icon>
                         </v-btn>
                       </div> 
@@ -1018,7 +1017,7 @@
                   <v-img 
                     max-height="328"
                     max-width="328"
-                    v-else src="/img/modelos/medium/unavailable.jpg">
+                    v-else src="/img/modelos/medium-unavailable.jpg">
                   </v-img>
                </v-hover>
               </v-col>
@@ -1137,7 +1136,6 @@ export default {
   name: "Quoter",
   data() {
     return {
-      manufacturer: null,
       beforePrint: false,
       pdfComponentKey: 1,
       disabledWoodText: true,
@@ -1171,6 +1169,7 @@ export default {
       editable: false,
       order: {
         type: this.$route.query.type || null,
+        manufacturer: null,
         celular_type: null,
         celular_drive: null,
         celular_variant: null,
@@ -1218,6 +1217,7 @@ export default {
       },
       defaultOrder: {
         type: null,
+        manufacturer: null,
         celular_type: null,
         celular_drive: null,
         celular_variant: null,
@@ -1337,10 +1337,31 @@ export default {
 
     },
     saveOrders(){
-      if(this.user == null){
+      if(this.user == null ){
+        this.$route.query.redirect = 'quoter'
          this.$router.push({name: "login"})
       }else{
-        this.$store.dispatch('saveOrders', this.orders)
+        if(this.$route.params.order_id){
+          this.$store.dispatch('updateOrders', {'orders': this.orders, 'id': this.$route.params.order_id,'is_quotation': false})
+        }else{
+          this.$store.dispatch('saveOrders', this.orders)
+        }
+      
+      }
+    },
+
+    saveQuotations(){
+      if(this.user == null){
+        this.$route.query.redirect = 'quoter'
+         this.$router.push({name: "login"})
+      }else{
+        if(this.$route.params.order_id){
+          this.$store.dispatch('updateQuotations', {'orders': this.orders, 'id': this.$route.params.order_id})
+        }else{
+          this.$store.dispatch('saveQuotations', this.orders)
+        }
+       
+        
       }
     },
 
@@ -1367,10 +1388,13 @@ export default {
     },
 
     chargeCelularColors(){
-        let variants = this.variants.filter(v => v.name.includes(this.order.celular_variant))
-        this.$store.dispatch("getRelatedColors", variants[0].id).then(()=>{
-          this.order.variant = variants[0].id
-        })
+        let variants = this.$store.state.productsModule.variants.filter(v => v.name.includes(this.order.celular_variant))
+        
+        if(variants.length > 0){
+          this.$store.dispatch("getRelatedColors", variants[0].id).then(()=>{
+            this.order.variant = variants[0].id
+          })
+       
         
         if(variants[1]){
           this.$store.dispatch("getRelatedColors2", variants[1].id).then(() => {
@@ -1385,7 +1409,7 @@ export default {
             this.disabledSelectColor = false
           });
         }
-     
+        }
     },
 
     showMargins(){
@@ -1417,8 +1441,8 @@ export default {
       }
     },
 
-    downloadImage(code){
-      watermark(['/img/modelos/full/'+code+'.jpg','/img/cotizador/watermarklogo.png'])
+    downloadImage(type, manufacturer, code){
+      watermark(['/img/modelos/full/'+type+'/'+manufacturer+'/'+code+'.jpg','/img/cotizador/watermarklogo.png'])
      .image(function (model, logo) {
     const context = model.getContext('2d');
     context.save();
@@ -1815,15 +1839,20 @@ export default {
     },
 
     variants() {
-      if (this.order.type && this.order.line) {
+      if (this.order.type && this.order.line && this.order.manufacturer) {
         return this.$store.state.productsModule.variants.filter(
-          (variant) =>
-            variant.type === this.order.type && variant.line === this.order.line && variant.manufacturer_id === this.manufacturer
+          (variant) => variant.type === this.order.type && variant.line === this.order.line && variant.manufacturer_id === this.order.manufacturer
         );
-      } else if (this.order.type) {
+      } else if (this.order.type && this.order.manufacturer) {
         return this.$store.state.productsModule.variants.filter(
-          (variant) => variant.type === this.order.type && variant.manufacturer_id === this.manufacturer
+          (variant) => variant.type === this.order.type && variant.manufacturer_id === this.order.manufacturer
         );
+      }
+    },
+
+    manufacturers(){
+      if(this.order.type){
+        return this.$store.state.productsModule.variants.filter((v) => v.type === this.order.type)
       }
     },
 
@@ -1855,7 +1884,6 @@ export default {
       colors2: (state) => state.modelsModule.relatedColors2,
       orders: (state) => state.ordersModule.orders,
       user: (state) => state.user,
-      manufacturers: (state) => state.modelsModule.manufacturers,
     }),
       
 

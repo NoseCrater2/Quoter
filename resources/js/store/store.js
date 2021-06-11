@@ -14,6 +14,7 @@ import ordersModule from './ordersModule';
 import sunblindModule from './sunblindModule';
 import motorizationModule from './motorizationModule';
 import { isLoggedIn, logOut } from '../utils/auth';
+import { isNull } from 'lodash';
 
 const store = new Vuex.Store({
 
@@ -95,12 +96,13 @@ mutations:{
 },
 actions:{
   async loadUser({commit, dispatch}){
-    
     if(isLoggedIn()){
       
       try {
         const response = await axios.get("/user")
-        commit("setUser", response.data)
+        
+        commit("setUser", response.data.data)
+       
         commit("setLoggedIn", true)
 
       } catch (error) {
@@ -111,7 +113,7 @@ actions:{
   }, 
 
   logout({commit}){
-    commit("setUser", {})
+    commit("setUser", null)
     commit("setLoggedIn", false)
     logOut()
   },

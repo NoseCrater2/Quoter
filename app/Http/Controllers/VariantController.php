@@ -14,7 +14,6 @@ use App\Http\Resources\VariantIndexResource;
 use App\Http\Resources\VariantShowResource;
 use App\Http\Resources\ColorIndexResource;
 use App\Imports\ModelsImport;
-use App\Sunblind;
 use Carbon\Carbon;
 use Spatie\Searchable\Search;
 use Spatie\Searchable\ModelSearchAspect;
@@ -29,7 +28,7 @@ class VariantController extends Controller
     public function index()
     {
         return VariantIndexResource::collection(
-            Variant::orderBy('price','desc')->get()
+            Variant::has('colors')->orderBy('price','desc')->get()
         );
     }
 

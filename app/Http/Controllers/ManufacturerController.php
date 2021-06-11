@@ -16,7 +16,7 @@ class ManufacturerController extends Controller
     public function index()
     {
         return ManufacturerIndexResource::collection(
-            Manufacturer::get()
+            Manufacturer::has('variants')->get()
         );
     }
 

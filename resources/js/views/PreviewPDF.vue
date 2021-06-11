@@ -1,5 +1,6 @@
 <template>
     <VueHtml2pdf
+    v-if="variants.length > 0"
     :show-layout="false"
     :float-layout="true"
     :enable-links="true"
@@ -17,10 +18,7 @@
     :html-to-pdf-options="{html2canvas: {scrollX: '0', scrollY: '0'}}"
     ref="html2Pdf2"
     >
-        <section>
-            
-        </section>
-        <section slot="pdf-content"  v-if="user">
+        <section slot="pdf-content"  >
            
             <section class="pdf-item" style="height: 235px; margin: 15px 15px 0px 15px;">
                 <v-row no-gutters v-if="user != null" style="height: 100px;" >
@@ -85,10 +83,10 @@
                         </div>
                         <div style="width: 60%; height: 80%;margin-top: -78px; margin-left: 25px;font-size: 12px;" >
                             <div class="d-block" style="font-weight: bolder;">
-                                Modelo: {{$store.getters.getVariant(o.variant).name}}
+                                Modelo: {{ $store.getters.getVariant(o.variant).name }}
                             </div>
                             <div class="d-block" style="font-weight: bolder;" v-if="o.variant2 != null">
-                                Modelo 2:  {{$store.getters.getVariant(o.variant2).name}}
+                                Modelo 2:  {{ $store.getters.getVariant(o.variant2).name }}
                             </div>
                             <div class="d-block">
                                 <b> Color:</b>{{o.color.color}}
@@ -242,6 +240,7 @@ export default {
          ...mapState({
             orders: (state) => state.ordersModule.orders,
             user: (state) => state.user,
+            variants: (state) => state.productsModule.variants,
         }),
     },
 

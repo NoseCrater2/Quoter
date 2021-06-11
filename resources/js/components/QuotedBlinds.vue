@@ -75,7 +75,7 @@
                             size="80"
                             tile
                           >
-                            <v-img :src="`/img/modelos/medium/${o.color.code}.jpg`" >
+                            <v-img :src="`/img/modelos/medium/${o.type}/${o.manufacturer}/${o.color.code}.jpg`" >
                               <template v-slot:placeholder>
                                 <v-img  src="/img/modelos/medium/unavailable.jpg"></v-img>
                               </template>
@@ -111,7 +111,7 @@
                             size="80"
                             tile
                           >
-                            <v-img  :src="`/img/modelos/medium/${o.second_color.code}.jpg`" >
+                            <v-img  :src="`/img/modelos/medium/${o.type}/${o.manufacturer}/${o.second_color.code}.jpg`" >
                               <template v-slot:placeholder>
                                 <v-img  src="/img/modelos/medium/unavailable.jpg"></v-img>
                               </template>
@@ -262,7 +262,7 @@
                     </v-list-item>
                   </v-list-group>
 
-                  <v-list-group no-action v-if="o.motor.motor != 0"  :value="true">
+                  <v-list-group no-action v-if="o.motor.motor != 0 && o.motor.motor != null"  :value="true">
                     <template v-slot:activator>
                       <v-list-item-content>
                         <v-list-item-title>MOTOR</v-list-item-title>
@@ -352,8 +352,6 @@
 
 <script>
 import { mapState } from "vuex";
-// import VueHtml2pdf from 'vue-html2pdf'
-// import {jsPDF} from 'jspdf';
 export default {
   data() {
     return {

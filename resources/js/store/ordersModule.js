@@ -6,6 +6,8 @@ const ordersModule = {
       totalPrice: 0,
       quotedOrders: [],
       quotedOrder: [],
+      quotingOrders: [],
+      quotingOrder: [],
        
     },
 
@@ -44,22 +46,32 @@ const ordersModule = {
         saveOrder(state,newOrder){
             state.orders.push(newOrder);
             //state.newUserId = newUser.id;
-          },
+        },
 
-          setQuotedOrders(state, orders){
-            state.quotedOrders = orders
-            //state.newUserId = newUser.id;
-          },
-          setQuotedOrder(state, order){
-            state.quotedOrder = order
-            //state.newUserId = newUser.id;
-          },
-          pushProductToCart (state, item){
-           
-              state.orders.push(item)
-              localStorage.setItem('orders', JSON.stringify(state.orders))
-            //   state.orders.push(item)
-          },
+        setQuotedOrders(state, orders){
+          state.quotedOrders = orders
+          //state.newUserId = newUser.id;
+        },
+
+        setQuotedOrder(state, order){
+          state.quotedOrder = order
+          //state.newUserId = newUser.id;
+        },
+
+        setQuotingOrders(state, orders){
+          state.quotingOrders = orders
+          //state.newUserId = newUser.id;
+        },
+
+        setQuotingOrder(state, order){
+          state.quotingOrder = order
+          //state.newUserId = newUser.id;
+        },
+
+        pushProductToCart (state, item){
+            state.orders.push(item)
+            localStorage.setItem('orders', JSON.stringify(state.orders))
+        },
 
         editOrder (state, item){
             state.orders.map(function(currentOrder) {
@@ -69,46 +81,41 @@ const ordersModule = {
                 }
             });
         },
-          incrementItemQuantity(state, item){
-              item.quantity++
-          },
 
-          sumTotalPrice(state, price){
-              let currentPrice = parseFloat(state.totalPrice)
-              let newPrice = parseFloat(price)
-                state.totalPrice = currentPrice + newPrice
+        incrementItemQuantity(state, item){
+            item.quantity++
+        },
+
+        sumTotalPrice(state, price){
+            let currentPrice = parseFloat(state.totalPrice)
+            let newPrice = parseFloat(price)
+            state.totalPrice = currentPrice + newPrice
         },
 
         deleteOrder(state, id) {
-
             let  u = state.orders.find((order => order.id === id))
             state.orders.splice(state.orders.indexOf(u),1)
-            localStorage.setItem('orders', JSON.stringify(state.orders))
-          
-           
-          },
+            localStorage.setItem('orders', JSON.stringify(state.orders))   
+        },
+
+        deleteQuotingOrder(state, deleteOrder) {
+            let  u = state.quotingOrders.find((order => order.id === deleteOrder.id))
+           state.quotingOrders.splice(state.quotingOrders.indexOf(u),1)
+        },
+
+        assignOrder(state, orders){
+            state.orders = orders.blinds
+        },
 
     },
     actions:{
         addToOrder (context, blind){
-            
             if(context.state.orders.length == 0){
                 blind.id = 1
             }else{
                 blind.id = context.state.orders[context.state.orders.length - 1].id + 1
             }
-           
-            //  const orderItem = context.state.orders.find(item => item.id === blind.id)
-            
-            // // if(!orderItem){
-                context.commit('pushProductToCart', blind)
-               // context.commit('sumTotalPrice', blind.price)
-            //  }
-             //else{
-            //     context.commit('incrementItemQuantity', orderItem)
-            // }
-
-            //Aquí se puede añadir otro commit para reducir el inventario
+            context.commit('pushProductToCart', blind)
         },
 
         editOrder (context, blind){
@@ -120,11 +127,45 @@ const ordersModule = {
         },
 
         saveOrders: async function ({ commit}, orders){
-            console.log(orders)
             try {
                 const response = await axios
-                .post("/api/orders", {'orders':orders})
+                .post("/api/orders", {'orders':orders, 'is_quotation': 0})
                 // commit('setProducts',response.data.data);
+            } catch (error) {}
+        
+        },
+
+        saveQuotations: async function ({ commit}, orders){
+            try {
+                const response = await axios
+                .post("/api/orders", {'orders':orders, 'is_quotation': true})
+            } catch (error) {}
+        
+        },
+
+        updateQuotations: async function ({ state}, orders){
+            try {
+                const response = await axios
+                .put("/api/orders/" + orders.id, orders).then((response) => {
+                    console.log(response)
+                    if(response.status === 200){
+                        localStorage.removeItem("orders");
+                        state.orders = []
+                    }
+                })
+            } catch (error) {}
+        
+        },
+
+        updateOrders: async function ({state}, orders){
+            try {
+                const response = await axios
+                .put("/api/orders/" + orders.id, orders).then((response) => {
+                    if(response.status === 200){
+                        localStorage.removeItem("orders");
+                        state.orders = []
+                    }
+                })
             } catch (error) {}
         
         },
@@ -132,7 +173,7 @@ const ordersModule = {
         getQuotedOrders: async function ({ commit, state }){
             try {
                 const response = await axios
-                .get("/api/orders/")
+                .get("/api/orders")
                 commit('setQuotedOrders',response.data.data);
             } catch (error) {}
         },
@@ -142,6 +183,45 @@ const ordersModule = {
                 const response = await axios
                 .get("/api/orders/"+id)
                 commit('setQuotedOrder',response.data.data);
+            } catch (error) {}
+        },
+        getQuotingOrders: async function ({ commit, state }){
+            try {
+                const response = await axios
+                .get("/api/quotations")
+                commit('setQuotingOrders',response.data.data);
+            } catch (error) {}
+        },
+
+        getQuotingOrder: async function ({ commit, state },id){
+            try {
+                const response = await axios
+                .get("/api/orders/"+id)
+                commit('setQuotingOrder',response.data.data);
+            } catch (error) {}
+        },
+
+        deleteQuotingOrder: async function ({ commit },id){
+            try {
+                const response = await axios
+                .delete("/api/orders/" + id)
+                commit('deleteQuotingOrder',response.data.data);
+            } catch (error) {}
+        },
+
+        editQuotingOrder: async function ({ commit },id){
+            try {
+                const response = await axios
+                .get("/api/orders/"+id)
+                commit('assignOrder',response.data.data);
+            } catch (error) {}
+        },
+
+        changeToOrder: async function ({ commit }, id){
+            try {
+                const response = await axios
+                .get("/api/changequoting/"+id)
+                commit('deleteQuotingOrder',response.data.data);
             } catch (error) {}
         },
     },
