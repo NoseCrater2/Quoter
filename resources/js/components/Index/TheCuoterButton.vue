@@ -1,5 +1,5 @@
 <template>
-     <v-btn v-if="!$route.path.includes('quoter')"  :to="{name:'Quoter'}" class="vertical" right fixed top tile height="44px"  width="210px" style="margin-right: -85px; z-index:5; border-radius: 15px 15px 0px 0px; margin-top: -15px"  dark x-large color="#f1c40f">      
+     <v-btn v-if="!$route.path.includes('quoter')"  :to="{name:'Quoter'}" class="vertical" right fixed top tile height="44px"  width="210px" style="margin-right: -85px; z-index:5; border-radius: 15px 15px 0px 0px; margin-top: 30px"  dark x-large color="#f1c40f">      
         <v-icon size="30" class="horizontal" left>mdi-calculator</v-icon>
         <b><p style="font-size: 1.2em" class="my-4 ml-4 mr-n5">COTIZADOR</p></b>
     </v-btn>

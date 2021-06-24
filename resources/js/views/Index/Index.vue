@@ -1,55 +1,121 @@
 <template>
-    <v-app>
-        <v-navigation-drawer app v-model="drawer" style="z-index: 8;" temporary>
-            <v-divider></v-divider>
-            <v-list dense>
-                <v-list-item :to="{name:'Home'}">
-                    <v-list-item-icon>
-                        <v-icon>mdi-home</v-icon>
-                    </v-list-item-icon>
-                </v-list-item>
-                
-                <v-divider></v-divider>
-                <v-list-item to="/contact">
-                    <v-list-item-content>
-                        <v-list-item-title>CONTACTO</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-                <v-divider></v-divider>
-                <v-list-item :to="{name: 'Register'}">
-                    <v-list-item-content>
-                        <v-list-item-title>INTERIORISTAS</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-                <v-divider></v-divider>
-                <v-list-item  to='/aboutus'>
-                    <v-list-item-content>
-                        <v-list-item-title>NOSOTROS</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-                <v-divider></v-divider>
-                <v-list-group  v-model="showProducts" no-action>
-                    <template v-slot:activator>
-                        <v-list-item-content>
-                            <v-list-item-title >PRODUCTOS</v-list-item-title>
-                        </v-list-item-content> 
-                    </template>
-                    <v-list-item v-for="p in products" :key="p.name" :to="{name: 'Categories', params: {slugProduct: p.slug}}">
-                        <v-list-item-title> {{ p.name }} </v-list-item-title>
-                    </v-list-item>
-                </v-list-group>
-            </v-list>
+  <v-app v-if="loading === true">
+    <v-dialog
+        v-model="loading"
+        hide-overlay
+        persistent
+      >
+        <v-card
+          color="#47a5ad"
+          dark
+        >
+          <v-card-text>
+            Please stand by
+            <v-progress-linear
+              indeterminate
+              color="white"
+              class="mb-0"
+            ></v-progress-linear>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+  </v-app>
+    <v-app v-else>
+      <v-navigation-drawer app v-model="drawer" style="z-index: 8;" temporary>
+        <v-list dense>
+          <v-list-group color="#47a5ad"   no-action>
+            <template v-slot:activator>
+              <v-list-item >
+                <v-list-item-avatar>
+                  <v-icon>mdi-account</v-icon>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                 
+                  <v-list-item-title v-if="$store.state.user != null" > {{ $store.state.user.name +' '+ $store.state.user.last_name }}</v-list-item-title>
+                   <v-list-item-title v-else  >CUENTA</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item >
+            </template>
+
+            <div v-if="$store.state.isLoggedIn === false || $store.state.isLoggedIn === 'false'">
+              <v-list-item :to="{name: 'login'}">
+                <v-list-item-title >Iniciar Sesión</v-list-item-title>
+              </v-list-item>
+            </div>
+
+            <div v-else>
+              <v-list-item  :to="{name: 'Orders'}">
+                <v-list-item-title  class="text-center">ORDENES</v-list-item-title>
+              </v-list-item>
+              <v-list-item :to="{name: 'Quotations'}">
+                <v-list-item-title class="text-center">COTIZACIONES</v-list-item-title>
+              </v-list-item>
+              <v-list-item :to="{name: 'Profile'}">
+                <v-list-item-title class="text-center">MI PERFIL</v-list-item-title>
+              </v-list-item>
+            </div>
+
+          </v-list-group>
+
+          <v-list-item style="background-color: black;"  :to="{name: 'Quotations'}">
+            <v-list-item-icon>
+              <v-icon dark>mdi-cart</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title style="color: white">
+                CARRITO ({{ quotingOrders.length }})
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider></v-divider>
+          <v-list-item color="#47a5ad" :to="{name:'Home'}">
+            <v-list-item-icon>
+              <v-icon>mdi-home</v-icon>
+            </v-list-item-icon>
+          </v-list-item>
+          <v-divider></v-divider>
+          <v-list-item color="#47a5ad" to="/contact">
+            <v-list-item-content>
+              <v-list-item-title>CONTACTO</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider></v-divider>
+          <v-list-item color="#47a5ad" :to="{name: 'Register'}">
+              <v-list-item-content>
+                  <v-list-item-title>INTERIORISTAS</v-list-item-title>
+              </v-list-item-content>
+          </v-list-item>
+          <v-divider></v-divider>
+          <v-list-item color="#47a5ad" to='/aboutus'>
+              <v-list-item-content>
+                  <v-list-item-title>NOSOTROS</v-list-item-title>
+              </v-list-item-content>
+          </v-list-item>
+          <v-divider></v-divider>
+          <v-list-group color="#47a5ad"  v-model="showProducts" no-action>
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title >PRODUCTOS</v-list-item-title>
+              </v-list-item-content> 
+            </template>
+            <v-list-item color="#47a5ad" v-for="p in products" :key="p.name" :to="{name: 'Categories', params: {slugProduct: p.slug}}">
+              <v-list-item-title> {{ p.name }} </v-list-item-title>
+            </v-list-item>
+          </v-list-group>
+          <v-divider></v-divider>
+        </v-list>
       </v-navigation-drawer>
-     
+
+      <blackBar v-if="!isMobile" />
             <!-- COMIENZA BARRA BLANCA -->
-          <whiteBar v-if="!isMobile"/>
+      <whiteBar v-if="!isMobile" />
             <!-- TERMINA BARRA BLANCA -->
            
               
          
 
             <!-- COMIENZA BARRA DE NAVEGACIÓN -->         
-            <v-app-bar ref="mybar" :color="isMobile?'white':'#47a5ad'" style="position: sticky; top:0; z-index: 7; max-height: 64px">
+            <v-app-bar ref="mybar" :color="isMobile?'white':'#47a5ad'" style="position: sticky; z-index: 2; max-height: 64px" :style="isMobile?'top: 0;':'top:28px;'">
              
                  <v-app-bar-nav-icon v-if="isMobile" @click="drawer = true">
                  </v-app-bar-nav-icon>
@@ -79,7 +145,7 @@
               
                   <v-menu  offset-y>
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn class="white--text " style="justify-content:left" depressed tile color="#404042" width="250px" height="65px" v-bind="attrs" v-on="on">
+                        <v-btn class="white--text " style="justify-content:left" depressed tile color="#404042" width="200px" height="65px" v-bind="attrs" v-on="on">
                               <div v-if="$refs.mybar">
                                
                                <v-img v-if="$refs.mybar._data.currentScroll >= 138" width="40px" class="ml-n2" :src="'/img/white-r.png'"></v-img>
@@ -112,7 +178,7 @@
                             </v-list-item-group>
                         </v-list>
                 </v-menu>
-                <v-btn icon color="white" :to="{name:'Home'}" >
+                <v-btn class="ml-1" icon color="white" :to="{name:'Home'}" >
                     <v-icon size="30">mdi-home</v-icon>
                 </v-btn>
                 <v-btn color="white" text height="65px" to="/aboutus" >Nosotros</v-btn>
@@ -123,6 +189,8 @@
                 <v-menu :offset-y="true" max-width="370" >
                   <template v-slot:activator="{on, attrs }">
                 <v-text-field
+                title
+                flat
                 v-bind="attrs"
                 v-on="on"
                 color="#47a5ad" 
@@ -148,16 +216,19 @@
                       <v-list-item-title style="font-size: 1em;" >{{item.name}}</v-list-item-title>
                       <v-list-item-subtitle style="color: #47a5ad; font-size: 1em" >${{item.price}}MXN</v-list-item-subtitle>
                     </v-list-item-content>
-                    <!-- <v-list-item-action>
-                      <v-icon color="#47a5ad" v-if="item.searchable.type.product.slug === 'PERSIANAS'">mdi-blinds</v-icon>
-                      <v-icon color="#47a5ad" v-else-if="item.searchable.type.product.slug === 'CORTINAS'" >mdi-script</v-icon>
-                       <v-icon color="#47a5ad" v-else>mdi-storefront</v-icon>
-                    </v-list-item-action> -->
                   </v-list-item>
                 </template>
               </v-list>
               </v-menu>
-       
+              <v-btn
+              :to="{name: 'Quotations'}"
+              height="65px" 
+              class="white--text ml-2"  
+              depressed tile color="#404042">
+                <v-icon left>mdi-cart</v-icon>
+                CARRITO ({{ quotingOrders.length }})
+              </v-btn>
+
        
             </template>
             
@@ -210,17 +281,16 @@
              <div class="d-flex justify-center" style="background-color: black; color: #616161; font-size: 10px">
                <span>Rollux México® {{(new Date()).getFullYear()}}  |  Hecho por Grupo Lidhber®</span>
              </div>
-
-             
         </v-app>
 </template>
 
 <script>
 
-import {mapState} from 'vuex';
+import { mapState } from 'vuex';
 import btnCotizador from '../../components/Index/TheCuoterButton';
 import btnMail from '../../components/Index/TheMailButton';
 import whiteBar from '../../components/Index/TheWhiteBar';
+import blackBar from '../../components/Index/TheBlackBar';
 import theFooter from '../../components/Index/TheFooter';
 import mailDialog from '../../components/Index/TheMailDialog';
 // import DialogInvite from '../../components/DialogInvite';
@@ -230,8 +300,9 @@ import mailDialog from '../../components/Index/TheMailDialog';
 export default {    
     data(){
         return{
+          loading: false,
           query: null,
-        items: [],
+          items: [],
           showSearch: false,
           dialog: false,
           isMobile:false,
@@ -246,6 +317,7 @@ export default {
       btnCotizador,
       btnMail,
       whiteBar,
+      blackBar,
       theFooter,
       mailDialog,
       
@@ -261,20 +333,24 @@ export default {
       }
     },
 
-     beforeRouteEnter(to, from, next){
-        next(um => {
-            um.$store.dispatch('getLines')
-           
+    //  beforeRouteEnter(to, from, next){
+    //     next(um => {
+          
              
-        })
-    },
+    //     })
+    // },
 
 
 
     mounted(){ 
+        this.loading = true
+        this.$store.dispatch('getLines')
+        this.$store.dispatch('getQuotingOrders');
         this.$store.dispatch('getProducts') 
-        this.$store.dispatch('getAllVariants')
-        this.$store.dispatch('getManufacturers')
+        this.$store.dispatch('getAllVariants').then( () =>{
+        this.loading = false;
+        })
+        // this.$store.dispatch('getManufacturers')
         this.onResize()
         window.addEventListener('resize', this.onResize, { passive: true })
     },
@@ -282,7 +358,7 @@ export default {
     computed:{
       ...mapState({
       products: state => state.productsModule.products,
-      // items: state => state.variantsModule.searchedVariants,
+      quotingOrders: state => state.ordersModule.quotingOrders,
     }),
 
 

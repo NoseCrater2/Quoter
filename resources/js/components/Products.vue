@@ -6,28 +6,40 @@
               
                 <v-col md="3" sm="12">
                   <v-row>
-                    <v-col cols="12" md="12" sm="12">
+                    <v-col class="line" cols="12" md="12" sm="12">
                     
-      
-                        <v-list-group :value="isMobile?false:true" v-if="lines">
-                       <template v-slot:activator>    
-                      <v-subheader>LINEA</v-subheader>
-                    </template>
-                        <v-list-item-group  color="#47a5ad">
-                            <v-list-item v-model="selectedLine" v-for="line in lines" :key="line.id" :to="{name: 'Products', params: {slugLine: line.slug}}">
-                                <v-list-item-content>
-                                    <v-list-item-title v-text="line.name"></v-list-item-title>
-                                </v-list-item-content>
+                        <v-list-group  :value="isMobile?false:true" v-if="lines && type">
+                       <template v-slot:activator>
+                         LÍNEAS {{ type.name }}
+                        </template>
+                        
+                        <v-list-group
+                        :append-icon="line.weaves > 0 ? 'mdi-chevron-down':''"
+                        color="#47a5ad"
+                        v-for="line in lines" :key="line.id">
+                          <template v-slot:activator >
+                            <v-list-item 
+                            :class="$route.path.includes(line.slug)?'v-item--active v-list-item--active':''"
+                            color="#47a5ad" 
+                            :to="line.weaves > 0 ? {name: 'Tejidos', params: {slugLine: line.slug}} : {name: 'Products', params: {slugLine: line.slug}}">
+                                <v-list-item-title>{{ line.name }}</v-list-item-title>
                             </v-list-item>
-                        </v-list-item-group>
+                          </template>
+                          
+                          <v-list-item  color="#47a5ad" v-for="(weave, index) in line.details" :key="index" :to="{name: 'Products', params: {slugLine: line.slug, slugWeave: weave.slug}}">
+                            <v-list-item-title class="text-right">{{ weave.name }}</v-list-item-title>
+                          </v-list-item>
+                        </v-list-group>
+
+                        
                         </v-list-group>
                    
               
                   <v-divider></v-divider>
                
                    <v-list-group :value="isMobile?false:true" v-if="types">
-                       <template v-slot:activator>    
-                      <v-subheader>TIPO</v-subheader>
+                       <template class="type" v-slot:activator>    
+                      MENÚ DE {{slugProduct}} 
                     </template>
                         <v-list-item-group  color="#47a5ad">
                             <v-list-item 
@@ -124,21 +136,26 @@
                     <template v-slot:default="props">
                       <v-row>
                         <v-col
+                        style="justify-content: center; display: flex;"
                         v-for="item in props.items"
                         :key="item.name"
                         cols="12"
                         sm="6"
                         md="4"
-                        lg="3"
                         >
                           <v-img class="d-flex tag" width="70px" v-if="item.rotate == 1" src="/img/modelos/rotable.png"></v-img>
                         <v-hover v-slot="{ hover }" v-if="item">
-                          <v-card width="240" height="340" color="grey lighten-4"  flat >
+                          <v-card width="240"  color="grey lighten-4"  flat >
                              <!-- -->
-                            <v-img class="white--text align-end"   :class="{'escalada':hover}" width="240" height="270" :aspect-ratio="16/9"  :src="`/img/modelos/medium/${item.image}.jpg`" :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
-                            
+                            <v-img 
+                            class="white--text align-end"   
+                            :class="{'escalada':hover}" 
+                            width="240" height="270" 
+                            :aspect-ratio="16/9"  
+                            :src="`/img/modelos/medium/${item.type}/${item.manufacturer}/${item.image}.jpg`" 
+                            :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
                               <template v-slot:placeholder>
-                                <v-img src="/img/modelos/medium/unavailable.jpg"></v-img>
+                                <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
                               </template>
                               <v-slide-y-reverse-transition>
                                 <v-card-title v-if="!hover" class="title d-flex transition-fast-in-fast-out">
@@ -172,14 +189,44 @@
                             
                             </v-img>
                             <v-card-text
-                            
+                            v-if="item.type != 'horizontal-madera-2'"
                             style="position: relative"
                             >
-                            <h2 class=" font-weight-light black--text text-center">
-                             ${{ item.price}}
+                            <h2 v-if="user != null" class="text-center">
+                              <div class="d-block font-weight-light ">
+                                $<div class="d-inline text-decoration-line-through">{{ maskPrice(item.price)[0] }}</div>
+                                <div class="d-inline cents" >{{ maskPrice(item.price)[1] }}</div>
+                               MXN
+                              </div>
+                              <div class="d-block red--text" >
+                                $<div class="d-inline">
+                                  {{ maskPrice(item.price - ((user.discount_percent / 100) * item.price))[0] }}
+                                </div>
+                                <div class="d-inline cents">
+                                  {{ maskPrice(item.price - ((user.discount_percent / 100) * item.price))[1] }}
+                                </div> MXN
+                              </div>
                             </h2>
-                           
+                            <h2 v-else class="font-weight-light black--text text-center">
+                             $<div class="d-inline">{{ maskPrice(item.price)[0] }}</div>
+                                <div class="d-inline cents">{{ maskPrice(item.price)[1] }}</div>
+                               MXN
+                            </h2>
+
                             </v-card-text>
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn
+                              v-if="item.product != 'TOLDOS'"
+                              color="#47a5ad"
+                              class="white--text"
+                              small
+                              :to="{name:'Quoter', query:{type: item.type, line: item.line, manufacturer: item.manufacturer,variant: item.id}}"
+                              >
+                                COTIZAR
+                              </v-btn>
+                              <v-spacer></v-spacer>
+                            </v-card-actions>
                           </v-card>
                         </v-hover>
                         </v-col>
@@ -239,9 +286,9 @@
               <v-row justify="space-around">
                 <v-col cols="12" md="6"  sm="12">
                   <!-- :src="`img/modelos/medium/${item.image}`" -->
-                  <v-img :width="350" :height="475" :src="`/img/modelos/full/${getSelectedProduct.image}.jpg`" >
+                  <v-img :width="350" :height="475" :src="`/img/modelos/full/${getSelectedProduct.type}/${getSelectedProduct.manufacturer}/${getSelectedProduct.image}.jpg`" >
                       <template v-slot:placeholder>
-                          <v-img src="/img/modelos/medium/unavailable.jpg"></v-img>
+                          <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
                       </template>
                   </v-img>
                
@@ -274,11 +321,7 @@
                      <v-list-item-icon><v-icon color="red">mdi-cancel</v-icon></v-list-item-icon>
                      <v-list-item-title style="color: red">Fuera de stock</v-list-item-title>
                    </v-list-item>
-                  </v-card-text>
-                  <div id="box2">
-
-                  </div>
-                  
+                  </v-card-text>                  
                 </v-col>
               </v-row>
             </v-card>
@@ -288,6 +331,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Descriptions from './Descriptions.vue';
 export default {
     data(){
@@ -304,7 +348,7 @@ export default {
           filter: {},
           sortDesc: false,
           page: this.$route.query.page || 1,
-          itemsPerPage: 16,
+          itemsPerPage: 18,
           sortBy: 'price',
           keys: ['name', 'price', 'created_date'],
           chargeBlinds : true,
@@ -319,6 +363,7 @@ export default {
 
         this.onResize()
         window.addEventListener('resize', this.onResize, { passive: true })
+        this.$store.dispatch('getWeaves',this.slugLine)
        
     },
 
@@ -345,16 +390,22 @@ export default {
 
     computed:{
 
-    products(){
-      if(this.slugWeave){
-         return this.$store.state.productsModule.variants.filter((variant) => variant.type === this.slugType && variant.line === this.slugLine && variant.weave === this.slugWeave)
-      }
-      else if(this.slugLine){
-        return this.$store.state.productsModule.variants.filter((variant) => variant.type === this.slugType && variant.line === this.slugLine)
-      }else{
-         return this.$store.state.productsModule.variants.filter((variant) => variant.type === this.slugType) 
-      }
-    },
+      ...mapState({
+        weaves: state => state.productsModule.weaves,
+        user: state => state.user,
+      }),
+
+      products(){
+        if(this.slugWeave){
+          return this.$store.state.productsModule.variants.filter((variant) => variant.type === this.slugType && variant.line === this.slugLine && variant.weave === this.slugWeave)
+        }
+        else if(this.slugLine){
+          return this.$store.state.productsModule.variants.filter((variant) => variant.type === this.slugType && variant.line === this.slugLine)
+        }else{
+          return this.$store.state.productsModule.variants.filter((variant) => variant.type === this.slugType) 
+        }
+      },
+
       numberOfPages(){
         return Math.ceil(this.products.length / this.itemsPerPage)
       },
@@ -422,7 +473,10 @@ export default {
     openDialog(id){
       this.dialog = true
       this.selectedIndex = id;
-    }
+    },
+    maskPrice(price){
+        return parseFloat(price).toFixed(2).toString().split('.')
+      },
     },
     components:{
       Descriptions,
@@ -434,6 +488,24 @@ export default {
         
 
 <style>
+.cents{
+  position: relative;
+  bottom: 0.4em;
+  font-size: 0.7em;
+  right: 0.4em;
+}
+.line > .v-list-group:first-child >.v-list-group__header{
+background-color: #47a5ad;
+color: white;
+font-weight: bolder;
+}
+
+.line > .v-list-group:last-child >.v-list-group__header{
+background-color: #867d7e;
+color: white;
+font-weight: bolder;
+}
+
 
 .v-card--reveal {
 align-items: center;
@@ -444,9 +516,8 @@ width: 100%;
 
 }
 .tag{
+    margin-top: -8px;
     z-index: 1;
-    margin-top: -20px;
-    margin-left: 128px;
     position: absolute;
 }
 

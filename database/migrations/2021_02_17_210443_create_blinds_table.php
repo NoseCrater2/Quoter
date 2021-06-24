@@ -15,8 +15,7 @@ class CreateBlindsTable extends Migration
     {
         Schema::create('blinds', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('variant_id');
-            $table->foreign('variant_id')->references('id')->on('variants');
+            
             $table->boolean('cloth_holder')->default(false);
             $table->enum('control_side',['Izquierdo', 'Derecho'])->nullable();
             $table->integer('panels')->default(0);
@@ -24,6 +23,9 @@ class CreateBlindsTable extends Migration
             $table->string('grouping')->nullable();
             $table->string('manufacturer')->nullable();
             $table->enum('string_type',['plastico', 'metal'])->nullable();
+            
+            $table->unsignedBigInteger('variant_id');
+            $table->foreign('variant_id')->references('id')->on('variants');
             $table->unsignedBigInteger('order_id');
             $table->foreign('order_id')->references('id')->on('orders');
             $table->unsignedBigInteger('color_id');
@@ -34,7 +36,6 @@ class CreateBlindsTable extends Migration
             $table->foreign('motorization_id')->references('id')->on('motorizations');
             $table->unsignedBigInteger('control_id')->nullable();
             $table->foreign('control_id')->references('id')->on('controls');
-
             $table->timestamps();
 
         });

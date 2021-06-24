@@ -76,21 +76,26 @@
       >
         <v-app-bar-nav-icon v-if="isMobile" @click="drawer = true"></v-app-bar-nav-icon>
   
-        
-          <v-img v-if="user" max-width="128" :src="`/img/${user.logo}`"></v-img>
+        <v-card color="transparent" flat tile :to="{name: 'Home'}">
+           <v-img  v-if="user" max-width="128" :src="`/img/${user.logo}`"></v-img>
+        </v-card>
+         
         
   
          <v-spacer></v-spacer>
           
           
           <v-toolbar-items >
-       
-              <v-btn class="white--text"  text :to="{name: 'Users'}">
+              <v-btn 
+              v-if="user.role === 'Administrador'"
+              class="white--text" 
+              text 
+              :to="{name: 'Users'}">
                 Usuarios
               </v-btn>
-              <v-divider inset vertical></v-divider>
 
-              <v-menu offset-y >
+              <v-divider  v-if="user.role === 'Administrador'" inset vertical></v-divider>
+              <v-menu offset-y  v-if="user.role === 'Administrador'" >
                 <template v-slot:activator="{attrs, on}">
                   <v-btn v-bind="attrs" v-on="on" class="white--text"  text  >Inventario</v-btn>
                 </template>
@@ -107,7 +112,22 @@
                 </v-list>
               </v-menu>
             <v-divider inset vertical></v-divider>
-            <v-btn class="white--text" text :to="{name: 'Orders'}">Pedidos</v-btn>
+
+            <v-menu offset-y>
+              <template v-slot:activator="{attrs, on}">
+                <v-btn v-bind="attrs" v-on="on" class="white--text" text >Pedidos</v-btn>
+              </template>
+               <v-list>
+                  <v-list-item :to="{name: 'Orders'}">
+                    <v-list-item-title >ORDENES</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item :to="{name: 'Quotations'}">
+                    <v-list-item-title >COTIZACIONES</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+            </v-menu>
+
+
             <v-divider inset vertical></v-divider>
              <v-btn class="white--text"  text :to="{name: 'Quoter'}">Cotizador</v-btn>
             <v-divider inset vertical></v-divider>
@@ -232,7 +252,7 @@
 <script>
 
 
-import {mapGetters, mapActions, mapState } from 'vuex';
+import {mapGetters,mapState } from 'vuex';
 import { logOut } from '../../utils/auth';
 export default {
 
@@ -263,6 +283,8 @@ beforeDestroy () {
   },
   mounted() {
      this.$store.dispatch('getProducts') 
+     this.$store.dispatch('getAllVariants')
+     this.$store.dispatch("getMotorizations")
     this.onResize()
 
     window.addEventListener('resize', this.onResize, { passive: true })

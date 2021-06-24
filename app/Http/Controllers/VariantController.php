@@ -14,7 +14,6 @@ use App\Http\Resources\VariantIndexResource;
 use App\Http\Resources\VariantShowResource;
 use App\Http\Resources\ColorIndexResource;
 use App\Imports\ModelsImport;
-use App\Sunblind;
 use Carbon\Carbon;
 use Spatie\Searchable\Search;
 use Spatie\Searchable\ModelSearchAspect;
@@ -28,9 +27,24 @@ class VariantController extends Controller
      */
     public function index()
     {
-        return VariantIndexResource::collection(
-            Variant::orderBy('price','desc')->get()
-        );
+        // return VariantIndexResource::collection(
+        //    Variant::orderBy('price','desc')->get()
+        // );
+
+        $variants = DB::table('variants as v')
+            ->join('types as t', 't.id', '=', 'v.type_id')
+            ->leftJoin('lines as l', 'l.id', '=', 'v.line_id')
+            ->leftJoin('weaves as w','w.id','=','v.weave_id')
+            ->join('products as p','p.id','=','t.product_id')
+            ->join('manufacturer_variant as mv','mv.variant_id','=','v.id')
+            ->join('manufacturers as m','m.id','=','mv.manufacturer_id')
+            ->join('color_variant as cv','cv.variant_id','=','v.id')
+            ->join('colors as c','c.id','=','cv.color_id')
+            ->select('v.id', 'v.name', 'v.slug','v.price','v.rotate','v.width','t.slug as type', 'l.slug as line','p.slug as product', 'm.name as manufacturer','c.code as image')
+            ->orderBy('v.price','desc')
+            ->get();
+        // $variants = Variant::with('type:slug as type','weave:slug as weave','line:slug as line','type.product:name as product','manufacturers:name as manufacturer')->get();
+        return response(['data'=> $variants],200);
     }
 
     /**

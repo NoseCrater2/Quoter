@@ -39,7 +39,11 @@ const routes = [
                 path: "orders",
                 component: () => import("./views/Users/Orders.vue"),
                 name: "Orders",
-
+            },
+            {
+                path: "quotations",
+                component: () => import("./views/Users/Quotations.vue"),
+                name: "Quotations",
             },
 
             {

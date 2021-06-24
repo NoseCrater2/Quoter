@@ -18,10 +18,7 @@ class RolePolicy
      */
     public function viewAny(User $user)
     {
-        if($user->can('roles.index')){
-            return true;
-        }
-        return false;
+        return $user->roles->contains('name','Administrador');
     }
 
     /**

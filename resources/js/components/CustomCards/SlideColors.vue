@@ -14,9 +14,9 @@
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs}">
                             <div>
-                                <v-img  v-bind="attrs" v-on="on"   :aspect-ratio="16/9" height="80"  :src="`/../../../img/modelos/medium/${colors[n-1].code}.jpg`">
+                                <v-img  v-bind="attrs" v-on="on"   :aspect-ratio="16/9" height="80"  :src="`/img/modelos/medium/${type}/${manufacturer}/${colors[n-1].code}.jpg`">
                                     <template v-slot:placeholder>
-                                        <v-img src="/../../../img/modelos/medium/unavailable.jpg"></v-img>
+                                        <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
                                     </template>
                                 </v-img>
                             </div>
@@ -40,6 +40,12 @@ export default {
     props: {
         colors:{
             type: Array,
+        },
+        type: {
+            type: String,
+        },
+        manufacturer: {
+            type: String,
         }
     },
 

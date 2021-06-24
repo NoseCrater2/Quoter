@@ -209,13 +209,14 @@
                         </div>
                     </v-card-title>
                     <v-card-text  style="text-align: justify; line-height: 1.2em;" :style="$vuetify.breakpoint.smAndDown?'font-size: 0.75em':'font-size: 1.5em'" >
-                        Para algunos casos se podrán motorizar
-                      las persianas manuales que ya tienes
-                      pero hay que tener en cuenta que esto
-                      te lo dirá una perosna experta en el
-                      tema, ya que se deben consider varios
-                      factores: tipo y medida del tubo o riel y
-                      otras especificaciones técnicas.
+                        En algunos casos, se podrán motorizar las
+                        persianas manuales que ya tienes, pero hay
+                        que tener en cuenta que, en este caso, es 
+                        necesario contactarnos, para que una persona 
+                        experta en el tema te asesore, ya que se 
+                        deben considerar varios factores cómo son: 
+                        tipo de persiana, medida del tubo o riel, 
+                        entre otras especificaciones técnicas.
                     </v-card-text>
                    
                 </v-card>

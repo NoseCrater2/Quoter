@@ -1,5 +1,5 @@
 <template>
-    <v-row justify="center" class="mx-3" style="max-height:77px" >
+    <v-row justify="center" class="mx-3 my-1"  style="max-height: 90px" >
         <v-card  width="1200px" class="d-flex" max-height="77" tile flat>
             <v-card tile flat class="mr-auto" :to="{name: 'Home'}">
                 <v-img width="200"  src="/img/logo.svg" ></v-img>

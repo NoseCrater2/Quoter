@@ -24,6 +24,8 @@ Route::post('logout', 'Api\AuthController@logout');
 Route::post('register', 'Api\AuthController@register');
 Route::post('register-client', 'Api\AuthController@registerClient');
 
+Route::get('directory', 'GalleryController@showDirectory');
+
 
 
 
@@ -84,6 +86,7 @@ Route::get('getRelatedBlinds/{sunblind}' , 'SunblindController@getRelatedBlinds'
 
 Route::get('getColors/{variant}' , 'VariantController@getColors');
 Route::post('users' , 'UserController@store')->name('users.store');
+Route::get('distributors' , 'UserController@distributors');
 Route::middleware(['auth:sanctum'])->group(function()
 {
 
@@ -94,7 +97,9 @@ Route::middleware(['auth:sanctum'])->group(function()
     //Roles
     Route::resource('roles', 'RoleController');
 
-    Route::resource('orders', 'OrderController')->only('index','show', 'store', 'destroy');
+    Route::resource('orders', 'OrderController')->only('index','show', 'store', 'update','destroy');
+    Route::get('quotations','OrderController@quotations');
+    Route::get('changequoting/{order}','OrderController@changeToOrder');
    
     //Products
     // Route::post('products/store' , 'Api\ProductController@store')->name('products.store')->middleware('can:products.create');

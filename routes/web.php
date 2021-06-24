@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\UserShowResource;
 
 
 /*
@@ -26,7 +27,8 @@ Route::get('/clear-all-cache', function() {
 Auth::routes();
 
 Route::middleware('auth')->get('/user',function (Request $request){
-    return $request->user();
+    
+    return new UserShowResource($request->user());
 });
 
 Route::get('/models/search', 'VariantController@getSearch');

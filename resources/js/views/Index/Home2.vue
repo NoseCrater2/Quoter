@@ -11,8 +11,8 @@
             </v-carousel-item>
         </v-carousel>
         
-        <MobileCards v-if="isMobile"/>
-        <DesktopCards v-else/>
+        <!-- <MobileCards v-if="isMobile"/> -->
+        <DesktopCards />
 
         <v-row class="grey lighten-3 ma-0" justify="center">
             <v-card  max-height="350px" tile flat class="grey lighten-3 ">

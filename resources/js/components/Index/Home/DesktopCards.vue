@@ -1,32 +1,23 @@
 <template>
-     <v-row justify="space-around" class="ma-4" >
+     <v-row style="max-width: 1200px; margin: auto;" justify="space-around" >
             <v-col  v-for="(item, i) in items" :key="i" cols="12" md="6" sm="12" >
-                <v-hover v-slot:default="{ hover }" >
-                    <v-card  height="250px" :to="{name: 'Categories', params: {slugProduct: item.title}}">
-                        <v-img  class="transparent--text  text-left align-center reset"  :src="item.img" :class="{'on-hover ':hover}"  :gradient="hover?'rgba(71, 165, 173, 0.5) 100%, transparent 72px':''" height="250px">                            
-                            <v-row class="mx-8" no-gutters style="flex-wrap: nowrap;  padding: -40px 40px;" :class="{'marco white--text':hover}">
-                                <v-col cols="4"  class="flex-grow-0 flex-shrink-0 force-center mt-4 mr-10" align-self="center"> 
-                                 
-                                    <v-img :width="icons[i].mobilew" :class="{'on-hover':hover}" style="margin-left:auto"  color="transparent"  :src="hover?icons[i].image:null">
-                                    </v-img>                                                
-                                                                                
-                                </v-col>
-                                <v-col cols="7" class=" flex-grow-0 flex-shrink-1 reset my-8"  >
-                                    <div class="text-h4 d-block">
-                                        <p style="letter-spacing:0.125em;" class="ma-0"  :class="{'condensed':hover}"  >
-                                            {{ item.title }}
-                                        </p>
-                                    </div>
-                                    <div class="d-block">
-                                        <p  class="text-h6  text-justify reset ma-0" style="line-height: 1em; max-width: 75%" color="transparent" >
-                                            {{ item.subtext }}
-                                        </p>
-                                    </div>
-                                </v-col> 
-                            </v-row>               
-                        </v-img>
-                    </v-card>
-                </v-hover>
+                <v-card  flat  :to="{name: 'Categories', params: {slugProduct: item.title}}">
+                    <v-card-title class="justify-center">
+                        <div class="d-inline font-weight-bold" style="font-size: 1.5em">{{ item.title }}</div>
+                        <div class="d-inline font-weight-bold" style="color: #47a5ad;font-size: 1.5em" >&nbsp;ROLLUX</div>
+                    </v-card-title>
+                    <div style="display: grid; height: 240px">
+                        <v-hover v-slot:default="{ hover }" >
+                            <v-img 
+                            :width="item.height" style="margin: auto;" 
+                            :class="{'opacado':hover}" :src="item.img">
+                            </v-img>
+                        </v-hover>
+                    </div>
+                    <v-card-subtitle class="justify-center mx-10"  style="font-size: 1.2em; color: black; text-align: center">
+                        {{item.subtext}}
+                    </v-card-subtitle>
+                </v-card>
             </v-col>
         </v-row>
 </template>
@@ -42,14 +33,17 @@ export default {
             transparent: 'rgba(255, 255, 255, 0)',
             items: [
                 {
-                    title: 'CORTINAS',
-                    subtext: 'Contamos con una extensa línea de cortinas para la decoración de tu hogar u oficina',
-                    img: 'img/home/CORTINAS.jpg',
+                    title: 'PERSIANAS',
+                    subtext: 'Contamos con la más amplia gama de texturas y colores de todo el Mercado Nacional para el recubrimiento de ventanas, suficiente para cubrir cualquier necesidad, requerimiento y gusto',
+                    img: 'img/home/PERSIANAS.svg',
+                    height: '150',
+                  
                 },
                 {
                     title: 'TOLDOS',
-                    subtext: 'Contamos con una gran varidad de diseños para que se adapten a tus necesidades',
-                    img: 'img/home/TOLDOS.jpg',
+                    subtext: 'Contamos con una gran variedad de toldos retráctiles, toldos de caída libre, palilleria y brazos rectos para cubrir cualquer necesidad en el exterior de tu jardín, terraza, entre otros.',
+                    img: 'img/home/TOLDOS.svg',
+                    height: '270',
                 },
             ],
         }
@@ -89,5 +83,9 @@ export default {
 
 .force-center{
     flex-grow: 0 !important;
+}
+
+.opacado{
+    opacity: 0.5;
 }
 </style>

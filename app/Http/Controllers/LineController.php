@@ -98,9 +98,9 @@ class LineController extends Controller
 
     public function getWeaves(String $slug)
     {
-        $line  = Line::where('slug', '=', $slug)->get();
+        $line  = Line::where('slug', '=', $slug)->first();
         return WeaveIndexResource::collection(
-            $line[0]->weaves
+            $line->weaves
         );
     }
 }

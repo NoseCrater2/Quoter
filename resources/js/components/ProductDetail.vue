@@ -5,17 +5,29 @@
             <v-row v-if="details.colors">
                 <v-col cols="12" md="4" sm="12" class="mt-3">
                     <v-card width="400"  >
-                        <v-img  :height="458" :width="380" :src="`/img/modelos/full/${details.colors[position].code}.jpg`"  >
+                        <v-img  
+                        :height="458" 
+                        :width="380" 
+                        :src="`/img/modelos/full/${details.type}/${details.manufacturer}/${details.colors[position].code}.jpg`"  >
                             <template v-slot:placeholder>
-                                <v-img src="/img/modelos/medium/unavailable.jpg"></v-img>
+                                <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
                             </template>
                         </v-img>
                         <v-card-actions  v-if="$vuetify.breakpoint.mobile">
-                             <ItemColors @changeIndex="changeIndex" :colors="details.colors" />
+                            <ItemColors 
+                            @changeIndex="changeIndex" 
+                            :type="details.type" 
+                            :manufacturer="details.manufacturer" 
+                            :colors="details.colors" />
                             
                         </v-card-actions>
                         <v-card-actions v-else>
-                             <SlideColors @openDialog="openDialog" @changeIndex="changeIndex" :colors="details.colors" />
+                            <SlideColors 
+                            @openDialog="openDialog" 
+                            @changeIndex="changeIndex" 
+                            :type="details.type" 
+                            :manufacturer="details.manufacturer" 
+                            :colors="details.colors" />
                         </v-card-actions>
                     </v-card>
                      <i style="font-family: Roboto, sans-serif; font-size: 8px">*El color puede variar dependiendo de tu dispositivo</i>
@@ -28,20 +40,62 @@
                           
                             </v-card-title>
                         <v-divider></v-divider>
-                        <div class="d-inline">
-                        <div class="display-1 d-inline-flex" style="color: #47a5ad">$ </div>
-                        <div  class="display-2 d-inline-flex" style="color: #47a5ad; font-weight: bolder;">{{details.price}}</div>
+                        <div class="d-inline" v-if="user != null">
+                            <div class="d-block">
+                                <div  class=" d-inline-flex" style="color: #47a5ad; font-size: 28px;">$ </div>
+                            <div 
+                            class="display-1 d-inline-flex " 
+                            style="color: #47a5ad; font-weight: bolder;">
+                                <div class="d-inline text-decoration-line-through">
+                                    {{ maskPrice(details.price)[0] }}
+                                </div>
+                                <div class="d-inline cents">
+                                     {{ maskPrice(details.price)[1] }}
+                                </div>
+                            </div>
+                             <div class="d-inline-flex" style="color: #47a5ad;font-size: 28px;">MXN </div>
+                            </div>
+                            <div class="d-block">
+                                <div  class="display-1 d-inline-flex" style="color: red">$ </div>
+                            <div 
+                            class="display-2 d-inline-flex" 
+                            style="color: red; font-weight: bolder;">
+                                <div class="d-inline">
+                                    {{ maskPrice(details.price - ((user.discount_percent / 100) * details.price))[0] }}
+                                </div>
+                                <div class="d-inline cents">
+                                     {{ maskPrice(details.price - ((user.discount_percent / 100) * details.price))[1] }}
+                                </div>
+                               
+                            </div>
+                            <div class="display-1 d-inline-flex" style="color: red">MXN </div>
+                            </div>
+                        </div>
+                        <div v-else class="d-inline">
+                        <div  class="display-1 d-inline-flex" style="color: #47a5ad">$ </div>
+                        
+                        <div  class="display-2 d-inline-flex" style="color: #47a5ad; font-weight: bolder;">
+                           <div class="d-inline">
+                                    {{ maskPrice(details.price)[0] }}
+                                </div>
+                                <div class="d-inline cents">
+                                     {{ maskPrice(details.price)[1] }}
+                                </div>
+                        </div>
+                        
+                       
                         <div class="display-1 d-inline-flex" style="color: #47a5ad">MXN </div>
                         </div>
                   
                         <div  class="d-inline ml-4" >
                              <div class="display-1 d-inline-flex" style="color: #47a5ad">
                                 
-                                 <v-btn 
+                                 <v-btn
+                                 v-if="details.product != 'TOLDOS'"
                                  dark
                                  color= "#47a5ad" 
                                  depressed 
-                                 :to="{name:'Quoter', query:{type: this.slugType, line: details.slugLine ,variant: details.id, color: details.colors[selected]}}">
+                                 :to="{name:'Quoter', query:{type: this.slugType, line: details.slugLine ,variant: details.id,manufacturer: details.manufacturer, color: details.colors[selected]}}">
                                      COTIZAR ESTE PRODUCTO
                                  </v-btn>
                              </div>
@@ -55,10 +109,14 @@
                             </v-row>
                            
                             <v-row v-if="!$vuetify.breakpoint.mobile">
-                                <ItemColors @changeIndex="changeIndex" :colors="details.colors" />
+                                <ItemColors 
+                                :type="details.type" 
+                                :manufacturer="details.manufacturer" 
+                                @changeIndex="changeIndex" 
+                                :colors="details.colors" />
                             </v-row>
-                            <v-row>
-                                <h1>{{ details.colors[position].code}}</h1> 
+                            <v-row class="my-5">
+                                <span>SKU: {{ details.colors[position].code}}</span> 
                             </v-row>
                         </v-card-text>
                     </v-card>
@@ -133,18 +191,12 @@
                                         <td>
                                             COLOR
                                         </td>
-                                        <td>
-                                                ROTABLE (90°)
-                                       </td>
                                     </thead>
                                     <tbody>
                                         <tr v-for="color in details.colors" :key="color.id">
                                             <td>
                                                 {{ color.color }}
                                             </td>
-                                            
-                                            <td v-if="color.rotate === 0"> NO </td>
-                                            <td v-else> SÍ </td>
                                         </tr>
                                     </tbody>
                                 </template>
@@ -171,7 +223,7 @@
                                             <td>ANCHO</td>
                                             <td>{{details.strip_width}}</td>
                                         </tr>
-                                        <tr v-if="details.ceiling_price > 0">
+                                        <!-- <tr v-if="details.ceiling_price > 0">
                                             <td>PRECIO TECHO</td>
                                             <td>{{details.ceiling_price }}</td>
                                         </tr>
@@ -194,7 +246,7 @@
                                         <tr v-if="details.curve_price > 0">
                                             <td>PRECIO TECHO MURO CURVO</td>
                                             <td>{{details.curve_price }}</td>
-                                        </tr>
+                                        </tr> -->
                                     </tbody>
                                 </template>
                             </v-simple-table>
@@ -250,9 +302,9 @@
                      <v-row justify="space-around" v-if="relationed">
                          <v-col cols="12" md="3" sm="12" v-for="r in relationed" :key="r.id">
                                  <v-card max-width="200" height="230" color="grey lighten-4" class="mx-auto" flat >
-                            <v-img class="white--text align-end"  width="200" height="185" :aspect-ratio="16/9" :src="`/../../../img/modelos/medium/${r.image}.jpg`"  >
+                            <v-img class="white--text align-end"  width="200" height="185" :aspect-ratio="16/9" :src="`/img/modelos/medium/${r.type}/${r.manufacturer}/${r.image}.jpg`"  >
                             <template v-slot:placeholder>
-                                <v-img src="/../../../img/modelos/medium/unavailable.jpg"></v-img>
+                                <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
                             </template>
 
                                  <div
@@ -303,7 +355,7 @@
                     <v-carousel-item 
                     v-for="color in details.colors" 
                     :key="color.code"
-                    :src="`/../../../img/modelos/full/${color.code}.jpg`"
+                    :src="`/img/modelos/full/${details.type}/${details.manufacturer}/${color.code}.jpg`"
                     >
                     </v-carousel-item>
                 </v-carousel>
@@ -314,7 +366,7 @@
 
 <script>
 
-import { mapActions, mapState, variantsModule, sunblindModule} from 'vuex';
+import { mapState } from 'vuex';
 import SlideColors from '../components/CustomCards/SlideColors';
 import ItemColors from '../components/CustomCards/ItemColors';
 
@@ -350,6 +402,7 @@ export default {
         ...mapState({
         details: state => state.variantsModule.variant,
         relationed: state => state.variantsModule.related,
+        user: state => state.user,
         }),
 
         getProduct(){
@@ -377,6 +430,9 @@ export default {
     },
 
     methods:{
+        maskPrice(price){
+            return parseFloat(price).toFixed(2).toString().split('.')
+        },
         changeIndex(index){
             if(index === undefined){
                 index = 0
@@ -421,6 +477,12 @@ export default {
 </script>
 
 <style>
+.cents{
+  position: relative;
+  bottom: 0.4em;
+  font-size: 0.7em;
+  right: 0.1em;
+}
 .selected{
     padding: 1px;
     border: 1px solid black;

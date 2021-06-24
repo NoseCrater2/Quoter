@@ -6,6 +6,7 @@ use App\Gallery;
 use Illuminate\Http\Request;
 use App\Http\Resources\IndexGalleryResource;
 use App\Imports\GalleryImport;
+use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
@@ -97,5 +98,11 @@ class GalleryController extends Controller
         if($import->failures()->isNotEmpty()){
            return response($import->failures());
         }
+    }
+    public function showDirectory(Request $request)
+    {
+        $data = $request->all();
+        $files = Storage::files('galerias/'.$data['product'].'/'.$data['type']);
+        return $files;
     }
 }

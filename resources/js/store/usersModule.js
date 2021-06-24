@@ -70,7 +70,6 @@ const usersModule = {
           },
 
           editUser: async function ({ commit, state }, editUser){
-            console.log(editUser)
             let u = new FormData();
             for (const prop in editUser) {
                 u.append(prop, editUser[prop])
@@ -90,11 +89,15 @@ const usersModule = {
               }
           },
 
-          saveUser: async function ({ commit, state }, newUser){
-           
+          saveUser: async function ({ commit }, newUser){
+
+            let u = new FormData();
+            for (const prop in newUser) {
+                u.append(prop, newUser[prop])
+            }
             try {
                 const response = await axios
-                .post("/api/users/",newUser)
+                .post("/api/users/",u)
                 
                 commit('setUsersStatus',response.status);
                 commit('saveUser',response.data.data);

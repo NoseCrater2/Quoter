@@ -4,7 +4,7 @@
         <v-card height="340" width="380" class="ma-4" :to="line.weaves > 0 ? {name: 'Tejidos', params: {slugLine: line.slug}}:{name: 'Products', params: {slugLine: line.slug}}"> 
             <v-img class="white--text align-end"  :class="{'escalada':hover}" width="390" height="340" :aspect-ratio="16/9"  :src="image(line.slug)"  :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
             <template v-slot:placeholder>
-                <v-img src="/img/modelos/medium/unavailable.jpg"></v-img>
+                <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
             </template>
                 <v-slide-y-reverse-transition>
                     <div v-if="!hover" class="title d-flex transition-fast-in-fast-out justify-center"  > 
