@@ -37,9 +37,9 @@
                 dense
                 :items="manufacturers"
                 item-text="manufacturer"
-                item-value="manufacturer_id"
+                item-value="manufacturer"
                 v-model="order.manufacturer"
-                label="Selecciona marca"
+                label="Selecciona la Línea"
                 outlined
                 color="#47a5ad"
                 background-color="white"
@@ -486,28 +486,6 @@
                       MXN
                  </div>
                  </div>
-              <!-- <v-list dense>
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title>PERSIANA:</v-list-item-title>
-                  </v-list-item-content>
-                  <v-list-item-action>
-                    <v-list-item-action-text>
-                     
-                    </v-list-item-action-text>
-                  </v-list-item-action>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title>MOTOR y CONTROL/GALERÍA:</v-list-item-title>
-                  </v-list-item-content>
-                  <v-list-item-action>
-                    <v-list-item-action-text>
-                      
-                    </v-list-item-action-text>
-                  </v-list-item-action>
-                </v-list-item>
-              </v-list> -->
               <div
                 v-for="(c, index) in order.canvas"
                 :key="index"
@@ -1091,30 +1069,105 @@
           </v-card-subtitle>
           <v-divider></v-divider>
           <v-card-actions>
-            
-            <!-- <v-btn text color="red" @click="flexibaletExtraDialog = false">NO</v-btn>
-            <v-spacer></v-spacer>-->
+
             <v-btn block text @click="redirectToLogin"  color="#47a5ad">INICIAR SESIÓN</v-btn> 
           </v-card-actions>
            <v-divider></v-divider>
           <v-card-actions>
           <v-btn block text @click="printRolluxQuoting">IMPRIMIR SIN INICIAR SESIÓN</v-btn> 
-            <!-- <v-btn text color="red" @click="flexibaletExtraDialog = false">NO</v-btn>
-            <v-spacer></v-spacer>
-            <v-btn text @click="openMotorizationDialogConfirm()"  color="#47a5ad">SÍ</v-btn> -->
           </v-card-actions>
            <v-divider></v-divider>
           <v-card-actions>
           <v-btn block text @click="beforePrint = false"  color="red">CANCELAR</v-btn>
-            <!-- <v-btn text color="red" @click="flexibaletExtraDialog = false">NO</v-btn>
-            <v-spacer></v-spacer>
-            <v-btn text @click="openMotorizationDialogConfirm()"  color="#47a5ad">SÍ</v-btn> -->
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <v-dialog v-model="sellerPrint" persistent max-width="390">
+        <v-card>
+          <v-card-title class="px-4 py-0 justify-center">
+           Elija usuario
+          </v-card-title>
+          <v-card-text>
+            <v-autocomplete
+            :items="distributors"
+            item-text="name"
+            return-object
+            v-model="selectedUser"
+            label="Selecciona un usuario registrado"
+            outlined
+            color="#47a5ad"
+            background-color="white">
+              <template v-slot:selection="data">
+                <v-chip
+                small
+                v-bind="data.attrs"
+                :input-value="data.selected"
+                >
+                  {{ data.item.name+' '+ data.item.last_name}}
+                </v-chip>
+              </template>
+              <template v-slot:item="data">
+                <template>
+                  <v-list-item-content>
+                    <v-list-item-title>{{data.item.name +' '+ data.item.last_name}}</v-list-item-title>
+                    <v-list-item-subtitle>{{data.item.discount_percent + '% '+data.item.company}}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </template>
+              </template>
+            </v-autocomplete>
+            <p class="text-center">ó</p>
+          <v-btn block v-if="showBtnUserForm" 
+          @click="function(){showUserForm = true; cancelShowBtnUserForm = true;showBtnUserForm = false}" 
+          outlined color="#47a5ad">Ingresa información de usuario</v-btn>
+           <v-btn 
+           block 
+           v-if="cancelShowBtnUserForm" 
+           @click="function(){showBtnUserForm = true; cancelShowBtnUserForm = false; showUserForm = false}" 
+           outlined 
+           color="red"
+           >Cancelar formulario</v-btn>
+          <v-form ref="userForm" v-show="showUserForm">
+            <v-text-field
+            :rules="[(v) => !!v || 'Requerido']"
+            v-model="selectedUser.name"
+            label="Nombre"
+            ></v-text-field>
+            <v-text-field
+            :rules="[(v) => !!v || 'Requerido']"
+            v-model="selectedUser.last_name"
+            label="Apellidos"
+            ></v-text-field>
+            <v-text-field
+            :rules="[(v) => !!v || 'Requerido']"
+            v-model="selectedUser.discount_percent"
+            type="number"
+            suffix="%"
+            label="Descuento"
+            ></v-text-field>
+            <v-text-field
+            :rules="[(v) => !!v || 'Requerido']"
+            v-model="selectedUser.phone"
+            label="Telefono"
+            ></v-text-field>
+            <v-text-field
+            :rules="[(v) => !!v || 'Requerido']"
+            v-model="selectedUser.ship_address"
+            label="Dirección de envío"
+            ></v-text-field>
+          </v-form>
+          </v-card-text>          
+          <v-divider></v-divider>
+          <v-card-actions>
+          <v-btn tile depressed @click="sellerPrint = false" color="red" class="white--text">CANCELAR</v-btn>
+          <v-spacer></v-spacer>
+           <v-btn tile depressed color="#47a5ad" @click="checkUserValid" class="white--text">IMPRIMIR</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
       
     </v-row>
-    <PreviewPDF></PreviewPDF>
+    <PreviewPDF :distributor="selectedUser"></PreviewPDF>
     <PreviewPdfRollux></PreviewPdfRollux>
          
   </v-container>
@@ -1136,6 +1189,17 @@ export default {
   name: "Quoter",
   data() {
     return {
+      cancelShowBtnUserForm: false,
+      showBtnUserForm: true,
+      showUserForm: false,
+      selectedUser: {
+        name: null,
+        last_name: null,
+        discount_percent: 0,
+        phone: null,
+        ship_address: null
+      },
+      sellerPrint: false,
       beforePrint: false,
       pdfComponentKey: 1,
       disabledWoodText: true,
@@ -1169,7 +1233,7 @@ export default {
       editable: false,
       order: {
         type: this.$route.query.type || null,
-        manufacturer: null,
+        manufacturer: this.$route.query.manufacturer || null,
         celular_type: null,
         celular_drive: null,
         celular_variant: null,
@@ -1299,19 +1363,34 @@ export default {
     };
   },
   methods: {
-
+    checkUserValid(){
+      if(this.$refs.userForm.validate()){
+        this.$children[6].$refs.html2Pdf2.generatePdf()
+        this.sellerPrint = false
+      }
+    },
+    
     redirectToLogin(){
       this.$router.push({name: 'login', query: {redirect: '/quoter'}})
     },
 
 	  printRolluxQuoting(){
-       this.$children[6].$refs.html2Pdf.generatePdf()
+       this.$children[7].$refs.html2Pdf.generatePdf()
        this.beforePrint = false
     },
 
     openPDFView(){
       if(this.$store.state.isLoggedIn == true){
-        this.$children[5].$refs.html2Pdf2.generatePdf()
+
+        if(this.user.role === 'Vendedor'){
+          this.$store.dispatch('getDistributors').then(() => {
+            this.sellerPrint = true
+          })
+          
+        }else{
+          this.$children[5].$refs.html2Pdf2.generatePdf()
+        }
+       
       }else{
         this.beforePrint = true
       }
@@ -1841,11 +1920,11 @@ export default {
     variants() {
       if (this.order.type && this.order.line && this.order.manufacturer) {
         return this.$store.state.productsModule.variants.filter(
-          (variant) => variant.type === this.order.type && variant.line === this.order.line && variant.manufacturer_id === this.order.manufacturer
+          (variant) => variant.type === this.order.type && variant.line === this.order.line && variant.manufacturer === this.order.manufacturer
         );
       } else if (this.order.type && this.order.manufacturer) {
         return this.$store.state.productsModule.variants.filter(
-          (variant) => variant.type === this.order.type && variant.manufacturer_id === this.order.manufacturer
+          (variant) => variant.type === this.order.type && variant.manufacturer === this.order.manufacturer
         );
       }
     },
@@ -1883,6 +1962,7 @@ export default {
       colors: (state) => state.modelsModule.relatedColors,
       colors2: (state) => state.modelsModule.relatedColors2,
       orders: (state) => state.ordersModule.orders,
+      distributors: (state) => state.userModule.distributors,
       user: (state) => state.user,
     }),
       

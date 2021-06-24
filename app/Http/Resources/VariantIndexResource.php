@@ -17,9 +17,10 @@ class VariantIndexResource extends JsonResource
     public function toArray($request)
     {
 
-        $color =  $this->colors->first(function ($color) {
-            return Storage::exists('modelos/medium/'.$color->code.'.jpg');
-        });
+        // $color =  $this->colors->first(function ($color) {
+        //     return Storage::exists('modelos/medium/'.$color->code.'.jpg');
+        // });
+
         
         return [
             'id' => $this->id,
@@ -29,12 +30,11 @@ class VariantIndexResource extends JsonResource
             'price' => $this->price,
             'line' => $this->line?$this->line->slug:null,
             'type' => $this->type->slug,
-            'image' =>  $color != null ? $color->code: 'modelos/medium-unavailable',
+            // 'image' =>  $color != null ? $color->code: 'modelos/medium-unavailable',
             'product' => $this->type->product->slug,
             'rotate' => $this->rotate,
             'width' => $this->width,
             'manufacturer' => $this->manufacturers->isNotEmpty()?$this->manufacturers[0]->name:null,
-            'manufacturer_id' => $this->manufacturers->isNotEmpty()?$this->manufacturers[0]->id:null
         ];
     }
 }

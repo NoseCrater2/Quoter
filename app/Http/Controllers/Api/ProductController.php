@@ -9,6 +9,7 @@ use App\Http\Resources\ProductIndexResource;
 use App\Http\Resources\VariantIndexResource;
 use App\Http\Resources\TypeIndexResurce;
 use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Database\Eloquent\Builder;
 
 
 class ProductController extends Controller
@@ -21,9 +22,14 @@ class ProductController extends Controller
     public function index()
     {
 
-        return ProductIndexResource::collection(
-            Product::get()
-        );;
+        // return ProductIndexResource::collection(
+        //     Product::get()
+        // );
+        $products = Product::with(['types' => function ($query) {
+            $query->withCount('lines as lines');
+        }])->get();
+        return response(['data'=> $products],200);
+        
 
     }
 

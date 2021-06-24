@@ -195,4 +195,10 @@ class UserController extends Controller
         return response(['Message' => "Acceso No autorizado"],401);
     }
 
+    public function distributors()
+    {
+        $distribuitors = User::role('Distribuidor')->select('id','name','last_name','discount_percent','logo','ship_address','phone','company')->get();
+        return response(['data'=> $distribuitors],200);
+    }
+
 }

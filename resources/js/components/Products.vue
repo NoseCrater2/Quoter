@@ -145,7 +145,7 @@
                         >
                           <v-img class="d-flex tag" width="70px" v-if="item.rotate == 1" src="/img/modelos/rotable.png"></v-img>
                         <v-hover v-slot="{ hover }" v-if="item">
-                          <v-card width="240" height="340" color="grey lighten-4"  flat >
+                          <v-card width="240"  color="grey lighten-4"  flat >
                              <!-- -->
                             <v-img 
                             class="white--text align-end"   
@@ -189,7 +189,7 @@
                             
                             </v-img>
                             <v-card-text
-                            
+                            v-if="item.type != 'horizontal-madera-2'"
                             style="position: relative"
                             >
                             <h2 v-if="user != null" class="text-center">
@@ -212,8 +212,21 @@
                                 <div class="d-inline cents">{{ maskPrice(item.price)[1] }}</div>
                                MXN
                             </h2>
-                           
+
                             </v-card-text>
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn
+                              v-if="item.product != 'TOLDOS'"
+                              color="#47a5ad"
+                              class="white--text"
+                              small
+                              :to="{name:'Quoter', query:{type: item.type, line: item.line, manufacturer: item.manufacturer,variant: item.id}}"
+                              >
+                                COTIZAR
+                              </v-btn>
+                              <v-spacer></v-spacer>
+                            </v-card-actions>
                           </v-card>
                         </v-hover>
                         </v-col>

@@ -37,6 +37,7 @@ public function collection(Collection $rows)
         ]);
 
         DB::table('variants')->where('type_id', '=', $type->id)->delete();
+        $type->lines()->detach();
     }
 
    
@@ -48,7 +49,7 @@ public function collection(Collection $rows)
         if($row->has('tipo') && $row['tipo']){
         $type = Type::firstOrCreate(['name' => $row['tipo'],
             ],[
-                'slug' => str_replace(" ", '-', strtolower($row['tipo'])),
+                'slug' => str_replace(" ", '-', mb_strtolower($row['tipo'])),
             ]);
 
 
@@ -56,18 +57,21 @@ public function collection(Collection $rows)
 
             $line =  Line::firstOrCreate([
                 'name' =>  $row['linea'],
+                'type_name' => $row['tipo'],
             ],[
-                'slug' => str_replace(" ", '-', strtolower($row['linea'])),
+                'slug' => str_replace(" ", '-', mb_strtolower($row['linea'])),
+                'type_name' => $row['tipo'],
             ]);
 
             $type->lines()->syncWithoutDetaching([$line->id]);
 
           
             if($row->has('tejido') && $row['tejido']){
+            
             $tejido = Weave::firstOrCreate([
                 'name' => $row['tejido']
                 ],[
-                 'slug' => str_replace(" ", '-', strtolower($row['tejido'])),
+                 'slug' => str_replace(' ', '-', mb_strtolower($row['tejido'])),
                 ]);
         
             $line->weaves()->syncWithoutDetaching([$tejido->id]);
@@ -92,18 +96,13 @@ public function collection(Collection $rows)
                 'name' => $row['modelo'],
                 'type_id' => $type->id,
                 'line_id' => $line?$line->id:null,
+                'weave_id' => $tejido?$tejido->id:null,
             ],
             [
                 'slug' =>  preg_replace("[\W]", "-", $row['modelo']),
                 'width' => $row->has('ancho') && $row['ancho']?floatval(preg_replace("[\,]",'.',$row['ancho'])):1,
                 'finished' => $row->has('acabado') ? $row['acabado'] : null,
                 'strip_width' => $row->has('tira') ? $row['tira'] : 0,
-                'ceiling_price' => $row->has('precio_techo') ? $row['precio_techo'] : 0,
-                'wall_price' => $row->has('precio_pared') ? $row['precio_pared'] : 0,
-                'wall_extended_price' => $row->has('precio_pared_extendido') ? $row['precio_pared_extendido'] : 0,
-                'wall_double_price' => $row->has('precio_pared_doble') ? $row['precio_pared_doble'] : 0,
-                'ceiling_wall_price' => $row->has('precio_techo_pared') ? $row['precio_techo_pared'] : 0,
-                'curve_price' => $row->has('precio_doble') ? $row['precio_doble'] : 0,
                 'price' => $row->has('precio')?$row['precio']:0,
                 'description' => $row->has('descripcion')?$row['descripcion']:null,
                 'rotate' =>$row->has('rotacion')?$row['rotacion']:0,
@@ -113,17 +112,6 @@ public function collection(Collection $rows)
             ]      
         );
 
-        if($row->has('codigo_cortinero')){
-           Weight::firstOrCreate(
-                ['code' => $row['codigo_cortinero']],
-                [
-                    'code' => $row[''],
-                    'weight' => $row['peso'],
-                    'width' => $row['ancho_cortinero'],
-                    'variant_id' => $variant->id,
-                ]
-            );
-        }
 
         if($row->has('fabricante') && $row['fabricante']){
             $manufacturer = Manufacturer::firstOrCreate([

@@ -90,11 +90,12 @@
                         <div  class="d-inline ml-4" >
                              <div class="display-1 d-inline-flex" style="color: #47a5ad">
                                 
-                                 <v-btn 
+                                 <v-btn
+                                 v-if="details.product != 'TOLDOS'"
                                  dark
                                  color= "#47a5ad" 
                                  depressed 
-                                 :to="{name:'Quoter', query:{type: this.slugType, line: details.slugLine ,variant: details.id, color: details.colors[selected]}}">
+                                 :to="{name:'Quoter', query:{type: this.slugType, line: details.slugLine ,variant: details.id,manufacturer: details.manufacturer, color: details.colors[selected]}}">
                                      COTIZAR ESTE PRODUCTO
                                  </v-btn>
                              </div>

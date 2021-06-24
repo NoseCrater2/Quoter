@@ -1,4 +1,5 @@
 
+import { isLoggedIn } from '../utils/auth';
 const ordersModule = {
 
     state:{
@@ -186,11 +187,13 @@ const ordersModule = {
             } catch (error) {}
         },
         getQuotingOrders: async function ({ commit, state }){
-            try {
-                const response = await axios
-                .get("/api/quotations")
-                commit('setQuotingOrders',response.data.data);
-            } catch (error) {}
+            if(isLoggedIn()){
+                try {
+                    const response = await axios
+                    .get("/api/quotations")
+                    commit('setQuotingOrders',response.data.data);
+                } catch (error) {}
+            }
         },
 
         getQuotingOrder: async function ({ commit, state },id){

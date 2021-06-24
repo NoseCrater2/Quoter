@@ -17,6 +17,7 @@ class CreateLinesTable extends Migration
             $table->bigIncrements('id');
             $table->string('name')->nullable();
             $table->string('slug')->nullable();
+            $table->string('type_name');
             
         });
     }

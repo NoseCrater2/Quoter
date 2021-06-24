@@ -1,5 +1,26 @@
 <template>
-    <v-app>
+  <v-app v-if="loading === true">
+    <v-dialog
+        v-model="loading"
+        hide-overlay
+        persistent
+      >
+        <v-card
+          color="#47a5ad"
+          dark
+        >
+          <v-card-text>
+            Please stand by
+            <v-progress-linear
+              indeterminate
+              color="white"
+              class="mb-0"
+            ></v-progress-linear>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+  </v-app>
+    <v-app v-else>
       <v-navigation-drawer app v-model="drawer" style="z-index: 8;" temporary>
         <v-list dense>
           <v-list-group color="#47a5ad"   no-action>
@@ -260,8 +281,6 @@
              <div class="d-flex justify-center" style="background-color: black; color: #616161; font-size: 10px">
                <span>Rollux México® {{(new Date()).getFullYear()}}  |  Hecho por Grupo Lidhber®</span>
              </div>
-
-             
         </v-app>
 </template>
 
@@ -281,8 +300,9 @@ import mailDialog from '../../components/Index/TheMailDialog';
 export default {    
     data(){
         return{
+          loading: false,
           query: null,
-        items: [],
+          items: [],
           showSearch: false,
           dialog: false,
           isMobile:false,
@@ -313,20 +333,24 @@ export default {
       }
     },
 
-     beforeRouteEnter(to, from, next){
-        next(um => {
-            um.$store.dispatch('getLines')
-            um.$store.dispatch('getQuotingOrders');
+    //  beforeRouteEnter(to, from, next){
+    //     next(um => {
+          
              
-        })
-    },
+    //     })
+    // },
 
 
 
     mounted(){ 
+        this.loading = true
+        this.$store.dispatch('getLines')
+        this.$store.dispatch('getQuotingOrders');
         this.$store.dispatch('getProducts') 
-        this.$store.dispatch('getAllVariants')
-        this.$store.dispatch('getManufacturers')
+        this.$store.dispatch('getAllVariants').then( () =>{
+        this.loading = false;
+        })
+        // this.$store.dispatch('getManufacturers')
         this.onResize()
         window.addEventListener('resize', this.onResize, { passive: true })
     },

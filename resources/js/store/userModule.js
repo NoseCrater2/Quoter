@@ -6,6 +6,7 @@ const userModule = {
             roles: [],
         },
         userStatus: [],
+        distributors: [],
     },
 
     getters: {
@@ -15,8 +16,8 @@ const userModule = {
     },
 
     mutations: {
-        setUser(state, user){
-            state.user = user
+        setDistributors(state, distributors){
+            state.distributors = distributors
         },
 
         setUserStatus(state, status){
@@ -25,22 +26,13 @@ const userModule = {
     },
 
     actions: {
-        getUser: async function ({ commit, state }){
-           
+        getDistributors: async function ({ commit}){
             try {
                 const response = await axios
-                .get("/api/getMyInfo",{
-                    headers: {Authorization: "Bearer "+localStorage.getItem('access_token')}})
-                
-                commit('setUserStatus',response.status);
-                commit('setUser',response.data.data);
-                
+                .get("/api/distributors")
+                commit('setDistributors',response.data.data); 
               } catch (error) {
-                // commit('setErrors',error.response.data)
-                // commit('setStatus',error.response.status);
               }
-            
-
           },
     }
 }

@@ -15,7 +15,8 @@
                 </v-card-subtitle>
             <v-form ref="formMotor" v-model="valid2" lazy-validation>
               <v-col cols="12" class="my-0 py-0">
-                  <span class="mx-2">5. Seleccione el lado del mando o motor</span>
+                  <span v-if="action === 'Manual'" class="mx-2">5. Seleccione lado del control</span>
+                  <span v-else-if="action === 'Motorizado'" class="mx-2">5. Seleccione lado del motor</span>
                   <v-radio-group
                   row
                   :mandatory="false"

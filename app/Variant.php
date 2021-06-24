@@ -15,14 +15,14 @@ class Variant extends Model implements Searchable
         'price',
         'width',
         'description',
-        'finished',//CORTINERO
-        'strip_width',//PERSIANA
-        'ceiling_price',//CORTINERO
-        'wall_price',//CORTINERO
-        'wall_extended_price',//CORTINERO
-        'wall_double_price',//CORTINERO
-        'ceiling_wall_price',//CORTINERO
-        'curve_price',//CORTINERO
+        // 'finished',//CORTINERO
+        // 'strip_width',//PERSIANA
+        // 'ceiling_price',//CORTINERO
+        // 'wall_price',//CORTINERO
+        // 'wall_extended_price',//CORTINERO
+        // 'wall_double_price',//CORTINERO
+        // 'ceiling_wall_price',//CORTINERO
+        // 'curve_price',//CORTINERO
         'rotate',
         'line_id',
         'weave_id',
