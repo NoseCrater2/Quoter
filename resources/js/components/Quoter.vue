@@ -5,7 +5,7 @@
         <v-card-title style="color: white" :style="editable?'background-color: red;':'background-color: #404042;'">
           {{ cardTitle }}
           {{ typeof order.id == 'undefined'?'':order.id }}
-          
+
           <v-spacer></v-spacer>
           <div>
             TOTAL: {{mxCurrencyFormat.format(totalPrice) }} MXN
@@ -15,7 +15,7 @@
           <v-row>
             <v-col class="pa-1" cols="6">
               <span style="font-size: 1em"> 1.Seleccione tipo de persiana</span>
-              
+
               <v-autocomplete
                 :rules="[(v) => !!v || 'Requerido']"
                 @change="chargeTypeModels()"
@@ -61,7 +61,7 @@
                 color="#47a5ad"
                 background-color="white"
                 class="ma-1"
-                
+
               ></v-autocomplete>
               <div v-if="order.line == 'tela-vertical'">
                 <v-radio-group
@@ -145,13 +145,13 @@
                 ></v-text-field>
               </div>
 
-              
+
               <div v-else>
                 <span style="font-size: 1em">
                   3.Seleccione las medidas (El mínimo a cobrar es 1.0 x
                   1.0)</span>
                 <v-text-field
-                  
+
                   :disabled="disabledSelectSize"
                   dense
                   type="number"
@@ -169,7 +169,7 @@
                 ></v-text-field>
 
                 <v-text-field
-                 
+
                   class="ma-1"
                   hide-details
                   :disabled="disabledSelectSize"
@@ -183,17 +183,17 @@
                   :placeholder="heightMargins"
                   outlined
                   color="#47a5ad"
-                  
+
                   v-model="order.canvas[0].height"
                 ></v-text-field>
               </div>
               <div >
-               <v-btn 
+               <v-btn
                v-if="showButtonDialog"
                color="#47a5ad"
-               dark 
-               small 
-               block 
+               dark
+               small
+               block
                @click="openCanvasDialog">
                <v-icon left>mdi-plus</v-icon>
                Añadir más lienzos
@@ -228,9 +228,9 @@
                 <v-radio @click="openMotorizationDialog" label="Manual"  color="#47a5ad" value="Manual"></v-radio>
                 <v-radio
                 v-if="order.type != 'horizontal-aluminio-1' && order.type != 'horizontal-aluminio-2' && order.type != 'vertical'"
-                @click="openMotorizationDialog" 
-                label="Motorizado"  
-                color="#47a5ad" 
+                @click="openMotorizationDialog"
+                label="Motorizado"
+                color="#47a5ad"
                 value="Motorizado">
                 </v-radio>
               </v-radio-group>
@@ -247,9 +247,9 @@
                         :key="celular.title"
                       >
                         <v-item  v-slot="{ active, toggle }" :value="celular.title">
-                         
+
                             <v-card
-                           
+
                               width="120"
                               flat
                               height="120"
@@ -263,14 +263,14 @@
                                 max-height="75"
                                 max-width="90"
                                 :src="celular.img"
-                               
+
                               >
                               </v-img>
                               <div>
                                  {{ celular.title }}
                               </div>
                               </div>
-                              
+
                             </div>
                             </v-card>
                         </v-item>
@@ -303,8 +303,8 @@
               >
                 <v-radio  label="Manual"  color="#47a5ad" value="Manual"></v-radio>
                 <v-radio
-                label="Motorizado"  
-                color="#47a5ad" 
+                label="Motorizado"
+                color="#47a5ad"
                 value="Motorizado">
                 </v-radio>
               </v-radio-group>
@@ -333,7 +333,7 @@
               </v-radio-group>
               <span style="font-size: 1em">
                   5.Seleccione las medidas</span>
-                <v-text-field                
+                <v-text-field
                 dense
                 type="number"
                 label="Ancho"
@@ -370,12 +370,12 @@
                   6.Marco
                 </span>
                 <v-radio-group
-                
+
                 :rules="[(v) => !!v || 'Requerido']"
                 row
                 :mandatory="false"
                 v-model="order.motor.frame"
-              
+
                 >
                   <v-radio label="Fuera"  color="#47a5ad" value="fuera"></v-radio>
                   <v-radio label="Adentro"  color="#47a5ad" value="adentro"></v-radio>
@@ -395,7 +395,7 @@
                 color="#47a5ad"
                 background-color="white"
                 class="ma-1"
-                
+
               ></v-autocomplete>
                <span style="font-size: 1em"> 7.Seleccione características</span>
               <v-autocomplete
@@ -433,7 +433,7 @@
               ></v-autocomplete>
               </div>
             </v-col>
-           
+
             <v-col class="pa-1" cols="6">
               <div v-if="order.type == null || order.type != 'celular'">
                <v-hover  v-slot="{ hover }">
@@ -448,14 +448,14 @@
                     <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
                   </template>
                   <v-slide-y-transition>
-                    <div v-if="hover && order.color.code" style="background-color: rgba(0,0,0,0.2)" class=" d-flex transition-fast-in-fast-out justify-center"  > 
+                    <div v-if="hover && order.color.code" style="background-color: rgba(0,0,0,0.2)" class=" d-flex transition-fast-in-fast-out justify-center"  >
                        <v-btn icon dark @click="downloadImage(order.type, order.manufacturer, order.color.code)">
                          <v-icon>mdi-cloud-download</v-icon>
                       </v-btn>
-                    </div> 
+                    </div>
                 </v-slide-y-transition>
                 </v-img>
-                <v-img 
+                <v-img
                  max-height="328"
                   max-width="328"
                 v-else src="/img/modelos/medium-unavailable.jpg">
@@ -465,8 +465,8 @@
 
                <div class="ma-2">
                <div class="d-flex  justify-center">
-                PERSIANA 
-                
+                PERSIANA
+
                </div>
                <div v-if="order.type == 'horizontal-madera-2'" class="d-flex  justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;">
                   {{mxCurrencyFormat.format(findWoodPrice)}} MXN
@@ -479,7 +479,7 @@
                <v-divider></v-divider>
                <div class="d-flex  justify-center ">
                  MOTOR y CONTROL/GALERÍA:
-                 
+
                </div>
                <div class="d-flex justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
                     {{mxCurrencyFormat.format(order.motor.price)}}
@@ -497,7 +497,7 @@
                   text-color="white"
                 >
                   <strong>Lienzo {{ index + 1 }}:</strong> &nbsp;
-                  {{ c.width }}M(Ancho)&nbsp; 
+                  {{ c.width }}M(Ancho)&nbsp;
                   {{ c.height }}M (Alto)
                 </v-chip>
               </div>
@@ -541,7 +541,7 @@
                 ></v-text-field>
                 <v-row v-if="order.celular_drive == 'Muelle' && order.motor.frame != null" no-gutters justify="center" align="center">
                   <v-col cols="12" md="6" sm="12">
-                    <v-img 
+                    <v-img
                     src="/img/cotizador/celulares/MuelleDiaNoche.png"
                     v-if="order.celular_type == 'Día y Noche'">
                     </v-img>
@@ -565,7 +565,7 @@
            </div>
             </v-col>
 
-            
+
           </v-row>
           <v-row no-gutters>
             <v-col cols="12" md="4" sm="12">
@@ -629,11 +629,11 @@
             </v-col>
           </v-row>
         </v-form>
-        
+
         <v-dialog v-if="getType && order.motor_type" v-model="dialogMotorization" persistent max-width="600" >
-          <MotorizationDialog 
-          @saveMotorization="saveMotorization"  
-          @CloseMotorizationDialog="CloseMotorizationDialog" 
+          <MotorizationDialog
+          @saveMotorization="saveMotorization"
+          @CloseMotorizationDialog="CloseMotorizationDialog"
           :typeName="getType.name"
           :parentMotor="order.motor"
           :action="order.motor_type"
@@ -642,11 +642,11 @@
           :line="order.line"
           />
         </v-dialog >
-        <QuotedBlinds 
+        <QuotedBlinds
         @editOrder="editOrder"
         @deleteOrder="deleteOrder"
         />
-        
+
       </v-card>
     </v-row>
     <v-row>
@@ -666,7 +666,7 @@
               <v-row >
                 <v-col
                   cols="12"
-                  
+
                   v-for="c in order.canvas.length"
                   :key="c"
                 >
@@ -684,15 +684,15 @@
                             <v-input style="margin-top: 70px; margin-left:65px;">
                               {{ order.canvas[c - 1].height || '0.0'}} mts
                             </v-input>
-                           
+
                           </v-col>
-                        </v-row> 
+                        </v-row>
                      <v-row no-gutters>
                        <v-col cols="3" offset="5">
                          <v-input style="margin-top: 15px;">
                              {{ order.canvas[c - 1].width || '0.0' }} mts
                           </v-input>
-                          
+
                        </v-col>
                      </v-row>
                     </v-img>
@@ -714,7 +714,7 @@
                           label="alto"
                           outlined
                           type="number"
-                         
+
                           dense
                         ></v-text-field>
                           <v-text-field
@@ -728,14 +728,14 @@
                             ),
                           ]"
                           label="ancho"
-                          
+
                           outlined
                           :placeholder="widthMargins"
                           type="number"
-                         
+
                           dense
                         ></v-text-field>
-                      </div> 
+                      </div>
                       </v-col>
                     </v-row>
                   </v-card>
@@ -778,14 +778,14 @@
               <div class="d-inline" style="font-style: Italic; color:#47a5ad;">
                 ({{order.celular_drive}})
               </div>
-              
+
             </v-card-subtitle>
             <v-row class="mx-3" v-if="order.celular_type == 'Muelle/Cordón'" >
 
               <v-col class="pa-0" cols="6" >
                 <div v-if="order.celular_drive == 'Muelle'">
                   <span class="ma-1 font-weight-black">Muelle implica operación manual</span>
-                  <v-img 
+                  <v-img
                   src="/img/cotizador/celulares/Sistema Muelle.png"
                   max-height="328"
                   max-width="328">
@@ -848,7 +848,7 @@
                   <v-radio label="Fuera"  color="#47a5ad" value="fuera"></v-radio>
                   <v-radio label="Adentro"  color="#47a5ad" value="adentro"></v-radio>
                 </v-radio-group>
-                
+
               </v-col>
               <v-col cols="6">
                 <v-hover  v-slot="{ hover }">
@@ -862,14 +862,14 @@
                       <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
                     </template>
                     <v-slide-y-transition>
-                      <div v-if="hover && order.color.code" style="background-color: rgba(0,0,0,0.2)" class=" d-flex transition-fast-in-fast-out justify-center"  > 
+                      <div v-if="hover && order.color.code" style="background-color: rgba(0,0,0,0.2)" class=" d-flex transition-fast-in-fast-out justify-center"  >
                          <v-btn icon dark @click="downloadImage(order.type, order.manufacturer, order.color.code)">
                            <v-icon>mdi-cloud-download</v-icon>
                         </v-btn>
-                      </div> 
+                      </div>
                     </v-slide-y-transition>
                   </v-img>
-                  <v-img 
+                  <v-img
                     max-height="328"
                     max-width="328"
                     v-else src="/img/modelos/medium-unavailable.jpg">
@@ -891,12 +891,12 @@
                   class="ma-1"
                   hide-details
                   :rules="[(v) => !!v || 'Requerido']"
-                  
+
                   dense
                   v-model="order.celular_variant"
                   :items="celular_variants"
                   item-text="title"
-                  item-value="flag"
+                  return-object
                   @change="chargeCelularColors()"
                   outlined
                   color="#47a5ad"
@@ -935,20 +935,20 @@
                       <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
                     </template>
                     <v-slide-y-transition>
-                      <div v-if="hover && order.color.code" style="background-color: rgba(0,0,0,0.2)" class=" d-flex transition-fast-in-fast-out justify-center"  > 
+                      <div v-if="hover && order.color.code" style="background-color: rgba(0,0,0,0.2)" class=" d-flex transition-fast-in-fast-out justify-center"  >
                          <v-btn icon dark @click="downloadImage(order.type, order.manufacturer, order.color.code)">
                            <v-icon>mdi-cloud-download</v-icon>
                         </v-btn>
-                      </div> 
+                      </div>
                     </v-slide-y-transition>
                   </v-img>
-                  <v-img 
+                  <v-img
                     max-height="328"
                     max-width="328"
                     v-else src="/img/modelos/medium-unavailable.jpg">
                   </v-img>
                </v-hover>
-               
+
               </v-col>
               <v-col >
                 <div :style="order.celular_drive == 'Motor' || order.celular_drive == 'Cordón'?'margin-top: 140px':'margin-top: 50px'">
@@ -985,14 +985,14 @@
                       <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
                     </template>
                     <v-slide-y-transition>
-                      <div v-if="hover && order.second_color.code" style="background-color: rgba(0,0,0,0.2)" class=" d-flex transition-fast-in-fast-out justify-center"  > 
+                      <div v-if="hover && order.second_color.code" style="background-color: rgba(0,0,0,0.2)" class=" d-flex transition-fast-in-fast-out justify-center"  >
                          <v-btn icon dark @click="downloadImage(order.type, order.manufacturer, order.second_color.code)">
                            <v-icon>mdi-cloud-download</v-icon>
                         </v-btn>
-                      </div> 
+                      </div>
                     </v-slide-y-transition>
                   </v-img>
-                  <v-img 
+                  <v-img
                     max-height="328"
                     max-width="328"
                     v-else src="/img/modelos/medium-unavailable.jpg">
@@ -1049,7 +1049,7 @@
           <v-card-title class="px-4 py-0 justify-center">
             ¿DESEA CONTINUAR?
           </v-card-title>
-          
+
           <v-divider></v-divider>
           <v-card-actions>
             <v-btn text color="red" @click="flexibaletExtraDialog = false">NO</v-btn>
@@ -1070,11 +1070,11 @@
           <v-divider></v-divider>
           <v-card-actions>
 
-            <v-btn block text @click="redirectToLogin"  color="#47a5ad">INICIAR SESIÓN</v-btn> 
+            <v-btn block text @click="redirectToLogin"  color="#47a5ad">INICIAR SESIÓN</v-btn>
           </v-card-actions>
            <v-divider></v-divider>
           <v-card-actions>
-          <v-btn block text @click="printRolluxQuoting">IMPRIMIR SIN INICIAR SESIÓN</v-btn> 
+          <v-btn block text @click="printRolluxQuoting">IMPRIMIR SIN INICIAR SESIÓN</v-btn>
           </v-card-actions>
            <v-divider></v-divider>
           <v-card-actions>
@@ -1117,14 +1117,14 @@
               </template>
             </v-autocomplete>
             <p class="text-center">ó</p>
-          <v-btn block v-if="showBtnUserForm" 
-          @click="function(){showUserForm = true; cancelShowBtnUserForm = true;showBtnUserForm = false}" 
+          <v-btn block v-if="showBtnUserForm"
+          @click="function(){showUserForm = true; cancelShowBtnUserForm = true;showBtnUserForm = false}"
           outlined color="#47a5ad">Ingresa información de usuario</v-btn>
-           <v-btn 
-           block 
-           v-if="cancelShowBtnUserForm" 
-           @click="function(){showBtnUserForm = true; cancelShowBtnUserForm = false; showUserForm = false}" 
-           outlined 
+           <v-btn
+           block
+           v-if="cancelShowBtnUserForm"
+           @click="function(){showBtnUserForm = true; cancelShowBtnUserForm = false; showUserForm = false}"
+           outlined
            color="red"
            >Cancelar formulario</v-btn>
           <v-form ref="userForm" v-show="showUserForm">
@@ -1156,7 +1156,7 @@
             label="Dirección de envío"
             ></v-text-field>
           </v-form>
-          </v-card-text>          
+          </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
           <v-btn tile depressed @click="sellerPrint = false" color="red" class="white--text">CANCELAR</v-btn>
@@ -1165,11 +1165,11 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      
+
     </v-row>
     <PreviewPDF :distributor="selectedUser"></PreviewPDF>
     <PreviewPdfRollux></PreviewPdfRollux>
-         
+
   </v-container>
 </template>
 
@@ -1211,9 +1211,9 @@ export default {
       disabledFrameRadio: true,
       disabledCommentText: true,
       celular_variants: [
-        {title:'CELULAR BOLERO 25 MM (3.66 MM)', flag: 'BOLERO'},
-        {title:'CELULAR ROMANCE 25 MM (3.66 MM)', flag: 'ROMANCE'},
-        {title:'CELULAR SOLIS 38 MM 118\'\' (3.00)', flag: 'SOLIS'},
+        {title:'CELULAR BOLERO 25 MM (3.66 MM)', day: 'BOLERO TRASLUCIDA', night: 'BOLERO BLACKOUT'},
+        {title:'CELULAR ROMANCE 25 MM (3.66 MM)', day: 'ROMANCE TRASLUCIDA', night: 'ROMANCE BLACKOUT'},
+        {title:'CELULAR SOLIS 38 MM 118\'\' (3.00)', day: 'SOLIS TRASLUCIDA', night: 'SOLIS TRASLUCIDA'},
       ],
       celularDialog: false,
       celulares: [
@@ -1251,7 +1251,7 @@ export default {
         rotate: false,
         motor_type: null,
         motor: {
-          
+
           side_control: null,
           price: 0,
           action: null,
@@ -1369,7 +1369,7 @@ export default {
         this.sellerPrint = false
       }
     },
-    
+
     redirectToLogin(){
       this.$router.push({name: 'login', query: {redirect: '/quoter'}})
     },
@@ -1382,19 +1382,19 @@ export default {
     openPDFView(){
       if(this.$store.state.isLoggedIn == true){
 
-        if(this.user.role === 'Vendedor'){
+        if(this.user.role === 'Vendedor' || this.user.role === 'Administrador'){
           this.$store.dispatch('getDistributors').then(() => {
             this.sellerPrint = true
           })
-          
+
         }else{
           this.$children[5].$refs.html2Pdf2.generatePdf()
         }
-       
+
       }else{
         this.beforePrint = true
       }
-     
+
     },
 
     chargeWoodPrices(){
@@ -1425,7 +1425,7 @@ export default {
         }else{
           this.$store.dispatch('saveOrders', this.orders)
         }
-      
+
       }
     },
 
@@ -1439,8 +1439,8 @@ export default {
         }else{
           this.$store.dispatch('saveQuotations', this.orders)
         }
-       
-        
+
+
       }
     },
 
@@ -1467,28 +1467,18 @@ export default {
     },
 
     chargeCelularColors(){
-        let variants = this.$store.state.productsModule.variants.filter(v => v.name.includes(this.order.celular_variant))
-        
-        if(variants.length > 0){
-          this.$store.dispatch("getRelatedColors", variants[0].id).then(()=>{
-            this.order.variant = variants[0].id
-          })
-       
-        
-        if(variants[1]){
-          this.$store.dispatch("getRelatedColors2", variants[1].id).then(() => {
-            this.order.variant2 = variants[1].id
+        // let variants = this.$store.state.productsModule.variants.filter(v => v.name.includes(this.order.celular_variant))
+        const variant1 = this.$store.state.productsModule.variants.find(v => v.name.includes(this.order.celular_variant.day))
+        const variant2 = this.$store.state.productsModule.variants.find(v => v.name.includes(this.order.celular_variant.night))
+
+        this.$store.dispatch("getRelatedColors", variant1.id).then(()=>{
+            this.order.variant = variant1.id
+        })
+        this.$store.dispatch("getRelatedColors2", variant2.id).then(() => {
+            this.order.variant2 = variant2.id
             this.loadingColors = false;
             this.disabledSelectColor = false
-          });
-        }else{
-          this.$store.dispatch("getRelatedColors2", variants[0].id).then(() => {
-            this.order.variant2 = variants[0].id
-            this.loadingColors = false;
-            this.disabledSelectColor = false
-          });
-        }
-        }
+        });
     },
 
     showMargins(){
@@ -1525,7 +1515,7 @@ export default {
      .image(function (model, logo) {
     const context = model.getContext('2d');
     context.save();
-    context.globalAlpha = 0.3 
+    context.globalAlpha = 0.3
     context.drawImage(logo,0,0,model.width,model.height);
     context.restore();
     return model;
@@ -1538,7 +1528,7 @@ export default {
       });
 
     },
-    
+
 
     buttonCanvasRules(max, index){
        let n = parseFloat(this.order.canvas[index].width);
@@ -1553,9 +1543,9 @@ export default {
        }else{
          return true
        }
-      
+
     },
- 
+
     validateCanvas() {
       if (this.$refs.canvasForm.validate()) {
         this.canvasDialog = false;
@@ -1582,7 +1572,7 @@ export default {
       if (this.editable) {
         this.dialogMotorization = false;
       } else {
-        
+
         this.dialogMotorization = false;
       }
     },
@@ -1594,14 +1584,14 @@ export default {
         this.dialogMotorization = true;
         this.$store.dispatch("getControls");
       }
-    
+
     },
 
     openMotorizationDialogConfirm(){
        this.dialogMotorization = true;
       this.$store.dispatch("getControls");
       this.flexibaletExtraDialog = false
-      
+
     },
 
     closeDialog() {
@@ -1618,7 +1608,7 @@ export default {
           }else{
              this.order.price = this.unitaryPrice;
           }
-       
+
 
          //this.order.motor.price = this.motorizationPrice;
         if (this.editable) {
@@ -1637,7 +1627,7 @@ export default {
         }
       }
         }
-      
+
     },
 
     editOrder(value) {
@@ -1657,7 +1647,7 @@ export default {
     },
 
     widthCanvasRules(min, max, index) {
-     
+
       let n = parseFloat(this.order.canvas[index].width);
       return (
         (!isNaN(n) && n >= min && n <= max) ||
@@ -1706,10 +1696,10 @@ export default {
         this.heightMargins = 1+' a '+1
         return ((!isNaN(h) && h >= 1 && h <= 1));
       }
-      
+
 
       return true
-      
+
     },
 
     widthWoodRules(){
@@ -1726,7 +1716,7 @@ export default {
         );
       }else{
         return true
-      }  
+      }
     },
 
     heightWoodRules(){
@@ -1735,7 +1725,7 @@ export default {
           (!isNaN(n) && n >= 0.80 && n <= 3) ||
           "Requerido"
         );
-     
+
     },
 
     widthCelularRules(type){
@@ -1744,13 +1734,13 @@ export default {
           (!isNaN(n) && n >= 0.60 && n <= 3) ||
           "Requerido"
         );
-      
-       
+
+
     },
-    
+
     heightCelularRules(type){
       let n = parseFloat(this.order.canvas[0].height);
-     
+
         return (
           (!isNaN(n) && n >= 1 && n <= 3) ||
           "Requerido"
@@ -1823,13 +1813,13 @@ export default {
       }else if(this.order.motor_type == 'Motorizado'){
          result  =  woodMotorized.filter((m) => m.width >= this.order.canvas[0].width && m.height >= this.order.canvas[0].height)
       }
-     
+
       if(result[0]){
         if(this.order.motor_type == 'Manual' && this.order.motor.drive == 'cinta'){
           return result[0].price + (result[0].price * 0.15)
         }else{
           return result[0].price
-        } 
+        }
       }
     },
 
@@ -1846,7 +1836,7 @@ export default {
       }else{
         return this.editable ? "terminar edición" : "terminar persiana";
       }
-      
+
     },
     btnMotorTitle() {
       return this.editable ? "editar motorización" : "terminar motorización";
@@ -1855,16 +1845,16 @@ export default {
     cardTitle() {
       return this.editable ? "EDITA TU PERSIANA" : "COTIZA TU PERSIANA";
     },
-    
+
     lines() {
       if (this.getType) return this.$store.getters.getLines(this.getType.slug);
     },
 
-   
+
 
     maxheight() {
       let w = 0;
- 
+
         if (this.getType && this.variant) {
           if (this.order.rotate) {
             w = this.variant.width - 0.2;
@@ -1884,7 +1874,7 @@ export default {
         } else {
           return w;
         }
-      
+
     },
 
     maxwidth() {
@@ -1965,7 +1955,7 @@ export default {
       distributors: (state) => state.userModule.distributors,
       user: (state) => state.user,
     }),
-      
+
 
     showRotate() {
       if (this.order.color) {
@@ -1998,7 +1988,7 @@ export default {
             );
             return price;
           } else {
-          
+
             price = parseFloat(this.variant.price) + parseFloat(this.variantTwo.price)
             return price;
           }
@@ -2035,11 +2025,11 @@ export default {
       } else {
         return 0;
       }
-      
+
 
     },
 
-    
+
   },
 
   components: {
