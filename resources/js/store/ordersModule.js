@@ -44,6 +44,9 @@ const ordersModule = {
 
     },
     mutations:{
+        mutationDeleteAllBlinds(state){
+            state.orders = [];
+        },
         saveOrder(state,newOrder){
             state.orders.push(newOrder);
             //state.newUserId = newUser.id;
@@ -110,6 +113,10 @@ const ordersModule = {
 
     },
     actions:{
+        actionDeleteAllBlinds({commit}){
+           commit('mutationDeleteAllBlinds');
+        },
+
         addToOrder (context, blind){
             if(context.state.orders.length == 0){
                 blind.id = 1
@@ -131,6 +138,15 @@ const ordersModule = {
             try {
                 const response = await axios
                 .post("/api/orders", {'orders':orders, 'is_quotation': 0})
+                // commit('setProducts',response.data.data);
+            } catch (error) {}
+
+        },
+
+        printOrders: async function ({ commit}, orders){
+            try {
+                const response = await axios
+                .post("/api/order-list-pdf", orders)
                 // commit('setProducts',response.data.data);
             } catch (error) {}
 

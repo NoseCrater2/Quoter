@@ -29,7 +29,7 @@ class ProductController extends Controller
             $query->withCount('lines as lines');
         }])->get();
         return response(['data'=> $products],200);
-        
+
 
     }
 
@@ -113,11 +113,11 @@ class ProductController extends Controller
         return VariantIndexResource::collection(
              $product->variants
         );
-        
+
     }
 
     public function getTypes(Product $product){
-    
+
         return TypeIndexResurce::collection(
             $product->types
        );
@@ -134,12 +134,20 @@ class ProductController extends Controller
     {
         //Recuperar el request en un objeto
         $orders = $request->all();
-    //    dd($orders[0]['type']);
-        $pdf = PDF::loadView('pdf.order', compact('orders'));
+        $pdf = PDF::loadView('pdf.orderclient', compact('orders'));
 
         return $pdf->download('order-list.pdf');
     }
 
- 
+    public function authExportPdf(Request $request)
+    {
+        //Recuperar el request en un objeto
+        $orders = $request->all();
+        $pdf = PDF::loadView('pdf.orderdistributor', compact('orders'));
+
+        return $pdf->download('order-list.pdf');
+    }
+
+
 
 }

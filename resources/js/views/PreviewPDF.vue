@@ -82,7 +82,7 @@
                 <div style="width: 78%; font-size: 8px; line-height: 10px; text-align: center; margin: 3px auto 5px auto" >
                     <i>
                         La emisión de este documento es solo para fines informativos y no representan ningún compromiso de fabricación para la empresa, ni para el cliente.
-                        Se considerará en firme cuando se realice el pago del importe acordado.
+                        Se considerará en firme cuando se realice el pago del importe acordado. Precios sujetos a cambios sin previo aviso.
                     </i>
                 </div>
             </section>
@@ -100,7 +100,7 @@
                         </div>
                         <div style="font-size: 6px; width: 64%; padding: 2px 0px 7px 4px;line-height: 10px;">
                         <div style="text-transform: uppercase;">
-                            {{o.type}} // {{o.manufacturer}}{{o.line != null ? ' // '+o.line+' // ' : ' // '}}{{o.second_color != null ? o.color.color+' // '+o.second_color.color+ ' // ' : o.color.color+' // '}}
+                            {{o.type}} // {{o.manufacturer}}{{o.line != null ? ' // '+o.line : ''}}{{o.variant2 != null ? ' // '+$store.getters.getVariant(o.variant).name+'-'+$store.getters.getVariant(o.variant2).name+' // ' : ' // '+$store.getters.getVariant(o.variant).name+' // '}}{{o.second_color != null ? o.color.color+' // '+o.second_color.color+ ' // ' : o.color.color+' // '}}
                                 <span v-for="(canva, index) in o.canvas" :key="index">
                                     <strong v-if="o.canvas.length > 1">(L{{(index+1)}}) Ancho: {{canva.width}}m - Alto: {{canva.height}}m // </strong>
                                     <strong v-else>Ancho: {{canva.width}}m - Alto: {{canva.height}}m // </strong>
@@ -118,10 +118,10 @@
                                 {{ o.motor.drive }} //
                             </span>
                             <span v-if="o.motor.string_type != null">
-                                {{o.motor.manufacturer}} {{o.motor.stringPrice > 0 ? '(+$'+o.motor.stringPrice+') // ': ' // '}}
+                                {{o.motor.control_color}} {{o.motor.stringPrice > 0 ? o.motor.manufacturer+' (+$'+o.motor.stringPrice+') // ': ' // '}}{{o.motor.string_type+' // '}}
                             </span>
                             <span v-if="o.motor.gallery != null">
-                                {{o.motor.gallery.model}} {{o.motor.galleryPrice > 0 ? '(+$'+o.motor.galleryPrice+') // ': '(+$'+o.motor.gallery.price+') // '}}
+                                {{o.motor.gallery.color != null ? o.motor.gallery.color+' // ' : ''}}{{o.motor.gallery.model}} {{o.motor.galleryPrice > 0 ? '(+$'+o.motor.galleryPrice+') // ': '(+$'+o.motor.gallery.price+') // '}}
                             </span>
                             <span v-if="o.motor.motor != 0 && o.motor.motor != null">
                                 {{$store.getters.getMotor(o.motor.motor).system}} // {{$store.getters.getMotor(o.motor.motor).motorizationType}} // {{$store.getters.getMotor(o.motor.motor).manufacturer}} {{$store.getters.getMotor(o.motor.motor).price > 0 ? '(+$'+$store.getters.getMotor(o.motor.motor).price+') // ': ' // '}}
@@ -226,8 +226,8 @@
                     <div style="width: 40%;font-size: 9px; background-color: rgba(255,255,255,0)">
                         <div v-if="o.second_color != null">
                             <div style="margin-top: 7px; margin-bottom: 11.5px; margin-left: 28%">
-                                <img width="50" height="50" :src="`/img/modelos/medium/${o.type}/${o.manufacturer}/${o.color.code}.jpg`">
-                                <img width="50" height="50" style="padding-left: 2px" :src="`/img/modelos/medium/${o.type}/${o.manufacturer}/${o.second_color.code}.jpg`">
+                                <img width="43" height="43" :src="`/img/modelos/medium/${o.type}/${o.manufacturer}/${o.color.code}.jpg`">
+                                <img width="43" height="43" style="padding-left: 2px" :src="`/img/modelos/medium/${o.type}/${o.manufacturer}/${o.second_color.code}.jpg`">
                             </div>
                             <div style="font-weight: bolder; border: 1px solid #d1d3d4;background-color:#f1f1f2; font-size: 9.57px; width: 100%; text-align: right; padding-bottom: 3px; padding-top: 2px; padding-right: 4px">
                                   <span>TOTAL: </span>
@@ -247,7 +247,7 @@
                         </div>
                         <div v-else>
                             <div style="margin-top: 7px; margin-bottom: 11.5px; margin-left: 60%">
-                              <img width="50" height="50" :src="`/img/modelos/medium/${o.type}/${o.manufacturer}/${o.color.code}.jpg`">
+                              <img width="43" height="43" :src="`/img/modelos/medium/${o.type}/${o.manufacturer}/${o.color.code}.jpg`">
                             </div>
                             <div style="font-weight: bolder; border: 1px solid #d1d3d4;background-color:#f1f1f2; font-size: 9.57px; width: 100%; text-align: right; padding-bottom: 3px; padding-top: 2px; padding-right: 4px">
                                   <span>TOTAL: </span>

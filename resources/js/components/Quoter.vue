@@ -590,6 +590,19 @@
               dark
               >CANCELAR EDICIÓN
               </v-btn>
+
+              <v-btn
+              color="red"
+              @click="deleteAllBlinds()"
+              depressed
+              dark
+              block
+              tile
+              class="mb-1"
+              v-if="orders.length > 0"
+              >TERMINAR PEDIDO
+              </v-btn>
+
             </v-col>
             <v-col cols="12" md="4" sm="12" class="my-1 text-center">
                <v-tooltip top>
@@ -1167,8 +1180,8 @@
       </v-dialog>
 
     </v-row>
-    <PreviewPDF :distributor="selectedUser"></PreviewPDF>
-    <PreviewPdfRollux></PreviewPdfRollux>
+    <!-- <PreviewPDF :distributor="selectedUser"></PreviewPDF>
+    <PreviewPdfRollux></PreviewPdfRollux> -->
 
   </v-container>
 </template>
@@ -1182,8 +1195,9 @@ import MotorizationDialog from './MotorizationDialog';
 import watermark from 'watermarkjs';
 import woodMatrix from '../utils/woodMatrixOne';
 import woodMotorized from '../utils/woodMatrixTwo';
-import PreviewPDF from '../views/PreviewPDF';
-import PreviewPdfRollux from '../views/PreviewPdfRollux';
+// import PreviewPDF from '../views/PreviewPDF';
+// import PreviewPdfRollux from '../views/PreviewPdfRollux';
+const FileDownload = require('js-file-download');
 
 export default {
   name: "Quoter",
@@ -1365,8 +1379,11 @@ export default {
   methods: {
     checkUserValid(){
       if(this.$refs.userForm.validate()){
-        this.$children[6].$refs.html2Pdf2.generatePdf()
-        this.sellerPrint = false
+        // this.$children[6].$refs.html2Pdf2.generatePdf()
+        axios.post("/api/auth-order-list-pdf", {orders: this.orders, user: this.selectedUser}, {responseType: 'blob',}).then((response)=>{
+            FileDownload(response.data, 'modelos.pdf')
+            this.sellerPrint = false
+        })
       }
     },
 
@@ -1375,7 +1392,12 @@ export default {
     },
 
 	  printRolluxQuoting(){
-       this.$children[7].$refs.html2Pdf.generatePdf()
+    //    this.$children[7].$refs.html2Pdf.generatePdf()
+    axios.post("/api/order-list-pdf", this.orders, {responseType: 'blob',}).then((response)=>{
+        FileDownload(response.data, 'modelos.pdf')
+    })
+    // this.$store.dispatch('printOrders', this.orders)
+
        this.beforePrint = false
     },
 
@@ -1388,7 +1410,11 @@ export default {
           })
 
         }else{
-          this.$children[5].$refs.html2Pdf2.generatePdf()
+        //   this.$children[5].$refs.html2Pdf2.generatePdf()
+            axios.post("/api/auth-order-list-pdf", {orders: this.orders, user: this.user}, {responseType: 'blob',}).then((response)=>{
+                FileDownload(response.data, 'modelos.pdf')
+                this.sellerPrint = false
+            })
         }
 
       }else{
@@ -1410,6 +1436,10 @@ export default {
     cancelEdit(){
        this.order = Object.assign({}, this.defaultOrder);
        this.editable = false
+    },
+
+    deleteAllBlinds(){
+        this.$store.dispatch('actionDeleteAllBlinds');
     },
 
     exportPDF(){
@@ -2033,10 +2063,10 @@ export default {
   },
 
   components: {
-    PreviewPDF,
+    // PreviewPDF,
     QuotedBlinds,
     MotorizationDialog,
-    PreviewPdfRollux,
+    // PreviewPdfRollux,
   },
 
 };
