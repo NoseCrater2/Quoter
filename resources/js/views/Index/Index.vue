@@ -368,7 +368,7 @@ export default {
 
 
     //  breadCrumbs() {
-  
+
     //   let pathArray = this.$route.path.split("/")
     //   pathArray.shift()
 
@@ -444,9 +444,9 @@ export default {
 #loading {
 	text-align: center;
 	margin: 117px auto 0 auto;
-  font-weight: bold;
-  font-size:16px;
-  color: white;
+    font-weight: bold;
+    font-size:16px;
+    color: white;
 }
 
 #loading span {
