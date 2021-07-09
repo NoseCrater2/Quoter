@@ -31,7 +31,7 @@ Route::get('directory', 'GalleryController@showDirectory');
 
 
 Route::resource('types', 'TypeController')->only('index','show');
-Route::get('lines', 'LineController@index');
+Route::resource('lines', 'LineController')->only('index','show');
 
 Route::resource('weaves', 'WeaveController')->only('index','show');
 Route::resource('sunblinds', 'SunblindController')->only('index','show');
@@ -54,8 +54,6 @@ Route::get('getLines/{slug}', 'TypeController@getLines');
 
 Route::get('getVariants/{slug}', 'LineController@getVariants');
 Route::get('getWeaves/{slug}', 'LineController@getWeaves');
-// getSubweabesByType
-Route::resource('subweaves', 'SubweaveController')->only('index');
 Route::get('getTypeVariants/{slug}', 'TypeController@getTypeVariants');
 Route::get('getVariantsByProduct/{product}', 'Api\ProductController@getVariantsByProduct');
 
@@ -75,9 +73,9 @@ Route::post('importGalleries', 'GalleryController@importGalleries');
 
 Route::get('exportExcel', 'VariantController@exportExcel');
 
-// 
+//
 
-Route::post('importSunblinds', 'SunblindController@importSunblinds');
+// Route::post('importSunblinds', 'SunblindController@importSunblinds');
 
 
 
@@ -102,7 +100,7 @@ Route::middleware(['auth:sanctum'])->group(function()
     Route::resource('orders', 'OrderController')->only('index','show', 'store', 'update','destroy');
     Route::get('quotations','OrderController@quotations');
     Route::get('changequoting/{order}','OrderController@changeToOrder');
-   
+
     //Products
     // Route::post('products/store' , 'Api\ProductController@store')->name('products.store')->middleware('can:products.create');
     // Route::get('products' , 'Api\ProductController@index')->name('products.index')->middleware('can:products.index');
@@ -113,14 +111,15 @@ Route::middleware(['auth:sanctum'])->group(function()
     // Route::get('products/{product}/edit' , 'Api\ProductController@edit')->name('products.edit')->middleware('can:products.edit');
 
     //users
-  
+
     Route::get('users','UserController@index')->name('users.index');
     //Route::get('products/create' , 'ProductController@create')->name('products.create')->middleware('permission:products.create');
     Route::put('users/{user}','UserController@update')->name('users.update');
     Route::get('users/{user}','UserController@show')->name('users.show');
     Route::delete('users/{user}','UserController@destroy')->name('users.destroy');
     Route::get('users/{user}/edit','UserController@edit')->name('users.edit');
-  
+
 });
 
-Route::get('order-list-pdf' , 'Api\ProductController@exportPdf');
+Route::post('order-list-pdf' , 'Api\ProductController@exportPdf');
+Route::post('auth-order-list-pdf' , 'Api\ProductController@authExportPdf');
