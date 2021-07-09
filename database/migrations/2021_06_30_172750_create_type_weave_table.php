@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateManufacturersTable extends Migration
+class CreateTypeWeaveTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateManufacturersTable extends Migration
      */
     public function up()
     {
-        Schema::create('manufacturers', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name')->required();
-            $table->string('short_name')->nullable();
-            $table->unsignedBigInteger('type_id')->nullable();
+        Schema::create('type_weave', function (Blueprint $table) {
+            $table->unsignedBigInteger('weave_id');
+            $table->unsignedBigInteger('type_id');
+            $table->foreign('weave_id')->references('id')->on('weaves');
             $table->foreign('type_id')->references('id')->on('types');
         });
     }
@@ -29,6 +28,6 @@ class CreateManufacturersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('manufacturers');
+        Schema::dropIfExists('type_weave');
     }
 }

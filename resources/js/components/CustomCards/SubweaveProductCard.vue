@@ -1,14 +1,13 @@
 <template>
     <v-hover v-slot="{ hover }">
-        <!-- "`../../img/lineas/${line.slug}.jpg`" -->
-        <v-card height="340" width="380" class="ma-4"> 
-            <v-img class="white--text align-end"  :class="{'escalada':hover}" width="390" height="340" :aspect-ratio="16/9"  :src="image(line.slug)"  :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
+        <v-card height="340" width="380" class="ma-4" > 
+            <v-img class="white--text align-end"  :class="{'escalada':hover}" width="390" height="340" :aspect-ratio="16/9"  :src="image(model.slug)"  :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
             <template v-slot:placeholder>
                 <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
             </template>
                 <v-slide-y-reverse-transition>
                     <div v-if="!hover" class="title d-flex transition-fast-in-fast-out justify-center"  > 
-                        <h3 class="text-center">{{ line.name}}</h3> 
+                        <h3 class="text-center">{{ model.name}}</h3> 
                     </div> 
                 </v-slide-y-reverse-transition>
                 <v-slide-x-transition>
@@ -18,9 +17,10 @@
                     style="height: 100%;"
                     >
                         <v-hover v-slot="{ hover }">
-                            <!-- :to="type.weaves.length > 0 ? {name: 'Tejidos', params: {slugLine: line.slug}}:{name: 'Products', params: {slugLine: line.slug}}" -->
-                            <v-btn @click="chooseRoute(line)" :outlined="!hover" depressed  tile color="white" >
-                                {{ line.name }}
+                            <v-btn
+                            :to="{name: 'TejidosToldos'}"
+                            :outlined="!hover" depressed  tile color="white" >
+                                {{ model.name }}
                             </v-btn>
                           </v-hover>
                     </div>
@@ -40,43 +40,18 @@
         </v-card>
     </v-hover>
 </template>
-
 <script>
 export default {
     props: {
-        line: Object, 
-        type: Object,
-        
-    },
-
-    mounted(){
-
-    },
-
-    methods: {
-
-    },
-
-    computed: {
-
+        model: Object,        
     },
 
     methods:{
         image(slug){
             try {
-                return "/img/lineas/"+this.type.slug+'-'+slug+".jpg"
+                return "/img/weaves/"+slug+".jpg"
             } catch (error) {
                 return "/img/modelos/medium/unavailable.jpg"
-            }
-        },
-
-        chooseRoute(line){
-            if(this.type.product_id === 3){
-                this.$router.replace({name: 'Modelos', params: {slugType:  this.type.slug, slugLine: line.slug}})
-            }else if(this.type.weaves.length > 0){
-                 this.$router.replace({name: 'Tejidos', params: {slugLine: line.slug}})
-            }else{
-                this.$router.replace({name: 'Products', params: {slugLine: line.slug}})
             }
         }
     }

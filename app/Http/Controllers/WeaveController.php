@@ -16,9 +16,8 @@ class WeaveController extends Controller
      */
     public function index()
     {
-        return WeaveIndexResource::collection(
-            Weave::get()
-        );
+        $weaves = Weave::has('subweaves')->with('subweaves:slug,name')->get();
+        return response(['data'=> $weaves],200);
     }
 
     /**

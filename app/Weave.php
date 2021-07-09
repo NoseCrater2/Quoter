@@ -6,16 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Weave extends Model
 {
-    protected $fillable = ['name', 'slug', 'description'];
+    protected $fillable = ['name', 'slug'];
     public $timestamps = false;
+    protected $hidden = ['pivot'];
 
     public function variants()
     {
         return $this->hasMany(Variant::class);
     }
 
-    public function lines()
+    public function subweaves()
     {
-        return $this->belongsToMany(Line::class);
+        return $this->belongsToMany(Subweave::class);
+    }
+
+    public function types()
+    {
+        return $this->belongsToMany(Type::class);
     }
 }

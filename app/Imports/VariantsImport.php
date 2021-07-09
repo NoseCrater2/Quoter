@@ -6,10 +6,7 @@ use App\Variant;
 use App\Type;
 use App\Line;
 use App\Color;
-use App\Manufacturer;
-use App\Weight;
 use App\Weave;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -36,31 +33,29 @@ public function collection(Collection $rows)
             'name' => $rows[0]['tipo'],
         ]);
 
-        DB::table('variants')->where('type_id', '=', $type->id)->delete();
+        $type->variants()->delete();
+        
         $type->lines()->detach();
+        $type->weaves()->detach();
     }
 
    
     foreach ($rows as $row) {
-        
-        $line = null;
-        $tejido = null;
+        $weave = null;
 
         if($row->has('tipo') && $row['tipo']){
         $type = Type::firstOrCreate(['name' => $row['tipo'],
-            ],[
-                'slug' => str_replace(" ", '-', mb_strtolower($row['tipo'])),
-            ]);
+        ],[
+            'name' => $row['tipo'],
+            'slug' => str_replace(" ", '-', mb_strtolower($row['tipo'])),
+        ]);
 
-
-       if($row->has('linea') && $row['linea']){
 
             $line =  Line::firstOrCreate([
                 'name' =>  $row['linea'],
-                'type_name' => $row['tipo'],
             ],[
+                'name' =>  $row['linea'],
                 'slug' => str_replace(" ", '-', mb_strtolower($row['linea'])),
-                'type_name' => $row['tipo'],
             ]);
 
             $type->lines()->syncWithoutDetaching([$line->id]);
@@ -68,69 +63,60 @@ public function collection(Collection $rows)
           
             if($row->has('tejido') && $row['tejido']){
             
-            $tejido = Weave::firstOrCreate([
-                'name' => $row['tejido']
+                $weave = Weave::firstOrCreate([
+                    'name' => $row['tejido']
                 ],[
-                 'slug' => str_replace(' ', '-', mb_strtolower($row['tejido'])),
+                    'name' => $row['tejido'],
+                    'slug' => str_replace(' ', '-', mb_strtolower($row['tejido']))
                 ]);
-        
-            $line->weaves()->syncWithoutDetaching([$tejido->id]);
-        }
+
+                $type->weaves()->syncWithoutDetaching([$weave->id]);
+            }
+
+           
+
+            $variant = Variant::firstOrCreate(
+                [
+                    'name' => $row['modelo'],
+                    'weave_id' => $weave != null ? $weave->id : null,
+                    'line_id' => $line->id,
+                    'type_id' => $type->id
+                ],
+                [
+                    'slug' =>  preg_replace("[\W]", "-", $row['modelo']),
+                    'width' => $row->has('ancho') && $row['ancho']?floatval(preg_replace("[\,]",'.',$row['ancho'])):1,
+                    'price' => $row->has('precio')?$row['precio']:0,
+                    'rotate' =>$row->has('rotacion')?$row['rotacion']:0,
+                    'weave_id' => $weave != null ? $weave->id : null,
+                    'line_id' => $line->id,
+                    'type_id' => $type->id
+                ]      
+            );
 
 
-       }
-       
-       
-    
-        $color = Color::firstOrCreate([
-            'code' => $row['codigo'],
-            'color' => $row['color'],
-        ],
-            [
-                'color' => $row['color']
-            ]
-        );
+            $color = Color::firstOrCreate([
+                'code' => $row['codigo'],
+                'color' => $row['color'],
+                'variant_id' => $variant->id
 
-        $variant = Variant::firstOrCreate(
-            [
-                'name' => $row['modelo'],
-                'type_id' => $type->id,
-                'line_id' => $line?$line->id:null,
-                'weave_id' => $tejido?$tejido->id:null,
             ],
-            [
-                'slug' =>  preg_replace("[\W]", "-", $row['modelo']),
-                'width' => $row->has('ancho') && $row['ancho']?floatval(preg_replace("[\,]",'.',$row['ancho'])):1,
-                'finished' => $row->has('acabado') ? $row['acabado'] : null,
-                'strip_width' => $row->has('tira') ? $row['tira'] : 0,
-                'price' => $row->has('precio')?$row['precio']:0,
-                'description' => $row->has('descripcion')?$row['descripcion']:null,
-                'rotate' =>$row->has('rotacion')?$row['rotacion']:0,
-                'weave_id'=> $tejido != null ? $tejido->id : null,
-                'line_id' => $line != null ? $line->id : null,
-                'type_id' => $type->id,
-            ]      
-        );
+                [
+                    'code' => $row['codigo'],
+                    'color' => $row['color'],
+                    'variant_id' => $variant->id
+                ]
+            );
 
-
-        if($row->has('fabricante') && $row['fabricante']){
-            $manufacturer = Manufacturer::firstOrCreate([
-                'name' => $row['fabricante']
-            ]);
+            // $oldColor = $variant->colors->whereStrict('color', $color->color);
             
-            $variant->manufacturers()->syncWithoutDetaching([$manufacturer->id]);
-        }
-
-        $oldColor = $variant->colors->whereStrict('color', $color->color);
+            // if(isset($oldColor[0])){
+            //    if($oldColor[0]->code !== $color->code){
+            //         $variant->colors()->detach($oldColor[0]->id);
+            //         $oldColor[0]->delete();
+            //    }
+            // }
        
-        if(isset($oldColor[0])){
-           if($oldColor[0]->code !== $color->code){
-                $variant->colors()->detach($oldColor[0]->id);
-                $oldColor[0]->delete();
-           }
-        }
-       
-        $variant->colors()->syncWithoutDetaching([$color->id]);
+            // $variant->colors()->syncWithoutDetaching([$color->id]);
 
     }
     }
@@ -167,22 +153,4 @@ public function collection(Collection $rows)
        ];
    }
 
-   function addZeros($code){
-    if($code[strlen($code)-1] == 'T'){
-        if(strlen($code) < 12){
-         
-          return $this->addZeros('0'.$code);
-          
-        }else{
-            return $code;
-        }
-        
-    }else{
-        if(strlen($code) < 11){
-         return $this->addZeros('0'.$code);
-        }else{
-            return $code;
-        }
-    }	
-   }
 }

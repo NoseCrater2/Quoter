@@ -82,11 +82,11 @@
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-progress-circular
+                        indeterminate
                         v-if="showProgressBar"
                         :rotate="360"
                         :size="200"
                         :width="15"
-                        :value="value"
                         color="#47a5ad"
                         >
                         {{ value }}%
@@ -163,6 +163,8 @@ export default {
             dialog2: false,
             value: 0,
             value2: 0,
+            importSunblinds: '/api/importSunblinds',
+            importVariants: '/api/importExcel',
             showProgressBar: false,
             showProgressBar2: false,
             file: null,
@@ -195,9 +197,7 @@ export default {
     },
 
     mounted(){
- 
-        this.$store.dispatch('getVariantsByProduct',this.product.id) 
-       
+        this.$store.dispatch('getVariantsByProduct',this.product.id)
     },
 
     computed:{
@@ -221,33 +221,25 @@ export default {
         },
 
         importModels( event){
+            // const endpooint;
+            // if(this.product.id === 1){
+            //     endpooint = this.importVariants
+            // }else if(this.product.id === 3){
+            //      endpooint = this.import
+            // }
             this.showProgressBar2 = true
             this.file2 = event.target.files[0];
             let formData = new FormData();
 
             formData.append('file',this.file2);
 
-            axios.post( '/api/importModels',
-                formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    },
-                    onUploadProgress: function (progressEvent) {
-                        this.value2 = parseInt( Math.round((progressEvent.loaded / progressEvent.total) * 100) )
-                            if(this.value2 === 100){
-                                this.value2 = 'IMPORTANDO...'
-                            }
-                    }.bind(this),
-                }
+            axios.post('/api/importModels',
+                formData, {headers: {'Content-Type': 'multipart/form-data'},}
             ).then(response =>{
                 this.errors2 = response.data
                   if(!this.errors2){
                     this.dialog2 = false
-                  }
-                this.$store.dispatch('getModels').then(()=>{
-                    this.loadingModels = false
-                    this.showProgressBar2 = false
-                })         
+                  }       
             })
             .catch( errors => {
                 this.errors =  errors.response.data.errors
@@ -255,13 +247,20 @@ export default {
         },
 
         selectImage(event){
+            let endpooint = null
+            if(this.product.id === 1){
+                endpooint = this.importVariants
+            }else if(this.product.id === 3){
+                 endpooint = this.importSunblinds
+                
+            }
             this.showProgressBar = true
             this.file = event.target.files[0];
             let formData = new FormData();
             
             formData.append('file',this.file);
 
-            axios.post( '/api/importExcel',
+            axios.post( endpooint,
                 formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'

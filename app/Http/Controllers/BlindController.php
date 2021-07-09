@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Blind;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\PDF;
 
 class BlindController extends Controller
 {
@@ -82,4 +83,5 @@ class BlindController extends Controller
     {
         //
     }
+
 }

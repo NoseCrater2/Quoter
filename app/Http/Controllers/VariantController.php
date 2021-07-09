@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
 use App\ErrorMessages;
 use App\Exports\VariantsExport;
 use App\Variant;
+use App\Color;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\VariantsImport;
@@ -27,23 +27,14 @@ class VariantController extends Controller
      */
     public function index()
     {
-        // return VariantIndexResource::collection(
-        //    Variant::orderBy('price','desc')->get()
-        // );
-
-        $variants = DB::table('variants as v')
-            ->join('types as t', 't.id', '=', 'v.type_id')
-            ->leftJoin('lines as l', 'l.id', '=', 'v.line_id')
-            ->leftJoin('weaves as w','w.id','=','v.weave_id')
-            ->join('products as p','p.id','=','t.product_id')
-            ->join('manufacturer_variant as mv','mv.variant_id','=','v.id')
-            ->join('manufacturers as m','m.id','=','mv.manufacturer_id')
-            ->join('color_variant as cv','cv.variant_id','=','v.id')
-            ->join('colors as c','c.id','=','cv.color_id')
-            ->select('v.id', 'v.name', 'v.slug','v.price','v.rotate','v.width','t.slug as type', 'l.slug as line','p.slug as product', 'm.name as manufacturer','c.code as image')
-            ->orderBy('v.price','desc')
-            ->get();
-        // $variants = Variant::with('type:slug as type','weave:slug as weave','line:slug as line','type.product:name as product','manufacturers:name as manufacturer')->get();
+        $variants = Variant::addSelect(
+            ['image' => Color::select('code')
+            ->whereColumn('variant_id', 'variants.id')
+            ->limit(1)],
+        )
+        ->with(['type:id,slug','line:id,slug','weave:id,slug','subweave:id,slug'])
+        ->orderBy('price','desc')
+        ->get();
         return response(['data'=> $variants],200);
     }
 
@@ -76,7 +67,11 @@ class VariantController extends Controller
      */
     public function show(Variant $variant)
     {
-        return new VariantShowResource(Variant::findOrFail($variant->id));
+        $v = Variant::
+        with(['type:id,slug,name,product_id','line:id,slug,name','weave:id,slug,name','subweave:id,slug,name','colors'])
+        ->where('id',$variant->id)
+        ->get();
+        return response(['data'=> $v],200);
     }
 
     /**
@@ -140,9 +135,15 @@ class VariantController extends Controller
 
     public function getRelated(Variant $variant)
     {
-        return VariantIndexResource::collection(
-            Variant::orderByRaw('rand()')->where('type_id', '=', $variant->type->id)->take(4)->get()
-        );
+        $v = $variant
+        ->with(['type:id,slug','line:id,slug','weave:id,slug','colors'])
+        ->orderBy('price','desc')
+        ->take(4)
+        ->get();
+        return response(['data'=> $v],200);
+        // return VariantIndexResource::collection(
+        //     Variant::orderByRaw('rand()')->where('type_id', '=', $variant->type->id)->take(4)->get()
+        // );
                 
     }
 

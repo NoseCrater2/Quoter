@@ -7,6 +7,7 @@ const productsModule = {
         types: [],
         lines: [],
         weaves: [],
+        subweaves: [],
         sunblinds: [],
     },
 
@@ -21,7 +22,7 @@ const productsModule = {
     },
 
     getLines: (state)=> (slug) => {
-        return state.lines.filter((line) => line.types.includes(slug))
+        return state.lines.filter((line) => line.types.includes({slug:slug}))
     },
 
     getType: (state)=> (slug) => {
@@ -54,6 +55,9 @@ const productsModule = {
         setWeaves(state, weaves){
             state.weaves = weaves
         },
+        setSubweaves(state, subweaves){
+            state.subweaves = subweaves
+        },
 
         setSunblinds(state, sunblinds){
             state.sunblinds = sunblinds
@@ -83,13 +87,13 @@ const productsModule = {
         }
         },
 
-        getVariantsByLine: async function ({ commit, state }, slug){
-            try {
-                const response = await axios
-                .get("/api/getVariants/"+slug)
-                commit('setVariants',response.data.data);
-            } catch (error) {}
-        },
+        // getVariantsByLine: async function ({ commit, state }, slug){
+        //     try {
+        //         const response = await axios
+        //         .get("/api/getVariants/"+slug)
+        //         commit('setVariants',response.data.data);
+        //     } catch (error) {}
+        // },
 
         getTypes: async function ({ commit, state }, idProduct){
             try {
@@ -99,47 +103,47 @@ const productsModule = {
             } catch (error) {}
         },
 
-        getLines: async function ({ commit, state }){
-            if(state.products.length === 0){
+        getLines: async function ({ commit, state },id){
+
             try {
                 const response = await axios
-                .get("/api/lines/"+idProduct)
+                .get("/api/lines/" + id)
                 commit('setLines',response.data.data);
             } catch (error) {}
-            }
+
         },
 
-        getWeaves: async function ({ commit, state }, slugLine){
+        getSubweaves: async function ({ commit}){
             try {
                 const response = await axios
-                .get("/api/getWeaves/"+slugLine)
-                commit('setWeaves',response.data.data);
+                .get("/api/subweaves")
+                commit('setSubweaves',response.data.data);
             } catch (error) {}
         },
 
-        getSunblinds: async function ({ commit, state }, idProduct){
-            try {
-                const response = await axios
-                .get("/api/getSunblinds/"+idProduct)
-                commit('setSunblinds',response.data.data);
-            } catch (error) {}
-        },
+        // getSunblinds: async function ({ commit, state }, idProduct){
+        //     try {
+        //         const response = await axios
+        //         .get("/api/getSunblinds/"+idProduct)
+        //         commit('setSunblinds',response.data.data);
+        //     } catch (error) {}
+        // },
 
-        getAllSunblinds: async function ({ commit, state }){
-            try {
-                const response = await axios
-                .get("/api/sunblinds/")
-                commit('setSunblinds',response.data.data);
-            } catch (error) {}
-        },
+        // getAllSunblinds: async function ({ commit, state }){
+        //     try {
+        //         const response = await axios
+        //         .get("/api/sunblinds/")
+        //         commit('setSunblinds',response.data.data);
+        //     } catch (error) {}
+        // },
 
-        getVariantsByType: async function ({ commit, state }, slug){
-            try {
-                const response = await axios
-                .get("/api/getTypeVariants/"+slug)
-                commit('setVariants',response.data.data);
-            } catch (error) {}
-        },
+        // getVariantsByType: async function ({ commit, state }, slug){
+        //     try {
+        //         const response = await axios
+        //         .get("/api/getTypeVariants/"+slug)
+        //         commit('setVariants',response.data.data);
+        //     } catch (error) {}
+        // },
 
         getVariantsByProduct: async function ({ commit }, idProduct){
             try {

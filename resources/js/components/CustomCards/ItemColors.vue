@@ -1,34 +1,25 @@
 <template>
      <v-item-group v-model="selected" @change="onClickItem(selected)">
-        <v-row >
-            <v-col
-            cols="2"
-            v-for="n in colors.length" :key="n">
-                <v-item v-slot="{ active, toggle}" >
-                    <v-card
-                    outlined
-                    tile
-                    class="d-flex"
-                    height="20"
-                    width="20"
-                    @click="toggle"
+                <v-item v-for="n in colors.length" :key="n" v-slot="{ active, toggle}" class="ma-2">
+                    <v-avatar
+                    :color="active?'#EEEEEE':'white'"
+                    size="60" :style="active?'box-shadow: 0px 0px 5px 2px gray;':''"
                     >
                        <v-tooltip bottom>
                             <template v-slot:activator="{ on, attrs}">
-                                <div :class="{'selected':active}" v-bind="attrs" v-on="on">
-                                    <v-img  :aspect-ratio="16/9" height="20"  width="20" :src="`/img/modelos/tumb/${type}/${manufacturer}/${colors[n-1].code}.jpg`">
+                                <v-avatar size="50" @click="toggle" v-bind="attrs" v-on="on"  style="box-shadow: 0px 0px 2px 1px gray" >
+                                    <v-img  :src="`/img/modelos/tumb/${type}/${manufacturer}/${colors[n-1].code}.jpg`">
                                          <template v-slot:placeholder>
-                                             <v-img src="/img/modelos/thumb-unavailable.jpg"></v-img>
+                                             <v-img src="/img/modelos/tumb-unavailable.jpg"></v-img>
                                          </template>
                                     </v-img>
-                                </div>
+                                </v-avatar>
                             </template>
                             <span>{{ colors[n-1].color }}</span>
                         </v-tooltip>   
-                    </v-card>
+                    </v-avatar>
                 </v-item>
-            </v-col>
-        </v-row>
+
     </v-item-group>
 </template>
 
@@ -50,10 +41,6 @@ export default {
         manufacturer: {
             type: String,
         }
-    },
-
-    mounted(){
-        console.log(this.type)
     },
 
     methods:{

@@ -23,11 +23,8 @@ class Type extends Model
         'product_id',
     ]; 
     public $timestamps = false;
+    protected $hidden = ['pivot'];
 
-    public function variants()
-    {
-        return $this->hasMany(Variant::class);
-    }
 
     public function galleries()
     {
@@ -47,6 +44,16 @@ class Type extends Model
     public function motorizations()
     {
         return $this->hasMany(Motorization::class);
+    }
+
+    public function variants()
+    {
+        return $this->hasMany(Variant::class);
+    }
+
+    public function weaves()
+    {
+        return $this->belongsToMany(Weave::class);
     }
 
    

@@ -21,10 +21,10 @@ class LineIndexResource extends JsonResource
             'types' => $this->types->map( function($type){
                 return $type->slug;
             }),
-            'details' => $this->weaves->map( function($weave){
-                return ["slug" => $weave->slug, "name" => $weave->name];
-            }),
-            'weaves' => $this->weaves->count(),
+            // 'details' => $this->weaves->map( function($weave){
+            //     return ["slug" => $weave->slug, "name" => $weave->name];
+            // }),
+            // 'weaves' => $this->weaves->count(),
         ];
     }
 }

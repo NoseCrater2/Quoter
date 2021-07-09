@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLineWeaveTable extends Migration
+class CreateSubweavesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class CreateLineWeaveTable extends Migration
      */
     public function up()
     {
-        Schema::create('line_weave', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('subweaves', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('slug');
             $table->unsignedBigInteger('line_id');
-            $table->unsignedBigInteger('weave_id');
             $table->foreign('line_id')->references('id')->on('lines');
-            $table->foreign('weave_id')->references('id')->on('weaves');
+            $table->unsignedBigInteger('type_id');
+            $table->foreign('type_id')->references('id')->on('types');
         });
     }
 
@@ -29,6 +31,6 @@ class CreateLineWeaveTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('line_weave');
+        Schema::dropIfExists('subweaves');
     }
 }
