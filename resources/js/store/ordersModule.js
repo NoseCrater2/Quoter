@@ -3,18 +3,18 @@ import { isLoggedIn } from '../utils/auth';
 const ordersModule = {
 
     state:{
-      orders: JSON.parse(localStorage.getItem('orders')) || [],
+      orders: [],
       totalPrice: 0,
       quotedOrders: [],
       quotedOrder: [],
       quotingOrders: [],
       quotingOrder: [],
-       
+
     },
 
 
     getters:{
-       
+
 
         countBlinds(state){
             return state.orders.length
@@ -28,22 +28,25 @@ const ordersModule = {
             state.orders.map(function(order){
                 let pt = parseFloat(order.price) +
                 parseFloat(order.motor.price) +
-                parseFloat(order.motor.flexiballetPrice) + 
-                parseFloat(order.motor.galleryPrice) + 
-                parseFloat(order.motor.manufacturerPrice) + 
+                parseFloat(order.motor.flexiballetPrice) +
+                parseFloat(order.motor.galleryPrice) +
+                parseFloat(order.motor.manufacturerPrice) +
                 parseFloat(order.motor.stringPrice)
-                
+
                 return prices += pt
            })
-            
+
             return prices
-            
+
         },
 
 
 
     },
     mutations:{
+        mutationDeleteAllBlinds(state){
+            state.orders = [];
+        },
         saveOrder(state,newOrder){
             state.orders.push(newOrder);
             //state.newUserId = newUser.id;
@@ -71,14 +74,14 @@ const ordersModule = {
 
         pushProductToCart (state, item){
             state.orders.push(item)
-            localStorage.setItem('orders', JSON.stringify(state.orders))
+
         },
 
         editOrder (state, item){
             state.orders.map(function(currentOrder) {
                 if (currentOrder.id === item.id) {
                     Object.assign(currentOrder, item);
-                    localStorage.setItem('orders', JSON.stringify(state.orders))
+
                 }
             });
         },
@@ -96,7 +99,7 @@ const ordersModule = {
         deleteOrder(state, id) {
             let  u = state.orders.find((order => order.id === id))
             state.orders.splice(state.orders.indexOf(u),1)
-            localStorage.setItem('orders', JSON.stringify(state.orders))   
+
         },
 
         deleteQuotingOrder(state, deleteOrder) {
@@ -110,6 +113,10 @@ const ordersModule = {
 
     },
     actions:{
+        actionDeleteAllBlinds({commit}){
+           commit('mutationDeleteAllBlinds');
+        },
+
         addToOrder (context, blind){
             if(context.state.orders.length == 0){
                 blind.id = 1
@@ -122,7 +129,7 @@ const ordersModule = {
         editOrder (context, blind){
             context.commit('editOrder', blind)
         },
-        
+
         deleteOrder(context,id){
              context.commit('deleteOrder',id);
         },
@@ -133,7 +140,16 @@ const ordersModule = {
                 .post("/api/orders", {'orders':orders, 'is_quotation': 0})
                 // commit('setProducts',response.data.data);
             } catch (error) {}
-        
+
+        },
+
+        printOrders: async function ({ commit}, orders){
+            try {
+                const response = await axios
+                .post("/api/order-list-pdf", orders)
+                // commit('setProducts',response.data.data);
+            } catch (error) {}
+
         },
 
         saveQuotations: async function ({ commit}, orders){
@@ -141,7 +157,7 @@ const ordersModule = {
                 const response = await axios
                 .post("/api/orders", {'orders':orders, 'is_quotation': true})
             } catch (error) {}
-        
+
         },
 
         updateQuotations: async function ({ state}, orders){
@@ -150,12 +166,12 @@ const ordersModule = {
                 .put("/api/orders/" + orders.id, orders).then((response) => {
                     console.log(response)
                     if(response.status === 200){
-                        localStorage.removeItem("orders");
+
                         state.orders = []
                     }
                 })
             } catch (error) {}
-        
+
         },
 
         updateOrders: async function ({state}, orders){
@@ -163,12 +179,12 @@ const ordersModule = {
                 const response = await axios
                 .put("/api/orders/" + orders.id, orders).then((response) => {
                     if(response.status === 200){
-                        localStorage.removeItem("orders");
+
                         state.orders = []
                     }
                 })
             } catch (error) {}
-        
+
         },
 
         getQuotedOrders: async function ({ commit, state }){
