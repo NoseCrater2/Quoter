@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserCreated;
+use App\Mail\UserCreatedClient;
 
 class AuthController extends Controller
 {
@@ -18,10 +21,10 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-        ]);
+        ], ErrorMessages::getMessages());
         if ($validator->fails())
         {
-            return response(['errors'=>$validator->errors()->all()], 422);
+            return response($validator->errors(), 422);
         }
         $request['password']=Hash::make($request['password']);
         $request['remember_token'] = Str::random(10);
@@ -29,6 +32,51 @@ class AuthController extends Controller
         $token = $user->createToken('Laravel Password Grant Client')->accessToken;
         $response = ['token' => $token];
         return response($response, 200);
+    }
+        // 'name', 'email', 'password',
+        // 'last_name',
+        // 'company',
+        // 'address',
+        // 'city',
+        // 'state',
+        // 'zip_code',
+        // 'phone',
+        // 'logo',
+        // 'comments',
+        // 'discount_percent',
+    public function registerClient(Request $request)
+    {
+        $data = $request->all();
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'last_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:15',
+            'address' => 'required|max:255',
+            'zip_code' => 'required|max:10',
+            
+        ], ErrorMessages::getMessages());
+        if ($validator->fails())
+        {
+            return response($validator->errors(), 422);
+        }else{
+            $user = User::make($data);
+            Mail::to('contacto@rollux.com.mx')->send(new UserCreated($user));
+            Mail::to($user)->send(new UserCreatedClient($user));
+            // Mail::send('email',[
+            //     'name' => $request->get('name'),
+            //     'email' => $request->get('email'),
+            //     'comment' => $request->get('comments')],
+            //     function($message){
+            //         $message->from('youremail@your_domain');
+            //         $message->to('youremail@your_domain', 'Your Name')
+            //         ->subject('Your Website Contact Form');
+            //     }
+            // );
+            return response('Email enviado',200);
+        }
+       
+        
     }
 
     public function login(Request $request)
@@ -62,9 +110,13 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $token = $request->user()->token();
+        $token = auth('api')->user()->token();
         $token->revoke();
-        $response = ['message' => 'You have been successfully logged out!'];
+        
+        $response = [
+            
+            'message' => "Has cerrado tu sesión existosamente"
+        ];
         return response($response, 200);
     }
 }

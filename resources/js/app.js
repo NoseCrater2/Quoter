@@ -1,25 +1,49 @@
 require('./bootstrap');
 
 import Vue from 'vue'
+import store from "./store/store";
+import router from "./router";
+
 import vuetify from './plugins/vuetify'
-import router from "./routes";
-import VueRouter from "vue-router";
+import App from './App.vue';
 
+// import Vuex from "vuex";
 
-import Home from "./views/Index/Home";
+// Vue.use(Vuex);
+// const store = new Vuex.Store(storeDefinition);
 
-import App from "./components/Index";
-import Login from "./views/Index/Login";
-import storeDefinition from "./store/store";
-import Vuex from "vuex";
+// router.beforeEach((to, from, next) => {
+//   if(to.matched.some(record => record.meta.requiresAuth)){
+//       if (store.state.isLoggedIn === true) {
+//           next()
+//         } else {
+//           next({
+//             name: 'login',
+//           })
+//         }
+//   }else{
+//       next();
+//   }
+// });
 
 
 
 window.Vue = require('vue');
+window.axios.interceptors.response.use(
+  response => {
+    return response
+  }, 
+  error => {
+    if(401 === error.response.status){
+      store.dispatch("logout")
+    }
+    return Promise.reject(error)
+  }
+)
 
-Vue.use(Vuex);
-Vue.use(VueRouter);
-const store = new Vuex.Store(storeDefinition);
+
+
+
 
 const app = new Vue({
     el: '#app',
@@ -27,11 +51,13 @@ const app = new Vue({
     router,
     store,
     components: {
+      App,
+    },
+    async beforeCreate() {
+      this.$store.dispatch("loadStoredState");
+      this.$store.dispatch("loadUser")
+  },
 
-        Home,
-
-        login: Login,
-    }
 });
 
 

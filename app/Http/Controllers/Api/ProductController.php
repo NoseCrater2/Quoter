@@ -3,8 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Product;
+use App\Color;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+use App\Http\Resources\ProductIndexResource;
+use App\Http\Resources\VariantIndexResource;
+use App\Http\Resources\TypeIndexResurce;
+use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class ProductController extends Controller
 {
@@ -15,9 +23,21 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::paginate();
 
-        return response($products, 200);
+        // return ProductIndexResource::collection(
+        //     Product::get()
+        // );
+        // $products = DB::table('products')
+
+        // ->join('types as p','types.id','=','pr')
+        // ->get();
+
+        $products = Product::with(['types' => function ($query) {
+            $query->with(['weaves:slug,name','lines:id,slug,name']);
+        }])->get();
+        return response(['data'=> $products],200);
+        
+
     }
 
     /**
@@ -93,4 +113,45 @@ class ProductController extends Controller
 
         return back()->with('info', 'Eliminado correctamente');
     }
+
+    public function getVariants(Product $product)
+    {
+
+        return VariantIndexResource::collection(
+             $product->variants
+        );
+        
+    }
+
+    public function getTypes(Product $product){
+    
+        return TypeIndexResurce::collection(
+            $product->types
+       );
+    }
+
+    public function getVariantsByProduct(Product $product)
+    {
+        $variants = $product->variants()->addSelect(
+            ['image' => Color::select('code')->limit(1)],
+        )
+        ->with(['type:id,slug','line:id,slug','weave:id,slug'])
+        ->orderBy('price','desc')
+        ->get();
+        return response(['data'=> $variants],200);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        //Recuperar el request en un objeto
+        // $orders = $request->all();
+        $orders = [];
+    //    dd($orders[0]['type']);
+        $pdf = PDF::loadView('pdf.order', compact('orders'));
+
+        return $pdf->stream('order-list.pdf');
+    }
+
+ 
+
 }

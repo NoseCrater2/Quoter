@@ -22,4 +22,6 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 
-public/js/app.js
+public/
+
+storage/framework/laravel-excel/
