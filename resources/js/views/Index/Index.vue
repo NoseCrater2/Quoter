@@ -246,12 +246,14 @@
              <v-main>
                 <!-- <v-btn max-width="500" tile left fixed style="z-index: 100"> -->
                  <!--  <v-container  style="width: 1200px; margin: auto" class="pa-0">
+
                  <v-breadcrumbs
                :items="breadCrumbs"
                divider=">"
                class="pa-3"
                v-if="breadCrumbs.length > 1"
                >
+
                <template v-slot:divider>
                 <v-icon>mdi-chevron-right</v-icon>
                 </template>
@@ -264,6 +266,7 @@
                       </v-breadcrumbs-item>
                     </router-link>
                   </template>
+
                </v-breadcrumbs>
                </v-container> -->
                   <btnCotizador />
@@ -287,6 +290,7 @@
 </template>
 
 <script>
+
 import { mapState } from 'vuex';
 import btnCotizador from '../../components/Index/TheCuoterButton';
 import btnMail from '../../components/Index/TheMailButton';
@@ -296,6 +300,8 @@ import theFooter from '../../components/Index/TheFooter';
 import mailDialog from '../../components/Index/TheMailDialog';
 // import DialogInvite from '../../components/DialogInvite';
 // import FakeNotification from '../../components/FakeNotification';
+
+
 export default {
     data(){
         return{
@@ -311,6 +317,7 @@ export default {
           showProducts: true,
         }
     },
+
     components: {
       btnCotizador,
       btnMail,
@@ -318,6 +325,7 @@ export default {
       blackBar,
       theFooter,
       mailDialog,
+
       // DialogInvite,
       // FakeNotification,
     },
@@ -326,12 +334,19 @@ export default {
         if(this.query !== ''){
           this.searchProducts();
         }
+
       }
     },
+
     //  beforeRouteEnter(to, from, next){
     //     next(um => {
+
+
     //     })
     // },
+
+
+
     mounted(){
         this.loading = true
         this.$store.dispatch('getLines')
@@ -344,32 +359,46 @@ export default {
         this.onResize()
         window.addEventListener('resize', this.onResize, { passive: true })
     },
+
     computed:{
       ...mapState({
       products: state => state.productsModule.products,
       quotingOrders: state => state.ordersModule.quotingOrders,
     }),
+
+
     //  breadCrumbs() {
+  
     //   let pathArray = this.$route.path.split("/")
     //   pathArray.shift()
+
+
     //   let breadcrumbs = pathArray.reduce((breadcrumbArray, path, idx) => {
+
     //     breadcrumbArray.push({
     //       path: path,
     //       to: this.$route.meta.name,
     //       text: path.split('-').join(' ').toUpperCase() || this.$route.matched[idx+1].meta.breadCrumb,
     //     });
+
+
     //     return breadcrumbArray;
     //   }, [])
+
+
     //   return breadcrumbs;
     //   }
+
      },
     methods:{
         onResize(){
       this.isMobile = window.innerWidth < 780
     },
+
     searchProducts(){
      this.items = this.$store.state.productsModule.variants.filter((t) => t.name.includes(this.query))
     },
+
     btnMailCliked(value){
       this.dialog = value
     },
@@ -377,6 +406,8 @@ export default {
       this.dialog = value
     }
     },
+
+
 }
 </script>
 
@@ -389,6 +420,7 @@ export default {
     -ms-box-sizing: border-box;
     box-sizing: border-box;
 }
+
 /* INICIA CODIGO PARA LOADING */
 #divBody{
     display:flex;
@@ -398,6 +430,7 @@ export default {
     align-items:center;
     background:#47a5ad;
 }
+
 #pngRolluxInOut{
     position:absolute;
     width:90px;
@@ -407,29 +440,35 @@ export default {
     z-index:6;
     animation: float_pngRolluxInOut .5s infinite , scale 2s infinite;
 }
+
 #loading {
 	text-align: center;
 	margin: 117px auto 0 auto;
-    font-weight: bold;
-    font-size:16px;
-    color: white;
+  font-weight: bold;
+  font-size:16px;
+  color: white;
 }
+
 #loading span {
 	-webkit-animation-name: opacity;
 	-webkit-animation-duration: 2.2s;
 	-webkit-animation-iteration-count: infinite;
+
 	-moz-animation-name: opacity;
 	-moz-animation-duration: 2.2s;
 	-moz-animation-iteration-count: infinite;
 }
+
 #loading span:nth-child(2) {
 	-webkit-animation-delay: 100ms;
 	-moz-animation-delay: 100ms;
 }
+
 #loading span:nth-child(3) {
 	-webkit-animation-delay: 190ms;
 	-moz-animation-delay: 190ms;
 }
+
 /* KEYFRAME pngRolluxInOut INICIA */
 @keyframes float_pngRolluxInOut{
     0%{
@@ -454,6 +493,7 @@ export default {
     }
 }
 /* KEYFRAME pngRolluxInOut TERMINA */
+
 /* KEYFRAME CARGANDO INICIA */
 @-webkit-keyframes opacity {
 	0% { opacity: 1; }
@@ -465,21 +505,26 @@ export default {
 }
 /* KEYFRAME CARGANDO TERMINA */
 /* TERMINA CODIGO PARA LOADING */
+
 .slide-enter-active,
 .slide-leave-active{
     transition: opacity 0.5s, transform 0.5s;
 }
+
 .slide-enter,
 .slide-leave-to{
     opacity: 0;
     transform: translateX(-30%);
 }
+
 .v-btn--absolute.v-btn--top, .v-btn--fixed.v-btn--top {
     right: 0px;
     top: 240px;
 }
+
 .v-toolbar__content{
     max-width: 1205px;
     margin: auto !important;
 }
+
 </style>
