@@ -23,15 +23,6 @@ class ProductController extends Controller
      */
     public function index()
     {
-
-        // return ProductIndexResource::collection(
-        //     Product::get()
-        // );
-        // $products = DB::table('products')
-
-        // ->join('types as p','types.id','=','pr')
-        // ->get();
-
         $products = Product::with(['types' => function ($query) {
             $query->with(['weaves:slug,name','lines:id,slug,name']);
         }])->get();
