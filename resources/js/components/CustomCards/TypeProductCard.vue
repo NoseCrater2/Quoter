@@ -14,7 +14,10 @@
                     style="height: 100%;"
                     >
                         <v-hover v-slot="{ hover }">
-                            <v-btn :to="type.lines > 0?{name: 'Lines', params: {slugType: type.slug}}:{name: 'Products', params: {slugType: type.slug}}" depressed :outlined="!hover" tile color="white" >
+                            <!-- <v-btn :to="type.lines > 0?{name: 'Lines', params: {slugType: type.slug}}:{name: 'Products', params: {slugType: type.slug}}" depressed :outlined="!hover" tile color="white" >
+                                {{type.name}}
+                            </v-btn> -->
+                             <v-btn :to="{name: 'Lines', params: {slugType: type.slug}}" depressed :outlined="!hover" tile color="white" >
                                 {{type.name}}
                             </v-btn>
                         </v-hover>

@@ -17,6 +17,8 @@ class CreateColorsTable extends Migration
             $table->bigIncrements('id');
             $table->string('color')->nullable();
             $table->string('code')->nullable();
+            $table->unsignedBigInteger('variant_id')->nullable();
+            $table->foreign('variant_id')->references('id')->on('variants');
         });
     }
 

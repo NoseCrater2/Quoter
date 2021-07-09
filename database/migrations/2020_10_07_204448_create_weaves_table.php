@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-
-class CreateCanvasesTable extends Migration
+class CreateWeavesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,12 +13,10 @@ class CreateCanvasesTable extends Migration
      */
     public function up()
     {
-        Schema::create('canvases', function (Blueprint $table) {
+        Schema::create('weaves', function (Blueprint $table) {
             $table->id();
-            $table->decimal('width',3,2,true);
-            $table->decimal('height',3,2,true);
-            $table->unsignedBigInteger('blind_id')->nullable();
-            $table->foreign('blind_id')->references('id')->on('blinds');
+            $table->string('name');
+            $table->string('slug');
         });
     }
 
@@ -30,6 +27,6 @@ class CreateCanvasesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('canvases');
+        Schema::dropIfExists('weaves');
     }
 }

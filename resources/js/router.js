@@ -167,6 +167,18 @@ const routes = [
                 props: true,
             },
             {
+                path: '/:slugProduct/:slugType/modelos/:slugLine',
+                component: () => import("./views/Modelos.vue"),
+                name: 'Modelos',
+                props: true,
+            },
+            {
+                path: '/:slugProduct/:slugType/weaves/:slugLine',
+                component: () => import("./views/TejidosToldos.vue"),
+                name: 'TejidosToldos',
+                props: true,
+            },
+            {
                 path: '/:slugProduct/:slugType/galleries',
                 component: () => import("./views/Galleries.vue"),
                 name: 'Gallery',
@@ -188,27 +200,18 @@ const routes = [
                 props: true,
             },
             {
-                path: '/:slugProduct/:slugType/:slugLine?/:slugWeave?',
-                // alias: [
-                //     '/:slugProduct/:slugType/tejido/:slugWave/:slugLine',
-                //     '/:slugProduct/:slugType'
-                // ],
+                path: '/:slugProduct/:slugType/:slugLine?/:slugWeave?/cat1',
                 name: 'Products',
                 component: () => import("./components/Products.vue"),
                 props: true,
-                // children: [
-                //     {
-                //         path: '',
-                //         
-                //         props: true,
-                //         component: () => import("./components/Products"),
-                //     }
-                // ]
+            },
+            {
+                path: '/:slugProduct/:slugType/:slugLine/:slugSubweave/:slugWeave/cat2',
+                name: 'Catalogo',
+                component: () => import("./components/Catalogo.vue"),
+                props: true,
             },
             
-
-            
-           
         ],
     },
 

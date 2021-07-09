@@ -165,7 +165,7 @@
                                         <v-list-item-title class="white--text" v-bind="attrs" v-on="on" >  {{ p.name }}  </v-list-item-title>
                                       </template>
                                       <v-list flat dark>
-                                        <v-list-item v-for="(t, index) in p.types" :key="index" :to=" t.lines > 0?{name: 'Lines', params: {slugProduct: p.slug ,slugType: t.slug,}}:{name: 'Products', params: {slugProduct: p.slug ,slugType: t.slug}}"  style="border-bottom: 1px solid gray" >
+                                        <v-list-item v-for="(t, index) in p.types" :key="index" :to="{name: 'Lines', params: {slugProduct: p.slug ,slugType: t.slug,}}"  style="border-bottom: 1px solid gray" >
                                           <v-list-item-content>
                                             <v-list-item-title > {{ t.name }} </v-list-item-title>
                                           </v-list-item-content>
@@ -344,13 +344,13 @@ export default {
 
     mounted(){ 
         this.loading = true
-        this.$store.dispatch('getLines')
-        this.$store.dispatch('getQuotingOrders');
+        // this.$store.dispatch('getLines')
+        // this.$store.dispatch('getQuotingOrders');
+         this.$store.dispatch('getSubweaves')
         this.$store.dispatch('getProducts') 
         this.$store.dispatch('getAllVariants').then( () =>{
         this.loading = false;
         })
-        // this.$store.dispatch('getManufacturers')
         this.onResize()
         window.addEventListener('resize', this.onResize, { passive: true })
     },

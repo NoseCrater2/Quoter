@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLineType extends Migration
+class CreateLineTypeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,6 @@ class CreateLineType extends Migration
     public function up()
     {
         Schema::create('line_type', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->unsignedBigInteger('line_id');
             $table->unsignedBigInteger('type_id');
             $table->foreign('line_id')->references('id')->on('lines');

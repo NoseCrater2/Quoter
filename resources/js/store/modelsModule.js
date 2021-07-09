@@ -102,16 +102,15 @@ const modelsModule = {
               }
         },
 
-        getLines: async function ({ commit, state }){
-            try {
-                const response = await axios
-                .get("/api/lines",{
-                    headers: {Authorization: "Bearer "+localStorage.getItem('access_token')}})
-                commit('setLines',response.data.data);   
-              } catch (error) {
+        // getLines: async function ({ commit, state }){
+        //     try {
+        //         const response = await axios
+        //         .get("/api/lines")
+        //         commit('setLines',response.data.data);   
+        //       } catch (error) {
                  
-              }
-        },
+        //       }
+        // },
 
 
         getColors: async function ({ commit, state }){

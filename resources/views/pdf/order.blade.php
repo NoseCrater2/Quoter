@@ -3,69 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-  
+    <style>
+        @font-face {
+            font-family: 'Montserrat Black';
+            src: url('/fonts/Montserrat-Black.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Montserrat Bold';
+            src: url('/fonts/Montserrat-Bold.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Montserrat';
+            src: url('https://fonts.googleapis.com/css2?family=Montserrat') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body{
+            font-family: 'Montserrat';
+        }
+        .row{
+            display: flex;
+            flex-wrap: wrap;
+            flex: 1 1 auto;
+            margin: -12px;
+        }
+        .col-md-4{
+            flex: 0 0 33.3333333333%;
+            max-width: 33.3333333333%;
+        }
+        .d-block{
+            display: block;
+        }
+        .justify-space-around{
+            justify-content: space-around!important;
+        }
+        
+    </style>
 </head>
 <body>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
-
-<nav  style="background-color: #47a5ad; display: block;">
-    <a  href="#">
-        <img src="{{ public_path('img/white-logo.png') }}" width="200" height="75" alt="logo" style="margin: 5px">
-    </a>
-    <h1>COTIZACIÓN</h1>
-</nav>
-    @foreach($orders as $order)
-        <table style="font-family: Arial, Helvetica, sans-serif; font-size: 0.8em; width: 100%;">
-            <tbody> 
-              
-                <tr >
-                
-                    <td colspan="4">Tipo</td>
-                    <td  colspan="5">{{ $order['type'] }}</td>
-                    <td colspan="1" rowspan="7">
-                        <img src="{{ public_path('img/modelos/medium/'.$order['code'].'.jpg') }}" width="150" height="150" alt="color" style="margin-top: 15px; align-self: end;" >
-                    </td>
-                </tr>
-
-                <tr >
-                    <td colspan="4">Modelo</td>
-                    <td colspan="5">{{ $order['variant'] }}</td>
-                </tr>
-
-                <tr >
-                    <td colspan="4">Color</td>
-                    <td colspan="5">{{ $order['color'] }} | {{ $order['code'] }} </td>
-                </tr>
-                <tr >
-                    <td colspan="4">Ancho</td>
-                    <td colspan="5">{{ $order['width'] }}MT</td>
-                </tr>
-                <tr >
-                    <td colspan="4">Alto</td>
-                    <td colspan="5">{{ $order['height'] }}MT</td>
-                </tr>
-                <tr >
-                    <td colspan="4">Precio</td>
-                    <td colspan="5">{{ $order['price'] }}</td>
-                </tr>
-
-                <tr >
-               
-                    <td colspan="4">Control</td>
-                    <td colspan="5" >{{ $order['control'] }}</td>
-                    
-                </tr>
-               
-             
-            </tbody>
-          
-        </table>
-        
-        <hr style="background-color: #47a5ad">
-        @endforeach
-      
-       
+    <!-- <div class="row justify-space-around" style="height: 100px; width: 100%">
+        <div class="col-md-4" style="margin: auto">
+            <img width="80%" src="img/logos/rollux.png" >
+        </div>
+        <div class="col-md-4" style="border-left: solid #47a5ad 4px;">
+            <div style="margin-left: 12px;margin-top: 20px; margin-botom: 6px;">
+                <div class="d-block" style="font-weight: bolder;font-size: 12px;" >Rollux | Atención a Distribuidores</div>
+                <div class="d-block" style="font-size: 12px;">Whatsapp: 55 4894 8279</div>
+                <div class="d-block" style="font-size: 12px;">Correo:  ventas@rolllux.com.mx</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-block" style="font-weight: bolder; font-size: 1.2em;">
+                Cotización en línea
+            </div>
+            <div class="d-block">
+                Fecha: 30/06/2021
+            </div>
+        </div>
+    </div>        -->
+    <table style="border-collapse:collapse; width: 100%;">
+        <tbody >
+            <tr>
+                <td style="width: 33.3333%">
+                    <img width="250px" src="img/logos/rollux.png" >
+                </td>
+                <td style="border-left: solid #47a5ad 4px;width: 33.3333%">
+                    <div class="d-block" style="padding-left: 15px; font-weight: bolder;font-size: 12px;" >Rollux | Atención a Distribuidores</div>
+                    <div class="d-block" style="padding-left: 15px; font-size: 12px;">Whatsapp: 55 4894 8279</div>
+                    <div class="d-block" style="padding-left: 15px; font-size: 12px;">Correo:  ventas@rolllux.com.mx</div>
+                </td>
+                <td style="text-align: center; width: 33.3333%">
+                    <div class="d-block" style="font-weight: bolder; font-size: 1.2em;">
+                        Cotización en línea
+                    </div>
+                    <div class="d-block">
+                        Fecha: 30/06/2021
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>

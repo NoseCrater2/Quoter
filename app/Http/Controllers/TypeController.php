@@ -17,9 +17,11 @@ class TypeController extends Controller
      */
     public function index()
     {
-         return TypeIndexResurce::collection(
-            Type::get()
-        );
+        $types = Type::withCount('lines as lines')->withCount('weaves as weaves')->get();
+        // return TypeIndexResurce::collection(
+        //     Type::get()
+        // );
+        return response(['data'=> $types],200);
     }
 
     /**
@@ -94,6 +96,11 @@ class TypeController extends Controller
         return LineIndexResource::collection(
             $type[0]->lines
         );
+    }
+
+    public function getSubweabesByType(Type $type)
+    {
+        
     }
 
     public function getTypeVariants(String $slug)

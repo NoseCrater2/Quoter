@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Line extends Model
 {
-    protected $fillable = ['name', 'slug','type_name'];
+    protected $fillable = ['name', 'slug'];
     public $timestamps = false;
+    protected $hidden = ['pivot'];
 
  
 
@@ -16,14 +17,17 @@ class Line extends Model
         return $this->hasMany(Variant::class);
     }
 
-    public function weaves()
-    {
-        return $this->belongsToMany(Weave::class);
-    }
 
     public function types()
     {
         return $this->belongsToMany(Type::class);
     }
+
+    public function subweaves()
+    {
+        return $this->hasMany(Subweave::class);
+    }
+
+    
 
 }

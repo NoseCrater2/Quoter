@@ -63,16 +63,16 @@ export default {
          document.title = this.slugProduct
     },
 
-    mounted(){
-         this.$store.dispatch('getProducts')         
-    },
+    // mounted(){
+    //      this.$store.dispatch('getProducts')         
+    // },
     computed:{
     //      ...mapState({
     //   persianas: state => state.productsModule.types,
     // }),
 
     getProduct(){
-         return  this.$store.getters.getTypes(this.slugProduct)
+        return  this.$store.getters.getTypes(this.slugProduct)
     },
    
     },

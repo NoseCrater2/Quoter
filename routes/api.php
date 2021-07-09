@@ -31,7 +31,7 @@ Route::get('directory', 'GalleryController@showDirectory');
 
 
 Route::resource('types', 'TypeController')->only('index','show');
-Route::resource('lines', 'LineController')->only('index','show');
+Route::get('lines', 'LineController@index');
 
 Route::resource('weaves', 'WeaveController')->only('index','show');
 Route::resource('sunblinds', 'SunblindController')->only('index','show');
@@ -54,6 +54,8 @@ Route::get('getLines/{slug}', 'TypeController@getLines');
 
 Route::get('getVariants/{slug}', 'LineController@getVariants');
 Route::get('getWeaves/{slug}', 'LineController@getWeaves');
+// getSubweabesByType
+Route::resource('subweaves', 'SubweaveController')->only('index');
 Route::get('getTypeVariants/{slug}', 'TypeController@getTypeVariants');
 Route::get('getVariantsByProduct/{product}', 'Api\ProductController@getVariantsByProduct');
 
@@ -75,7 +77,7 @@ Route::get('exportExcel', 'VariantController@exportExcel');
 
 // 
 
-// Route::post('importSunblinds', 'SunblindController@importSunblinds');
+Route::post('importSunblinds', 'SunblindController@importSunblinds');
 
 
 
@@ -121,4 +123,4 @@ Route::middleware(['auth:sanctum'])->group(function()
   
 });
 
-Route::post('order-list-pdf' , 'Api\ProductController@exportPdf');
+Route::get('order-list-pdf' , 'Api\ProductController@exportPdf');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Line;
+use App\Type;
 use Illuminate\Http\Request;
 use App\Http\Resources\LineIndexResource;
 use App\Http\Resources\VariantIndexResource;
@@ -17,9 +18,9 @@ class LineController extends Controller
      */
     public function index()
     {
-        return LineIndexResource::collection(
-            Line::get()
-        );
+        $lines = Line::with('types:slug')->get();
+        // return response(['data'=> $variants],200);
+        return response(['data'=> $lines],200);
     }
 
     /**
@@ -103,4 +104,6 @@ class LineController extends Controller
             $line->weaves
         );
     }
+
+    public function getLinesByType(){}
 }

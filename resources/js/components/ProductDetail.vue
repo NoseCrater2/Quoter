@@ -1,14 +1,14 @@
 <template>
     <div>
         <v-container fluid style="max-width: 1200px" class="my-4">
-            
-            <v-row v-if="details.colors">
-                <v-col cols="12" md="4" sm="12" class="mt-3">
-                    <v-card width="400"  >
+            <v-card flat>
+                <v-row>
+                    <v-col cols="12" md="4" sm="12">
+                         <v-card width="400" flat>
                         <v-img  
                         :height="458" 
                         :width="380" 
-                        :src="`/img/modelos/full/${details.type}/${details.manufacturer}/${details.colors[position].code}.jpg`"  >
+                        :src="`/img/modelos/full/${details.type.slug}/${details.line.slug}/${details.colors[position].code}.jpg`"  >
                             <template v-slot:placeholder>
                                 <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
                             </template>
@@ -16,8 +16,8 @@
                         <v-card-actions  v-if="$vuetify.breakpoint.mobile">
                             <ItemColors 
                             @changeIndex="changeIndex" 
-                            :type="details.type" 
-                            :manufacturer="details.manufacturer" 
+                            :type="details.type.slug" 
+                            :manufacturer="details.line.slug" 
                             :colors="details.colors" />
                             
                         </v-card-actions>
@@ -25,23 +25,27 @@
                             <SlideColors 
                             @openDialog="openDialog" 
                             @changeIndex="changeIndex" 
-                            :type="details.type" 
-                            :manufacturer="details.manufacturer" 
+                            :type="details.type.slug" 
+                            :manufacturer="details.line.slug" 
                             :colors="details.colors" />
                         </v-card-actions>
                     </v-card>
-                     <i style="font-family: Roboto, sans-serif; font-size: 8px">*El color puede variar dependiendo de tu dispositivo</i>
-                </v-col>
-                 <v-col cols="12" md="8" sm="12">
-                    <v-card  flat>
-                        <v-card-title class="text-center font-weight-black" :style="$vuetify.breakpoint.mobile?'font-size: 1.1em':'font-size: 1.6em'" >
-                          
-                                  {{ details.name}}
-                          
+                    <i style="font-family: Roboto, sans-serif; font-size: 8px">*El color puede variar dependiendo de tu dispositivo</i>
+                    </v-col>
+                    <v-col cols="12" md="8" sm="12">
+                        <v-card flat>
+                            <v-card-title class="text-center font-weight-black" :style="$vuetify.breakpoint.mobile?'font-size: 1.1em':'font-size: 1.6em'" >
+                                {{ details.name}}
+                                
+                            <v-chip label class="mx-2 white--text" color="#47a5ad" style="font-family: 'Montserrat';">
+                                SKU: {{ details.colors[position].code}}
+                            </v-chip>
                             </v-card-title>
-                        <v-divider></v-divider>
-                        <div class="d-inline" v-if="user != null">
-                            <div class="d-block">
+                             <v-divider></v-divider>
+                             <v-card-text>
+                        <div v-if="details.type.product_id != 3 " class="d-inline"  >
+                        <div  v-if="user != null">
+                            <div >
                                 <div  class=" d-inline-flex" style="color: #47a5ad; font-size: 28px;">$ </div>
                             <div 
                             class="display-1 d-inline-flex " 
@@ -55,7 +59,7 @@
                             </div>
                              <div class="d-inline-flex" style="color: #47a5ad;font-size: 28px;">MXN </div>
                             </div>
-                            <div class="d-block">
+                            <div >
                                 <div  class="display-1 d-inline-flex" style="color: red">$ </div>
                             <div 
                             class="display-2 d-inline-flex" 
@@ -86,213 +90,90 @@
                        
                         <div class="display-1 d-inline-flex" style="color: #47a5ad">MXN </div>
                         </div>
+                        </div>
                   
-                        <div  class="d-inline ml-4" >
-                             <div class="display-1 d-inline-flex" style="color: #47a5ad">
-                                
+                        <div class="d-inline" >
+                             <div class="display-1 d-inline" style="color: #47a5ad">
                                  <v-btn
-                                 v-if="details.product != 'TOLDOS'"
+                                 v-if="details.type.product_id != 3"
                                  dark
                                  color= "#47a5ad" 
                                  depressed 
                                  :to="{name:'Quoter', query:{type: this.slugType, line: details.slugLine ,variant: details.id,manufacturer: details.manufacturer, color: details.colors[selected]}}">
-                                     COTIZAR ESTE PRODUCTO
+                                    COTIZAR ESTE PRODUCTO
+                                 </v-btn>
+                                <v-btn
+                                target="_blank"
+                                :href="`https://api.whatsapp.com/send?phone=5214434713271?&amp;text=Hola+quiero+saber+el+precio+del+toldo+${details.name}+de+color+${details.colors[selected].color}`"
+                                v-else
+                                dark
+                                color= "#47a5ad" 
+                                depressed>
+                                    PREGUNTAR POR PRECIO
                                  </v-btn>
                              </div>
                         </div>
-                        <v-card-text>
-                            <v-row align="center">
-                                <v-col>
-                                     <b> SELECCIONA MÁS COLORES:</b>
-                                </v-col>
-                               
+                        
+                            <v-row align="center" class="mt-6" no-gutters>
+                                <b> SELECCIONA MÁS COLORES:</b>
                             </v-row>
-                           
-                            <v-row v-if="!$vuetify.breakpoint.mobile">
-                                <ItemColors 
-                                :type="details.type" 
-                                :manufacturer="details.manufacturer" 
-                                @changeIndex="changeIndex" 
-                                :colors="details.colors" />
-                            </v-row>
-                            <v-row class="my-5">
-                                <span>SKU: {{ details.colors[position].code}}</span> 
-                            </v-row>
+                        
+                            <ItemColors
+                            v-if="!$vuetify.breakpoint.mobile"
+                            :type="details.type.slug" 
+                            :manufacturer="details.line.slug" 
+                            @changeIndex="changeIndex" 
+                            :colors="details.colors" />                           
                         </v-card-text>
-                    </v-card>
-                    <v-tabs v-model="tab" align-with-title  background-color="#47a5ad" dark>
-                    <v-tabs-slider color="#47a5ad"></v-tabs-slider>
-                        <v-tab v-if="details.type_product_id === 1">FICHA TÉCNICA</v-tab>
-                       <v-tab v-if="details.type_product_id === 1">TELAS</v-tab>
-                       <v-tab v-if="details.type_product_id === 2">DESCRIPCIÓN</v-tab>
-                        <v-tab v-if="details.type_product_id === 2">CARACTERÍSTICAS</v-tab>
-                        <v-tab v-if="details.type_product_id === 2">PESOS</v-tab>
-                    </v-tabs>
-
-                    <v-tabs-items v-model="tab" >
-                        <v-tab-item v-if="details.type_product_id === 1">
-                             <v-simple-table>
-                                <template>
-                                    <tbody>
-                                        <tr>
-                                            <td>LINEA</td>
-                                            <td> {{ details.line }} </td>
-                                            
-                                        </tr>
-                                        <tr>
-                                            <td>TIPO DE PRODUCTO</td>
-                                            <td> {{ details.type }} </td>
-                                        </tr>
-                                        <tr v-if="details.type != 'HORIZONTAL DE MADERA 2'">
-                                            <td>ANCHO MÁXIMO DE TELA</td>
-                                            <td v-if="details.max_width == 0">{{ details.width }} </td>
-                                            <td v-else>{{details.max_width}}</td>
-                                             <td>ANCHO MÍNIMO DE TELA</td>
-                                            <td >{{ details.min_width }} </td>
-                                        </tr>
-                                        <tr v-if="details.type != 'HORIZONTAL DE MADERA 2'">
-                                           <td>ALTO MÁXIMO DE TELA</td>
-                                           <td v-if="details.max_height == 0">{{ details.width }} </td>
-                                            <td v-else>{{details.max_height}}</td>
-                                           
-                                             <td>ALTO MÍNIMO DE TELA</td>
-                                            <td >{{ details.min_height }} </td>
-                                        </tr>
-
-                                        <tr v-if="!details.max_width_rot == 0 && !details.type =='HORIZONTAL DE MADERA 2'">
-                                            <td>
-                                                ANCHO MÁXIMO ROTADO
-                                            </td>
-                                            <td>{{ details.max_width_rot }}</td>
-                                             <td>
-                                                ANCHO MÍNIMO ROTADO
-                                            </td>
-                                            <td>{{details.min_width_rot}}</td>
-                                        </tr>
-                                         <tr v-if="!details.max_width_rot == 0 && !details.type =='HORIZONTAL DE MADERA 2'">
-                                            <td>
-                                                ALTO MÁXIMO ROTADO
-                                            </td>
-                                            <td>{{ details.max_height_rot }}</td>
-                                             <td>
-                                                ALTO MÍNIMO ROTADO
-                                            </td>
-                                            <td>{{details.min_height_rot}}</td>
-                                        </tr>
-                                    </tbody>
-                                </template>
-                    </v-simple-table>
-                        </v-tab-item>
-
-                        <v-tab-item v-if="details.type_product_id === 1">
-                            <v-simple-table fixed-header height="220px">
-                                <template>
-                                    <thead>
-                                        <td>
-                                            COLOR
-                                        </td>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="color in details.colors" :key="color.id">
-                                            <td>
-                                                {{ color.color }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </template>
-                            </v-simple-table>
-                        </v-tab-item>
-
-                        <v-tab-item v-if="details.type_product_id === 2">
-                            <v-card>
-                                <v-card-text>
-                                    {{ details.description }}
-                                </v-card-text>
-                            </v-card>
-                        </v-tab-item>
-
-                        <v-tab-item v-if="details.type_product_id === 2">
-                            <v-simple-table>
-                                <template>
-                                    <tbody>
-                                        <tr v-if="details.finished !== null">
-                                            <td>ACABADO</td>
-                                            <td>{{details.finished}}</td>
-                                        </tr>
-                                        <tr v-if="details.strip_width > 0">
-                                            <td>ANCHO</td>
-                                            <td>{{details.strip_width}}</td>
-                                        </tr>
-                                        <!-- <tr v-if="details.ceiling_price > 0">
-                                            <td>PRECIO TECHO</td>
-                                            <td>{{details.ceiling_price }}</td>
-                                        </tr>
-                                        <tr v-if="details.wall_price > 0">
-                                            <td>PRECIO MURO</td>
-                                            <td>{{details.wall_price }}</td>
-                                        </tr>
-                                        <tr v-if="details.wall_extended_price > 0">
-                                            <td>PRECIO MURO EXTENDIDO</td>
-                                            <td>{{details.wall_extended_price }}</td>
-                                        </tr>
-                                        <tr v-if="details.wall_double_price > 0">
-                                            <td>PRECIO MURO DOBLE</td>
-                                            <td>{{details.wall_double_price }}</td>
-                                        </tr>
-                                        <tr v-if="details.ceiling_wall_price > 0">
-                                            <td>PRECIO MURO TECHO</td>
-                                            <td>{{details.ceiling_wall_price }}</td>
-                                        </tr>
-                                        <tr v-if="details.curve_price > 0">
-                                            <td>PRECIO TECHO MURO CURVO</td>
-                                            <td>{{details.curve_price }}</td>
-                                        </tr> -->
-                                    </tbody>
-                                </template>
-                            </v-simple-table>
-                        </v-tab-item>
-                        <v-tab-item v-if="details.type_product_id === 2">
-                            <v-simple-table v-if="details.weights">
-                                <template>
-                                    <tr>
-                                        <td>CÓDIGO</td>
-                                        <td>PESO</td>
-                                        <td>ANCHO</td>
-                                    </tr>
-                                    <tr v-for="weight in details.weights"  :key="weight.code">
-                                        <td> {{weight.code }} </td>
-                                        <td> {{weight.weight}}mt </td>
-                                        <td> {{weight.width}}kg </td>
-                                    </tr>
-                                </template>
-                            </v-simple-table>
-                        </v-tab-item>
-                    </v-tabs-items>
-                </v-col>
-                 <!-- <v-col cols="12" md="4" sm="12">
-                    
-                   
-                </v-col> -->
-            </v-row>
-
-            <v-row v-else>
-                 <v-col cols="12" md="4" sm="12" class="mt-3">
-                <v-skeleton-loader
-                height="567"
-                width="400"
-                v-bind="attrs"
-                type="image, actions"
-                 ></v-skeleton-loader>
-                 </v-col>
-
-                 <v-col cols="12" md="8" sm="12">
-                     <v-skeleton-loader
-                    v-bind="attrs"
-                    type="date-picker"
-                    ></v-skeleton-loader>
-                 </v-col>
-            </v-row>
-
+                        <v-list dense>
+                        <v-list-item>
+                            <v-list-item-content>
+                                <v-list-item-title>TIPO</v-list-item-title>
+                                <v-list-item-subtitle class="text--primary">
+                                    {{ details.type.name }}
+                                </v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item>
+                            <v-list-item-content>
+                                <v-list-item-title>LÍNEA</v-list-item-title>
+                                <v-list-item-subtitle class="text--primary">
+                                    {{ details.line.name }}
+                                </v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item v-if="details.subweave != null">
+                            <v-list-item-content >
+                                <v-list-item-title>MODELO</v-list-item-title>
+                                <v-list-item-subtitle class="text--primary">
+                                    {{ details.subweave.name }}
+                                </v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item v-if="details.weave != null">
+                            <v-list-item-content>
+                                <v-list-item-title>TEJIDO</v-list-item-title>
+                                <v-list-item-subtitle class="text--primary">
+                                    {{ details.weave.name }}
+                                </v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item v-if="details.rotate != 0">
+                            <v-list-item-avatar>
+                              <v-icon color="#47a5ad" dark>
+                                mdi-format-rotate-90
+                              </v-icon>
+                            </v-list-item-avatar>
+                            <v-list-item-content>
+                                <v-list-item-title>ROTABLE</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </v-list>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-card>
+            
             <v-row>
                 <v-col cols="12">
                       <v-card tile flat>
@@ -302,7 +183,7 @@
                      <v-row justify="space-around" v-if="relationed">
                          <v-col cols="12" md="3" sm="12" v-for="r in relationed" :key="r.id">
                                  <v-card max-width="200" height="230" color="grey lighten-4" class="mx-auto" flat >
-                            <v-img class="white--text align-end"  width="200" height="185" :aspect-ratio="16/9" :src="`/img/modelos/medium/${r.type}/${r.manufacturer}/${r.image}.jpg`"  >
+                            <v-img class="white--text align-end"  width="200" height="185" :aspect-ratio="16/9" :src="`/img/modelos/medium/${r.type.slug}/${r.line.slug}/${r.image}.jpg`"  >
                             <template v-slot:placeholder>
                                 <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
                             </template>
@@ -355,7 +236,7 @@
                     <v-carousel-item 
                     v-for="color in details.colors" 
                     :key="color.code"
-                    :src="`/img/modelos/full/${details.type}/${details.manufacturer}/${color.code}.jpg`"
+                    :src="`/img/modelos/full/${details.type.slug}/${details.line.slug}/${color.code}.jpg`"
                     >
                     </v-carousel-item>
                 </v-carousel>
@@ -400,31 +281,31 @@ export default {
 
     computed:{
         ...mapState({
-        details: state => state.variantsModule.variant,
+        details: state => state.variantsModule.variant[0],
         relationed: state => state.variantsModule.related,
         user: state => state.user,
         }),
 
-        getProduct(){
-         return this.$store.state.productsModule.variants.find((variant => variant.slug === this.slugDetail && variant.type === this.slugType))
-        },
+        // getProduct(){
+        //  return this.$store.state.productsModule.variants.find(variant => variant.slug === this.slugDetail && variant.type.slug === this.slugType)
+        // },
 
 
     },
 
     mounted(){
-        if(this.getProduct){
+        if(this.slugDetail){
              if(this.$route.params.id){
-                 document.title = this.getProduct.name
+                //  document.title = this.getProduct.name
                 this.$store.dispatch('getVariant',this.$route.params.id).then(()=>{
                 this.$store.dispatch('getRelated', this.$route.params.id);
             })  
-        }else{
-             document.title = this.getProduct.name
-             this.$store.dispatch('getVariant',this.getProduct.id).then(()=>{
-            this.$store.dispatch('getRelated', this.getProduct.id);
-            }) 
-        }
+            }else{
+                //  document.title = this.getProduct.name
+                 this.$store.dispatch('getVariant',parseInt(this.slugDetail)).then(()=>{
+                this.$store.dispatch('getRelated', parseInt(this.slugDetail));
+                }) 
+            }
         }
        
     },

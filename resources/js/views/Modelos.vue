@@ -4,7 +4,7 @@
            <v-row justify="space-between" class="mx-4">
                 <v-col cols="12" align-self="center" class="text-center">
                     <div class="d-inline-flex">
-                         <h1>TEJIDOS</h1>
+                         <h1>MODELOS</h1>
                     </div>
                    <div class="d-inline-flex"  style="color: #47a5ad;">
                          <h1> {{slugLine.toUpperCase()}} </h1>
@@ -43,19 +43,20 @@
                         ¡Conoce nuestra variedad de tejidos!
                     </p>
                 </v-col> -->
-                <v-col cols="12" align-self="center" class="text-center" v-if="getProduct">
-                   <v-row v-if="getType" justify="center" align="center" >
-                       <v-col cols="12" md="4" sm="6"  v-for="weave in getType.weaves" :key="weave.id">
-                            <WeaveProductDetail :line="slugLine" :type="slugType" :weave="weave"/>
+                <v-col cols="12" align-self="center" class="text-center">
+                   <v-row v-if="models"  justify="center" align="center" >
+                       <v-col cols="12" md="4" sm="6"  v-for="model in models" :key="model.id">
+                           <SubweaveProductDetail :model="model"/>
+                           <!-- :to="{name: 'Tejidos', params: {slugLine: getProduct.slug, slugWeave: weave.slug}}" -->
                            <!-- <v-card
                            height="340" 
                            width="380" 
                            tile flat 
-                           :to="{name: 'Products', params: {slugLine: getProduct.slug, slugWeave: weave.slug}}">
+                           >
                            <v-hover v-slot="{ hover }">
-                                <v-img :src="`/img/weaves/${weave.slug}.png`" class="align-end"  height="340" width="380" :class="{'opacado':hover}">
+                                <v-img :src="`/img/weaves/${model.slug}.png`" class="align-end"  height="340" width="380" :class="{'opacado':hover}">
                                     <div class="weave d-flex justify-center"  > 
-                                        <h3 class="text-center">{{ weave.name}}</h3> 
+                                        <h3 class="text-center">{{ model.name}}</h3> 
                                     </div> 
                                 </v-img>
                              </v-hover>
@@ -67,7 +68,6 @@
                 <v-col cols="12"   class="text-center mt-5">
                     <v-btn rounded color="#47a5ad" x-large dark>Ver Galería</v-btn>
                 </v-col>
-               
             </v-row>
         </v-container>
     </div>
@@ -75,7 +75,8 @@
 
 <script>
 
-import WeaveProductDetail from '../components/CustomCards/WeaveProductCard';
+import SubweaveProductDetail from '../components/CustomCards/SubweaveProductCard';
+// import {mapState } from 'vuex';
 export default {
     data(){
         return{
@@ -84,22 +85,19 @@ export default {
     },
 
     created(){
-        document.title = this.slugLine
+        document.title = 'Modelos '+ this.slugType
     },
 
     mounted(){
-        // this.$store.dispatch('getWeaves',this.slugLine)
-    },
-    computed:{
-        getProduct(){
-             return  this.$store.getters.getTypes(this.slugProduct)
-        },
 
-        getType(){
-            if(this.getProduct){
-                 return this.$store.getters.getTypes(this.slugProduct).types.find(type => type.slug === this.slugType)
-            }
-           
+    },
+     computed:{
+        // getProduct(){
+        //      return  this.$store.getters.getTypes(this.slugProduct)
+        // },
+
+        models(){
+            return this.$store.state.productsModule.subweaves.filter(sw => sw.line.slug === this.slugLine && sw.type.slug === this.slugType)
         },
     },
 
@@ -109,10 +107,10 @@ export default {
             required: false
         },
 
-        slugProduct: {
-            type: String,
-            required: false
-        },
+        // slugProduct: {
+        //     type: String,
+        //     required: false
+        // },
         slugLine: {
             type: String,
             required: false
@@ -121,7 +119,7 @@ export default {
 
     
     components:{
-        WeaveProductDetail
+        SubweaveProductDetail
     },
 }
 </script>
