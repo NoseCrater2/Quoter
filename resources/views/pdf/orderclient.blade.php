@@ -79,10 +79,10 @@
     some content
     </div>
     </div> -->
-    @for($i = 0; $i < (round(count($orders['orders'])/2)); $i++)
+    @for($i = 0; $i < (round(count($orders)/2)); $i++)
         <tr style="width: 100%;">
-            @if (count($orders['orders'])%2 == 0)
-                @foreach (@returnedOneTwoOrders(($i + 1), $orders['orders']) as $key => $order)
+            @if (count($orders)%2 == 0)
+                @foreach (@returnedOneTwoOrders(($i + 1), $orders) as $key => $order)
                     <td style="height: 99px; border: 1px dashed black; width: 393px;">
                         <table style="font-size: 7px; border: 1px solid #d1d3d4; background-color: #f1f1f2; margin-left: 8px; margin-right: 8px;">
                             <tbody>
@@ -256,7 +256,7 @@
                     </td>
                 @endforeach
             @else
-                @foreach (@returnedOneTwoOrders(($i + 1), $orders['orders']) as $key => $order)
+                @foreach (@returnedOneTwoOrders(($i + 1), $orders) as $key => $order)
                     <td style="height: 99px; border: 1px dashed black; width: 393px;">
                         <table style="font-size: 6px; border: 1px solid #d1d3d4; background-color: #f1f1f2; margin-left: 8px; margin-right: 8px;">
                             <tbody>
@@ -430,7 +430,7 @@
                         </table>
                     </td>
                 @endforeach
-                @if (($i+1) == (round(count($orders['orders'])/2)))
+                @if (($i+1) == (round(count($orders)/2)))
                     <td style="height: 99px; border: 1px dashed black; width: 393px;">
                     </td>
                 @endif

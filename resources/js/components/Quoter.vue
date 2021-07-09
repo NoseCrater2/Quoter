@@ -1,5 +1,35 @@
 <template>
   <v-container id="quoter">
+      <v-dialog
+        v-model="pdfDialog"
+        width="auto"
+      >
+        <v-card>
+          <v-toolbar
+            dark
+            color="#47a5ad"
+          >
+            <v-btn
+              icon
+              dark
+              @click="closePdfDialog()"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+              <v-btn
+                dark
+                @click="downloadButtonPdfAuth()"
+              >
+              <v-icon>mdi-arrow-collapse-down</v-icon>
+              </v-btn>
+            </v-toolbar-items>
+          </v-toolbar>
+        <pdf :src="urlPdfVisor">
+        </pdf>
+        </v-card>
+      </v-dialog>
     <v-row justify="center" align="center">
       <v-card style="background-color: #ffffffc2">
         <v-card-title style="color: white" :style="editable?'background-color: red;':'background-color: #404042;'">
@@ -1199,10 +1229,16 @@ import woodMotorized from '../utils/woodMatrixTwo';
 // import PreviewPdfRollux from '../views/PreviewPdfRollux';
 const FileDownload = require('js-file-download');
 
+import pdf from 'vue-pdf';
+
 export default {
   name: "Quoter",
   data() {
     return {
+        urlPdfVisor: '',
+        pdfDialog: '',
+        numPdfPages: 0,
+        downloadButtonPdf: null,
       cancelShowBtnUserForm: false,
       showBtnUserForm: true,
       showUserForm: false,
@@ -1377,11 +1413,24 @@ export default {
     };
   },
   methods: {
+    downloadButtonPdfAuth(){
+        FileDownload(this.downloadButtonPdf, 'modelos.pdf');
+    },
+    closePdfDialog(){
+        this.pdfDialog = false;
+        this.downloadButtonPdf = null;
+        this.urlPdfVisor = '';
+        this.numPdfPages = 0;
+    },
     checkUserValid(){
       if(this.$refs.userForm.validate()){
         // this.$children[6].$refs.html2Pdf2.generatePdf()
         axios.post("/api/auth-order-list-pdf", {orders: this.orders, user: this.selectedUser}, {responseType: 'blob',}).then((response)=>{
-            FileDownload(response.data, 'modelos.pdf')
+            //FileDownload(response.data, 'modelos.pdf')
+            const objectUrl = URL.createObjectURL(response.data);
+            this.urlPdfVisor = objectUrl;
+            this.downloadButtonPdf = response.data;
+            this.pdfDialog = true;
             this.sellerPrint = false
         })
       }
@@ -2067,6 +2116,8 @@ export default {
     QuotedBlinds,
     MotorizationDialog,
     // PreviewPdfRollux,
+
+    pdf
   },
 
 };
