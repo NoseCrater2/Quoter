@@ -32,7 +32,7 @@ const productsModule = {
     getLine: (state)=> (slug) => {
         return state.lines.filter((line) => line.slug === slug)
     },
-        
+
     },
 
     mutations: {
@@ -149,11 +149,11 @@ const productsModule = {
             try {
                 const response = await axios
                 .get("/api/getVariantsByProduct/"+idProduct)
-                commit('setVariants',response.data.data);
+                commit('setSunblinds',response.data.data);
             } catch (error) {}
         },
 
-        
+
     }
 }
 
