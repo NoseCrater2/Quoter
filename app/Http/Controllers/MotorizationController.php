@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Motorization;
+use App\Line;
+use App\MotorizationType;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\MotorizationImport;
@@ -18,9 +20,21 @@ class MotorizationController extends Controller
      */
     public function index()
     {
-        return IndexMotorizationResource::collection(
-            Motorization::get()
-        );   
+        $motorizations = Motorization::select('id','code','canvas','system','width','height','price','via')
+        ->addSelect(
+            ['motorizationType' => MotorizationType::select('name')
+            ->whereColumn('motorization_type_id', 'motorization_types.id')],
+        )
+        ->addSelect(
+            ['type' => Type::select('name')
+            ->whereColumn('type_id', 'types.id')],
+        )
+        ->addSelect(
+            ['manufacturer' => Line::select('name')
+            ->whereColumn('line_id', 'lines.id')],
+        )
+        ->get();
+        return response(['data'=> $motorizations],200);  
     }
 
     /**

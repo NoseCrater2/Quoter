@@ -99,12 +99,12 @@
                                  dark
                                  color= "#47a5ad" 
                                  depressed 
-                                 :to="{name:'Quoter', query:{type: this.slugType, line: details.slugLine ,variant: details.id,manufacturer: details.manufacturer, color: details.colors[selected]}}">
+                                 :to="{name:'Quoter', query:{type: details.type.slug, line: details.weave.slug, variant: details.id,manufacturer: details.line.slug, color: details.colors[selected]}}">
                                     COTIZAR ESTE PRODUCTO
                                  </v-btn>
                                 <v-btn
                                 target="_blank"
-                                :href="`https://api.whatsapp.com/send?phone=5214434713271?&amp;text=Hola+quiero+saber+el+precio+del+toldo+${details.name}+de+color+${details.colors[selected].color}`"
+                                :href="`https://api.whatsapp.com/send?phone=5215548948279?&amp;text=Hola+quiero+saber+el+precio+del+toldo+${details.name}+de+color+${details.colors[selected].color}`"
                                 v-else
                                 dark
                                 color= "#47a5ad" 

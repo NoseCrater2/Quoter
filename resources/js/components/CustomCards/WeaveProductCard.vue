@@ -1,7 +1,7 @@
 <template>
     <v-hover v-slot="{ hover }">
         <!-- "`../../img/lineas/${line.slug}.jpg`" -->
-        <v-card height="340" width="380" class="ma-4" > 
+        <v-card height="340" width="380" class="ma-4"  :to="{name: 'Products', params: {slugLine: line, slugWeave: weave.slug}}"> 
             <v-img class="white--text align-end"  :class="{'escalada':hover}" width="390" height="340" :aspect-ratio="16/9"  :src="`/img/weaves/${type}-${weave.slug}.jpg`"  :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
             <template v-slot:placeholder>
                 <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>

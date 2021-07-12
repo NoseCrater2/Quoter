@@ -19,13 +19,12 @@ class IndexMotorizationResource extends JsonResource
             'code' => $this->code,
             'canvas' => $this->canvas,
             'system' => $this->system,
-            'description' => $this->description,
             'width' => $this->width,
             'height' => $this->height,
             'price' => $this->price,
             'via' => $this->via,
             'motorizationType' => isset($this->motorizationType)?$this->motorizationType->name:null,
-            'manufacturer' => $this->manufacturer->name,
+            'manufacturer' => $this->line->name,
             'type' => $this->type->name
         ];
     }

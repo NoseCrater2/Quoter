@@ -60,11 +60,11 @@
                           <div >
                             <v-card-subtitle class="overline" style="line-height: normal">
                               <div class="d-inline" style="font-weight: bolder; color:black">TIPO:</div>
-                              {{$store.getters.getVariant(o.variant).type}} <br>
+                              {{$store.getters.getVariant(o.variant).type.slug}} <br>
                               <div class="d-inline" style="font-weight: bolder; color:black">CODIGO:</div>
                               {{o.color.code}} <br>
                               <div class="d-inline" style="font-weight: bolder; color:black">LINEA:</div>
-                              {{$store.getters.getVariant(o.variant).line}} <br>
+                              {{$store.getters.getVariant(o.variant).line.slug}} <br>
                               <div class="d-inline" style="font-weight: bolder; color:black">COLOR:</div>
                               {{o.color.color}}
 

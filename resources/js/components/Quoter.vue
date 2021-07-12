@@ -62,12 +62,13 @@
                 class="ma-1"
               ></v-autocomplete>
               <v-autocomplete
+                v-if="getType"
                 :rules="[(v) => !!v || 'Requerido']"
                 hide-details
                 dense
-                :items="manufacturers"
-                item-text="manufacturer"
-                item-value="manufacturer"
+                :items="getType.lines"
+                item-text="name"
+                item-value="slug"
                 v-model="order.manufacturer"
                 label="Selecciona la Línea"
                 outlined
@@ -77,12 +78,12 @@
               ></v-autocomplete>
               <div v-if="order.type != 'celular' && order.type != 'horizontal-madera-2' ">
               <v-autocomplete
-                v-if="getType && getType.lines > 0"
+                v-if="getType && getType.weaves.length > 0"
                 :rules="[(v) => !!v || 'Requerido']"
                 @change="chargeModels()"
                 hide-details
                 dense
-                :items="lines"
+                :items="getType.weaves"
                 item-text="name"
                 item-value="slug"
                 v-model="order.line"
@@ -1443,7 +1444,10 @@ export default {
 	  printRolluxQuoting(){
     //    this.$children[7].$refs.html2Pdf.generatePdf()
     axios.post("/api/order-list-pdf", this.orders, {responseType: 'blob',}).then((response)=>{
-        FileDownload(response.data, 'modelos.pdf')
+        const objectUrl = URL.createObjectURL(response.data);
+            this.urlPdfVisor = objectUrl;
+            this.downloadButtonPdf = response.data;
+            this.pdfDialog = true;
     })
     // this.$store.dispatch('printOrders', this.orders)
 
@@ -1461,7 +1465,10 @@ export default {
         }else{
         //   this.$children[5].$refs.html2Pdf2.generatePdf()
             axios.post("/api/auth-order-list-pdf", {orders: this.orders, user: this.user}, {responseType: 'blob',}).then((response)=>{
-                FileDownload(response.data, 'modelos.pdf')
+            const objectUrl = URL.createObjectURL(response.data);
+            this.urlPdfVisor = objectUrl;
+            this.downloadButtonPdf = response.data;
+            this.pdfDialog = true;
                 this.sellerPrint = false
             })
         }
@@ -1989,11 +1996,11 @@ export default {
     variants() {
       if (this.order.type && this.order.line && this.order.manufacturer) {
         return this.$store.state.productsModule.variants.filter(
-          (variant) => variant.type === this.order.type && variant.line === this.order.line && variant.manufacturer === this.order.manufacturer
+          (variant) => variant.type.slug === this.order.type && variant.weave.slug === this.order.line && variant.line.slug === this.order.manufacturer
         );
       } else if (this.order.type && this.order.manufacturer) {
         return this.$store.state.productsModule.variants.filter(
-          (variant) => variant.type === this.order.type && variant.manufacturer === this.order.manufacturer
+          (variant) => variant.type.slug === this.order.type && variant.line.slug === this.order.manufacturer
         );
       }
     },

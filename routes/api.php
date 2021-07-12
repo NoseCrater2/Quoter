@@ -31,13 +31,12 @@ Route::get('directory', 'GalleryController@showDirectory');
 
 
 Route::resource('types', 'TypeController')->only('index','show');
-Route::resource('lines', 'LineController')->only('index','show');
+Route::get('lines', 'LineController@index');
 
 Route::resource('weaves', 'WeaveController')->only('index','show');
 Route::resource('sunblinds', 'SunblindController')->only('index','show');
 
 Route::resource('colors', 'ColorController')->only('index','show');
-Route::resource('manufacturers', 'ManufacturerController')->only('index','show');
 Route::resource('variants', 'VariantController')->only('index','show','update');
 Route::resource('products', 'Api\ProductController')->only('index','show');
 
@@ -54,6 +53,7 @@ Route::get('getLines/{slug}', 'TypeController@getLines');
 
 Route::get('getVariants/{slug}', 'LineController@getVariants');
 Route::get('getWeaves/{slug}', 'LineController@getWeaves');
+Route::resource('subweaves', 'SubweaveController')->only('index');
 Route::get('getTypeVariants/{slug}', 'TypeController@getTypeVariants');
 Route::get('getVariantsByProduct/{product}', 'Api\ProductController@getVariantsByProduct');
 
@@ -75,7 +75,7 @@ Route::get('exportExcel', 'VariantController@exportExcel');
 
 //
 
-// Route::post('importSunblinds', 'SunblindController@importSunblinds');
+Route::post('importSunblinds', 'SunblindController@importSunblinds');
 
 
 

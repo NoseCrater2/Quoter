@@ -1,6 +1,6 @@
 <template>
     <v-hover v-slot="{ hover }">
-        <v-card :width="$vuetify.breakpoint.mobile?'330':'420'" height="300" color="grey lighten-4"  flat :to=" type.lines > 0?{name: 'Lines', params: {slugType: type.slug }}:{name: 'Products', params: {slugType: type.slug}}" >
+        <v-card :width="$vuetify.breakpoint.mobile?'330':'420'" height="300" color="grey lighten-4"  flat :to="{name: 'Lines', params: {slugType: type.slug}}">
             <v-img class="white--text align-end"  :class="{'escalada':hover}" width="420" height="300" :aspect-ratio="16/9"  :src="`/img/tipos/${type.slug}.jpg`" :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
                 <v-slide-y-reverse-transition>
                     <div v-if="!hover" class="title d-flex transition-fast-in-fast-out justify-center"  > 
