@@ -14,10 +14,6 @@ class UsersTableSeeder extends Seeder
     {
         factory(App\User::class,5)->create();
 
-        Role::create([
-            'name' => 'Admin',
-            'slug' => 'admin',
-            'special' => 'all-access',
-        ]);
+        
     }
 }

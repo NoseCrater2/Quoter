@@ -5,6 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Color;
+use App\Http\Resources\VariantIndexResource;
+use App\Http\Resources\TypeIndexResurce;
+use Barryvdh\DomPDF\Facade as PDF;
+
 
 class ProductController extends Controller
 {
@@ -15,9 +20,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::paginate();
 
-        return response($products, 200);
+        $products = Product::with(['types' => function ($query) {
+            $query->with(['weaves:slug,name','lines:id,slug,name']);
+        }])->get();
+        return response(['data'=> $products],200);
+
     }
 
     /**
@@ -93,4 +101,52 @@ class ProductController extends Controller
 
         return back()->with('info', 'Eliminado correctamente');
     }
+
+    public function getVariants(Product $product)
+    {
+
+        return VariantIndexResource::collection(
+             $product->variants
+        );
+
+    }
+
+    public function getTypes(Product $product){
+
+        return TypeIndexResurce::collection(
+            $product->types
+       );
+    }
+
+    public function getVariantsByProduct(Product $product)
+    {
+        $variants = $product->variants()->addSelect(
+            ['image' => Color::select('code')->limit(1)],
+        )
+        ->with(['type:id,slug','line:id,slug','weave:id,slug'])
+        ->orderBy('price','desc')
+        ->get();
+        return response(['data'=> $variants],200);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        //Recuperar el request en un objeto
+        $orders = $request->all();
+        $pdf = PDF::loadView('pdf.orderclient', compact('orders'));
+
+        return $pdf->download('order-list.pdf');
+    }
+
+    public function authExportPdf(Request $request)
+    {
+        //Recuperar el request en un objeto
+        $orders = $request->all();
+        $pdf = PDF::loadView('pdf.orderdistributor', compact('orders'));
+
+        return $pdf->download('order-list.pdf');
+    }
+
+
+
 }

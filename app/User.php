@@ -3,15 +3,19 @@
 namespace App;
 
 
-use Caffeinated\Shinobi\Concerns\HasRolesAndPermissions;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
+use Laravel\Sanctum\HasApiTokens;
+
+
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRolesAndPermissions, HasApiTokens;
+
+    
+    use Notifiable, HasRoles, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +24,18 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 'email', 'password',
+        'last_name',
+        'company',
+        'address',
+        'ship_address',
+        'second_ship_address',
+        'city',
+        'state',
+        'zip_code',
+        'phone',
+        'logo',
+        'comments',
+        'discount_percent',
     ];
 
     /**
@@ -39,4 +55,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function make_password(){
+        $pass = '';
+        $pass = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 8);
+        return $pass;
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    // protected $with = ['roles'];
 }

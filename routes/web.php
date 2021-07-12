@@ -1,6 +1,11 @@
 <?php
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\UserShowResource;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -15,11 +20,24 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/clear-all-cache', function() {
+    Artisan::call('config:clear');
+    echo "Cleared all caches successfully.";
+  });
+Auth::routes();
 
-Route::get('/login', function () {
-    return view('login');
+Route::middleware('auth')->get('/user',function (Request $request){
+    
+    return new UserShowResource($request->user());
 });
 
+Route::get('/models/search', 'VariantController@getSearch');
+
+
+
+Route::get('/{any?}', function () {
+    return view('welcome');
+})->where('any','^(?!api\/)[\/\w\.-]*');
 
 //Route::get('/home', 'HomeController@index')->name('home');
 
