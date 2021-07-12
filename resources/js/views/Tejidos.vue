@@ -1,12 +1,20 @@
 <template>
     <div>
         <v-container fluid style="max-width: 1200px" class="my-4">
-           <v-row justify="space-between" class="mx-4">
+           <v-row justify="space-between" class="mx-4" no-gutters>
+               <v-col class="text-center">
+                    <div class="d-inline-flex">
+                         <h2>{{slugProduct}}</h2>
+                    </div>
+                    <div class="d-inline-flex"  >
+                         <h2> {{slugType.toUpperCase().split('-').join(" ")}} </h2>
+                    </div>
+               </v-col>
                 <v-col cols="12" align-self="center" class="text-center">
                     <div class="d-inline-flex">
                          <h1>TEJIDOS</h1>
                     </div>
-                   <div class="d-inline-flex"  style="color: #47a5ad;">
+                    <div class="d-inline-flex"  style="color: #47a5ad;">
                          <h1> {{slugLine.toUpperCase()}} </h1>
                     </div>
                      <div class="d-flex justify-center">

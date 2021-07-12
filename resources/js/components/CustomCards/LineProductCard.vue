@@ -1,7 +1,7 @@
 <template>
     <v-hover v-slot="{ hover }">
         <!-- "`../../img/lineas/${line.slug}.jpg`" -->
-        <v-card height="340" width="380" class="ma-4"> 
+        <v-card height="340" width="380" class="ma-4" @click="chooseRoute(line)"> 
             <v-img class="white--text align-end"  :class="{'escalada':hover}" width="390" height="340" :aspect-ratio="16/9"  :src="image(line.slug)"  :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
             <template v-slot:placeholder>
                 <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
@@ -71,7 +71,7 @@ export default {
         },
 
         chooseRoute(line){
-            if(this.type.product_id === 3){
+            if(this.type.product_id === 3 || this.type.product_id === "3"){
                 this.$router.replace({name: 'Modelos', params: {slugType:  this.type.slug, slugLine: line.slug}})
             }else if(this.type.weaves.length > 0){
                  this.$router.replace({name: 'Tejidos', params: {slugLine: line.slug}})

@@ -1,60 +1,34 @@
 <template>
-    <v-container fluid style="max-width: 1175px; background-color: #ECEFF1; ">
-        <v-row justify="space-between" no-gutters>
+    <v-container fluid style="max-width: 1175px;">
+        <v-row justify="space-between" no-gutters >
             <v-col cols="12" md="3" sm="12"  >
-                <v-card flat color="blue-grey lighten-5" min-height="600" style="position: fixed;">
-                    <v-list  dense flat subheader v-if="weaves && !isMobile" color="transparent">
-                        <v-subheader>TEJIDO</v-subheader>
-                        <v-list-item-group
-                        mandatory
-                        v-model="weave">
-                          <v-list-item 
-                          :value="weave.slug"
-                          dense 
-                          v-for="weave in weaves.weaves" 
-                          :key="weave.id" 
-                          style="min-height: 20px;height:20px">
-                            <template v-slot:default="{ active }">
-                                <v-list-item-action>
-                                    <v-checkbox
-                                    dense
-                                    :input-value="active"
-                                    color="#47a5ad"
-                                    ></v-checkbox>
-                                </v-list-item-action>
-                                <v-list-item-content class="pa-0" >
-                                    <v-list-item-title>{{ weave.name }}</v-list-item-title>
-                                </v-list-item-content>
-                            </template>
-                          </v-list-item>
-                        </v-list-item-group>
-                    </v-list>
-                    <v-divider></v-divider>
-                    <v-list  dense flat subheader v-if="subweaves && !isMobile" color="transparent">
-                        <v-subheader>MODELO</v-subheader>
-                        <v-list-item-group
-                        mandatory
-                        v-model="subweave">
-                          <v-list-item 
-                          :value="subweave.slug"
-                          dense 
-                          v-for="subweave in subweaves" 
-                          :key="subweave.id" 
-                          style="min-height: 20px;height:20px">
-                            <template v-slot:default="{ active }">
-                                <v-list-item-action>
-                                    <v-checkbox
-                                    dense
-                                    :input-value="active"
-                                    color="#47a5ad"
-                                    ></v-checkbox>
-                                </v-list-item-action>
-                                <v-list-item-content class="pa-0" >
-                                    <v-list-item-title>{{ subweave.name }}</v-list-item-title>
-                                </v-list-item-content>
-                            </template>
-                          </v-list-item>
-                        </v-list-item-group>
+                <v-card flat  >
+                  <v-list dense flat subheader v-if="types && !isMobile"  color="transparent">
+                    <v-subheader>TOLDO</v-subheader>
+                    <v-list-item-group
+                    v-model="type"
+                    mandatory>
+                      <v-list-item
+                      dense 
+                      v-for="type in types.types" 
+                      :key="type.id"
+                      :value="type.slug"
+                      style="min-height: 20px;height:20px"
+                      >
+                        <template v-slot:default="{ active }">
+                          <v-list-item-action>
+                            <v-checkbox
+                            dense
+                            :input-value="active"
+                            color="#47a5ad"
+                            ></v-checkbox>
+                          </v-list-item-action>
+                          <v-list-item-content class="pa-0">
+                            <v-list-item-title>{{ type.name }}</v-list-item-title>
+                          </v-list-item-content>
+                        </template>
+                        </v-list-item>
+                      </v-list-item-group>
                     </v-list>
                     <v-divider></v-divider>
                     <v-list dense flat subheader v-if="getType && !isMobile" color="transparent">
@@ -84,37 +58,64 @@
                       </v-list-item-group>
                     </v-list>
                     <v-divider></v-divider>
-                    <v-list dense flat subheader v-if="types && !isMobile" style="height: 32px" color="transparent">
-                    <v-subheader>PERSIANA</v-subheader>
-                    <v-list-item-group
-                    v-model="type"
-                    mandatory>
-                      <v-list-item
-                      dense 
-                      v-for="type in types.types" 
-                      :key="type.id"
-                      :value="type.slug"
-                      style="min-height: 20px;height:20px"
-                      >
-                        <template v-slot:default="{ active }">
-                          <v-list-item-action>
-                            <v-checkbox
-                            dense
-                            :input-value="active"
-                            color="#47a5ad"
-                            ></v-checkbox>
-                          </v-list-item-action>
-                          <v-list-item-content class="pa-0">
-                            <v-list-item-title>{{ type.name }}</v-list-item-title>
-                          </v-list-item-content>
-                        </template>
-                      </v-list-item>
-                    </v-list-item-group>
-                </v-list>
+                    <v-list  dense flat subheader v-if="subweaves && !isMobile" color="transparent">
+                        <v-subheader>MODELO</v-subheader>
+                        <v-list-item-group
+                        mandatory
+                        v-model="subweave">
+                          <v-list-item 
+                          :value="subweave.slug"
+                          dense 
+                          v-for="subweave in subweaves" 
+                          :key="subweave.id" 
+                          style="min-height: 20px;height:20px">
+                            <template v-slot:default="{ active }">
+                                <v-list-item-action>
+                                    <v-checkbox
+                                    dense
+                                    :input-value="active"
+                                    color="#47a5ad"
+                                    ></v-checkbox>
+                                </v-list-item-action>
+                                <v-list-item-content class="pa-0" >
+                                    <v-list-item-title>{{ subweave.name }}</v-list-item-title>
+                                </v-list-item-content>
+                            </template>
+                          </v-list-item>
+                        </v-list-item-group>
+                    </v-list>
+                    <v-divider></v-divider>
+                    <v-list  dense flat subheader v-if="weaves && !isMobile" color="transparent">
+                        <v-subheader>TEJIDO</v-subheader>
+                        <v-list-item-group
+                        mandatory
+                        v-model="weave">
+                          <v-list-item 
+                          :value="weave.slug"
+                          dense 
+                          v-for="weave in weaves.weaves" 
+                          :key="weave.id" 
+                          style="min-height: 20px;height:20px">
+                            <template v-slot:default="{ active }">
+                                <v-list-item-action>
+                                    <v-checkbox
+                                    dense
+                                    :input-value="active"
+                                    color="#47a5ad"
+                                    ></v-checkbox>
+                                </v-list-item-action>
+                                <v-list-item-content class="pa-0" >
+                                    <v-list-item-title>{{ weave.name }}</v-list-item-title>
+                                </v-list-item-content>
+                            </template>
+                          </v-list-item>
+                        </v-list-item-group>
+                    </v-list> 
                 </v-card>
             </v-col>
-            <v-col cols="12" md="9" sm="12" >
+            <v-col cols="12" md="9" sm="12" class="hide-scroll" style="overflow-y: scroll" >
                 <v-data-iterator
+                style="height: 500px;"
                 :items="products"
                 :items-per-page="18"
                 :page="parseInt(page)"
@@ -140,7 +141,7 @@
                         <v-row>
                             <v-col style="justify-content: center; display: flex;" v-for="item in props.items" :key="item.name" cols="12" md="4" sm="6">
                                 <v-hover v-slot="{ hover }" v-if="item">
-                            <v-card width="240"  color="grey lighten-4"  flat >
+                            <v-card width="240"  color="grey lighten-4"  flat :to="{name: 'Details', params: {slugWeave:item.weave.slug, slugDetail: item.id.toString()}}">
                               <v-img 
                               class="white--text align-end"   
                               :class="{'escalada':hover}" 
@@ -151,13 +152,9 @@
                                 <template v-slot:placeholder>
                                   <v-img src="/img/modelos/generic-sunwave.png"></v-img>
                                 </template>
-                                <v-slide-y-reverse-transition>
-                                  <v-card-title v-if="!hover" class="title-weave d-flex justify-center transition-fast-in-fast-out">
-                                    <b class="text-center" style="font-size: 12px; line-height: 20px; color: #47a5ad" >
-                                      {{ item.name}}
-                                    </b> 
-                                  </v-card-title> 
-                                </v-slide-y-reverse-transition>
+                                <!-- <v-slide-y-reverse-transition>
+                                  
+                                </v-slide-y-reverse-transition> -->
                                 <v-slide-x-transition>
                                   <div
                                   v-if="hover"
@@ -168,22 +165,17 @@
                                     </v-hover>
                                   </div>
                                 </v-slide-x-transition>
-                                <!-- <v-expand-transition>
-                                  <div
-                                  v-if="hover"
-                                  class="d-flex transition-fast-in-fast-out  v-card--reveal white--text"
-                                  style="height: 20%;">
-                                    <v-hover v-slot="{ hover }">
-                                      <v-btn @click="openDialog(item.id)" depressed :outlined="!hover" tile color="white"  small><v-icon>mdi-arrow-expand</v-icon></v-btn>
-                                    </v-hover>
-                                  </div>
-                                </v-expand-transition> -->
                               </v-img>
+                              <v-card-title  class="title-weave d-flex justify-center ">
+                                    <b class="text-center" style="font-size: 12px; line-height: 20px; color: #47a5ad" >
+                                      {{ item.name}}
+                                    </b> 
+                              </v-card-title> 
                               <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn
                                 target="_blank"
-                                :href="`https://api.whatsapp.com/send?phone=5214434713271?&amp;text=Hola+quiero+saber+el+precio+del+toldo+${item.name}`"
+                                :href="`https://api.whatsapp.com/send?phone=5215548948279?&amp;text=Hola+quiero+saber+el+precio+del+toldo+${item.name}`"
                                 color="#47a5ad" 
                                 tile 
                                 depressed 
@@ -232,6 +224,9 @@
                       </v-row>
                     </template>
                 </v-data-iterator>
+                <!-- <v-btn fab small icon bottom absolute color="white">
+                    <v-icon>mdi-arrow-down</v-icon>
+                  </v-btn> -->
             </v-col>
         </v-row>
     </v-container>
@@ -387,6 +382,15 @@ export default {
 </script>
 
 <style>
+.hide-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scroll {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
 .v-card--reveal {
 align-items: center;
 bottom: 0;

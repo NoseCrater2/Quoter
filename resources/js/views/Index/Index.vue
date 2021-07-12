@@ -21,7 +21,7 @@
       </v-dialog> -->
     <div id="divBody">
         <!-- Deja la etiqueta 'img' en vez de 'v-img' -->
-        <img src="/img/white-r.png" id="pngRolluxInOut"></img>
+        <img src="/img/white-r.png" id="pngRolluxInOut">
         <p id="loading">Cargando<span>.</span><span>.</span><span>.</span></p>
     </div>
   </v-app>
@@ -170,7 +170,7 @@
                                         <v-list-item-title class="white--text" v-bind="attrs" v-on="on" >  {{ p.name }}  </v-list-item-title>
                                       </template>
                                       <v-list flat dark>
-                                        <v-list-item v-for="(t, index) in p.types" :key="index" :to=" t.lines > 0?{name: 'Lines', params: {slugProduct: p.slug ,slugType: t.slug,}}:{name: 'Products', params: {slugProduct: p.slug ,slugType: t.slug}}"  style="border-bottom: 1px solid gray" >
+                                        <v-list-item v-for="(t, index) in p.types" :key="index" :to="{name: 'Lines', params: {slugProduct: p.slug,slugType: t.slug}}"  style="border-bottom: 1px solid gray" >
                                           <v-list-item-content>
                                             <v-list-item-title > {{ t.name }} </v-list-item-title>
                                           </v-list-item-content>
@@ -349,9 +349,9 @@ export default {
 
     mounted(){
         this.loading = true
-        this.$store.dispatch('getLines')
         this.$store.dispatch('getQuotingOrders');
-        this.$store.dispatch('getProducts')
+        this.$store.dispatch('getSubweaves')
+        this.$store.dispatch('getProducts') 
         this.$store.dispatch('getAllVariants').then( () =>{
         this.loading = false;
         })
@@ -434,7 +434,7 @@ export default {
 #pngRolluxInOut{
     position:absolute;
     width:90px;
-    height:83px;
+    height:64px;
     margin: 0 0 0 -1px;
     transform: translatey(-85px) translatex(-20px);
     z-index:6;

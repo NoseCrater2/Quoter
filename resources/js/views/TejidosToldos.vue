@@ -2,6 +2,14 @@
     <div>
         <v-container fluid style="max-width: 1200px" class="my-4">
            <v-row justify="space-between" class="mx-4">
+               <v-col class="text-center">
+                    <div class="d-inline-flex">
+                         <h2>{{slugProduct}}</h2>
+                    </div>
+                    <div class="d-inline-flex"  >
+                         <h2> {{slugType.toUpperCase().split('-').join(" ")}} </h2>
+                    </div>
+               </v-col>
                 <v-col cols="12" align-self="center" class="text-center">
                     <div class="d-inline-flex">
                          <h1>TEJIDOS</h1>

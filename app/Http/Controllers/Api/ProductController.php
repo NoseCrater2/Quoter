@@ -5,11 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ProductIndexResource;
+use App\Color;
 use App\Http\Resources\VariantIndexResource;
 use App\Http\Resources\TypeIndexResurce;
 use Barryvdh\DomPDF\Facade as PDF;
-use Illuminate\Database\Eloquent\Builder;
 
 
 class ProductController extends Controller
@@ -22,14 +21,10 @@ class ProductController extends Controller
     public function index()
     {
 
-        // return ProductIndexResource::collection(
-        //     Product::get()
-        // );
         $products = Product::with(['types' => function ($query) {
-            $query->withCount('lines as lines');
+            $query->with(['weaves:slug,name','lines:id,slug,name']);
         }])->get();
         return response(['data'=> $products],200);
-
 
     }
 
@@ -125,9 +120,13 @@ class ProductController extends Controller
 
     public function getVariantsByProduct(Product $product)
     {
-        return VariantIndexResource::collection(
-            $product->variants
-        );
+        $variants = $product->variants()->addSelect(
+            ['image' => Color::select('code')->limit(1)],
+        )
+        ->with(['type:id,slug','line:id,slug','weave:id,slug'])
+        ->orderBy('price','desc')
+        ->get();
+        return response(['data'=> $variants],200);
     }
 
     public function exportPdf(Request $request)

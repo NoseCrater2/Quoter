@@ -1,7 +1,7 @@
 <template>
-    <v-hover v-slot="{ hover }">
+    <v-hover v-slot="{ hover }" :to="{name: 'TejidosToldos'}">
         <v-card height="340" width="380" class="ma-4" > 
-            <v-img class="white--text align-end"  :class="{'escalada':hover}" width="390" height="340" :aspect-ratio="16/9"  :src="image(model.slug)"  :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
+            <v-img class="white--text align-end"  :class="{'escalada':hover}" width="390" height="340" :aspect-ratio="16/9"  :src="`/img/subweaves/${type}-${model.slug}.jpg`"  :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
             <template v-slot:placeholder>
                 <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
             </template>
@@ -43,13 +43,14 @@
 <script>
 export default {
     props: {
-        model: Object,        
+        model: Object,
+        type: String        
     },
 
     methods:{
         image(slug){
             try {
-                return "/img/weaves/"+slug+".jpg"
+                return "/img/subweaves/"+slug+".jpg"
             } catch (error) {
                 return "/img/modelos/medium/unavailable.jpg"
             }

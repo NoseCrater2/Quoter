@@ -11,13 +11,12 @@ class Motorization extends Model
         'code',
         'canvas',
         'system',
-        'description',
         'width',
         'height',
         'price',
         'via',
         'motorization_type_id',
-        'manufacturer_id',
+        'line_id',
         'type_id',
      ];
 
@@ -26,11 +25,10 @@ class Motorization extends Model
         return $this->belongsTo(MotorizationType::class);
      }
 
-     public function manufacturer()
+     public function line()
      {
-        return $this->belongsTo(Manufacturer::class);
+      return $this->belongsTo(Line::class);
      }
-
      public function type()
      {
       return $this->belongsTo(Type::class);

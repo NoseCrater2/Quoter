@@ -2,6 +2,14 @@
     <div>
         <v-container fluid style="max-width: 1200px" class="my-4">
            <v-row justify="space-between" class="mx-4">
+               <v-col cols="12" class="text-center">
+                   <div class="d-inline-flex">
+                         <h2>TOLDOS</h2>
+                    </div>
+                   <div class="d-inline-flex"  >
+                         <h2> {{slugType.toUpperCase().split('-').join(" ")}} </h2>
+                    </div>
+               </v-col>
                 <v-col cols="12" align-self="center" class="text-center">
                     <div class="d-inline-flex">
                          <h1>MODELOS</h1>
@@ -46,7 +54,7 @@
                 <v-col cols="12" align-self="center" class="text-center">
                    <v-row v-if="models"  justify="center" align="center" >
                        <v-col cols="12" md="4" sm="6"  v-for="model in models" :key="model.id">
-                           <SubweaveProductDetail :model="model"/>
+                           <SubweaveProductDetail :type="slugType" :model="model"/>
                            <!-- :to="{name: 'Tejidos', params: {slugLine: getProduct.slug, slugWeave: weave.slug}}" -->
                            <!-- <v-card
                            height="340" 

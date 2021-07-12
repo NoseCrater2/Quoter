@@ -1,7 +1,12 @@
 <template>
     <div>
         <v-container fluid style="max-width: 1200px" class="my-4">
-            <v-row justify="space-between" class="mx-4">
+            <v-row justify="space-between" class="mx-4" no-gutters>
+                <v-col cols="12"  class="text-center">
+                    <div >
+                        <h2>{{slugProduct}}</h2>
+                    </div>
+                </v-col>
                 <v-col cols="12" align-self="center" class="text-center">
                     <div class="d-inline-flex" >
                         <h1>LÍNEAS</h1>
@@ -14,8 +19,8 @@
                          <h1 v-else>{{nameLine}}</h1>
                     </div> -->
                      <div class="d-flex justify-center">
-                  <hr align="center" noshade="noshade" class="divider" style="height: 5px" size="3" width="35%" />
-              </div>
+                    <hr align="center" noshade="noshade" class="divider" style="height: 5px" size="3" width="35%" />
+                    </div>
                    
                 </v-col>
                 <v-row v-if="!$vuetify.breakpoint.mobile">

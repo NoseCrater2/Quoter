@@ -105,10 +105,10 @@
                                     <td style="width: 60%; background-color: white;">
                                         <div style="text-transform: uppercase; margin-top: -34px;">
                                             <?php
-                                                $concat = $blindVariant1->type->name.' // '.$blindVariant1->manufacturers[0]->name;
+                                                $concat = $blindVariant1->type->name.' // '.$blindVariant1->line->name;
                                                 $concat2 = '';
-                                                if($blindVariant1->line->name != null){
-                                                    $concat .= ' // '.$blindVariant1->line->name;
+                                                if($blindVariant1->weave != null){
+                                                    $concat .= ' // '.$blindVariant1->weave->name;
                                                 }
                                                 if($blindVariant2 != null){
                                                     $concat .= ' // [1. '.$blindVariant1->name.'] y [2. '.$blindVariant2->name.'] // ';
@@ -165,8 +165,8 @@
                                                 }
 
                                                 if($order['motor']['gallery'] != null){
-                                                    if($order['motor']['gallery']['colors'] != null){
-                                                        $concat3 .= $order['motor']['gallery']['colors'].' // ';
+                                                    if($order['motor']['gallery_color'] != null){
+                                                        $concat3 .= $order['motor']['gallery_color'].' // ';
                                                     }
                                                     $concat3 .= $order['motor']['gallery']['model'].' ';
                                                     if($order['motor']['galleryPrice'] > 0){
@@ -280,10 +280,10 @@
                                     <td style="width: 60%; background-color: white;">
                                         <div style="text-transform: uppercase; margin-top: -29px;">
                                             <?php
-                                                $concat = $blindVariant1->type->name.' // '.$blindVariant1->manufacturers[0]->name;
+                                                $concat = $blindVariant1->type->name.' // '.$blindVariant1->line->name;
                                                 $concat2 = '';
-                                                if($blindVariant1->line->name != null){
-                                                    $concat .= ' // '.$blindVariant1->line->name;
+                                                if($blindVariant1->weave != null){
+                                                    $concat .= ' // '.$blindVariant1->weave->name;
                                                 }
                                                 if($blindVariant2 != null){
                                                     $concat .= ' // [1. '.$blindVariant1->name.'] y [2. '.$blindVariant2->name.'] // ';
@@ -340,8 +340,8 @@
                                                 }
 
                                                 if($order['motor']['gallery'] != null){
-                                                    if($order['motor']['gallery']['colors'] != null){
-                                                        $concat3 .= $order['motor']['gallery']['colors'].' // ';
+                                                    if($order['motor']['gallery_color'] != null){
+                                                        $concat3 .= $order['motor']['gallery_color'].' // ';
                                                     }
                                                     $concat3 .= $order['motor']['gallery']['model'].' ';
                                                     if($order['motor']['galleryPrice'] > 0){
