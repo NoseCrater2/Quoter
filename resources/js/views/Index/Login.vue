@@ -9,7 +9,7 @@
             <v-spacer></v-spacer>
           </v-toolbar>
           <v-card-text>
-            <v-form>
+            <v-form @submit.prevent="login()">
               <v-text-field
                 color="#3ba2a9"
                 label="Email"
@@ -29,16 +29,14 @@
                 name="password"
                 prepend-icon="mdi-lock"
                 type="password"
-                
+
               ></v-text-field>
 
               <p class="text-center">
                 ¿Quieres cotizar y no eres distribuidor?
                 <router-link :to="{name:'Register', hash: '#formulary'}"> Reguistrate aquí</router-link>
               </p>
-            </v-form>
-          </v-card-text>
-          <v-card-actions>
+            <v-card-actions>
             <v-btn color="red" dark @click="cancel()">
               <v-icon left>mdi-arrow-left-bold</v-icon>
               Cancelar
@@ -46,15 +44,17 @@
 
             <v-spacer></v-spacer>
 
-            <v-btn :loading="loading" @click="login()" dark color="#3ba2a9">
+            <v-btn :loading="loading" :disabled="disableBtnEntrar" class="white--text" color="#3ba2a9" type="submit">
               Entrar
               <v-icon right>mdi-login</v-icon>
             </v-btn>
           </v-card-actions>
+            </v-form>
+          </v-card-text>
         </v-card>
       </v-dialog>
     </v-app>
- 
+
 </template>
 
 <script>
@@ -76,9 +76,17 @@ export default {
   },
   props: {},
 
-  // computed: {
-  //   ...mapGetters(["getLoginErrors", "getLoginStatus", "loggedIn"]),
-  // },
+  computed: {
+      disableBtnEntrar(){
+          if(((this.credentials.email == null || this.credentials.email == '') || (this.credentials.password == null || this.credentials.password == '')) || this.loading == true){
+              return true;
+          }
+          else{
+              return false;
+          }
+      }
+    // ...mapGetters(["getLoginErrors", "getLoginStatus", "loggedIn"]),
+  },
   methods: {
 
     async login(){
@@ -97,7 +105,7 @@ export default {
 
           this.$router.push(redirectPath)
         })
-        
+
       } catch (error) {
         this.getLoginErrors = error.response && error.response.data.errors
       }

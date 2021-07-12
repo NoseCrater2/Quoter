@@ -22,8 +22,14 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 
+<<<<<<< HEAD
+public/js/app.js
+
+public/
+=======
 public/
 
 storage/framework/laravel-excel/
 
 package-lock.json
+>>>>>>> master
