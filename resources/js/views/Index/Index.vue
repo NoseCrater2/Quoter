@@ -106,6 +106,9 @@
             <v-list-item color="#47a5ad" v-for="p in products" :key="p.name" :to="{name: 'Categories', params: {slugProduct: p.slug}}">
               <v-list-item-title> {{ p.name }} </v-list-item-title>
             </v-list-item>
+            <v-list-item :to="{name:'Motorized'}">
+                <v-list-item-title>MOTORIZACIÓN</v-list-item-title>
+            </v-list-item>
           </v-list-group>
           <v-divider></v-divider>
         </v-list>
@@ -179,6 +182,9 @@
                                   </v-menu>
                                 </v-list-item-content>
                               </v-list-item>
+                                <v-list-item :to="{name:'Motorized'}">
+                                    <v-list-item-title>MOTORIZACIÓN</v-list-item-title>
+                                </v-list-item>
 
                             </v-list-item-group>
                         </v-list>
@@ -351,7 +357,7 @@ export default {
         this.loading = true
         this.$store.dispatch('getQuotingOrders');
         this.$store.dispatch('getSubweaves')
-        this.$store.dispatch('getProducts') 
+        this.$store.dispatch('getProducts')
         this.$store.dispatch('getAllVariants').then( () =>{
         this.loading = false;
         })

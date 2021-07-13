@@ -1,15 +1,20 @@
 <template>
-    <v-hover v-slot="{ hover }">
-        <!-- "`../../img/lineas/${line.slug}.jpg`" -->
-        <v-card height="340" width="380" class="ma-4" @click="chooseRoute(line)"> 
+    <v-hover  v-slot="{ hover }">
+        <v-btn rounded :outlined="hover?false:true" :style="hover?'color: white':''"  style="font-size:0.70em" block color="#47a5ad"
+        @click="chooseRoute(line)">
+            {{line.name}}
+        </v-btn>
+    </v-hover>
+    <!-- <v-hover v-slot="{ hover }">
+        <v-card height="340" width="380" class="ma-4" @click="chooseRoute(line)">
             <v-img class="white--text align-end"  :class="{'escalada':hover}" width="390" height="340" :aspect-ratio="16/9"  :src="image(line.slug)"  :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
             <template v-slot:placeholder>
                 <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
             </template>
                 <v-slide-y-reverse-transition>
-                    <div v-if="!hover" class="title d-flex transition-fast-in-fast-out justify-center"  > 
-                        <h3 class="text-center">{{ line.name}}</h3> 
-                    </div> 
+                    <div v-if="!hover" class="title d-flex transition-fast-in-fast-out justify-center"  >
+                        <h3 class="text-center">{{ line.name}}</h3>
+                    </div>
                 </v-slide-y-reverse-transition>
                 <v-slide-x-transition>
                     <div
@@ -18,7 +23,7 @@
                     style="height: 100%;"
                     >
                         <v-hover v-slot="{ hover }">
-                            <!-- :to="type.weaves.length > 0 ? {name: 'Tejidos', params: {slugLine: line.slug}}:{name: 'Products', params: {slugLine: line.slug}}" -->
+
                             <v-btn @click="chooseRoute(line)" :outlined="!hover" depressed  tile color="white" >
                                 {{ line.name }}
                             </v-btn>
@@ -38,15 +43,15 @@
                 </v-expand-transition>
             </v-img>
         </v-card>
-    </v-hover>
+    </v-hover> -->
 </template>
 
 <script>
 export default {
     props: {
-        line: Object, 
+        line: Object,
         type: Object,
-        
+
     },
 
     mounted(){
