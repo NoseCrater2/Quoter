@@ -2,21 +2,22 @@
 
   <div id="app">
     <v-app>
-   <v-navigation-drawer app
-      v-model="drawer"
-      
+   <v-navigation-drawer
+        v-model="computedDrawerSize"
+        absolute
+        temporary
       >
 
       <v-list-item>
           <v-list-item-content>
             <v-list-item-title class="title">{{user.name}}</v-list-item-title>
-            <v-list-item-subtitle>{{user.email}}</v-list-item-subtitle>  
+            <v-list-item-subtitle>{{user.email}}</v-list-item-subtitle>
           </v-list-item-content>
       </v-list-item>
 
       <v-divider></v-divider>
       <v-list dense>
-        <v-list-item to="/profile">
+        <v-list-item v-if="loggedIn" :to="{name: 'Profile'}">
             <v-list-item-icon>
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
@@ -40,7 +41,7 @@
               <v-list-item-title>Pedidos</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item  @click="showComponent = 5">
+          <v-list-item v-if="user.role === 'Administrador'" @click="showComponent = 5">
             <v-list-item-icon>
               <v-icon>mdi-clipboard-list</v-icon>
             </v-list-item-icon>
@@ -48,7 +49,7 @@
               <v-list-item-title>Inventario</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item  @click="showComponent = 2">
+          <v-list-item v-if="user.role === 'Administrador'" @click="showComponent = 2">
             <v-list-item-icon>
               <v-icon>mdi-account-multiple</v-icon>
             </v-list-item-icon>
@@ -68,28 +69,30 @@
 
       </v-navigation-drawer>
 
-        
+
       <v-app-bar app
         color="#3ba2a9"
         class="white--text"
         dense
       >
-        <v-app-bar-nav-icon v-if="isMobile" @click="drawer = true"></v-app-bar-nav-icon>
-  
+        <v-app-bar-nav-icon class="white--text" v-if="!$vuetify.breakpoint.mdAndUp" @click.stop="drawer = true"></v-app-bar-nav-icon>
+
+        <v-spacer v-if="!$vuetify.breakpoint.mdAndUp"></v-spacer>
+
         <v-card color="transparent" flat tile :to="{name: 'Home'}">
            <v-img  v-if="user" max-width="128" :src="`/img/${user.logo}`"></v-img>
         </v-card>
-         
-        
-  
+
+
+
          <v-spacer></v-spacer>
-          
-          
-          <v-toolbar-items >
-              <v-btn 
+
+
+          <v-toolbar-items v-if="$vuetify.breakpoint.mdAndUp">
+              <v-btn
               v-if="user.role === 'Administrador'"
-              class="white--text" 
-              text 
+              class="white--text"
+              text
               :to="{name: 'Users'}">
                 Usuarios
               </v-btn>
@@ -132,8 +135,8 @@
              <v-btn class="white--text"  text :to="{name: 'Quoter'}">Cotizador</v-btn>
             <v-divider inset vertical></v-divider>
 
-           
-           
+
+
           </v-toolbar-items>
 
 
@@ -143,18 +146,18 @@
 
           <v-btn icon large class="ma-2" rounded depressed dark>
 
-            <v-badge color="red" 
+            <v-badge color="red"
             :content="orders.length"
-            :value="orders.length" 
+            :value="orders.length"
             overlap>
               <v-icon>mdi-cart-outline</v-icon>
             </v-badge>
           </v-btn>
 
-          <v-divider v-if="!isMobile" inset vertical></v-divider>
+          <v-divider v-if="$vuetify.breakpoint.mdAndUp" inset vertical></v-divider>
 
           <v-menu
-           v-if="!isMobile"
+           v-if="$vuetify.breakpoint.mdAndUp"
             bottom
             offset-y
             transition="slide-y-transition">
@@ -168,7 +171,7 @@
 
            <v-list v-if="loggedIn " >
             <v-list-item >
-              
+
             <v-list-item >
             <v-list-item-content>
               <v-list-item-title class="title">{{user.name}}</v-list-item-title>
@@ -177,7 +180,7 @@
           </v-list-item>
             <v-divider></v-divider>
             </v-list-item>
-          </v-list> 
+          </v-list>
 
           <v-list nav dense>
             <v-list-item-group color="#3ba2a9">
@@ -187,25 +190,25 @@
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title>Perfil</v-list-item-title>
-                </v-list-item-content>    
+                </v-list-item-content>
               </v-list-item>
-               
+
               <v-list-item v-if="!loggedIn" to="/login">
-               
+
                 <v-list-item-icon>
                   <v-icon >mdi-login</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content >
                 <v-list-item-title >Entrar</v-list-item-title>
                 </v-list-item-content>
-                
+
               </v-list-item>
 
             <v-list-item v-if="loggedIn" @click="logout()">
               <v-list-item-icon>
                 <v-icon >mdi-logout</v-icon>
               </v-list-item-icon>
-  
+
               <v-list-item-content>
                 <v-list-item-title>Salir</v-list-item-title>
               </v-list-item-content>
@@ -214,7 +217,7 @@
           </v-list-item-group>
         </v-list>
            </v-menu>
-    
+
 
       <v-snackbar
         v-model="snackbar"
@@ -238,12 +241,12 @@
         </v-snackbar>
 
         </v-app-bar>
-    
+
 
       <v-main>
         <router-view :key="$route.path"></router-view>
       </v-main>
-    
+
     </v-app>
 
   </div>
@@ -259,15 +262,14 @@ export default {
 
    data() {
     return {
-      isMobile: false,
       drawer: false,
       showComponent: 1,
       right: null,
       snackbar: false,
       timeout: 3000,
-      
+
       image: "/storage/img/Madera.jpeg",
-      
+
 
     }
   },
@@ -276,32 +278,21 @@ async  beforeCreate(){
   this.$store.dispatch("loadUser")
 },
 
-beforeDestroy () {
-   if (typeof window === 'undefined') return
-
-      window.removeEventListener('resize', this.onResize, { passive: true })
-  },
   mounted() {
-     this.$store.dispatch('getProducts') 
+     this.$store.dispatch('getProducts')
      this.$store.dispatch('getAllVariants')
      this.$store.dispatch("getMotorizations")
-    this.onResize()
 
-    window.addEventListener('resize', this.onResize, { passive: true })
    },
 
 
- 
- 
+
+
   components: {
       // BlindSteps,
   },
 
   methods: {
-    onResize(){
-      this.isMobile = window.innerWidth < 732
-    },
-
     logout(){
      try {
        axios.post("/logout");
@@ -329,9 +320,30 @@ beforeDestroy () {
       'getUserStatus'
      ]),
 
-   
 
-  
+        //Propiedad computada que controla si debe aparecer menu hamburguesa o la barra. Necesario para casos donde resize y menu burguer este activo
+        computedDrawerSize: {
+            get(){
+                if(this.$vuetify.breakpoint.mdAndUp){
+                    return false;
+                }
+                else if(!this.$vuetify.breakpoint.mdAndUp){
+                    return this.drawer;
+                }
+            },
+            set(model){
+                this.drawer = model;
+                if(this.$vuetify.breakpoint.mdAndUp){
+                    return false;
+                }
+                else if(!this.$vuetify.breakpoint.mdAndUp){
+                    return this.drawer;
+                }
+            }
+        }
+
+
+
 
   },
 };

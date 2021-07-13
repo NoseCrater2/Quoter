@@ -16,7 +16,7 @@
                     </v-list-item>
                     <v-list-item href="https://api.whatsapp.com/send?phone=5214434713271">
                         <v-list-item-icon><v-icon color="#31ba45">mdi-whatsapp</v-icon></v-list-item-icon>
-                        <v-list-item-content>443 471 3271</v-list-item-content>
+                        <v-list-item-content>55 4894 8279</v-list-item-content>
                     </v-list-item>
                     <!-- <v-list-item>
                         <v-list-item-icon><v-icon color="red">mdi-map-marker</v-icon></v-list-item-icon>
@@ -29,7 +29,7 @@
                 <v-card flat>
                     <v-form class="ma-4">
                         <v-select
-                        v-model="select" 
+                        v-model="select"
                         :items="items"
                         item-text="name"
                         item-value="id"
@@ -81,7 +81,7 @@ export default {
             reference: null,
             email: null,
             select: null,
-           
+
             items: [
                 {id:1, name:'Webmaster'},
                  {id:0, name:'Servicio al cliente'}
@@ -93,7 +93,7 @@ export default {
     },
 
     methods:{
-       
+
     },
 
     computed:{
