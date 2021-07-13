@@ -1,10 +1,11 @@
 <template>
   <v-container id="quoter">
       <v-dialog
+        persistent
         v-model="pdfDialog"
         width="auto"
       >
-        <v-card>
+        <v-card height="100%">
           <v-toolbar
             dark
             color="#47a5ad"
@@ -18,6 +19,24 @@
             </v-btn>
             <v-spacer></v-spacer>
             <v-toolbar-items>
+                <v-btn
+                  icon
+                  class="white--text"
+                  :disabled="(zoomPdf < 100) ? false : true"
+                    @click="editPdfZoom('plus')"
+                >
+                  <v-icon>mdi-magnify-plus</v-icon>
+                </v-btn>
+
+                <v-btn
+                  icon
+                  class="white--text"
+                  :disabled="(zoomPdf == 0) ? true : false"
+                    @click="editPdfZoom('minus')"
+                >
+                  <v-icon>mdi-magnify-minus</v-icon>
+                </v-btn>
+
               <v-btn
                 dark
                 @click="downloadButtonPdfAuth()"
@@ -26,8 +45,10 @@
               </v-btn>
             </v-toolbar-items>
           </v-toolbar>
-        <pdf :src="urlPdfVisor">
-        </pdf>
+          <v-col cols="12" class="d-flex justify-center">
+            <pdf :src="urlPdfVisor" style="height: 100%"  :style="`width: ${zoomPdf}%`">
+            </pdf>
+          </v-col>
         </v-card>
       </v-dialog>
     <v-row justify="center" align="center">
@@ -1239,6 +1260,7 @@ export default {
         urlPdfVisor: '',
         pdfDialog: '',
         numPdfPages: 0,
+        zoomPdf: 100,
         downloadButtonPdf: null,
       cancelShowBtnUserForm: false,
       showBtnUserForm: true,
@@ -1416,6 +1438,14 @@ export default {
   methods: {
     downloadButtonPdfAuth(){
         FileDownload(this.downloadButtonPdf, 'modelos.pdf');
+    },
+    editPdfZoom(zoomState){
+        if(zoomState == 'plus'){
+            this.zoomPdf = this.zoomPdf + 10;
+        }
+        else if(zoomState == 'minus'){
+            this.zoomPdf = this.zoomPdf - 10;
+        }
     },
     closePdfDialog(){
         this.pdfDialog = false;

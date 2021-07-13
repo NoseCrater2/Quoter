@@ -120,10 +120,8 @@ class ProductController extends Controller
 
     public function getVariantsByProduct(Product $product)
     {
-        $variants = $product->variants()->addSelect(
-            ['image' => Color::select('code')->limit(1)],
-        )
-        ->with(['type:id,slug','line:id,slug','weave:id,slug'])
+        $variants = $product->variants()
+        ->with(['type:id,name', 'line:id,name', 'weave:id,name', 'subweave:id,name'])
         ->orderBy('price','desc')
         ->get();
         return response(['data'=> $variants],200);

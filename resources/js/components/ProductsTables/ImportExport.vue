@@ -1,30 +1,55 @@
 <template>
     <div>
         <div class="text-center">
-            <input type="file" id="file" ref="btnUploadFile" style="display:none" @change="selectImage($event)" accept=".xlsx,.csv"/>
-            <v-btn rounded color="#47a5ad" dark class="ma-4" @click="dialog1 = true">
-                IMPORTAR INFORMACIÓN GENERAL
-            </v-btn>
+            <h2 class="mt-2 mb-5">{{product.name}}</h2>
         <v-card>
+            <v-card-actions>
+                <v-row justify="center" align="center">
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="12" xs="12">
+                        <v-btn color="#188038" rounded dark @click="exportModels()">
+                            EXPORTAR DATOS
+                            <v-icon right>mdi-table-arrow-right</v-icon>
+                        </v-btn>
+                    </v-col>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="12" xs="12">
+                        <input type="file" id="file" ref="btnUploadFile" style="display:none" @change="selectImage($event)" accept=".xlsx,.csv"/>
+                        <v-btn rounded color="#47a5ad" dark @click="dialog1 = true">
+                            IMPORTAR INFORMACIÓN GENERAL
+                        </v-btn>
+                    </v-col>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="12" xs="12">
+                        <v-btn color="#188038" rounded dark @click="dialog2 = true">
+                            IMPORTAR DATOS
+                            <v-icon right>mdi-table-arrow-left</v-icon>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+            </v-card-actions>
             <v-data-table
             v-if="products"
             :loading="loadingModels"
             :headers="modelsHeaders"
-            :items="products"  
+            :items="products"
             :search="search"
             :items-per-page="5"
             class="elevation-1"
             >
              <!-- :src="`img/modelos/medium/${item.image}`" -->
                 <template v-slot:top>
-                    <h2>{{product.name}}</h2>
                     <v-spacer></v-spacer>
-                    <v-text-field  
+                    <v-text-field
+                    class="mx-2"
                     v-model="search"
-                    append-icon="mdi-magnify"
+                    outlined
+                    dense
+                    prepend-inner-icon="mdi-magnify"
                     :label="`BUSCAR ${product.name}`"
                     hide-details
                     ></v-text-field>
+                </template>
+
+                <template v-slot:item.subweave="{ item }">
+                    {{ item.subweave == null ? 'N/A' : item.subweave.name }}
                 </template>
 
                 <template v-slot:item.price="{ item }">
@@ -39,20 +64,8 @@
                     hide-details
                     >
                     </v-text-field>
-                </template>         
+                </template>
             </v-data-table>
-
-            <v-card-actions>      
-                <v-btn color="#188038" rounded dark @click="exportModels()"> 
-                    EXPORTAR DATOS
-                    <v-icon right>mdi-table-arrow-right</v-icon>
-                </v-btn>
-                <v-spacer></v-spacer>
-                <v-btn color="#188038" rounded dark @click="dialog2 = true">
-                    IMPORTAR DATOS
-                    <v-icon right>mdi-table-arrow-left</v-icon>
-                </v-btn>     
-            </v-card-actions>
         </v-card>
         </div>
 
@@ -146,7 +159,7 @@
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn text color="#47a5ad" @click="dialog2 = false">CANCELAR</v-btn>
-                        </v-card-actions>
+                    </v-card-actions>
                 </v-card>
             </v-row>
         </v-dialog>
@@ -177,23 +190,28 @@ export default {
             showVariants: null,
             modelsHeaders: [
                 {
-                    text: 'id',
-                    align: 'start',
-                    sortable: false,
+                    text: 'ID',
                     value: 'id',
+                    sortable: false,
+                    align: 'center',
                 },
-                { text: 'Nombre', value: 'name' },
-                { text: 'Precio', value: 'price' },
-                { text: 'Linea', value: 'line' },
+                { text: 'Nombre', value: 'name', align: 'center' },
+                { text: 'Tipo', value: 'type.name', align: 'center' },
+                { text: 'Linea', value: 'line.name', align: 'center' },
+                { text: 'Tejido', value: 'weave.name', align: 'center' },
+                { text: 'Modelo', value: 'subweave', align: 'center' },
+                { text: 'Ancho', value: 'width', align: 'center' },
+                { text: 'Lienzo', value: 'rotate', align: 'center' },
+                { text: 'Precio', value: 'price', align: 'center' },
             ],
         }
     },
 
     props:{
         product: {
-            type: Object, 
+            type: Object,
             required: true,
-        }, 
+        },
     },
 
     mounted(){
@@ -202,9 +220,9 @@ export default {
 
     computed:{
         ...mapState({
-     products: state => state.productsModule.variants,
+     products: state => state.productsModule.sunblinds,
     }),
-       
+
     },
 
     methods:{
@@ -239,7 +257,7 @@ export default {
                 this.errors2 = response.data
                   if(!this.errors2){
                     this.dialog2 = false
-                  }       
+                  }
             })
             .catch( errors => {
                 this.errors =  errors.response.data.errors
@@ -252,12 +270,12 @@ export default {
                 endpooint = this.importVariants
             }else if(this.product.id === 3){
                  endpooint = this.importSunblinds
-                
+
             }
             this.showProgressBar = true
             this.file = event.target.files[0];
             let formData = new FormData();
-            
+
             formData.append('file',this.file);
 
             axios.post( endpooint,
