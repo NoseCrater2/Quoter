@@ -1,16 +1,19 @@
 <template>
-    <v-container fluid style="max-width: 1175px;">
-        <v-row justify="space-between" no-gutters >
-            <v-col cols="12" md="3" sm="12"  >
-                <v-card flat  >
-                  <v-list dense flat subheader v-if="types && !isMobile"  color="transparent">
+<div>
+    <v-container fluid style="max-width: 1200px;" class="my-4">
+        <v-row justify="space-between">
+            <v-col md="3" sm="12" :style="(isMobile && $vuetify.breakpoint.width > 779) ? 'background-color: white; position: sticky; top: 84px; z-index: 2;' : (isMobile && $vuetify.breakpoint.width < 780) ? 'background-color: white; position: sticky; top: 56px; z-index: 2;' : '' ">
+                <!-- MENU INICIA -->
+                 <v-row :style="!isMobile ? 'position: sticky; top: 77px': ''">
+                <v-col class="line" cols="12" md="12" sm="12">
+                  <v-list dense flat subheader v-if="types && !isMobile">
                     <v-subheader>TOLDO</v-subheader>
                     <v-list-item-group
-                    v-model="type"
-                    mandatory>
+                        v-model="type"
+                        mandatory>
                       <v-list-item
-                      dense 
-                      v-for="type in types.types" 
+                      dense
+                      v-for="type in types.types"
                       :key="type.id"
                       :value="type.slug"
                       style="min-height: 20px;height:20px"
@@ -30,17 +33,52 @@
                         </v-list-item>
                       </v-list-item-group>
                     </v-list>
+
+                    <v-menu offset-y v-if="types && isMobile">
+                      <template v-slot:activator="{attrs, on}">
+                        <v-btn v-bind="attrs" v-on="on" text color="#47a5ad" block>
+                          TOLDO: {{selectedType }}
+                          <v-icon right>mdi-chevron-down</v-icon>
+                        </v-btn>
+                      </template>
+                       <v-list  dense flat>
+                      <v-list-item-group
+                      mandatory
+                      v-model="type">
+                        <v-list-item
+                        :value="type.slug"
+                        dense
+                        v-for="type in types.types"
+                        :key="type.id"
+                        >
+                          <template v-slot:default="{ active }">
+                            <v-list-item-action>
+                              <v-checkbox
+                              dense
+                              :input-value="active"
+                              color="#47a5ad"
+                              ></v-checkbox>
+                            </v-list-item-action>
+                            <v-list-item-content>
+                              <v-list-item-title>{{ type.name }}</v-list-item-title>
+                            </v-list-item-content>
+                          </template>
+                        </v-list-item>
+                      </v-list-item-group>
+                    </v-list>
+                    </v-menu>
                     <v-divider></v-divider>
+
                     <v-list dense flat subheader v-if="getType && !isMobile" color="transparent">
                       <v-subheader>LÍNEA</v-subheader>
                       <v-list-item-group
                       mandatory
                       v-model="line">
-                        <v-list-item 
+                        <v-list-item
                         :value="line.slug"
-                        dense 
-                        v-for="line in getType.lines" 
-                        :key="line.id" 
+                        dense
+                        v-for="line in getType.lines"
+                        :key="line.id"
                         style="min-height: 20px;height:20px">
                           <template v-slot:default="{ active }">
                             <v-list-item-action>
@@ -57,17 +95,51 @@
                         </v-list-item>
                       </v-list-item-group>
                     </v-list>
+                    <v-menu offset-y v-if="getType && isMobile">
+                      <template v-slot:activator="{attrs, on}">
+                        <v-btn v-bind="attrs" v-on="on" text color="#47a5ad" block>
+                          LINEA: {{ selectedLine }}
+                          <v-icon right>mdi-chevron-down</v-icon>
+                        </v-btn>
+                      </template>
+                       <v-list  dense flat>
+                      <v-list-item-group
+                      mandatory
+                      v-model="line">
+                        <v-list-item
+                        :value="line.slug"
+                        dense
+                        v-for="line in getType.lines"
+                        :key="line.id"
+                        >
+                          <template v-slot:default="{ active }">
+                            <v-list-item-action>
+                              <v-checkbox
+                              dense
+                              :input-value="active"
+                              color="#47a5ad"
+                              ></v-checkbox>
+                            </v-list-item-action>
+                            <v-list-item-content>
+                              <v-list-item-title>{{ line.name }}</v-list-item-title>
+                            </v-list-item-content>
+                          </template>
+                        </v-list-item>
+                      </v-list-item-group>
+                    </v-list>
+                    </v-menu>
                     <v-divider></v-divider>
+
                     <v-list  dense flat subheader v-if="subweaves && !isMobile" color="transparent">
                         <v-subheader>MODELO</v-subheader>
                         <v-list-item-group
                         mandatory
                         v-model="subweave">
-                          <v-list-item 
+                          <v-list-item
                           :value="subweave.slug"
-                          dense 
-                          v-for="subweave in subweaves" 
-                          :key="subweave.id" 
+                          dense
+                          v-for="subweave in subweaves"
+                          :key="subweave.id"
                           style="min-height: 20px;height:20px">
                             <template v-slot:default="{ active }">
                                 <v-list-item-action>
@@ -84,17 +156,51 @@
                           </v-list-item>
                         </v-list-item-group>
                     </v-list>
+                    <v-menu offset-y v-if="subweaves && isMobile">
+                      <template v-slot:activator="{attrs, on}">
+                        <v-btn v-bind="attrs" v-on="on" text color="#47a5ad" block>
+                          MODELO: {{ selectedSubweave }}
+                          <v-icon right>mdi-chevron-down</v-icon>
+                        </v-btn>
+                      </template>
+                       <v-list  dense flat>
+                      <v-list-item-group
+                      mandatory
+                      v-model="subweave">
+                        <v-list-item
+                        :value="subweave.slug"
+                        dense
+                        v-for="subweave in subweaves"
+                        :key="subweave.id"
+                        >
+                          <template v-slot:default="{ active }">
+                            <v-list-item-action>
+                              <v-checkbox
+                              dense
+                              :input-value="active"
+                              color="#47a5ad"
+                              ></v-checkbox>
+                            </v-list-item-action>
+                            <v-list-item-content>
+                              <v-list-item-title>{{ subweave.name }}</v-list-item-title>
+                            </v-list-item-content>
+                          </template>
+                        </v-list-item>
+                      </v-list-item-group>
+                    </v-list>
+                    </v-menu>
                     <v-divider></v-divider>
+
                     <v-list  dense flat subheader v-if="weaves && !isMobile" color="transparent">
                         <v-subheader>TEJIDO</v-subheader>
                         <v-list-item-group
                         mandatory
                         v-model="weave">
-                          <v-list-item 
+                          <v-list-item
                           :value="weave.slug"
-                          dense 
-                          v-for="weave in weaves.weaves" 
-                          :key="weave.id" 
+                          dense
+                          v-for="weave in weaves.weaves"
+                          :key="weave.id"
                           style="min-height: 20px;height:20px">
                             <template v-slot:default="{ active }">
                                 <v-list-item-action>
@@ -110,12 +216,55 @@
                             </template>
                           </v-list-item>
                         </v-list-item-group>
-                    </v-list> 
-                </v-card>
+                    </v-list>
+
+                    <v-menu offset-y v-if="weaves && isMobile" >
+                      <template v-slot:activator="{attrs, on}">
+                        <v-btn
+                        v-bind="attrs"
+                        v-on="on"
+                        text
+                        color="#47a5ad"
+                        block>
+                          TEJIDO: {{ selectedWeave }}
+                          <v-icon right>mdi-chevron-down</v-icon>
+                        </v-btn>
+                      </template>
+                       <v-list  dense flat>
+                      <v-list-item-group
+                      mandatory
+                      v-model="weave">
+                        <v-list-item
+                        :value="weave.slug"
+                        dense
+                        v-for="weave in weaves.weaves"
+                        :key="weave.id"
+                        >
+                          <template v-slot:default="{ active }">
+                            <v-list-item-action>
+                              <v-checkbox
+                              dense
+                              :input-value="active"
+                              color="#47a5ad"
+                              ></v-checkbox>
+                            </v-list-item-action>
+                            <v-list-item-content class="pa-0">
+                              <v-list-item-title>{{ weave.name }}</v-list-item-title>
+                            </v-list-item-content>
+                          </template>
+                        </v-list-item>
+                      </v-list-item-group>
+                    </v-list>
+                    </v-menu>
+                    <v-divider></v-divider>
+
+
+                </v-col>
+                 </v-row>
+                 <!-- MENU TERMINA -->
             </v-col>
-            <v-col cols="12" md="9" sm="12" class="hide-scroll" style="overflow-y: scroll" >
+            <v-col cols="12" md="9" sm="12" >
                 <v-data-iterator
-                style="height: 500px;"
                 :items="products"
                 :items-per-page="18"
                 :page="parseInt(page)"
@@ -133,27 +282,27 @@
                           <v-btn class="mr-8" depressed fab dark color="white" small @click="nextPage()">
                               <v-icon color="black">mdi-chevron-right</v-icon>
                           </v-btn>
-                         
+
                       </v-row>
-                     
+
                     </template>
                     <template v-slot:default="props">
                         <v-row>
                             <v-col style="justify-content: center; display: flex;" v-for="item in props.items" :key="item.name" cols="12" md="4" sm="6">
                                 <v-hover v-slot="{ hover }" v-if="item">
                             <v-card width="240"  color="grey lighten-4"  flat :to="{name: 'Details', params: {slugWeave:item.weave.slug, slugDetail: item.id.toString()}}">
-                              <v-img 
-                              class="white--text align-end"   
-                              :class="{'escalada':hover}" 
-                              width="240" height="270" 
-                              :aspect-ratio="16/9"  
-                              :src="`/img/modelos/medium/${item.type.slug}/${item.line.slug}/${item.image}.jpg`" 
+                              <v-img
+                              class="white--text align-end"
+                              :class="{'escalada':hover}"
+                              width="240" height="270"
+                              :aspect-ratio="16/9"
+                              :src="`/img/modelos/medium/${item.type.slug}/${item.line.slug}/${item.image}.jpg`"
                               :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
                                 <template v-slot:placeholder>
                                   <v-img src="/img/modelos/generic-sunwave.png"></v-img>
                                 </template>
                                 <!-- <v-slide-y-reverse-transition>
-                                  
+
                                 </v-slide-y-reverse-transition> -->
                                 <v-slide-x-transition>
                                   <div
@@ -169,17 +318,17 @@
                               <v-card-title  class="title-weave d-flex justify-center ">
                                     <b class="text-center" style="font-size: 12px; line-height: 20px; color: #47a5ad" >
                                       {{ item.name}}
-                                    </b> 
-                              </v-card-title> 
+                                    </b>
+                              </v-card-title>
                               <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn
                                 target="_blank"
                                 :href="`https://api.whatsapp.com/send?phone=5215548948279?&amp;text=Hola+quiero+saber+el+precio+del+toldo+${item.name}`"
-                                color="#47a5ad" 
-                                tile 
-                                depressed 
-                                outlined  
+                                color="#47a5ad"
+                                tile
+                                depressed
+                                outlined
                                 small>
                                   PREGUNTAR POR PRECIO
                                 </v-btn>
@@ -230,6 +379,7 @@
             </v-col>
         </v-row>
     </v-container>
+</div>
 </template>
 
 <script>
@@ -271,10 +421,10 @@ export default {
     methods: {
         nextPage(){
             this.page = parseInt(this.page)
-            if(this.page + 1 <= this.numberOfPages){ 
+            if(this.page + 1 <= this.numberOfPages){
                 this.page += 1
                 this.$router.push({query: {...this.$route.query, page: this.page}})
-            } 
+            }
         },
         formerPage(){
             this.page = parseInt(this.page)
@@ -302,7 +452,7 @@ export default {
                 return this.slugWeave
             },
 	        set: function(newValue) {
-                this.selectedWeave = newValue  
+                this.selectedWeave = newValue
 	        }
 	    },
 
@@ -311,7 +461,7 @@ export default {
                 return this.slugSubweave
             },
 	        set: function(newValue) {
-                this.selectedSubweave = newValue  
+                this.selectedSubweave = newValue
 	        }
 	    },
 
@@ -320,7 +470,7 @@ export default {
                 return this.slugLine
             },
 	        set: function(newValue) {
-                this.selectedLine = newValue  
+                this.selectedLine = newValue
 	        }
 	    },
         type: {
@@ -328,7 +478,7 @@ export default {
                 return this.slugType
             },
             set: function(newValue) {
-                this.selectedType = newValue  
+                this.selectedType = newValue
 	        }
         },
 
@@ -352,7 +502,7 @@ export default {
         products(){
           return this.$store.state.productsModule.variants.filter((variant) => variant.type.slug === this.selectedType && variant.line.slug === this.selectedLine && variant.weave.slug === this.selectedWeave && variant.subweave.slug === this.selectedSubweave)
         },
-        
+
     },
 
     props:{
@@ -402,7 +552,7 @@ width: 100%;
 
 .title-weave{
   text-align: center;
-  padding: 5px; 
+  padding: 5px;
   word-break: break-word !important;
   line-height: 12px;
   font-size: 12px !important;

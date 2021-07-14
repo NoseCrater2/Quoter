@@ -1,19 +1,20 @@
 <template>
-  <div >
-    <v-container fluid style="max-width: 1200px;" class="my-4">     
+  <div>
+    <v-container fluid style="max-width: 1200px;" class="my-4">
       <v-row justify="space-between" >
-        <v-col md="3" sm="12">
-          <v-row >
+        <v-col md="3" sm="12" :style="(isMobile && $vuetify.breakpoint.width > 779) ? 'background-color: white; position: sticky; top: 84px; z-index: 2;' : (isMobile && $vuetify.breakpoint.width < 780) ? 'background-color: white; position: sticky; top: 56px; z-index: 2;' : '' ">
+            <!-- MENU INICIA -->
+          <v-row :style="!isMobile ? 'position: sticky; top: 77px': ''">
             <v-col class="line" cols="12" md="12" sm="12" >
               <v-list dense flat subheader v-if="types.types && !isMobile">
                 <v-subheader>PERSIANA</v-subheader>
                 <v-list-item-group
-                v-model="type"
-                mandatory
+                    v-model="type"
+                    mandatory
                 >
                   <v-list-item
-                  dense 
-                  v-for="type in types.types" 
+                  dense
+                  v-for="type in types.types"
                   :key="type.id"
                   :value="type.slug"
                   style="min-height: 20px;height:20px"
@@ -33,7 +34,7 @@
                   </v-list-item>
                 </v-list-item-group>
               </v-list>
-              <v-menu offset-y v-if="types.types && isMobile" >
+              <v-menu offset-y v-if="types.types && isMobile">
                 <template v-slot:activator="{attrs, on}">
                   <v-btn v-bind="attrs" v-on="on" text color="#47a5ad" block>
                     PERSIANA: {{selectedType }}
@@ -44,11 +45,11 @@
                 <v-list-item-group
                 mandatory
                 v-model="type">
-                  <v-list-item 
+                  <v-list-item
                   :value="type.slug"
-                  dense 
-                  v-for="type in types.types" 
-                  :key="type.id" 
+                  dense
+                  v-for="type in types.types"
+                  :key="type.id"
                   >
                     <template v-slot:default="{ active }">
                       <v-list-item-action>
@@ -73,11 +74,11 @@
                 <v-list-item-group
                 mandatory
                 v-model="line">
-                  <v-list-item 
+                  <v-list-item
                   :value="line.slug"
-                  dense 
-                  v-for="line in getType.lines" 
-                  :key="line.id" 
+                  dense
+                  v-for="line in getType.lines"
+                  :key="line.id"
                   style="min-height: 20px;height:20px">
                     <template v-slot:default="{ active }">
                       <v-list-item-action>
@@ -105,11 +106,11 @@
                 <v-list-item-group
                 mandatory
                 v-model="line">
-                  <v-list-item 
+                  <v-list-item
                   :value="line.slug"
-                  dense 
-                  v-for="line in getType.lines" 
-                  :key="line.id" 
+                  dense
+                  v-for="line in getType.lines"
+                  :key="line.id"
                   >
                     <template v-slot:default="{ active }">
                       <v-list-item-action>
@@ -127,18 +128,18 @@
                 </v-list-item-group>
               </v-list>
               </v-menu>
-              
+
                <v-divider></v-divider>
               <v-list  dense flat subheader v-if="getType && !isMobile">
                 <v-subheader>TEJIDO</v-subheader>
                 <v-list-item-group
                 mandatory
                 v-model="weave">
-                  <v-list-item 
+                  <v-list-item
                   :value="weave.slug"
-                  dense 
-                  v-for="weave in getType.weaves" 
-                  :key="weave.id" 
+                  dense
+                  v-for="weave in getType.weaves"
+                  :key="weave.id"
                   style="min-height: 20px;height:20px">
                     <template v-slot:default="{ active }">
                       <v-list-item-action>
@@ -158,10 +159,10 @@
               <v-menu offset-y v-if="getType.weaves.length > 0 && isMobile" >
                 <template v-slot:activator="{attrs, on}">
                   <v-btn
-                  v-bind="attrs" 
-                  v-on="on" 
-                  text 
-                  color="#47a5ad" 
+                  v-bind="attrs"
+                  v-on="on"
+                  text
+                  color="#47a5ad"
                   block>
                     TEJIDO: {{ selectedWeave }}
                     <v-icon right>mdi-chevron-down</v-icon>
@@ -171,11 +172,11 @@
                 <v-list-item-group
                 mandatory
                 v-model="weave">
-                  <v-list-item 
+                  <v-list-item
                   :value="weave.slug"
-                  dense 
-                  v-for="weave in getType.weaves" 
-                  :key="weave.id" 
+                  dense
+                  v-for="weave in getType.weaves"
+                  :key="weave.id"
                   >
                     <template v-slot:default="{ active }">
                       <v-list-item-action>
@@ -193,8 +194,11 @@
                 </v-list-item-group>
               </v-list>
               </v-menu>
+              <v-divider></v-divider>
             </v-col>
           </v-row>
+        <!-- MENU TERMINA -->
+
         </v-col>
         <v-col cols="12" md="9" sm="12" >
           <v-row v-if="selectedLine && selectedType">
@@ -203,12 +207,11 @@
               <div >
                   <Descriptions :nameLine="selectedLine"/>
               </div>
-              
+
               <v-divider></v-divider>
             </v-col>
-            <v-col cols="12" class="hide-scroll" style="overflow-y: scroll" >
+            <v-col cols="12"  >
                   <v-data-iterator
-                  style="height: 500px;"
                   v-if="products"
                   :items="products"
                   :items-per-page="itemsPerPage"
@@ -271,22 +274,22 @@
                         cols="12"
                         sm="6"
                         md="4">
-                          
+
                           <v-hover v-slot="{ hover }" v-if="item">
                             <v-card width="240"  color="grey lighten-4"  flat :to="{name: 'Details', params: {slugWeave:item.weave.slug, slugDetail: item.id.toString()}}">
                               <v-img class="d-flex tag" width="40"  v-if="item.rotate == 1" src="/img/modelos/rotable.png"></v-img>
-                              <v-img 
-                              class="white--text align-end"   
-                              :class="{'escalada':hover}" 
-                              width="240" height="270" 
-                              :aspect-ratio="16/9"  
-                              :src="`/img/modelos/medium/${item.type.slug}/${item.line.slug}/${item.image}.jpg`" 
+                              <v-img
+                              class="white--text align-end"
+                              :class="{'escalada':hover}"
+                              width="240" height="270"
+                              :aspect-ratio="16/9"
+                              :src="`/img/modelos/medium/${item.type.slug}/${item.line.slug}/${item.image}.jpg`"
                               :gradient="hover?'rgba(71, 165, 173, 0.7) 100%, transparent 72px':''"  >
                                 <template v-slot:placeholder>
                                   <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
                                 </template>
                                 <!-- <v-slide-y-reverse-transition>
-                                 
+
                                 </v-slide-y-reverse-transition> -->
                                 <v-slide-x-transition>
                                   <div
@@ -312,7 +315,7 @@
                                 <v-card-title class="title d-flex justify-center white--text ">
                                     <b class="text-center" style="font-size: 12px; line-height: 20px;" >
                                       {{ item.name}}
-                                    </b> 
+                                    </b>
                                   </v-card-title>
                               <v-card-text
                               v-if="item.type != 'horizontal-madera-2'"
@@ -436,7 +439,7 @@
                     <v-list-item-icon><v-icon color="red">mdi-cancel</v-icon></v-list-item-icon>
                     <v-list-item-title style="color: red">Fuera de stock</v-list-item-title>
                   </v-list-item>
-                </v-card-text>                  
+                </v-card-text>
               </v-col>
             </v-row>
           </v-card>
@@ -516,7 +519,7 @@ export default {
         return this.slugLine
       },
 	    set: function(newValue) {
-        this.selectedLine = newValue  
+        this.selectedLine = newValue
 	    }
 	  },
     weave: {
@@ -524,7 +527,7 @@ export default {
         return this.slugWeave
       },
 	    set: function(newValue) {
-        this.selectedWeave = newValue  
+        this.selectedWeave = newValue
 	    }
 	  },
 
@@ -546,7 +549,7 @@ export default {
          return this.slugType
       },
       set: function(newValue) {
-        this.selectedType = newValue  
+        this.selectedType = newValue
 	    }
     },
 
@@ -570,10 +573,10 @@ export default {
   methods: {
     nextPage(){
       this.page = parseInt(this.page)
-        if(this.page + 1 <= this.numberOfPages){ 
+        if(this.page + 1 <= this.numberOfPages){
           this.page += 1
           this.$router.push({query: {...this.$route.query, page: this.page}})
-        } 
+        }
       },
     formerPage(){
       this.page = parseInt(this.page)
@@ -604,7 +607,7 @@ export default {
     },
 }
 </script>
-        
+
 
 <style>
 .hide-scroll::-webkit-scrollbar {
@@ -652,8 +655,8 @@ width: 100%;
 }
 
 .title{
-  background-color: #47a5ad; 
-  padding: 5px; 
+  background-color: #47a5ad;
+  padding: 5px;
   word-break: break-word !important;
   line-height: 12px;
   font-size: 12px !important;

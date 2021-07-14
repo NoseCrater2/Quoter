@@ -18,7 +18,7 @@
             :headers="motorizationHeaders"
             :items="motorizations"
             :search="search"
-            :items-per-page="5"
+            :items-per-page="15"
             class="elevation-1"
             >
              <!-- :src="`img/modelos/medium/${item.image}`" -->
@@ -62,52 +62,41 @@
                 </v-btn>
             </v-card-actions> -->
         </v-card>
-           <v-dialog v-model="dialog1" width="600" >
-            <v-row justify="center" align="center">
-                <v-card max-width="600" max-height="600">
+           <v-dialog persistent v-model="dialog1" :width="$vuetify.breakpoint.xl ? '1000' : $vuetify.breakpoint.lg ? '900' : '600'">
+                <v-card tile :width="$vuetify.breakpoint.xl ? '1000' : $vuetify.breakpoint.lg ? '900' : '600'" :height="$vuetify.breakpoint.xl ? '800' : $vuetify.breakpoint.lg ? '700' : '580'" class="d-flex flex-column justify-center align-center">
                     <v-card-title>
-                        IMPORTAR INFORMACIÓN DESDE ARCHIVO XSLX O CSV
+                        IMPORTAR INFORMACIÓN DESDE ARCHIVO .XSLX O .CSV
                     </v-card-title>
-                    <v-card-text>
+                    <v-card-text class="text-center">
                         Asegurate de que tu archivo cumpla con los requisitos para ser reconocido por el sistema.
-                        <ol>
-                            <li>EL nombre de los encabezados debe ser correcto.</li>
-                            <li>Evita escribir incorrectamente nombres de modelos, telas, persianas y fabricantes.</li>
-                            <li>Evita las celdas vacías donde debe ir algún dato.</li>
-                            <li>Evita poner letras donde solo van números y viceversa.</li>
-                        </ol>
+                            <div>El nombre de los encabezados debe ser correcto.</div>
+                            <div>Evita escribir incorrectamente nombres de modelos, telas, persianas y fabricantes.</div>
+                            <div>Evita las celdas vacías donde debe ir algún dato.</div>
+                            <div>Evita poner letras donde solo van números y viceversa.</div>
                     </v-card-text>
                     <v-card-actions>
-                        <v-spacer></v-spacer>
+                        <v-btn text color="#47a5ad" @click="dialog1 = false">CANCELAR</v-btn>
                         <v-btn dark color="#188038" @click="$refs.btnUploadFile.click()" >
                             SUBIR ARCHIVO
                         <v-icon right> mdi-microsoft-excel</v-icon>
                         </v-btn>
-                        <v-spacer></v-spacer>
                     </v-card-actions>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
+                    <v-card-actions class="mt-5">
                         <v-progress-circular
-                        v-if="showProgressBar"
+                        v-if="(showProgressBar && (errors != null || errors != ''))"
                         :rotate="360"
-                        :size="200"
+                        :size="$vuetify.breakpoint.lgAndUp ? 200 : 160"
                         :width="15"
                         :value="value"
                         color="#47a5ad"
                         >
                         {{ value }}%
                         </v-progress-circular>
-                        <v-spacer></v-spacer>
                     </v-card-actions>
-                    <v-card-text>
-                        {{ errors }}
+                    <v-card-text class="mt-7 text-center red--text font-weight-bold text-uppercase">
+                        {{ (errors != null || errors != '') ? errors : ''}}
                     </v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn text color="#47a5ad" @click="dialog1 = false">CANCELAR</v-btn>
-                    </v-card-actions>
                 </v-card>
-            </v-row>
         </v-dialog>
         </div>
 </template>

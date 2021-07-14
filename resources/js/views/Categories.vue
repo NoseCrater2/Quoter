@@ -1,9 +1,9 @@
 <template>
     <div id="app">
-           
+
         <v-container fluid style="max-width: 1200px">
         <v-row justify="space-between"  class="mx-2" v-if="getProduct" >
-           
+
                 <v-row justify="center">
                 <v-col cols="11"  align-self="center">
                 <h1 class="text-center" :style="$vuetify.breakpoint.mobile?'font-weight: bolder;font-size: 1.5em;':'font-weight: bolder;font-size: 3em;'"  >
@@ -13,7 +13,7 @@
                   <hr align="center" noshade="noshade" class="divider" style="height: 5px" size="3" width="15%" />
               </div>
                <br>
-                <h2 class="text-center" :style="$vuetify.breakpoint.mobile?'font-size: 1em':''"> 
+                <h2 class="text-center" :style="$vuetify.breakpoint.mobile?'font-size: 1em':''">
                     {{getProduct.description}}
                 </h2>
                 </v-col>
@@ -23,9 +23,9 @@
                         <TypeProductCard :type='type'/>
                     </v-col>
                 </v-row>
-                
+
         </v-row>
-         <v-row justify="center" align="center" class="ma-4">
+         <!-- <v-row justify="center" align="center" class="ma-4">
                     <v-col v-for="n in options.length" :key="n" cols="6" align-self="center" md="3" sm="6">
                         <v-hover v-slot="{hover}">
                             <v-btn :to="options[n-1].route" rounded :outlined="hover?false:true" :style="hover?'color: white':''" style="font-weight: bolder;" block color="#47a5ad">
@@ -33,7 +33,7 @@
                             </v-btn>
                         </v-hover>
                     </v-col>
-        </v-row>
+        </v-row> -->
        </v-container>
     </div>
 </template>
@@ -64,7 +64,7 @@ export default {
     },
 
     // mounted(){
-    //      this.$store.dispatch('getProducts')         
+    //      this.$store.dispatch('getProducts')
     // },
     computed:{
     //      ...mapState({
@@ -74,14 +74,14 @@ export default {
     getProduct(){
         return  this.$store.getters.getTypes(this.slugProduct)
     },
-   
+
     },
 
     props: {
         slugProduct: String,
         required: true
     },
-    
+
 }
 </script>
 
@@ -112,6 +112,6 @@ width: 100%;
     border: none;
     height: 5px;
     background-color: #47a5ad;
-    
+
 }
 </style>

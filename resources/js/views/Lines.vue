@@ -3,12 +3,12 @@
         <v-container fluid style="max-width: 1200px" class="my-4">
             <v-row justify="space-between" class="mx-4" no-gutters>
                 <v-col cols="12"  class="text-center">
-                    <div >
+                    <div>
                         <h2>{{slugProduct}}</h2>
                     </div>
                 </v-col>
                 <v-col cols="12" align-self="center" class="text-center">
-                    <div class="d-inline-flex" >
+                    <div class="d-inline-flex">
                         <h1>LÍNEAS</h1>
                     </div>
                     <div class="d-inline-flex" v-if="getType"  style="color: #47a5ad;">
@@ -21,26 +21,26 @@
                      <div class="d-flex justify-center">
                     <hr align="center" noshade="noshade" class="divider" style="height: 5px" size="3" width="35%" />
                     </div>
-                   
+
                 </v-col>
                 <v-row v-if="!$vuetify.breakpoint.mobile">
                 <!-- <Descriptions :nameLine="nameLine"/> -->
                 </v-row>
-                <v-col cols="12" align-self="center" class="text-center" >
+                <v-col cols="12" align-self="center" class="text-center my-7">
                    <v-row v-if="getType"  justify="center" align="center">
                        <v-col cols="12" md="4" sm="6"  v-for="line in getType.lines" :key="line.id">
                           <LineProductDetail :type="getType" :line="line"/>
                        </v-col>
                    </v-row>
-                   
-                           
+
+
 
 
                 </v-col>
                 <v-col cols="12"  class="text-center">
                     <v-btn rounded color="#47a5ad" :to="{name:'Gallery', props: {slugProduct: slugProduct, slugType: slugType}}" x-large dark>Ver Galería</v-btn>
                 </v-col>
-               
+
             </v-row>
 
             <!-- <v-row v-if="$vuetify.breakpoint.mobile">
@@ -59,11 +59,11 @@
                      <div class="d-flex justify-center">
                   <hr align="center" noshade="noshade" class="divider" style="height: 5px" size="3" width="10%" />
               </div>
-                   
+
                 </v-col>
                     <v-col v-for="n in getProduct.types" :key="n.id" cols="12" align-self="center" md="3" sm="6">
                         <v-hover  v-slot="{ hover }">
-                            <v-btn rounded :outlined="hover?false:true" :style="hover?'color: white':''"  style="font-size:0.70em" block color="#47a5ad" 
+                            <v-btn rounded :outlined="hover?false:true" :style="hover?'color: white':''"  style="font-size:0.70em" block color="#47a5ad"
                             :to="{name: 'Lines', params: {slugType: n.slug}}">
                                 {{n.name}}
                             </v-btn>
@@ -89,9 +89,9 @@ export default {
         LineProductDetail,
     },
 
- 
+
     beforeRouteEnter(to, from, next){
-     
+
         next(um => {
              document.title = 'Líneas '+um.slugType
         })
@@ -107,7 +107,7 @@ export default {
             if(this.getProduct){
                  return this.$store.getters.getTypes(this.slugProduct).types.find(type => type.slug === this.slugType)
             }
-           
+
         },
     },
 
@@ -123,7 +123,7 @@ export default {
         }
     },
 
-   
+
 
 }
 </script>
@@ -170,10 +170,10 @@ width: 100%;
 /* .v-slide-group__wrapper{
     border-width: 0 40px 0  0;
   border-style: solid;
-  border-image: 
+  border-image:
     linear-gradient(
-      to left, 
-       red, 
+      to left,
+       red,
       rgba(0, 0, 0, 0)
     ) 1 100%;
 } */
@@ -182,10 +182,10 @@ width: 100%;
    font-size: 24px !important;
 }
  /* border-style: solid;
-  border-image: 
+  border-image:
     linear-gradient(
-      to left, 
-      white, 
+      to left,
+      white,
       rgba(0, 0, 0, 0)
     ) 1 100%; */
 

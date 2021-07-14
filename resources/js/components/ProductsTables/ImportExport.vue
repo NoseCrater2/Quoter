@@ -5,22 +5,10 @@
         <v-card>
             <v-card-actions>
                 <v-row justify="center" align="center">
-                    <v-col cols="12" xl="4" lg="4" md="4" sm="12" xs="12">
-                        <v-btn color="#188038" rounded dark @click="exportModels()">
-                            EXPORTAR DATOS
-                            <v-icon right>mdi-table-arrow-right</v-icon>
-                        </v-btn>
-                    </v-col>
-                    <v-col cols="12" xl="4" lg="4" md="4" sm="12" xs="12">
+                    <v-col cols="12" xl="12" lg="12" md="12" sm="12" xs="12">
                         <input type="file" id="file" ref="btnUploadFile" style="display:none" @change="selectImage($event)" accept=".xlsx,.csv"/>
                         <v-btn rounded color="#47a5ad" dark @click="dialog1 = true">
                             IMPORTAR INFORMACIÓN GENERAL
-                        </v-btn>
-                    </v-col>
-                    <v-col cols="12" xl="4" lg="4" md="4" sm="12" xs="12">
-                        <v-btn color="#188038" rounded dark @click="dialog2 = true">
-                            IMPORTAR DATOS
-                            <v-icon right>mdi-table-arrow-left</v-icon>
                         </v-btn>
                     </v-col>
                 </v-row>
@@ -31,21 +19,55 @@
             :headers="modelsHeaders"
             :items="products"
             :search="search"
-            :items-per-page="5"
+            :items-per-page="15"
             class="elevation-1"
             >
              <!-- :src="`img/modelos/medium/${item.image}`" -->
                 <template v-slot:top>
-                    <v-spacer></v-spacer>
-                    <v-text-field
-                    class="mx-2"
-                    v-model="search"
-                    outlined
-                    dense
-                    prepend-inner-icon="mdi-magnify"
-                    :label="`BUSCAR ${product.name}`"
-                    hide-details
-                    ></v-text-field>
+                    <v-row justify="space-between">
+                        <v-col cols="11">
+                            <v-text-field
+                            class="mx-2"
+                            v-model="search"
+                            outlined
+                            dense
+                            prepend-inner-icon="mdi-magnify"
+                            :label="`BUSCAR ${product.name}`"
+                            hide-details
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="1">
+
+                            <v-menu transition="scroll-y-transition">
+
+                                <template v-slot:activator="{ on: menu, attrs }">
+                                  <v-tooltip top>
+                                    <template v-slot:activator="{ on: tooltip }">
+                                        <v-btn
+                                        outlined
+                                        icon
+                                        v-bind="attrs"
+                                        v-on="{ ...tooltip, ...menu }"
+                                        >
+                                          <v-icon>mdi-menu</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <span>IMPORTAR/EXPORTAR DATOS</span>
+                                  </v-tooltip>
+                                </template>
+
+                              <v-list>
+                                <v-list-item @click="exportModels()">
+                                    <v-list-item-title v-text="'EXPORTAR DATOS'"></v-list-item-title>
+                                </v-list-item>
+                                <v-list-item @click="dialog2 = true">
+                                    <v-list-item-title v-text="'IMPORTAR DATOS'"></v-list-item-title>
+                                </v-list-item>
+                              </v-list>
+                            </v-menu>
+
+                        </v-col>
+                    </v-row>
                 </template>
 
                 <template v-slot:item.subweave="{ item }">
@@ -69,99 +91,78 @@
         </v-card>
         </div>
 
-        <v-dialog v-model="dialog1" width="600" >
-            <v-row justify="center" align="center">
-                <v-card max-width="600" max-height="600">
+        <v-dialog persistent v-model="dialog1" :width="$vuetify.breakpoint.xl ? '1000' : $vuetify.breakpoint.lg ? '900' : '600'">
+                <v-card tile :width="$vuetify.breakpoint.xl ? '1000' : $vuetify.breakpoint.lg ? '900' : '600'" :height="$vuetify.breakpoint.xl ? '800' : $vuetify.breakpoint.lg ? '700' : '580'" class="d-flex flex-column justify-center align-center">
                     <v-card-title>
-                        IMPORTAR INFORMACIÓN DESDE ARCHIVO XSLX O CSV
+                        IMPORTAR INFORMACIÓN DESDE ARCHIVO .XSLX O .CSV
                     </v-card-title>
-                    <v-card-text>
+                    <v-card-text class="text-center">
                         Asegurate de que tu archivo cumpla con los requisitos para ser reconocido por el sistema.
-                        <ol>
-                            <li>EL nombre de los encabezados debe ser correcto.</li>
-                            <li>Evita escribir incorrectamente nombres de modelos, telas, persianas y fabricantes.</li>
-                            <li>Evita las celdas vacías donde debe ir algún dato.</li>
-                            <li>Evita poner letras donde solo van números y viceversa.</li>
-                        </ol>
+                            <div>1. El nombre de los encabezados debe ser correcto.</div>
+                            <div>2. Evita escribir incorrectamente nombres de modelos, telas, persianas y fabricantes.</div>
+                            <div>3. Evita las celdas vacías donde debe ir algún dato.</div>
+                            <div>4. Evita poner letras donde solo van números y viceversa.</div>
                     </v-card-text>
                     <v-card-actions>
-                        <v-spacer></v-spacer>
+                        <v-btn text color="#47a5ad" @click="dialog1 = false">CANCELAR</v-btn>
                         <v-btn dark color="#188038" @click="$refs.btnUploadFile.click()" >
                             SUBIR ARCHIVO
                         <v-icon right> mdi-microsoft-excel</v-icon>
                         </v-btn>
-                        <v-spacer></v-spacer>
                     </v-card-actions>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
+                    <v-card-actions class="mt-5">
                         <v-progress-circular
                         indeterminate
-                        v-if="showProgressBar"
+                        v-if="(showProgressBar && (errors != null || errors != ''))"
                         :rotate="360"
-                        :size="200"
+                        :size="$vuetify.breakpoint.lgAndUp ? 200 : 160"
                         :width="15"
                         color="#47a5ad"
                         >
                         {{ value }}%
                         </v-progress-circular>
-                        <v-spacer></v-spacer>
+
                     </v-card-actions>
-                    <v-card-text>
-                        {{ errors }}
+                    <v-card-text class="mt-7 text-center red--text font-weight-bold text-uppercase">
+                        {{ (errors != null || errors != '') ? errors : ''}}
                     </v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn text color="#47a5ad" @click="dialog1 = false">CANCELAR</v-btn>
-                    </v-card-actions>
                 </v-card>
-            </v-row>
         </v-dialog>
 
-        <v-dialog v-model="dialog2" width="600" >
-            <v-row justify="center" align="center">
-                <v-card max-width="600" max-height="600">
+         <v-dialog persistent v-model="dialog2" :width="$vuetify.breakpoint.xl ? '1000' : $vuetify.breakpoint.lg ? '900' : '600'">
+                <v-card tile :width="$vuetify.breakpoint.xl ? '1000' : $vuetify.breakpoint.lg ? '900' : '600'" :height="$vuetify.breakpoint.xl ? '800' : $vuetify.breakpoint.lg ? '700' : '580'" class="d-flex flex-column justify-center align-center">
                     <v-card-title>
-                        ACTUAIZACIÓN MASIVA DE PRECIOS
+                        ACTUALIZACIÓN MASIVA DE PRECIOS
                     </v-card-title>
-                    <v-card-text>
+                    <v-card-text class="text-center">
                         Asegurate de que tu archivo cumpla con los requisitos para ser reconocido por el sistema.
-                        <ol>
-                            <li>Solo modificar precios.</li>
-                            <li>Escribir solo valores numéricos absolutos.</li>
-                        </ol>
+                            <div>Solo modificar precios.</div>
+                            <div>Escribir solo valores numéricos absolutos.</div>
                     </v-card-text>
                     <v-card-actions>
-                        <v-spacer></v-spacer>
                         <input type="file" id="file" ref="btnUploadFile2" style="display:none" @change="importModels($event)" accept=".xlsx,.csv"/>
+                        <v-btn text color="#47a5ad" @click="dialog2 = false">CANCELAR</v-btn>
                         <v-btn dark color="#188038" @click="$refs.btnUploadFile2.click()" >
                             SUBIR ARCHIVO
                             <v-icon right> mdi-microsoft-excel</v-icon>
                         </v-btn>
-                        <v-spacer></v-spacer>
                     </v-card-actions>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
+                    <v-card-actions class="mt-5">
                         <v-progress-circular
-                        v-if="showProgressBar2"
+                        v-if="(showProgressBar2 && (errors2 != null || errors2 != ''))"
                         :rotate="360"
-                        :size="200"
+                        :size="$vuetify.breakpoint.lgAndUp ? 200 : 160"
                         :width="15"
                         :value="value2"
                         color="#47a5ad"
                         >
                         {{ value2 }}%
                         </v-progress-circular>
-                        <v-spacer></v-spacer>
                     </v-card-actions>
-                    <v-card-text>
-                        {{ errors2 }}
+                    <v-card-text class="mt-7 text-center red--text font-weight-bold text-uppercase">
+                        {{ (errors2 != null || errors2 != '') ? errors2 : ''}}
                     </v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn text color="#47a5ad" @click="dialog2 = false">CANCELAR</v-btn>
-                    </v-card-actions>
                 </v-card>
-            </v-row>
         </v-dialog>
     </div>
 </template>
@@ -172,6 +173,7 @@ const FileDownload = require('js-file-download');
 export default {
     data(){
         return{
+            fab: false,
             dialog1: false,
             dialog2: false,
             value: 0,
