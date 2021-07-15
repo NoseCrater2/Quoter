@@ -61,12 +61,20 @@
                             <v-card-subtitle class="overline" style="line-height: normal">
                               <div class="d-inline" style="font-weight: bolder; color:black">TIPO:</div>
                               {{$store.getters.getVariant(o.variant).type.slug}} <br>
-                              <div class="d-inline" style="font-weight: bolder; color:black">CODIGO:</div>
-                              {{o.color.code}} <br>
+                              <div
+                              v-if="o.color"  
+                              class="d-inline" style="font-weight: bolder; color:black">CODIGO:
+                                {{o.color.code}} <br>
+                              </div>
+                              
                               <div class="d-inline" style="font-weight: bolder; color:black">LINEA:</div>
                               {{$store.getters.getVariant(o.variant).line.slug}} <br>
-                              <div class="d-inline" style="font-weight: bolder; color:black">COLOR:</div>
-                              {{o.color.color}}
+                              <div
+                               v-if="o.color" 
+                              class="d-inline" style="font-weight: bolder; color:black">COLOR:
+                                 {{o.color.color}}
+                              </div>
+                             
 
                             </v-card-subtitle>
                           </div>
@@ -75,7 +83,16 @@
                             size="80"
                             tile
                           >
-                            <v-img :src="`/img/modelos/medium/${o.type}/${o.manufacturer}/${o.color.code}.jpg`" >
+                          <v-img
+                          v-if="o.color === null"
+                          :src="`/img/modelos/medium/${o.type}/${o.manufacturer}/${$store.getters.getVariant(o.variant).image}.jpg`" >
+                            <template v-slot:placeholder>
+                              <v-img  src="/img/modelos/medium/unavailable.jpg"></v-img>
+                            </template>
+                          </v-img>
+                            <v-img
+                            v-else
+                            :src="`/img/modelos/medium/${o.type}/${o.manufacturer}/${o.color.code}.jpg`" >
                               <template v-slot:placeholder>
                                 <v-img  src="/img/modelos/medium/unavailable.jpg"></v-img>
                               </template>
@@ -96,11 +113,11 @@
                           <div >
                             <v-card-subtitle class="overline" style="line-height: normal">
                               <div class="d-inline" style="font-weight: bolder; color:black">TIPO:</div>
-                              {{$store.getters.getVariant(o.variant).type}} <br>
+                              {{$store.getters.getVariant(o.variant).type.slug}} <br>
                               <div class="d-inline" style="font-weight: bolder; color:black">CODIGO:</div>
                               {{o.second_color.code}} <br>
                               <div class="d-inline" style="font-weight: bolder; color:black">LINEA:</div>
-                              {{$store.getters.getVariant(o.variant2).line}} <br>
+                              {{$store.getters.getVariant(o.variant2).lines.slug}} <br>
                               <div class="d-inline" style="font-weight: bolder; color:black">COLOR:</div>
                              {{o.second_color.color}}
 

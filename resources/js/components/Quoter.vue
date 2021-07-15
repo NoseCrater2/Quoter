@@ -69,7 +69,7 @@
 
               <v-autocomplete
                 :rules="[(v) => !!v || 'Requerido']"
-                @change="chargeTypeModels()"
+                @change="chargeTypeModels(order.type)"
                 hide-details
                 dense
                 :items="getProduct ? getProduct.types : []"
@@ -97,7 +97,7 @@
                 background-color="white"
                 class="ma-1"
               ></v-autocomplete>
-              <div v-if="order.type != 'celular' && order.type != 'horizontal-madera-2' ">
+              <div v-if="order.type != 'celular' && order.type != 'horizontal-madera-2' && order.type != 'horizontal-aluminio-2' ">
               <v-autocomplete
                 v-if="getType && getType.weaves.length > 0"
                 :rules="[(v) => !!v || 'Requerido']"
@@ -115,7 +115,7 @@
                 class="ma-1"
 
               ></v-autocomplete>
-              <div v-if="order.line == 'tela-vertical'">
+              <div v-if="order.line == 'pvc-vertical'">
                 <v-radio-group
               row
               :mandatory="false"
@@ -144,6 +144,7 @@
                 label="Modelo"
               ></v-autocomplete>
               <v-autocomplete
+                v-if="order.type != 'horizontal-aluminio-1' && order.type != 'horizontal-aluminio-2'"
                 class="ma-1"
                 hide-details
                 :rules="[(v) => !!v || 'Requerido']"
@@ -251,7 +252,7 @@
                Añadir más lienzos
                </v-btn>
               </div>
-              <div v-if="order.type == 'sheer' || order.type == 'triple-shade-shangri-la' || order.type == 'romantic'">
+              <div v-if="order.type == 'sheer' || order.type == 'triple-shade-sangri-la' || order.type == 'romantic'">
                 <span style="font-size: 1em">
                   4.Elige el tipo de instalación
                 </span>
@@ -296,12 +297,9 @@
                         md="4"
                         sm="12"
                         v-for="celular in celulares"
-                        :key="celular.title"
-                      >
+                        :key="celular.title">
                         <v-item  v-slot="{ active, toggle }" :value="celular.title">
-
                             <v-card
-
                               width="120"
                               flat
                               height="120"
@@ -342,36 +340,36 @@
                 </v-radio-group>
               </div>
 
-              <div v-else-if="order.type == 'horizontal-madera-2'">
+              <div v-else-if="order.type === 'horizontal-madera-2' || order.type === 'horizontal-aluminio-2'">
+                 <!-- && order.type === 'horizontal-aluminio-2' -->
                 <v-alert dense outlined color="orange" v-if="order.motor_type == 'Motorizado'">
                   Para persiana motorizada el accionamiento solo es posible con escalerilla.
-                  </v-alert>
-                 <span>2. Seleccione modo de accionamiento</span>
-                 <v-radio-group
-                 @change="chargeWoodPrices"
+                </v-alert>
+                <span>2. Seleccione modo de accionamiento</span>
+                <v-radio-group
+                @change="chargeWoodPrices"
                 row
                 :mandatory="false"
-                v-model="order.motor_type"
-              >
-                <v-radio  label="Manual"  color="#47a5ad" value="Manual"></v-radio>
-                <v-radio
-                label="Motorizado"
-                color="#47a5ad"
-                value="Motorizado">
-                </v-radio>
-              </v-radio-group>
+                v-model="order.motor_type">
+                  <v-radio  label="Manual"  color="#47a5ad" value="Manual"></v-radio>
+                  <v-radio
+                  label="Motorizado"
+                  color="#47a5ad"
+                  value="Motorizado">
+                  </v-radio>
+                </v-radio-group>
 
-                  <span style="font-size: 1em" >
-                  3. Selecciona accionamiento
-                  </span>
-                  <v-radio-group
-                  :rules="[(v) => !!v || 'Requerido']"
-                  row
-                  :mandatory="false"
-                  v-model="order.motor.drive">
-                    <v-radio label="Escalerilla"  color="#47a5ad" value="escalerilla"></v-radio>
-                    <v-radio v-if="order.motor_type != 'Motorizado'" label="Cinta"  color="#47a5ad" value="cinta"></v-radio>
-                  </v-radio-group>
+                <span style="font-size: 1em" >
+                3. Selecciona accionamiento
+                </span>
+                <v-radio-group
+                :rules="[(v) => !!v || 'Requerido']"
+                row
+                :mandatory="false"
+                v-model="order.motor.drive">
+                  <v-radio label="Escalerilla"  color="#47a5ad" value="escalerilla"></v-radio>
+                  <v-radio v-if="order.motor_type != 'Motorizado'" label="Cinta"  color="#47a5ad" value="cinta"></v-radio>
+                </v-radio-group>
 
                   <span >4. Seleccione el lado del mando o motor</span>
                   <v-radio-group
@@ -422,13 +420,11 @@
                   6.Marco
                 </span>
                 <v-radio-group
-
-                :rules="[(v) => !!v || 'Requerido']"
+                style="max-width: 244px;"
+                @click:append="order.motor.frame = null"
+                :append-icon="order.motor.frame?'mdi-close-circle':undefined"
                 row
-                :mandatory="false"
-                v-model="order.motor.frame"
-
-                >
+                v-model="order.motor.frame">
                   <v-radio label="Fuera"  color="#47a5ad" value="fuera"></v-radio>
                   <v-radio label="Adentro"  color="#47a5ad" value="adentro"></v-radio>
                 </v-radio-group>
@@ -451,22 +447,22 @@
               ></v-autocomplete>
                <span style="font-size: 1em"> 7.Seleccione características</span>
               <v-autocomplete
-                class="ma-1"
-                hide-details
-                :rules="[(v) => !!v || 'Requerido']"
-                :loading="loadingModels"
-                dense
-                v-model="order.variant"
-                :items="variants"
-                item-text="name"
-                item-value="id"
-                @change="chargeColors()"
-                outlined
-                color="#47a5ad"
-                background-color="white"
-                label="Modelo"
+              class="ma-1"
+              hide-details
+              :rules="[(v) => !!v || 'Requerido']"
+              :loading="loadingModels"
+              dense
+              v-model="order.variant"
+              :items="variants"
+              item-text="name"
+              item-value="id"
+              @change="chargeColors()"
+              outlined
+              color="#47a5ad"
+              background-color="white"
+              label="Modelo"
               ></v-autocomplete>
-              <v-autocomplete
+              <!-- <v-autocomplete
                 class="ma-1"
                 hide-details
                 :rules="[(v) => !!v || 'Requerido']"
@@ -482,19 +478,25 @@
                 color="#47a5ad"
                 background-color="white"
                 label="Color"
-              ></v-autocomplete>
+              ></v-autocomplete> -->
               </div>
             </v-col>
 
             <v-col class="pa-1" cols="6">
               <div v-if="order.type == null || order.type != 'celular'">
                <v-hover  v-slot="{ hover }">
-
                 <v-img
-                 v-if="order.color"
-                  max-height="328"
-                  max-width="328"
-                  :src=" `/img/modelos/medium/${order.type}/${order.manufacturer}/${order.color.code}.jpg`"
+                max-height="328"
+                max-width="328"
+                v-if="(order.type === 'horizontal-aluminio-1' || order.type === 'horizontal-aluminio-2' || order.type === 'horizontal-madera-2') && order.variant != null"
+                :src=" `/img/modelos/medium/${order.type}/${order.manufacturer}/${$store.getters.getVariant(order.variant).image}.jpg`"
+                >
+                </v-img> 
+                <v-img
+                v-else-if="order.color"
+                max-height="328"
+                max-width="328"
+                :src=" `/img/modelos/medium/${order.type}/${order.manufacturer}/${order.color.code}.jpg`"
                 >
                   <template v-slot:placeholder>
                     <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
@@ -559,7 +561,8 @@
              <span style="font-size: 1em">
                   3.Seleccione las medidas (El mínimo a cobrar es 1.0 x
                   1.0)</span>
-                <v-text-field                  dense
+                <v-text-field
+                  dense
                   type="number"
                   label="Ancho"
                   class="ma-1"
@@ -652,7 +655,7 @@
               tile
               class="mb-1"
               v-if="orders.length > 0"
-              >TERMINAR PEDIDO
+              >Nuevo pedido
               </v-btn>
 
             </v-col>
@@ -900,13 +903,14 @@
                 label="Color"
               ></v-autocomplete>
                 <span style="font-size: 1em">
-                  7 .Marco
+                  7. Marco
                 </span>
                 <v-radio-group
+                style="max-width: 244px;"
+                @click:append="order.motor.frame = null"
+                :append-icon="order.motor.frame?'mdi-close-circle':undefined"
                 :disabled="disabledFrameRadio"
-                :rules="[(v) => !!v || 'Requerido']"
                 row
-                :mandatory="false"
                 v-model="order.motor.frame"
                 @change="disabledCommentText = false"
                 >
@@ -1069,11 +1073,12 @@
                   7 .Marco
                 </span>
                 <v-radio-group
+                style="max-width: 244px;"
+                @click:append="order.motor.frame = null"
+                :append-icon="order.motor.frame?'mdi-close-circle':undefined"
                 @change="disabledCommentText = false"
                 :disabled="disabledFrameRadio"
-                :rules="[(v) => !!v || 'Requerido']"
                 row
-                :mandatory="false"
                 v-model="order.motor.frame"
                 >
                   <v-radio label="Fuera"  color="#47a5ad" value="fuera"></v-radio>
@@ -1081,8 +1086,40 @@
                 </v-radio-group>
               </v-col>
             </v-row>
-            <v-row class="mx-3">
-              <v-col class="pa-0" cols="12">
+            <v-row class="mx-3" no-gutters>
+              <v-col cols="12" v-if="order.celular_drive === 'Motor'">
+                <span>
+                    8. Seleccione motor
+                  </span>
+                  <v-select
+                    outlined
+                    color="#47a5ad"
+                    clearable
+                    clear-icon="mdi-close-circle"
+                    label="Motor"
+                    :items="celularMotors"
+                    item-text="system"
+                    item-value="id"
+                    v-model="order.motor.motor"
+                    placeholder="Sin Control"
+                  ></v-select>
+                  <span>
+                    9. Seleccione características de control (opcional)
+                  </span>
+                  <v-select
+                    outlined
+                    color="#47a5ad"
+                    clearable
+                    clear-icon="mdi-close-circle"
+                    label="Canal(es) de Control Remoto"
+                    :items="controls"
+                    item-text="description"
+                    return-object
+                    v-model="order.motor.control"
+                    placeholder="Sin Control"
+                  ></v-select>
+              </v-col>
+              <v-col  cols="12">
                 <v-textarea
                 :disabled="disabledCommentText"
                 v-model="order.motor.comment"
@@ -1698,14 +1735,14 @@ export default {
         this.flexibaletExtraDialog = true
       }else{
         this.dialogMotorization = true;
-        this.$store.dispatch("getControls");
+       
       }
 
     },
 
     openMotorizationDialogConfirm(){
        this.dialogMotorization = true;
-      this.$store.dispatch("getControls");
+      // this.$store.dispatch("getControls");
       this.flexibaletExtraDialog = false
 
     },
@@ -1714,6 +1751,16 @@ export default {
       this.dialogMotorization = false;
     },
 
+    motorCelularPrice(){
+      let price = 0
+      if(this.order.motor.motor){
+        price += parseFloat(this.$store.getters.getMotor(this.order.motor.motor).price)
+      }
+      if(this.order.motor.control){
+        price += parseFloat(this.order.motor.control.price)
+      }
+      return price
+    },
     addBlind() {
       if(this.order.celular_drive != null && !this.$refs.celularForm.validate()){
           this.celularDialog = true
@@ -1721,6 +1768,11 @@ export default {
         if (this.$refs.form.validate()) {
           if(this.order.type == 'horizontal-madera-2'){
             this.order.price = this.findWoodPrice
+          }else if(this.order.type == 'celular'){
+           
+            this.order.price = this.unitaryPrice 
+            this.order.motor.price = this.motorCelularPrice()
+
           }else{
              this.order.price = this.unitaryPrice;
           }
@@ -1850,13 +1902,10 @@ export default {
           (!isNaN(n) && n >= 0.60 && n <= 3) ||
           "Requerido"
         );
-
-
     },
 
     heightCelularRules(type){
       let n = parseFloat(this.order.canvas[0].height);
-
         return (
           (!isNaN(n) && n >= 1 && n <= 3) ||
           "Requerido"
@@ -1870,18 +1919,20 @@ export default {
 
     },
 
-    chargeTypeModels() {
-      this.order.line = null
-      this.order.celular_type = null
-      this.order.celular_drive = null
-      this.disabledDriveRadio = true
-      this.disabledCelularText = true
-      this.disabledSelectModel = false;
-      this.chargeModels()
+    chargeTypeModels(type) {
+      // this.order.line = null
+      // this.order.celular_type = null
+      // this.order.celular_drive = null
+      // this.disabledDriveRadio = true
+      // this.disabledCelularText = true
+      // this.disabledSelectModel = false;
+      // this.chargeModels()
+      this.order = Object.assign({}, this.defaultOrder);
+      this.order.type = type
       if(this.order.type == 'flexibalet'){
         this.widthMargins = '1.00 a 22'
       }
-      this.order.canvas = [{width: null, height: null}]
+      // this.order.canvas = [{width: null, height: null}]
     },
 
     chargeColors() {
@@ -1911,6 +1962,7 @@ export default {
 
   mounted() {
     this.$store.dispatch("getMotorizations");
+    this.$store.dispatch("getControls");
 
     if (this.order.variant) {
       this.chargeColors();
@@ -1921,6 +1973,12 @@ export default {
 
 
   computed: {
+
+    celularMotors (){
+      if(this.order.canvas[0].width){
+        return this.motorizations.filter(m => m.type === "PERSIANAS CELULARES" && parseFloat(m.width) >= this.order.canvas[0].width)
+      }
+    },
 
     findWoodPrice(){
       let result = 'Medida no válida'
@@ -2069,6 +2127,8 @@ export default {
       colors2: (state) => state.modelsModule.relatedColors2,
       orders: (state) => state.ordersModule.orders,
       distributors: (state) => state.userModule.distributors,
+      controls: (state) => state.motorizationModule.controls,
+      motorizations: (state) => state.motorizationModule.motorizations,
       user: (state) => state.user,
     }),
 
@@ -2188,8 +2248,8 @@ export default {
 .v-text-field--outlined.v-input--dense.v-text-field--single-line
   > .v-input__control
   > .v-input__slot {
-  min-height: 30px !important;
-  height: 30px !important;
+  min-height: 35px !important;
+  height: 35px !important;
 }
 .row {
   box-sizing: border-box;
