@@ -51,12 +51,14 @@
                 >
                   <span>6. Selecciona el número de vías</span>
                   <v-select
-                    color="#47a5ad"
-                    v-model="motor.panels"
-                    dense
-                    outlined
-                    label="Número de paneles"
-                    :items="paneles"
+                  clearable
+                  clear-icon="mdi-close-circle"
+                  color="#47a5ad"
+                  v-model="motor.panels"
+                  dense
+                  outlined
+                  label="Número de paneles"
+                  :items="paneles"
                   ></v-select>
                   <v-item-group v-model="motor.selected_panel">
                     <span>SELECCIONA AGRUPAMIENTO</span>
@@ -108,7 +110,7 @@
                  
                 >
                 
-                  <span>SELECCIONA AGRUPAMIENTO</span>
+                  <span>6. SELECCIONA AGRUPAMIENTO</span>
                   <v-row>
                     <v-col cols="3" v-for="f in flexballets" :key="f.title">
                       <v-item v-slot="{ active, toggle }" :value="f.title">
@@ -138,10 +140,12 @@
                   </v-row>
                 </v-item-group>
                   <span style="font-size: 1em">
-                  7 .Elige el tipo de instalación
+                  7. Elige el tipo de instalación
                 </span>
                 <v-radio-group
-                :rules="[(v) => !!v || 'Requerido']"
+                style="max-width: 244px;"
+                @click:append="motor.instalation_side = null"
+                :append-icon="motor.instalation_side?'mdi-close-circle':undefined"
                 row
                 :mandatory="false"
                 v-model="motor.instalation_side"
@@ -153,25 +157,31 @@
                   8 .Marco
                 </span>
                 <v-radio-group
+                style="max-width: 244px;"
+                @click:append="motor.frame = null"
+                :append-icon="motor.frame?'mdi-close-circle':undefined"
                 @change="addGallery()"
-                :rules="[(v) => !!v || 'Requerido']"
                 row
-                :mandatory="false"
                 v-model="motor.frame"
                 >
                   <v-radio label="Fuera"  color="#47a5ad" value="fuera"></v-radio>
                   <v-radio label="Adentro"  color="#47a5ad" value="adentro"></v-radio>
                 </v-radio-group>
-                <span style="font-size: 1em">
+                <div v-if="typeName != 'VERTICAL'">
+                  <span style="font-size: 1em">
                   9 .Riel
-                </span>
-                <v-select
-                v-model="motor.rail_color"
-                dense
-                outlined
-                :items="['BLANCO', 'IVORY']"
-                label="Color"
-                ></v-select>
+                  </span>
+                  <v-select
+                  clearable
+                  clear-icon="mdi-close-circle"
+                  v-model="motor.rail_color"
+                  dense
+                  outlined
+                  :items="['BLANCO', 'IVORY']"
+                  label="Color"
+                  ></v-select>
+                </div>
+                
                 </v-col>
 
                 <v-col
@@ -194,10 +204,11 @@
                   8 .Marco
                 </span>
                 <v-radio-group
+                style="max-width: 244px;"
+                @click:append="motor.frame = null"
+                :append-icon="motor.frame?'mdi-close-circle':undefined"
                 @change="addGallery()"
-                :rules="[(v) => !!v || 'Requerido']"
                 row
-                :mandatory="false"
                 v-model="motor.frame"
                 >
                   <v-radio label="Fuera"  color="#47a5ad" value="fuera"></v-radio>
@@ -216,10 +227,11 @@
                   8 .Marco
                 </span>
                 <v-radio-group
+                style="max-width: 244px;"
+                @click:append="motor.frame = null"
+                :append-icon="motor.frame?'mdi-close-circle':undefined"
                 @change="addGallery()"
-                :rules="[(v) => !!v || 'Requerido']"
                 row
-                :mandatory="false"
                 v-model="motor.frame"
                 >
                   <v-radio label="Fuera"  color="#47a5ad" value="fuera"></v-radio>
@@ -242,41 +254,42 @@
                  
                 >
                   <v-radio-group
-                    row
-                    :mandatory="false"
-                    :rules="[(v) => !!v || 'Requerido']"
-                    v-model="motor.type"
-                  >
+                  style="max-width: 343px;"
+                  row
+                  :append-icon="motor.type ? 'mdi-close-circle' : undefined"
+                  @click:append="motor.type = null"
+                  v-model="motor.type">
                     <v-radio
                     v-if="typeName != 'PANEL JAPONES'"
-                      color="#47a5ad"
-                      label="Recargable (batería)"
-                      value="RECARGABLE"
+                    color="#47a5ad"
+                    label="Recargable (batería)"
+                    value="RECARGABLE"
                     ></v-radio>
                     <v-radio
-                      color="#47a5ad"
-                      label="Eléctrico"
-                      value="ELECTRICO"
+                    color="#47a5ad"
+                    label="Eléctrico"
+                    value="ELECTRICO"
                     ></v-radio>
                   </v-radio-group>
                 </v-col>
                 <v-col cols="6" class="my-0 py-0" >
                   <v-select
-                    :rules="[(v) => !!v || 'Requerido']"
-                    outlined
-                    dense
-                    color="#47a5ad"
-                    label="Fabricante"
-                    :items="motorizations"
-                    item-text="manufacturer"
-                    item-value="manufacturer"
-                    v-model="motor.manufacturer"
+                  clearable
+                  clear-icon="mdi-close-circle"
+                  outlined
+                  dense
+                  color="#47a5ad"
+                  label="Fabricante"
+                  :items="motorizations"
+                  item-text="manufacturer"
+                  item-value="manufacturer"
+                  v-model="motor.manufacturer"
                   ></v-select>
                 </v-col>
                 <v-col cols="12" class="my-0 py-0" >
-                  <span
-                    >7. Seleccione características de control (opcional)</span
-                  >
+                  <span>
+                    7. Seleccione características de control (opcional)
+                  </span>
                   <v-select
                     outlined
                     color="#47a5ad"
@@ -369,10 +382,12 @@
                      
                     </div>
                   <v-radio-group
+                    :append-icon="motor.manufacturer?'mdi-close-circle':undefined"
+                    @click:append="motor.manufacturer = null"
                     row
                     :mandatory="false"
                     v-model="motor.manufacturer"
-                    :rules="[(v) => !!v || 'Requerido']"
+                    style="max-width: 241px;"
                   >
                     <v-radio
                       color="#47a5ad"
@@ -382,7 +397,7 @@
                     <v-radio color="#47a5ad" label="VTX" value="vtx"></v-radio>
                   </v-radio-group>
                 </v-col>
-                <v-col cols="6" class="my-0" >
+                <v-col cols="12" md="6" sm="12"  class="my-0" >
                   <span>8. Seleccione color de control</span>
                   <v-select
                     color="#47a5ad"
@@ -391,21 +406,24 @@
                     outlined
                     dense
                     label="Color"
+                    clearable
+                    clear-icon="mdi-close-circle"
                   ></v-select>
                 </v-col>
-                <v-col cols="6" class="my-0" >
+                <v-col cols="12" md="6" sm="12"  class="my-0" >
                   <span>9. Seleccione tipo de Cadena
                       <v-chip v-if="addStringPrice > 0" label outlined color="orange" class="ma-2 font-weight-black">
                         Se agregará un cargo extra de ${{addStringPrice}}
                       </v-chip>
                   </span>
                   <v-radio-group
-                    class="my-1 py-1"
-                    v-model="motor.string_type"
-                    row
-                    :mandatory="false"
-                    :rules="[(v) => !!v || 'Requerido']"
-                  >
+                  style="max-width: 258px;"
+                  @click:append="motor.string_type = null"
+                  :append-icon="motor.string_type?'mdi-close-circle':undefined"
+                  class="my-1 py-1"
+                  v-model="motor.string_type"
+                  row
+                  :mandatory="false">
                     <v-radio
                       color="#47a5ad"
                       label="PLÁSTICO"
@@ -433,6 +451,8 @@
                     <!-- </div> -->
                   </span>
                   <v-select
+                  clearable
+                  clear-icon="mdi-close-circle"
                     dense
                     v-model="motor.gallery"
                     :items="filteredGalleries"
@@ -443,9 +463,11 @@
                     label="Galería/Fascia"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" class="my-0" v-if="motor.gallery && (typeName != 'SHEER' && typeName != 'VERTICAL' && typeName != 'HORIZONTAL DE MADERA 2')" >
+                <v-col cols="12" class="my-0" v-if="motor.gallery && (typeName != 'ROMANA' && typeName != 'PANEL JAPONES' && typeName != 'SHEER' && typeName != 'VERTICAL' && typeName != 'HORIZONTAL DE MADERA 2')" >
                   <span>11. Seleccione color (opcional)</span>
                   <v-select
+                  clearable
+                  clear-icon="mdi-close-circle"
                     dense
                     v-model="motor.gallery_color"
                     color="#47a5ad"
@@ -542,10 +564,10 @@ export default {
             {title: "Extemos Inverso",img: "/img/cotizador/verticales/extremos-inverso.png",},
           ],
           flexballets: [
-            { title: "Izquierda", img: "/img/cotizador/flexballet/izquierda.png" },
-            { title: "Derecha", img: "/img/cotizador/flexballet/derecha.png" },
+            { title: "Inverso", img: "/img/cotizador/flexballet/izquierda.png" },
+            { title: "Normal", img: "/img/cotizador/flexballet/derecha.png" },
             { title: "Central", img: "/img/cotizador/flexballet/central.png" },
-            {title: "Exterior",img: "/img/cotizador/flexballet/exterior.png",},
+            {title: "Extremos",img: "/img/cotizador/flexballet/exterior.png",},
           ],
           paneles: [2, 3, 4, 5, 6, 8, 9],
           panelesj: [
@@ -609,7 +631,7 @@ export default {
     },
     
     updated(){
-      if(this.typeName == 'FLEXIBALET'){
+      if(this.typeName === 'FLEXIBALET' && this.action === 'Motorizado' ){
           this.motor.flexiballetPrice = 25500
       }
       // else if(this.typeName == 'SHEER'){
@@ -679,7 +701,7 @@ export default {
 
         addStringPrice(){
           let stringPrice = 0
-          if(this.motor.string_type == 'metal' && this.typeName == 'ENROLLABLE'){
+          if(this.motor.string_type == 'metal' && (this.typeName == 'ENROLLABLE' || this.typeName === 'ROMANA')){
              this.canvases.forEach(canvas => {
                if(canvas.height >= 2){
                  stringPrice += 100
@@ -692,7 +714,7 @@ export default {
         },
 
         addManufacturerPrice(){
-          if(this.motor.manufacturer == 'vtx' && this.typeName == 'ENROLLABLE'){
+          if(this.motor.manufacturer == 'vtx' && (this.typeName === 'ENROLLABLE' || this.typeName === 'ROMANA')){
              return 250;
           }else{
             return 0;

@@ -122,6 +122,11 @@
                                                 else{
                                                     $concat .= $order['color']['color'].' //';
                                                 }
+
+                                                if($order['cloth_holder']){
+                                                    $concat .= 'CON PORTATELA //';
+                                                }
+                                                
                                             ?>
                                             <span>{{$concat}}</span>
                                             @foreach ($order['canvas'] as $key => $canva)
@@ -135,14 +140,23 @@
                                                 ?>
                                             @endforeach
                                             <span><strong>{{$concat2}}</strong></span>
-
+                                            <br>
                                             <?php
                                                 $concat3 = '';
+                                                if($order['celular_type'] != null){
+                                                    $concat3 .= $order['celular_type'].' // '.$order['celular_drive'].' // ';
+                                                }
+                                                if($order['motor']['selected_panel'] != null){
+                                                    $concat3 .= $order['motor']['selected_panel'].' // PANELES: '.$order['motor']['panels'].' // ';
+                                                }
                                                 if($order['motor_type'] != null){
                                                     $concat3 .= $order['motor_type'].' // '.$order['motor']['side_control'].' // '.$order['motor']['manufacturer'].' // ';
                                                     if($order['motor']['instalation_side'] != null){
-                                                        $concat3 .= $order['motor']['rail_color'].' // ';
+                                                        $concat3 .= $order['motor']['instalation_side'].' // '.$order['motor']['rail_color'].' // ';
                                                     }
+                                                }
+                                                if($order['motor']['frame'] != null){
+                                                    $concat3 .= $order['motor']['frame'].' // ';
                                                 }
 
                                                 if($order['instalation_side'] != null){
@@ -162,6 +176,9 @@
                                                         $concat3 .= ' // ';
                                                     }
                                                     $concat3 .= $order['motor']['string_type'].' // ';
+                                                }
+                                                if($order['motor']['height_control'] != null || $order['motor']['height_control'] > 0){
+                                                    $concat3 .= $order['motor']['height_control'].' MTS// ';
                                                 }
 
                                                 if($order['motor']['gallery'] != null){
@@ -297,6 +314,9 @@
                                                 else{
                                                     $concat .= $order['color']['color'].' //';
                                                 }
+                                                if($order['cloth_holder']){
+                                                    $concat .= 'CON PORTATELA //';
+                                                }
                                             ?>
                                             <span>{{$concat}}</span>
                                             @foreach ($order['canvas'] as $key => $canva)
@@ -310,14 +330,23 @@
                                                 ?>
                                             @endforeach
                                             <span><strong>{{$concat2}}</strong></span>
-
+                                            <br>
                                             <?php
                                                 $concat3 = '';
+                                                if($order['celular_type'] != null){
+                                                    $concat3 .= $order['celular_type'].'// '.$order['celular_drive'].' // ';
+                                                }
+                                                if($order['motor']['selected_panel'] != null){
+                                                    $concat3 .= $order['motor']['selected_panel'].' // PANELES: '.$order['motor']['panels'].' // ';
+                                                }
                                                 if($order['motor_type'] != null){
                                                     $concat3 .= $order['motor_type'].' // '.$order['motor']['side_control'].' // '.$order['motor']['manufacturer'].' // ';
                                                     if($order['motor']['instalation_side'] != null){
-                                                        $concat3 .= $order['motor']['rail_color'].' // ';
+                                                        $concat3 .= $order['motor']['instalation_side'].' // '.$order['motor']['rail_color'].' // ';
                                                     }
+                                                }
+                                                if($order['motor']['frame'] != null){
+                                                    $concat3 .= $order['motor']['frame'].' // ';
                                                 }
 
                                                 if($order['instalation_side'] != null){
@@ -338,7 +367,9 @@
                                                     }
                                                     $concat3 .= $order['motor']['string_type'].' // ';
                                                 }
-
+                                                if($order['motor']['height_control'] != null || $order['motor']['height_control'] > 0){
+                                                    $concat3 .= $order['motor']['height_control'].' MTS// ';
+                                                }
                                                 if($order['motor']['gallery'] != null){
                                                     if($order['motor']['gallery_color'] != null){
                                                         $concat3 .= $order['motor']['gallery_color'].' // ';
