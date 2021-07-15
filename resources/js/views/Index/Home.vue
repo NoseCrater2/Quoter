@@ -156,67 +156,115 @@
 
           <v-divider v-if="$vuetify.breakpoint.mdAndUp" inset vertical></v-divider>
 
-          <v-menu
-           v-if="$vuetify.breakpoint.mdAndUp"
-            bottom
-            offset-y
-            transition="slide-y-transition">
-           <template v-slot:activator="{ on, attrs }">
-              <v-btn icon class="ma-1" rounded depressed dark v-bind="attrs" v-on="on">
-                <v-avatar color="#3ba2a9">
-                  <v-icon dark>mdi-account-circle</v-icon>
-                </v-avatar>
-              </v-btn>
-           </template>
+            <v-menu
+                v-if="$vuetify.breakpoint.mdAndUp"
+                bottom
+                offset-y
+                transition="slide-y-transition"
+            >
+                <template v-slot:activator="{ on, attrs }">
+                   <v-btn icon class="ma-1" rounded depressed dark v-bind="attrs" v-on="on">
+                     <v-avatar color="#3ba2a9">
+                       <v-icon dark>mdi-account-circle</v-icon>
+                     </v-avatar>
+                   </v-btn>
+                </template>
 
-           <v-list v-if="loggedIn " >
-            <v-list-item >
 
-            <v-list-item >
-            <v-list-item-content>
-              <v-list-item-title class="title">{{user.name}}</v-list-item-title>
-              <v-list-item-subtitle>{{user.email}}</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-            <v-divider></v-divider>
-            </v-list-item>
-          </v-list>
+                <v-card min-width="340">
+                    <v-list-item-content class="justify-center">
+                        <div class="mx-auto text-center">
+                            <div class="px-3">
+                                <h3>{{user.name}}</h3>
+                                <p class="text-caption mt-1">
+                                    {{user.email}}
+                                </p>
 
-          <v-list nav dense>
-            <v-list-item-group color="#3ba2a9">
-              <v-list-item v-if="loggedIn" :to="{name: 'Profile'}">
-                <v-list-item-icon>
-                  <v-icon >mdi-account</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>Perfil</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
+                            </div>
+                            <v-divider v-if="loggedIn" class="my-3"></v-divider>
+                            <v-btn
+                              depressed
+                              rounded
+                              text
+                              color="#3ba2a9"
+                              v-if="loggedIn"
+                              :to="{name: 'Profile'}"
+                            >
+                                <v-icon left>mdi-account</v-icon>
+                                Perfil
+                            </v-btn>
+                            <v-divider class="my-3"></v-divider>
+                            <v-btn
+                              depressed
+                              rounded
+                              text
+                              color="#3ba2a9"
+                              v-if="!loggedIn"
+                              to="/login"
+                            >
+                                <v-icon left>mdi-login</v-icon>
+                                Entrar
+                            </v-btn>
+                            <v-btn
+                              depressed
+                              rounded
+                              text
+                              color="#3ba2a9"
+                              v-if="loggedIn"
+                              @click="logout()"
+                            >
+                                <v-icon left>mdi-logout</v-icon>
+                                Salir
+                            </v-btn>
+                        </div>
+                    </v-list-item-content>
+                </v-card>
 
-              <v-list-item v-if="!loggedIn" to="/login">
 
-                <v-list-item-icon>
-                  <v-icon >mdi-login</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content >
-                <v-list-item-title >Entrar</v-list-item-title>
-                </v-list-item-content>
+                <!-- <v-list v-if="loggedIn ">
+                    <v-list-item >
+                        <v-list-item >
+                            <v-list-item-content>
+                              <v-list-item-title class="title">{{user.name}}</v-list-item-title>
+                              <v-list-item-subtitle>{{user.email}}</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                    </v-list-item>
+                </v-list>
 
-              </v-list-item>
+                <v-list nav dense>
+                    <v-list-item-group color="#3ba2a9">
+                        <v-list-item v-if="loggedIn" :to="{name: 'Profile'}">
+                            <v-list-item-icon>
+                                <v-icon >mdi-account</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title>Perfil</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
 
-            <v-list-item v-if="loggedIn" @click="logout()">
-              <v-list-item-icon>
-                <v-icon >mdi-logout</v-icon>
-              </v-list-item-icon>
+                      <v-list-item v-if="!loggedIn" to="/login">
+                            <v-list-item-icon>
+                                <v-icon >mdi-login</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content >
+                                <v-list-item-title >Entrar</v-list-item-title>
+                            </v-list-item-content>
+                      </v-list-item>
 
-              <v-list-item-content>
-                <v-list-item-title>Salir</v-list-item-title>
-              </v-list-item-content>
+                        <v-list-item v-if="loggedIn" @click="logout()">
+                            <v-list-item-icon>
+                                <v-icon >mdi-logout</v-icon>
+                            </v-list-item-icon>
 
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-           </v-menu>
+                            <v-list-item-content>
+                                <v-list-item-title>Salir</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </v-list-item-group>
+                </v-list> -->
+            </v-menu>
 
 
       <v-snackbar
