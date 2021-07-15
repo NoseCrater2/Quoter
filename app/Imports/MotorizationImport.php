@@ -49,7 +49,9 @@ class MotorizationImport implements WithHeadingRow, ToCollection, SkipsOnError, 
                 [
                     'code' => $row['codigo'],
                     'motorization_type_id' => $typeM ==! null?$typeM->id:null,
+                    'system' => $row['sistema'],
                     'line_id' => $manufacturer->id,
+                    'type_id' => $type->id,
                 ],
                 [
                     'canvas' => $row->has('lienzo') && $row['lienzo']?$row['lienzo']:0,
