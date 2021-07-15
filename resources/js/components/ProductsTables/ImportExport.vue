@@ -24,7 +24,7 @@
             >
              <!-- :src="`img/modelos/medium/${item.image}`" -->
                 <template v-slot:top>
-                    <v-row justify="space-between">
+                    <v-row no-gutters justify="space-between">
                         <v-col cols="11">
                             <v-text-field
                             class="mx-2"
@@ -44,6 +44,7 @@
                                   <v-tooltip top>
                                     <template v-slot:activator="{ on: tooltip }">
                                         <v-btn
+                                        class="mt-1"
                                         outlined
                                         icon
                                         v-bind="attrs"
