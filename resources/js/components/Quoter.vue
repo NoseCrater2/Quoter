@@ -188,7 +188,7 @@
                 class="ma-1"
                 dense
                 hide-details=""
-                label="Ancho"
+                label="Alto"
                  outlined
                  :placeholder="heightMargins"
                 :rules="[
@@ -536,7 +536,11 @@
 
                </div>
                <div class="d-flex justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
-                    {{mxCurrencyFormat.format(order.motor.price)}}
+                    {{mxCurrencyFormat.format(order.motor.price +
+                          order.motor.flexiballetPrice +
+                          order.motor.galleryPrice +
+                          order.motor.manufacturerPrice +
+                          order.motor.stringPrice)}}
                       MXN
                  </div>
                  </div>
@@ -1361,7 +1365,6 @@ export default {
         rotate: false,
         motor_type: null,
         motor: {
-
           side_control: null,
           price: 0,
           action: null,
@@ -1790,7 +1793,9 @@ export default {
           this.$store.dispatch("addToOrder", this.order).then(() => {
             this.order = Object.assign({}, this.defaultOrder);
             this.order.canvas = [{width: null, height: null}],
+            this.order.motor =  Object.assign({}, this.defaultMotor);
            this.$refs.form.resetValidation()
+           console.log(this.order)
           });
         }
       }
@@ -1928,6 +1933,8 @@ export default {
       // this.disabledSelectModel = false;
       // this.chargeModels()
       this.order = Object.assign({}, this.defaultOrder);
+      this.order.canvas = [{width: null, height: null}],
+      this.order.motor =  Object.assign({}, this.defaultMotor);
       this.order.type = type
       if(this.order.type == 'flexibalet'){
         this.widthMargins = '1.00 a 22'
