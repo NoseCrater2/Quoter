@@ -1,31 +1,15 @@
 <template>
-  <v-app v-if="loading === true">
-    <!-- <v-dialog
-        v-model="loading"
-        hide-overlay
-        persistent
-      >
-        <v-card
-          color="#47a5ad"
-          dark
-        >
-          <v-card-text>
-            Please stand by
-            <v-progress-linear
-              indeterminate
-              color="white"
-              class="mb-0"
-            ></v-progress-linear>
-          </v-card-text>
-        </v-card>
-      </v-dialog> -->
-    <div id="divBody">
+    <v-app >
+      <div  id="string" class="pull">
+        <svg id="ball" height="50" width="50">
+          <circle cx="25" elevation="3" cy="25" r="20" stroke="black" stroke-width="8" fill="transparent" />
+        </svg> 
+      </div>
+      <div id="divBody" style="position: absolute;z-index: 6;">
         <!-- Deja la etiqueta 'img' en vez de 'v-img' -->
         <img src="/img/white-r.png" id="pngRolluxInOut">
         <p id="loading">Cargando<span>.</span><span>.</span><span>.</span></p>
     </div>
-  </v-app>
-    <v-app v-else>
       <v-navigation-drawer app v-model="drawer" style="z-index: 8;" temporary>
         <v-list dense>
           <v-list-group color="#47a5ad"   no-action>
@@ -311,6 +295,7 @@ import mailDialog from '../../components/Index/TheMailDialog';
 export default {
     data(){
         return{
+          blindView: null,
           loading: false,
           query: null,
           items: [],
@@ -354,16 +339,29 @@ export default {
 
 
     mounted(){
-        this.loading = true
+        this.loading = true;
+
         this.$store.dispatch('getQuotingOrders');
         this.$store.dispatch('getSubweaves')
         this.$store.dispatch('getProducts')
+       // this.blindView =  document.getElementById("divBody")
         this.$store.dispatch('getAllVariants').then( () =>{
-        this.loading = false;
+        document.getElementById("string").classList.remove("pull");
+        document.getElementById("string").classList.toggle("pulled");
+        // 
+        document.getElementById("divBody").classList.toggle("animation");
+        setTimeout(function(){
+        
+        document.getElementById("string").style.visibility = 'hidden'
+        document.getElementById("divBody").style.visibility = 'hidden'
+        }.bind(this), 1000);
+       
+        
         })
         // this.$store.dispatch('getManufacturers')
         this.onResize()
         window.addEventListener('resize', this.onResize, { passive: true })
+        
     },
 
     computed:{
@@ -426,7 +424,30 @@ export default {
     -ms-box-sizing: border-box;
     box-sizing: border-box;
 }
+#string{
+  background-color: white;
+  position: fixed;
+  height: 100%;
+  width: 5px;
+  top: -50%;
+  left: 10%;
+  cursor: pointer;
+  float: left;
+  z-index: 7;
+}
 
+#ball {
+  position: relative;
+  top: 99%;
+  left: -22px;
+}
+
+.pull{
+  animation: pull 2s infinite ease;
+}
+.pulled{
+  animation: pulled 2s 1 ease;
+}
 /* INICIA CODIGO PARA LOADING */
 #divBody{
     display:flex;
@@ -532,5 +553,48 @@ export default {
     max-width: 1205px;
     margin: auto !important;
 }
+.animation{
+  animation: reveal 0.5s 1s cubic-bezier(1,.75,.5,1) forwards;
+}
 
+@keyframes reveal {
+  0% {
+    transform: translateY(-10%);
+  }
+  50% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes pull {
+  0% {
+    animation-timing-function: linear;
+  }
+  50%{
+    transform: translateY(10%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes pulled {
+  0% {
+    animation-timing-function: linear;
+  }
+  50%{
+    transform: translateY(50%);
+    opacity: 0.5;
+  }
+  80%{
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    visibility: hidden;
+  }
+}
 </style>
