@@ -126,7 +126,7 @@
                                                 if($order['cloth_holder']){
                                                     $concat .= 'CON PORTATELA //';
                                                 }
-                                                
+
                                             ?>
                                             <span>{{$concat}}</span>
                                             @foreach ($order['canvas'] as $key => $canva)
@@ -177,7 +177,7 @@
                                                     }
                                                     $concat3 .= $order['motor']['string_type'].' // ';
                                                 }
-                                                if($order['motor']['height_control'] != null || $order['motor']['height_control'] > 0){
+                                                if(isset($order['motor']['height_control'])){
                                                     $concat3 .= $order['motor']['height_control'].' MTS// ';
                                                 }
 
@@ -367,7 +367,7 @@
                                                     }
                                                     $concat3 .= $order['motor']['string_type'].' // ';
                                                 }
-                                                if($order['motor']['height_control'] != null || $order['motor']['height_control'] > 0){
+                                                if(isset($order['motor']['height_control'])){
                                                     $concat3 .= $order['motor']['height_control'].' MTS// ';
                                                 }
                                                 if($order['motor']['gallery'] != null){
