@@ -4,12 +4,12 @@
             <v-btn @click="onClickButton"  tile icon color="white" min-width="20" width="20" >
                 <v-icon dark size="30">
                     mdi-email
-                </v-icon> 
+                </v-icon>
             </v-btn>
         </div>
 
         <div class="d-flex justify-center">
-            <v-btn  tile dark  color="#26d367" icon min-width="20" width="20" href="https://api.whatsapp.com/send?phone=5214434713271"  >
+            <v-btn  tile dark  color="#26d367" icon min-width="20" width="20" href="https://api.whatsapp.com/send?phone=5215548948279" target="_blank">
                 <v-img src="/img/whatsapp.png" width="30"></v-img>
             </v-btn>
         </div>

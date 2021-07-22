@@ -14,7 +14,7 @@
                         <v-list-item-icon><v-icon color="primary">mdi-at</v-icon></v-list-item-icon>
                         <v-list-item-content>contacto@rollux.com.mx</v-list-item-content>
                     </v-list-item>
-                    <v-list-item href="https://api.whatsapp.com/send?phone=5214434713271">
+                    <v-list-item href="https://api.whatsapp.com/send?phone=5215548948279" target="_blank">
                         <v-list-item-icon><v-icon color="#31ba45">mdi-whatsapp</v-icon></v-list-item-icon>
                         <v-list-item-content>55 4894 8279</v-list-item-content>
                     </v-list-item>
