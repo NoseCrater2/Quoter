@@ -117,7 +117,7 @@
                               <div class="d-inline" style="font-weight: bolder; color:black">CODIGO:</div>
                               {{o.second_color.code}} <br>
                               <div class="d-inline" style="font-weight: bolder; color:black">LINEA:</div>
-                              {{$store.getters.getVariant(o.variant2).lines.slug}} <br>
+                              {{$store.getters.getVariant(o.variant2).line.slug}} <br>
                               <div class="d-inline" style="font-weight: bolder; color:black">COLOR:</div>
                              {{o.second_color.color}}
 

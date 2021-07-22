@@ -276,8 +276,8 @@
                         md="4">
 
                           <v-hover v-slot="{ hover }" v-if="item">
-                            <v-card width="240"  color="grey lighten-4"  flat :to="{name: 'Details', params: {slugWeave:item.weave.slug, slugDetail: item.id.toString()}}">
-                              <v-img class="d-flex tag" width="40"  v-if="item.rotate == 1" src="/img/modelos/rotable.png"></v-img>
+                            <v-card width="240"  color="grey lighten-4" flat :to="{name: 'Details', params: {slugWeave:item.weave.slug, slugDetail: item.id.toString()}}">
+                              <v-img class="tag" width="85"  v-if="item.rotate == 1" src="/img/modelos/rotable.png"></v-img>
                               <v-img
                               class="white--text align-end"
                               :class="{'escalada':hover}"
@@ -650,8 +650,8 @@ width: 100%;
 .tag{
     z-index: 1;
     position: absolute;
-    right: 0px;
-    margin-top: -4px;
+    margin-top: -8px;
+    right: 30%;
 }
 
 .title{
