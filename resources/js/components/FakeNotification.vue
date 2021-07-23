@@ -3,7 +3,7 @@
         <div class="d-flex justify-end">
             <v-btn @click="snackbar = false" height="0" width="0" class="pt-3 pr-1"  icon><v-icon size="15" color="black">mdi-close</v-icon></v-btn>
         </div>
-            
+
         <div v-if="variant" style="color: black" class="d-flex flex-no-wrap   mb-2 mx-2">
              <v-avatar size="90" tile>
                 <v-img :src="`/img/modelos/medium/${variant.image}.jpg`"></v-img>
