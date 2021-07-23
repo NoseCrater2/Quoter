@@ -197,10 +197,10 @@
         </v-col>
         <v-col
           cols="12"
-          v-if="(typeName == 'HORIZONTAL DE MADERA 2' && action == 'Motorizado') || 
+          v-if="(typeName == 'HORIZONTAL DE MADERA 2' && action == 'Motorizado') ||
                 (typeName == 'HORIZONTAL DE ALUMINIO 1\'\'' && action == 'Manual') ||
                 (typeName == 'HORIZONTAL DE ALUMINIO 2\'\'' && action == 'Manual')"
-          class="my-0">  
+          class="my-0">
           <span style="font-size: 1em">
             8 .Marco
           </span>
@@ -216,7 +216,7 @@
           </v-radio-group>
         </v-col>
         <v-row
-          v-if="(action == 'Motorizado') && (typeName === 'ENROLLABLE' || typeName === 'ROMANA' || typeName === 'PANEL JAPONES')"
+          v-if="(action == 'Motorizado') && (typeName === 'ENROLLABLE' || typeName === 'ROMANA' || typeName === 'PANEL JAPONES' || typeName === 'SHEER')"
           class="ma-0 pa-0">
           <span class="mx-2"  >6. Seleccione características de motor</span>
           <v-col
@@ -397,9 +397,9 @@
             </v-radio-group>
           </v-col>
         </v-row>
-        <v-col 
-          cols="12" 
-          class="my-0" 
+        <v-col
+          cols="12"
+          class="my-0"
           v-if="filteredGalleries && (action == 'Manual' && (typeName == 'ENROLLABLE' || typeName == 'ROMANA' || typeName == 'PANEL JAPONES' ))" >
           <span>10. Seleccione GALERÍA/FASCIA
             <v-chip v-if="addGalleryPrice > 0" label outlined color="orange" class="ma-2 font-weight-black">
@@ -582,10 +582,10 @@ export default {
       this.motor = Object.assign({}, this.parentMotor);
         this.$store.dispatch("getGalleries").then(()=>{
         });
-        
+
 
     },
-    
+
     updated(){
       if(this.typeName === 'FLEXIBALET' && this.action === 'Motorizado' ){
           this.motor.flexiballetPrice = 25500
@@ -620,7 +620,7 @@ export default {
         },
 
         save(){
-        
+
           if(this.$refs.formMotor.validate()){
             this.motor.galleryPrice = this.addGalleryPrice
             this.motor.manufacturerPrice = this.addManufacturerPrice
@@ -630,7 +630,7 @@ export default {
             this.$emit('saveMotorization', this.motor)
             this.close()
           }
-          
+
         },
     },
 
@@ -651,7 +651,7 @@ export default {
              });
           }
           }
-          
+
           return galleryPrice
         },
 
