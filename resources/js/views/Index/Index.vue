@@ -1,15 +1,21 @@
 <template>
-    <v-app >
-      <div  id="string" class="pull">
-        <svg id="ball" height="50" width="50">
-          <circle cx="25" elevation="3" cy="25" r="20" stroke="black" stroke-width="8" fill="transparent" />
-        </svg> 
-      </div>
-      <div id="divBody" style="position: absolute;z-index: 6;">
-        <!-- Deja la etiqueta 'img' en vez de 'v-img' -->
-        <img src="/img/white-r.png" id="pngRolluxInOut">
-        <p id="loading">Cargando<span>.</span><span>.</span><span>.</span></p>
-    </div>
+    <v-app>
+
+        <div v-if="!isLoadedPromises">
+            <div id="string" class="pull">
+                <svg id="ball" height="50" width="50">
+                  <circle cx="25" elevation="3" cy="25" r="20" stroke="black" stroke-width="8" fill="transparent" />
+                </svg>
+              </div>
+              <div id="divBody" style="position: absolute;z-index: 6;">
+                <!-- Deja la etiqueta 'img' en vez de 'v-img' -->
+                <img src="/img/white-r.png" id="pngRolluxInOut">
+                <p id="loading">Cargando<span>.</span><span>.</span><span>.</span></p>
+            </div>
+        </div>
+
+
+<div v-else>
       <v-navigation-drawer app v-model="drawer" style="z-index: 8;" temporary>
         <v-list dense>
           <v-list-group color="#47a5ad"   no-action>
@@ -266,6 +272,7 @@
 
                <!-- <btnSocialMedia/> -->
             </v-main>
+                 <LegalPopUp v-if="isLoadedPromises"></LegalPopUp>
             <!-- <DialogInvite/>
              <FakeNotification/> -->
              <!-- EMPIEZA FOOTER -->
@@ -276,6 +283,8 @@
              <div class="d-flex justify-center" style="background-color: black; color: #616161; font-size: 10px">
                <span>Rollux México® {{(new Date()).getFullYear()}}  |  Hecho por Grupo Lidhber®</span>
              </div>
+
+</div>
         </v-app>
 </template>
 
@@ -288,6 +297,9 @@ import whiteBar from '../../components/Index/TheWhiteBar';
 import blackBar from '../../components/Index/TheBlackBar';
 import theFooter from '../../components/Index/TheFooter';
 import mailDialog from '../../components/Index/TheMailDialog';
+
+import LegalPopUp from '../../components/LegalPopUp.vue'
+
 // import DialogInvite from '../../components/DialogInvite';
 // import FakeNotification from '../../components/FakeNotification';
 
@@ -296,7 +308,7 @@ export default {
     data(){
         return{
           blindView: null,
-          loading: false,
+          isLoadedPromises: false,
           query: null,
           items: [],
           showSearch: false,
@@ -316,6 +328,7 @@ export default {
       blackBar,
       theFooter,
       mailDialog,
+      LegalPopUp
 
       // DialogInvite,
       // FakeNotification,
@@ -339,29 +352,7 @@ export default {
 
 
     mounted(){
-        this.loading = true;
-
-        this.$store.dispatch('getQuotingOrders');
-        this.$store.dispatch('getSubweaves')
-        this.$store.dispatch('getProducts')
-       // this.blindView =  document.getElementById("divBody")
-        this.$store.dispatch('getAllVariants').then( () =>{
-        document.getElementById("string").classList.remove("pull");
-        document.getElementById("string").classList.toggle("pulled");
-        // 
-        document.getElementById("divBody").classList.toggle("animation");
-        setTimeout(function(){
-        
-        document.getElementById("string").style.visibility = 'hidden'
-        document.getElementById("divBody").style.visibility = 'hidden'
-        }.bind(this), 1000);
-       
-        
-        })
-        // this.$store.dispatch('getManufacturers')
-        this.onResize()
-        window.addEventListener('resize', this.onResize, { passive: true })
-        
+        this.chargePromises();
     },
 
     computed:{
@@ -395,6 +386,73 @@ export default {
 
      },
     methods:{
+
+        async chargePromises(){
+
+
+    //     this.$store.dispatch('getQuotingOrders');
+    //     this.$store.dispatch('getSubweaves');
+    //     this.$store.dispatch('getProducts');
+    //    // this.blindView =  document.getElementById("divBody")
+    //     this.$store.dispatch('getAllVariants').then( () =>{
+    //         document.getElementById("string").classList.remove("pull");
+    //         document.getElementById("string").classList.toggle("pulled");
+    //         //
+    //         document.getElementById("divBody").classList.toggle("animation");
+    //         setTimeout(function(){
+
+    //             document.getElementById("string").style.visibility = 'hidden'
+    //         document.getElementById("divBody").style.visibility = 'hidden'
+    //         }.bind(this), 1000);
+    //     })
+    //     // this.$store.dispatch('getManufacturers')
+    //     this.onResize()
+    //     window.addEventListener('resize', this.onResize, { passive: true })
+
+
+            // NUEVO METODO INICIA
+                let promiseQuotingOrders = 0;
+                let promiseSubweaves = 0;
+                let promiseProducts = 0;
+                let promiseAllVariants = 0;
+
+                await this.$store.dispatch('getQuotingOrders').then(()=>{
+                    promiseQuotingOrders++;
+                }).catch(()=>{
+                    promiseQuotingOrders++
+                });
+                await this.$store.dispatch('getSubweaves').then(()=>{
+                    promiseSubweaves++;
+                }).catch(()=>{
+                    promiseSubweaves++
+                });
+                await this.$store.dispatch('getProducts').then(()=>{
+                    promiseProducts++;
+                }).catch(()=>{
+                    promiseProducts++
+                });
+                await this.$store.dispatch('getAllVariants').then(()=>{
+                    promiseAllVariants++;
+                }).catch(()=>{
+                    promiseAllVariants++
+                });
+                let resultPromises = promiseQuotingOrders + promiseSubweaves + promiseProducts + promiseAllVariants;
+                if(resultPromises == 4) {
+                    document.getElementById("string").classList.remove("pull");
+                    document.getElementById("string").classList.toggle("pulled");
+                    //
+                    document.getElementById("divBody").classList.toggle("animation");
+                    setTimeout(function(){
+                        this.isLoadedPromises = true;
+                        document.getElementById("string").style.visibility = 'hidden'
+                    document.getElementById("divBody").style.visibility = 'hidden'
+                    }.bind(this), 1000);
+                }
+                this.onResize()
+                window.addEventListener('resize', this.onResize, { passive: true })
+                // NUEVO METODO TERMINA
+        },
+
         onResize(){
       this.isMobile = window.innerWidth < 780
     },

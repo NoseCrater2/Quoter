@@ -1,15 +1,8 @@
 <template>
-    <div>  
+    <div>
         <v-container fluid style="max-witth: 1200px; margin: auto">
             <v-row align="center" justify="center">
-                <v-tabs background-color="black" dark v-model="tab">
-                     <v-tabs-slider color="#47a5ad"></v-tabs-slider>
-                    <v-tab >Aviso de privacidad</v-tab>
-                </v-tabs>
-           
-
-            <v-tabs-items v-model="tab">
-                <v-tab-item  >
+                <h1 class="text-center mt-2">AVISO DE PRIVACIDAD</h1>
                     <v-card class="mx-13" flat tile>
                         <v-card-text>
                             Para Rollux – Persianas Enrollables MEXICO, su privacidad y confianza son muy importantes; por ello, deseamos asegurarnos de que nuestros clientes conozcan como protegemos la integridad, privacidad y protección de sus datos personales, conforme a lo previsto en la Ley Federal dee Protección de Datos Personales.
@@ -54,7 +47,7 @@
                         </v-card-text>
                         <v-card-text style="text-align: justify">
                             <p>Como Titular de Datos Personales, presentar o enviar una solicitud para el acceso, rectificación, cancelación u oposición. Dicha solicitud deberá contener por lo menos:</p>
-                            <ul type="circle"> 
+                            <ul type="circle">
                                 <li>Nombre completo y domicilio del titular de los Datos Personales, u otro medio para comunicar la respuesta a la solicitud.</li>
                                 <li>Documentos que acrediten la identidad o la representación legal del titular de los Datos Personales.</li>
                                 <li>Descripción clara y precisa de los Datos Personales respecto de los que se busca ejercer alguno de los derechos antes mencionados.</li>
@@ -63,16 +56,16 @@
                         </v-card-text>
                         <v-card-text>
                         <dl>
-	                        <dt><strong>USO DE LA TECNOLOGÍA</strong></dt> 
+	                        <dt><strong>USO DE LA TECNOLOGÍA</strong></dt>
 	                            <dd>
                                    Le informamos que en nuestra página de Internet utilizamos cookies, y otras tecnologías a través de las cuales es posible monitorear su comportamiento como usuario de Internet, así como brindarle un mejor servicio y experiencia de usuario al navegar en nuestra página.
                                 </dd>
-	
+
 	                        <dt><strong>Cookies</strong></dt>
 	                            <dd>
                                    Los Cookies son archivos de texto que se descargan automáticamente y se almacenan en el disco duro del equipo de cómputo del usuario al navegar en una página o portal de Internet específico, que permiten almacenar al servidor de Internet ciertos datos, entre ellos, páginas preferidas de visualización en internet, algunas claves y contraseñas.
                                 </dd>
-                                <dt><strong>Redes Sociales</strong></dt> 
+                                <dt><strong>Redes Sociales</strong></dt>
 	                            <dd>
                                   Las redes sociales (tales como Facebook, Twitter, entre otras), son una plataforma de comunicación e interconexión dentro de plataformas digitales de los diferentes usuarios, son ajenas a <b>  Rollux – Persianas Enrollables MEXICO </b> y por lo tanto, no se encuentran bajo su responsabilidad.
                                 </dd>
@@ -92,12 +85,10 @@
                         <p>
                             El presente Aviso de Privacidad fue actualizado por última ocasión el  <b> 27 de Noviembre 2020</b>
                         </p>
-                        
+
                     </v-card-text>
 
                     </v-card>
-                </v-tab-item>
-            </v-tabs-items>
              </v-row>
         </v-container>
     </div>
@@ -114,6 +105,6 @@ export default {
     created(){
         document.title = 'Aviso de privacidad'
     }
-    
+
 }
 </script>
