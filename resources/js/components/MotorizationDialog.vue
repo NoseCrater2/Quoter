@@ -625,7 +625,7 @@ export default {
             this.motor.galleryPrice = this.addGalleryPrice
             this.motor.manufacturerPrice = this.addManufacturerPrice
             this.motor.stringPrice = this.addStringPrice
-            this.motor.price = this.motorizationPrice
+            this.motor.price = Math.round(this.motorizationPrice * 10) / 10 
 
             this.$emit('saveMotorization', this.motor)
             this.close()

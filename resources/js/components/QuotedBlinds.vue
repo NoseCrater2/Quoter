@@ -159,7 +159,7 @@
                   <v-list-item class="overline" dense>
                     <v-list-item-title>PRECIO</v-list-item-title>
                     <v-list-item-subtitle class="text-right">
-                      ${{o.price}} MXN
+                      {{mxCurrencyFormat.format(o.price)}} MXN
                     </v-list-item-subtitle>
                   </v-list-item>
                   <v-list-item class="overline" v-if="o.cloth_holder" dense>
