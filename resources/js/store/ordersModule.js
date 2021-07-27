@@ -31,8 +31,8 @@ const ordersModule = {
                 parseFloat(order.motor.flexiballetPrice) +
                 parseFloat(order.motor.galleryPrice) +
                 parseFloat(order.motor.manufacturerPrice) +
-                parseFloat(order.motor.stringPrice)
-
+                parseFloat(order.motor.stringPrice) +
+                parseFloat(order.extraEnrollable)
                 return prices += pt
            })
 

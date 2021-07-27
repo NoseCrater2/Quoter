@@ -6,8 +6,8 @@
             </v-tabs>
         </v-card>
         <v-tabs-items  v-model="tab" >
-         
-            <v-tab-item v-for="o in orders" :key="o.id">
+
+            <v-tab-item v-for="(o, index) in orders" :key="o.id">
                <v-progress-linear
                v-if="$store.state.productsModule.variants.length == 0"
               color="#47a5ad"
@@ -20,16 +20,17 @@
                     <v-toolbar-title>
                       TOTAL: {{
                         mxCurrencyFormat.format(
-                          o.price + 
+                          o.price +
                           o.motor.price +
                           o.motor.flexiballetPrice +
                           o.motor.galleryPrice +
                           o.motor.manufacturerPrice +
-                          o.motor.stringPrice
+                          o.motor.stringPrice +
+                          o.extraEnrollable
                         )}} MXN
                     </v-toolbar-title>
                     <v-spacer> </v-spacer>
-                      <v-tooltip bottom> 
+                      <v-tooltip bottom>
                       <template v-slot:activator=" {on, attrs}">
                         <v-btn @click="edit(o.id)" v-bind="attrs" v-on="on" icon>
                           <v-icon>mdi-pencil</v-icon>
@@ -38,7 +39,7 @@
                       <span>Editar</span>
                       </v-tooltip>
 
-                      <v-tooltip bottom> 
+                      <v-tooltip bottom>
                       <template v-slot:activator=" {on, attrs}">
                         <v-btn @click="eliminate(o.id)" v-bind="attrs" v-on="on" icon>
                           <v-icon>mdi-delete</v-icon>
@@ -46,9 +47,9 @@
                       </template>
                       <span>Eliminar</span>
                       </v-tooltip>
-                   
+
                   </v-toolbar>
-               
+
                   <v-row no-gutters>
                     <v-col :cols="o.variant2 != null?'6':'12'">
                       <v-card flat>
@@ -62,19 +63,19 @@
                               <div class="d-inline" style="font-weight: bolder; color:black">TIPO:</div>
                               {{$store.getters.getVariant(o.variant).type.slug}} <br>
                               <div
-                              v-if="o.color"  
+                              v-if="o.color"
                               class="d-inline" style="font-weight: bolder; color:black">CODIGO:
                                 {{o.color.code}} <br>
                               </div>
-                              
+
                               <div class="d-inline" style="font-weight: bolder; color:black">LINEA:</div>
                               {{$store.getters.getVariant(o.variant).line.slug}} <br>
                               <div
-                               v-if="o.color" 
+                               v-if="o.color"
                               class="d-inline" style="font-weight: bolder; color:black">COLOR:
                                  {{o.color.color}}
                               </div>
-                             
+
 
                             </v-card-subtitle>
                           </div>
@@ -101,9 +102,9 @@
                         </div>
                       </v-card>
                     </v-col>
-                     
+
                     <v-col v-if="o.variant2 != null" cols="6">
-                     
+
                        <v-card flat >
                         <v-card-title class="py-2 px-4 justify-center" style="line-height: normal;font-size: 0.7em; font-weight: bolder">
                           {{$store.getters.getVariant(o.variant2).name}}
@@ -162,6 +163,12 @@
                       {{mxCurrencyFormat.format(o.price)}} MXN
                     </v-list-item-subtitle>
                   </v-list-item>
+                    <v-list-item class="overline" dense v-if="extraEnrollablePrice(index) > 0">
+                        <v-list-item-title class="blue--text">CARGO EXTRA</v-list-item-title>
+                        <v-list-item-subtitle class="blue--text text-right">
+                          {{mxCurrencyFormat.format(extraEnrollablePrice(index))}} MXN
+                        </v-list-item-subtitle>
+                    </v-list-item>
                   <v-list-item class="overline" v-if="o.cloth_holder" dense>
                     <v-list-item-title>CON PORTATELA</v-list-item-title>
                   </v-list-item>
@@ -201,8 +208,8 @@
                       {{o.motor.rail_color}}
                     </v-list-item-subtitle>
                   </v-list-item>
-                  
-                 
+
+
                    <v-list-item class="overline" v-if="o.motor.drive != null" dense>
                     <v-list-item-title>Accionamiento</v-list-item-title>
                     <v-list-item-subtitle class="text-right">
@@ -297,7 +304,7 @@
                       <v-list-item-title>Tipo</v-list-item-title>
                       <v-list-item-subtitle class="text-right">{{$store.getters.getMotor(o.motor.motor).motorizationType}}</v-list-item-subtitle>
                     </v-list-item>
-                    
+
                      <v-list-item class="overline" dense>
                       <v-list-item-title>Precio</v-list-item-title>
                       <v-list-item-subtitle class="text-right">{{mxCurrencyFormat.format($store.getters.getMotor(o.motor.motor).price)}}MXN</v-list-item-subtitle>
@@ -388,8 +395,20 @@ export default {
     }
   },
 
-  
+
   methods:{
+
+    extraEnrollablePrice(index){
+      let enrollablePrice = 0;
+      if(this.orders[index].extraEnrollable > 0){
+        enrollablePrice = 350
+      }
+      else{
+        enrollablePrice = 0
+      }
+      return enrollablePrice
+    },
+
     saveOrders(){
       if(this.user == null){
          this.$router.push({name: "login"})
@@ -410,7 +429,7 @@ export default {
     eliminate(id){
       this.deletetConfirmDialog = true
       this.blindId = id
-     
+
     },
     confirmDelete(){
       this.$emit('deleteOrder', this.blindId)
@@ -420,10 +439,10 @@ export default {
     exportPDF(){
       this.$refs.html2Pdf.generatePdf()
       // let d = new Date()
-     
+
       // let doc = new jsPDF()
 
-      // doc.addImage('/img/logo.png',"JPEG", 0, 8, 70, 22)//x,y,width,height 
+      // doc.addImage('/img/logo.png',"JPEG", 0, 8, 70, 22)//x,y,width,height
       // doc.setLineWidth(1);
       // doc.line(72,2,72,28)//x1, y1,x2,y2
       // doc.setFont("helvetica", "bold");
@@ -462,7 +481,7 @@ export default {
       // doc.save('autoprint.pdf');
     },
 
-  
+
   },
 
 
@@ -471,7 +490,7 @@ export default {
       orders: (state) => state.ordersModule.orders,
       user: (state) => state.user,
     }),
-    
+
   },
 
 

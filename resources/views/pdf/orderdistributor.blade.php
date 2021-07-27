@@ -169,6 +169,11 @@
                                                     }
                                                 ?>
                                             @endforeach
+                                            <?php
+                                                if(($order['extraEnrollable']) > 0){
+                                                    $concat2 .= 'Cargo extra: $'.$order['extraEnrollable'].'.00 MXN // ' ;
+                                                }
+                                            ?>
                                             <span><strong>{{$concat2}}</strong></span>
                                             <br>
                                             <?php
@@ -293,15 +298,20 @@
                                             <span>TOTAL: </span>
                                             <span style="color: #47a5ad">
                                                 <?php
-                                                    $unitaryPrice = $totaldiscount +
+                                                    $totalCanvasPrice = 0;
+                                                    foreach ($order['canvas'] as $key => $canva){
+                                                        $totalCanvasPrice += (($canva['width'] * $canva['height']) * $totaldiscount);
+                                                    }
+                                                    $unitaryPrice = $totalCanvasPrice +
                                                     $order['motor']['price'] +
                                                     $order['motor']['flexiballetPrice'] +
                                                     $order['motor']['galleryPrice'] +
                                                     $order['motor']['manufacturerPrice'] +
-                                                    $order['motor']['stringPrice'];
+                                                    $order['motor']['stringPrice'] +
+                                                    $order['extraEnrollable'];
                                                     $total += $unitaryPrice;
                                                 ?>
-                                                $@priceFormat($unitaryPrice) MXN
+                                                $@priceFormat(round($unitaryPrice, 1, PHP_ROUND_HALF_UP)) MXN
                                             </span>
                                         </div>
                                     </td>
@@ -367,6 +377,11 @@
                                                     }
                                                 ?>
                                             @endforeach
+                                            <?php
+                                                if(($order['extraEnrollable']) > 0){
+                                                    $concat2 .= 'Cargo extra: $'.$order['extraEnrollable'].'.00 MXN // ' ;
+                                                }
+                                            ?>
                                             <span><strong>{{$concat2}}</strong></span>
                                             <br>
                                             <?php
@@ -491,15 +506,20 @@
                                             <span>TOTAL: </span>
                                             <span style="color: #47a5ad">
                                                 <?php
-                                                    $unitaryPrice = $totaldiscount +
+                                                    $totalCanvasPrice = 0;
+                                                    foreach ($order['canvas'] as $key => $canva){
+                                                        $totalCanvasPrice += (($canva['width'] * $canva['height']) * $totaldiscount);
+                                                    }
+                                                    $unitaryPrice = $totalCanvasPrice +
                                                     $order['motor']['price'] +
                                                     $order['motor']['flexiballetPrice'] +
                                                     $order['motor']['galleryPrice'] +
                                                     $order['motor']['manufacturerPrice'] +
-                                                    $order['motor']['stringPrice'];
+                                                    $order['motor']['stringPrice'] +
+                                                    $order['extraEnrollable'];
                                                     $total += $unitaryPrice;
                                                 ?>
-                                                $@priceFormat($unitaryPrice) MXN
+                                                $@priceFormat(round($unitaryPrice, 1, PHP_ROUND_HALF_UP)) MXN
                                             </span>
                                         </div>
                                     </td>
@@ -526,7 +546,7 @@
                         SUBTOTAL
                     </td>
                     <td style="font-size: 12px; text-align: right; padding-right: 11px;">
-                        $@priceFormat($total) MXN
+                        $@priceFormat(round($total, 1, PHP_ROUND_HALF_UP)) MXN
                     </td>
                 </tr>
                 <tr style="border: 1px solid black;font-weight: bolder;">
@@ -542,7 +562,7 @@
                         TOTAL
                     </td>
                     <td style="text-align: right; padding-right: 11px; padding-top: 3px; padding-bottom: 3px;">
-                        $@priceFormat($total) MXN
+                        $@priceFormat(round($total, 1, PHP_ROUND_HALF_UP)) MXN
                     </td>
                 </tr>
             </table>
