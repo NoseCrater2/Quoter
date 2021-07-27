@@ -523,11 +523,11 @@
 
                </div>
                <div v-if="order.type == 'horizontal-madera-2'" class="d-flex  justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;">
-                  {{mxCurrencyFormat.format(findWoodPrice)}} MXN
+                  {{mxCurrencyFormat.format( roundToOneDecimal(findWoodPrice) )}} MXN
                </div>
 
                 <div v-else class="d-flex  justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
-                    {{mxCurrencyFormat.format(unitaryPrice)}} MXN
+                    {{mxCurrencyFormat.format(roundToOneDecimal(unitaryPrice))}} MXN
                  </div>
 
                <v-divider></v-divider>
@@ -729,7 +729,7 @@
               Indique ancho alto para cada lienzo
               <v-spacer></v-spacer>
               ${{
-                parseFloat(Math.round(unitaryPrice * 100) / 100).toFixed(2)
+                parseFloat(Math.round(unitaryPrice * 10) / 10).toFixed(2)
               }}
               MXN
             </v-card-title>
@@ -1476,6 +1476,11 @@ export default {
     };
   },
   methods: {
+    roundToOneDecimal (value ) {
+      return Math.round(value * 10) / 10
+      
+    },
+    
     downloadButtonPdfAuth(){
         FileDownload(this.downloadButtonPdf, 'modelos.pdf');
     },
@@ -1770,14 +1775,14 @@ export default {
         }else{
         if (this.$refs.form.validate()) {
           if(this.order.type == 'horizontal-madera-2'){
-            this.order.price = this.findWoodPrice
+            this.order.price = this.roundToOneDecimal(this.findWoodPrice)
           }else if(this.order.type == 'celular'){
            
-            this.order.price = this.unitaryPrice 
-            this.order.motor.price = this.motorCelularPrice()
+            this.order.price = this.roundToOneDecimal(this.unitaryPrice)
+            this.order.motor.price = this.roundToOneDecimal(this.motorCelularPrice())
 
           }else{
-             this.order.price = this.unitaryPrice;
+             this.order.price = this.roundToOneDecimal(this.unitaryPrice)
           }
 
 
