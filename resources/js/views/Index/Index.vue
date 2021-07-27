@@ -209,9 +209,8 @@
                 <!-- '/:slugProduct/:slugType/:slugLine?/detalles/:slugDetail' -->
                 <template v-for="(item, index) in items" >
                   <v-list-item :key="index" style="background-color: white"
-                  :to="{name: 'Details', params: {slugProduct:item.product,slugType:item.type,slugDetail: item.slug, id: item.id}}"
+                  :to="{name: 'Details', params: {slugProduct:item.type.product_id == 1 ? 'PERSIANAS' : 'TOLDOS',slugType:item.type.slug,slugDetail: item.slug, id: item.id}}"
                   >
-                      <v-img max-width="60" :src="`../img/modelos/tumb/${item.image}.jpg`"></v-img>
 
                     <v-list-item-content class="ma-1">
                       <v-list-item-title style="font-size: 1em;" >{{item.name}}</v-list-item-title>
@@ -335,7 +334,7 @@ export default {
     },
     watch:{
       query(after, before){
-        if(this.query !== ''){
+        if(this.query !== '' && this.query !== null){
           this.searchProducts();
         }
 
@@ -458,7 +457,7 @@ export default {
     },
 
     searchProducts(){
-     this.items = this.$store.state.productsModule.variants.filter((t) => t.name.includes(this.query))
+     this.items = this.$store.state.productsModule.variants.filter((t) => t.name.toLowerCase().includes(this.query.toLowerCase()))
     },
 
     btnMailCliked(value){

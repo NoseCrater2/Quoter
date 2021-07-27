@@ -217,8 +217,9 @@
                   v-model="order.canvas[0].width"
                   :rules="[
                   buttonCanvasRules(maxwidth, 0),
-                    ...widthCanvasRules(getType ? getType.min_width : 0, maxwidth,0),
+                    ...widthCanvasRules(getType ? getType.min_width : 0, maxwidth,0)
                   ]"
+                  :messages="extraEnrollableRule(0)"
                 ></v-text-field>
 
                 <v-text-field
@@ -491,7 +492,7 @@
                 v-if="(order.type === 'horizontal-aluminio-1' || order.type === 'horizontal-aluminio-2' || order.type === 'horizontal-madera-2') && order.variant != null"
                 :src=" `/img/modelos/medium/${order.type}/${order.manufacturer}/${$store.getters.getVariant(order.variant).image}.jpg`"
                 >
-                </v-img> 
+                </v-img>
                 <v-img
                 v-else-if="order.color"
                 max-height="328"
@@ -527,7 +528,7 @@
                </div>
 
                 <div v-else class="d-flex  justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
-                    {{mxCurrencyFormat.format(roundToOneDecimal(unitaryPrice))}} MXN
+                    {{mxCurrencyFormat.format(roundToOneDecimal(unitaryPrice) + parseFloat(extraEnrollablePrice))}} MXN
                  </div>
 
                <v-divider></v-divider>
@@ -725,11 +726,20 @@
       <v-dialog v-model="canvasDialog" persistent max-width="600">
         <v-form ref="canvasForm" lazy-validation>
           <v-card>
+            <v-card-title class="mb-n7">
+                <v-spacer></v-spacer>
+                <v-btn
+                  icon
+                  @click="closeCanvasForm"
+                >
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-card-title>
             <v-card-title>
               Indique ancho alto para cada lienzo
               <v-spacer></v-spacer>
               ${{
-                parseFloat(Math.round(unitaryPrice * 10) / 10).toFixed(2)
+                parseFloat((Math.round(unitaryPrice * 10) / 10) + parseFloat(extraEnrollablePrice)).toFixed(2)
               }}
               MXN
             </v-card-title>
@@ -832,7 +842,9 @@
                       >Eliminar último lienzo</v-btn>
             </v-card-actions>
             <v-card-actions>
-              <v-btn dark block  color="#47a5ad" @click="validateCanvas">ACEPTAR</v-btn>
+                <v-btn dark color="red" @click="closeCanvasForm">CANCELAR</v-btn>
+                <v-spacer></v-spacer>
+              <v-btn dark color="#47a5ad" @click="validateCanvas">ACEPTAR</v-btn>
             </v-card-actions>
           </v-card>
         </v-form>
@@ -1364,6 +1376,7 @@ export default {
         price: 0,
         rotate: false,
         motor_type: null,
+        extraEnrollable: 0,
         motor: {
           side_control: null,
           price: 0,
@@ -1411,6 +1424,7 @@ export default {
         price: 0,
         rotate: false,
         motor_type: null,
+        extraEnrollable: 0,
         motor: {
           price: 0,
           action: null,
@@ -1478,9 +1492,9 @@ export default {
   methods: {
     roundToOneDecimal (value ) {
       return Math.round(value * 10) / 10
-      
+
     },
-    
+
     downloadButtonPdfAuth(){
         FileDownload(this.downloadButtonPdf, 'modelos.pdf');
     },
@@ -1696,7 +1710,7 @@ export default {
        if(this.getType){
           if(n > max && (  this.getType.name == 'ENROLLABLE' || this.getType.name == 'ROMANA' )){
          this.showButtonDialog = true
-         return "Si tu ventana revasa los limites permitidos puedes agregar más lienzos"
+         return "Si tu ventana rebasa los limites permitidos puedes agregar más lienzos"
        }else{
          this.showButtonDialog = false
          return true
@@ -1707,10 +1721,32 @@ export default {
 
     },
 
+    extraEnrollableRule(index){
+       let n = parseFloat(this.order.canvas[index].width);
+       if(this.getType){
+          if(n > 2.45 && (  this.getType.name == 'ENROLLABLE')){
+         return "Si el lienzo rebasa los 2.45 metros de ancho, se hará un cargo extra de $350.00 MXN"
+       }else{
+         return ''
+       }
+       }else{
+         return ''
+       }
+
+    },
+
     validateCanvas() {
       if (this.$refs.canvasForm.validate()) {
         this.canvasDialog = false;
       }
+    },
+    closeCanvasForm(){
+        this.$refs.canvasForm.resetValidation();
+        this.canvasDialog = false;
+        while (this.order.canvas.length > 1) {
+            this.order.canvas.pop();
+        }
+
     },
     addCanvas() {
       if (this.order.canvas.length < 3) {
@@ -1743,7 +1779,7 @@ export default {
         this.flexibaletExtraDialog = true
       }else{
         this.dialogMotorization = true;
-       
+
       }
 
     },
@@ -1777,11 +1813,12 @@ export default {
           if(this.order.type == 'horizontal-madera-2'){
             this.order.price = this.roundToOneDecimal(this.findWoodPrice)
           }else if(this.order.type == 'celular'){
-           
+
             this.order.price = this.roundToOneDecimal(this.unitaryPrice)
             this.order.motor.price = this.roundToOneDecimal(this.motorCelularPrice())
 
           }else{
+              this.order.extraEnrollable = this.extraEnrollablePrice * 1;
              this.order.price = this.roundToOneDecimal(this.unitaryPrice)
           }
 
@@ -1801,6 +1838,7 @@ export default {
             this.order.motor =  Object.assign({}, this.defaultMotor);
            this.$refs.form.resetValidation()
            console.log(this.order)
+           console.log(this.orders)
           });
         }
       }
@@ -1990,6 +2028,16 @@ export default {
       if(this.order.canvas[0].width){
         return this.motorizations.filter(m => m.type === "PERSIANAS CELULARES" && parseFloat(m.width) >= this.order.canvas[0].width)
       }
+    },
+
+    extraEnrollablePrice(){
+      let enrollablePrice = 0
+        this.order.canvas.forEach(canvas => {
+            if(canvas.width > 2.45){
+                enrollablePrice += 350;
+            }
+        });
+      return enrollablePrice
     },
 
     findWoodPrice(){

@@ -32,7 +32,7 @@ class VariantController extends Controller
             ->whereColumn('variant_id', 'variants.id')
             ->limit(1)],
         )
-        ->with(['type:id,slug','line:id,slug','weave:id,slug','subweave:id,slug'])
+        ->with(['type:id,slug,product_id','line:id,slug','weave:id,slug','subweave:id,slug'])
         ->orderBy('price','desc')
         ->get();
         return response(['data'=> $variants],200);
@@ -99,15 +99,15 @@ class VariantController extends Controller
              'price' => 'required|numeric|min:1',
          ];
          $validator= Validator::make($data,$rules, ErrorMessages::getMessages());
-         
+
          if($validator->fails()){
              return response($validator->errors(),422);
          }else{
-             
-             $variant->price = $data['price']; 
+
+             $variant->price = $data['price'];
              $variant->save();
              return new VariantIndexResource(Variant::findOrFail($variant->id));
-         }   
+         }
     }
 
     /**
@@ -144,7 +144,7 @@ class VariantController extends Controller
         // return VariantIndexResource::collection(
         //     Variant::orderByRaw('rand()')->where('type_id', '=', $variant->type->id)->take(4)->get()
         // );
-                
+
     }
 
     public function getColors(Variant $variant)
@@ -177,7 +177,7 @@ class VariantController extends Controller
        $results = (new Search())
        ->registerModel(Variant::class, function(ModelSearchAspect $modelSearchAspect){
            $modelSearchAspect
-           
+
            ->addSearchableAttribute('name')
            ->addSearchableAttribute('price')
            ->with(['colors:code','type.product:id,slug']);
