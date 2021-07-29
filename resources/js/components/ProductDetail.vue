@@ -99,7 +99,7 @@
                                  dark
                                  color= "#47a5ad"
                                  depressed
-                                 :to="{name:'Quoter', query:{type: details.type.slug, line: details.weave.slug, variant: details.id,manufacturer: details.line.slug, color: details.colors[selected]}}">
+                                 :to="{name:'Quoter', query:{type: details.type.slug, line: details.weave != null ? details.weave.slug : null, variant: details.id,manufacturer: details.line.slug, color: details.colors[selected]}}">
                                     COTIZAR ESTE PRODUCTO
                                  </v-btn>
                                 <v-btn
@@ -194,7 +194,7 @@
                               style="height: 100%;"
                               >
                               <v-hover v-slot="{ hover }">
-                              <v-btn :to="{name: 'Details', params: {slugWeave:r.weave.slug, slugDetail: r.id.toString()}}" depressed :outlined="!hover" tile color="white"  x-small>VER</v-btn>
+                              <v-btn :to="{name: 'Details', params: {slugWeave:r.weave != null ? r.weave.slug : null, slugDetail: r.id.toString()}}" depressed :outlined="!hover" tile color="white"  x-small>VER</v-btn>
                               </v-hover>
                               </div>
 
