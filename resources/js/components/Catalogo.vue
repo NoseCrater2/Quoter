@@ -452,6 +452,8 @@ export default {
                 return this.slugWeave
             },
 	        set: function(newValue) {
+                this.page = 1;
+                this.$router.push({query: {...this.$route.query, page: this.page}, params: {slugWeave: newValue}})
                 this.selectedWeave = newValue
 	        }
 	    },
@@ -461,6 +463,8 @@ export default {
                 return this.slugSubweave
             },
 	        set: function(newValue) {
+                this.page = 1;
+                this.$router.push({query: {...this.$route.query, page: this.page}, params: {slugSubweave: newValue}})
                 this.selectedSubweave = newValue
 	        }
 	    },
@@ -470,6 +474,8 @@ export default {
                 return this.slugLine
             },
 	        set: function(newValue) {
+                this.page = 1;
+                this.$router.push({query: {...this.$route.query, page: this.page}, params: {slugLine: newValue}})
                 this.selectedLine = newValue
 	        }
 	    },
@@ -478,6 +484,8 @@ export default {
                 return this.slugType
             },
             set: function(newValue) {
+                this.page = 1;
+                this.$router.push({query: {...this.$route.query, page: this.page}, params: {slugType: newValue}})
                 this.selectedType = newValue
 	        }
         },
