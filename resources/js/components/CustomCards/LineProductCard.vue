@@ -1,6 +1,6 @@
 <template>
     <v-hover  v-slot="{ hover }">
-        <v-btn rounded :outlined="hover?false:true" :style="hover?'color: white':''"  style="font-size:0.70em" block color="#47a5ad"
+        <v-btn rounded :outlined="hover?false:true" :style="hover?'color: white':''"  style="font-size:0.70em; font-weight: bolder;" block color="#47a5ad"
         @click="chooseRoute(line)">
             {{line.name}}
         </v-btn>

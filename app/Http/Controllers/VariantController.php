@@ -135,15 +135,16 @@ class VariantController extends Controller
 
     public function getRelated(Variant $variant)
     {
-        $v = $variant
-        ->with(['type:id,slug','line:id,slug','weave:id,slug','colors'])
-        ->orderBy('price','desc')
-        ->take(4)
+        $variant = Variant::addSelect(
+            ['image' => Color::select('code')
+            ->whereColumn('variant_id', 'variants.id')
+            ->limit(1)],
+        )
+        ->with(['type:id,slug,product_id','line:id,slug','weave:id,slug','subweave:id,slug'])
+        ->where('type_id', $variant->type_id)
+        ->limit(4)
         ->get();
-        return response(['data'=> $v],200);
-        // return VariantIndexResource::collection(
-        //     Variant::orderByRaw('rand()')->where('type_id', '=', $variant->type->id)->take(4)->get()
-        // );
+        return response(['data'=> $variant],200);
 
     }
 
