@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 
 const routes = [
     {
-        
+
         path: "/dashboard",
         component: () => import('./views/Index/Home.vue'),
         name: "Dashboard",
@@ -83,7 +83,7 @@ const routes = [
                 }
 
             },
-            
+
         ]
 
     },
@@ -127,7 +127,7 @@ const routes = [
                 path: 'client-register',
                 component: () => import("./views/Register.vue"),
                 name: 'Register',
-  
+
             },
             {
                 /* webpackChunkName: Aboutus*/
@@ -211,11 +211,11 @@ const routes = [
                 component: () => import("./components/Catalogo.vue"),
                 props: true,
             },
-            
+
         ],
     },
 
-   
+
 
     {
         path: "/404",

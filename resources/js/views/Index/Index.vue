@@ -115,33 +115,61 @@
             <!-- COMIENZA BARRA DE NAVEGACIÓN -->
             <v-app-bar ref="mybar" :color="isMobile?'white':'#47a5ad'" style="position: sticky; z-index: 2; max-height: 64px" :style="isMobile?'top: 0;':'top:28px;'">
 
-                 <v-app-bar-nav-icon v-if="isMobile" @click="drawer = true">
+        <template v-if="isMobile" v-slot:default="{}">
+            <v-container class="d-flex align-center justify-space-between">
+                 <v-app-bar-nav-icon @click="drawer = true">
                  </v-app-bar-nav-icon>
                  <v-spacer></v-spacer>
-                 <v-card v-if="isMobile" :to="{name:'Home'}" flat height="56" max-height="56" width="180" tile>
+                 <v-card :to="{name:'Home'}" flat height="56" max-height="56" width="180" tile>
                     <v-img max-width="170"  src="/img/logo.svg"  ></v-img>
                  </v-card>
 
                    <v-spacer></v-spacer>
-                   <v-expand-transition>
-                   <v-text-field
-                    color="#47a5ad"
-                    class="mt-8"
-                    placeholder="Buscar producto"
-                    single-line
-                    solo
-                    v-if="showSearch"
-                    @blur="showSearch = false"
-                    >
-                </v-text-field>
-                  </v-expand-transition>
-          <v-btn icon v-if="isMobile" @click="showSearch = true">
-              <v-icon color="#47a5ad">mdi-magnify</v-icon>
-          </v-btn>
 
-             <template v-if="!isMobile" v-slot:default="{}" >
+                    <v-menu :offset-y="true" nudge-top="35" max-width="370" >
+                        <template v-slot:activator="{on, attrs }">
+                            <v-slide-x-reverse-transition>
+                            <v-text-field
+                                autocomplete="false"
+                                color="#47a5ad"
+                                class="mt-8"
+                                placeholder="Buscar producto"
+                                v-bind="attrs"
+                                v-on="on"
+                                single-line
+                                v-model="query"
+                                solo
+                                v-if="showSearch"
+                                @blur="showSearch = false"
+                                >
+                            </v-text-field>
+                            </v-slide-x-reverse-transition>
+                      </template>
 
-                  <v-menu  offset-y>
+                      <v-list three-line max-height="500" color="white">
+                        <!-- '/:slugProduct/:slugType/:slugLine?/detalles/:slugDetail' -->
+                        <template v-for="(item, index) in items" >
+                          <v-list-item :key="index" style="background-color: white"
+                          :to="{name: 'Details', params: {slugProduct:item.type.product_id == 1 ? 'PERSIANAS' : 'TOLDOS',slugType:item.type.slug,slugDetail: item.slug, id: item.id}}"
+                          >
+
+                            <v-list-item-content class="ma-1">
+                              <v-list-item-title style="font-size: 1em;" >{{item.name}}</v-list-item-title>
+                              <v-list-item-subtitle style="color: #47a5ad; font-size: 1em" >${{item.price}}MXN</v-list-item-subtitle>
+                            </v-list-item-content>
+                          </v-list-item>
+                        </template>
+                      </v-list>
+                    </v-menu>
+                        <v-btn icon @click="showSearch = !showSearch">
+                            <v-icon color="#47a5ad">mdi-magnify</v-icon>
+                        </v-btn>
+            </v-container>
+        </template>
+
+             <template v-else v-slot:default="{}">
+
+                  <v-menu offset-y>
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn class="white--text " style="justify-content:left" depressed tile color="#404042" width="200px" height="65px" v-bind="attrs" v-on="on">
                               <div v-if="$refs.mybar">
@@ -188,8 +216,9 @@
                 <v-btn color="white" text height="65px" to="/contact">Contáctanos</v-btn>
                 <v-spacer  ></v-spacer>
                 <v-menu :offset-y="true" max-width="370" >
-                  <template v-slot:activator="{on, attrs }">
+                  <template v-slot:activator="{on, attrs}">
                 <v-text-field
+                autocomplete="false"
                 title
                 flat
                 v-bind="attrs"
@@ -209,9 +238,8 @@
                 <!-- '/:slugProduct/:slugType/:slugLine?/detalles/:slugDetail' -->
                 <template v-for="(item, index) in items" >
                   <v-list-item :key="index" style="background-color: white"
-                  :to="{name: 'Details', params: {slugProduct:item.product,slugType:item.type,slugDetail: item.slug, id: item.id}}"
+                  :to="{name: 'Details', params: {slugProduct:item.type.product_id == 1 ? 'PERSIANAS' : 'TOLDOS',slugType:item.type.slug,slugDetail: item.slug, id: item.id}}"
                   >
-                      <v-img max-width="60" :src="`../img/modelos/tumb/${item.image}.jpg`"></v-img>
 
                     <v-list-item-content class="ma-1">
                       <v-list-item-title style="font-size: 1em;" >{{item.name}}</v-list-item-title>
@@ -335,10 +363,9 @@ export default {
     },
     watch:{
       query(after, before){
-        if(this.query !== ''){
+        if(this.query !== '' && this.query !== null){
           this.searchProducts();
         }
-
       }
     },
 
@@ -458,7 +485,7 @@ export default {
     },
 
     searchProducts(){
-     this.items = this.$store.state.productsModule.variants.filter((t) => t.name.includes(this.query))
+     this.items = this.$store.state.productsModule.variants.filter((t) => t.name.toLowerCase().includes(this.query.toLowerCase()))
     },
 
     btnMailCliked(value){

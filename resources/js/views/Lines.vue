@@ -63,7 +63,7 @@
                 </v-col>
                     <v-col v-for="n in getProduct.types" :key="n.id" cols="12" align-self="center" md="3" sm="6">
                         <v-hover  v-slot="{ hover }">
-                            <v-btn rounded :outlined="hover?false:true" :style="hover?'color: white':''"  style="font-size:0.70em" block color="#47a5ad"
+                            <v-btn rounded :outlined="hover?false:true" :style="hover?'color: white':''"  style="font-size:0.70em; font-weight: bolder;" block color="#47a5ad"
                             :to="{name: 'Lines', params: {slugType: n.slug}}">
                                 {{n.name}}
                             </v-btn>

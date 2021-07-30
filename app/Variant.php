@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Variant extends Model implements Searchable
 {
-    protected $fillable = 
+    protected $fillable =
     [
         'name',
         'slug',
@@ -19,7 +19,7 @@ class Variant extends Model implements Searchable
         'weave_id',
         'subweave_id',
         'type_id',
-        
+
     ];
     public $timestamps = false;
     // protected $hidden = ['pivot'];

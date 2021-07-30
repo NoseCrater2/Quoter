@@ -276,7 +276,7 @@
                         md="4">
 
                           <v-hover v-slot="{ hover }" v-if="item">
-                            <v-card width="240"  color="grey lighten-4" flat :to="{name: 'Details', params: {slugWeave:item.weave.slug, slugDetail: item.id.toString()}}">
+                            <v-card width="240"  color="grey lighten-4" flat :to="{name: 'Details', params: {slugWeave:item.weave != null ? item.weave.slug : null, slugDetail: item.id.toString()}}">
                               <v-img class="tag" width="85"  v-if="item.rotate == 1" src="/img/modelos/rotable.png"></v-img>
                               <v-img
                               class="white--text align-end"
@@ -297,7 +297,7 @@
                                   class="d-flex transition-fast-in-fast-out  v-card--reveal white--text "
                                   style="height: 100%;">
                                     <v-hover v-slot="{ hover }">
-                                      <v-btn :to="{name: 'Details', params: {slugWeave:item.weave.slug, slugDetail: item.id.toString()}}" depressed :outlined="!hover" tile color="white"  small>Detalles del producto</v-btn>
+                                      <v-btn :to="{name: 'Details', params: {slugWeave:item.weave != null ? item.weave.slug : null, slugDetail: item.id.toString()}}" depressed :outlined="!hover" tile color="white"  small>Detalles del producto</v-btn>
                                     </v-hover>
                                   </div>
                                 </v-slide-x-transition>
@@ -348,7 +348,7 @@
                                 color="#47a5ad"
                                 class="white--text"
                                 small
-                                :to="{name:'Quoter', query:{type: item.type.slug, line: item.weave.slug, manufacturer: item.line.slug,variant: item.id}}"
+                                :to="{name:'Quoter', query:{type: item.type.slug, line: item.weave != null ? item.weave.slug : null, manufacturer: item.line.slug,variant: item.id}}"
                                 >
                                   COTIZAR
                                 </v-btn>
@@ -519,6 +519,8 @@ export default {
         return this.slugLine
       },
 	    set: function(newValue) {
+        this.page = 1;
+        this.$router.push({query: {...this.$route.query, page: this.page}, params: {slugLine: newValue}})
         this.selectedLine = newValue
 	    }
 	  },
@@ -527,17 +529,20 @@ export default {
         return this.slugWeave
       },
 	    set: function(newValue) {
+            this.page = 1;
+            this.$router.push({query: {...this.$route.query, page: this.page}, params: {slugWeave: newValue}})
         this.selectedWeave = newValue
 	    }
 	  },
 
     products(){
-      if(this.getType.weaves.length > 0){
-        return this.$store.state.productsModule.variants.filter((variant) => variant.type.slug === this.selectedType && variant.line.slug === this.selectedLine && variant.weave.slug === this.selectedWeave)
-      }
-      else{
-        return this.$store.state.productsModule.variants.filter((variant) => variant.type.slug === this.selectedType && variant.line.slug === this.selectedLine)
-      }
+        if(this.getType.weaves.length > 0){
+            return this.$store.state.productsModule.variants.filter((variant) => variant.type.slug === this.selectedType && variant.line.slug === this.selectedLine && variant.weave.slug === this.selectedWeave)
+        }
+        else{
+            return this.$store.state.productsModule.variants.filter((variant) => variant.type.slug === this.selectedType && variant.line.slug === this.selectedLine)
+
+        }
     },
 
     numberOfPages(){
@@ -549,6 +554,8 @@ export default {
          return this.slugType
       },
       set: function(newValue) {
+          this.page = 1;
+          this.$router.push({query: {...this.$route.query, page: this.page}, params: {slugType: newValue}})
         this.selectedType = newValue
 	    }
     },
