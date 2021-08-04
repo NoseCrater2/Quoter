@@ -26,7 +26,7 @@ Route::get('/clear-all-cache', function() {
   });
 Auth::routes();
 
-Route::middleware('auth')->get('/user',function (Request $request){
+Route::middleware('auth:sanctum')->get('/user',function (Request $request){
     
     return new UserShowResource($request->user());
 });

@@ -68,6 +68,14 @@ class SunblindsImport implements WithHeadingRow, ToCollection, SkipsOnError, Wit
                 ],[
                     'name' => $row['modelo'],
                     'slug' => str_replace(' ', '-', mb_strtolower($row['modelo'])),
+                    'weight' => $row->has('peso')?$row['peso']:null,
+                    'polyester' => $row->has('polyester')?$row['polyester']:null,
+                    'acrylic' => $row->has('acrilico')?$row['acrilico']:null,
+                    'pvc' => $row->has('pvc')?$row['pvc']:null,
+                    'fiberglass' => $row->has('fiberglass')?$row['fiberglass']:null,
+                    'linen' => $row->has('lino')?$row['lino']:null,
+                    'pet' => $row->has('pet')?$row['pet']:null,
+                    'whiteback' => $row->has('whiteback')?$row['whiteback']:null,
                     'line_id' => $line->id,
                     'type_id' => $type->id
                 ]);

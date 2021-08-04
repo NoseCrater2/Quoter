@@ -14,7 +14,6 @@ import ordersModule from './ordersModule';
 import sunblindModule from './sunblindModule';
 import motorizationModule from './motorizationModule';
 import { isLoggedIn, logOut } from '../utils/auth';
-import { isNull } from 'lodash';
 
 const store = new Vuex.Store({
 
