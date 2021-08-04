@@ -30,8 +30,8 @@
                     :zoom="zoom"
                     :center="center"
                     :options="mapOptions"
-                    style="width: 100%; z-index: 0"
-                    :style="$vuetify.breakpoint.mdAndUp ? 'height: 47%; ' : 'height: 100%; '"
+                    style="z-index: 0"
+                    :style="$vuetify.breakpoint.mdAndUp ? 'height: 47vh; width: 100%;' : 'height: 50vh; width: 100%;'"
                     @update:center="centerUpdate"
                     @update:zoom="zoomUpdate"
                   >
