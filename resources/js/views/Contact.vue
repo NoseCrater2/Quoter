@@ -2,7 +2,7 @@
     <div id="app">
         <v-container fluid style="max-width: 1200px" class="my-4">
         <v-row justify="space-between">
-            <v-col cols="12" md="6" sm="12" >
+            <v-col cols="12" xl="6" lg="6" md="6" sm="12" >
                 <v-card flat>
                     <v-card-title>CONTÁCTANOS</v-card-title>
                     <v-card-text>
@@ -24,8 +24,30 @@
                     </v-list-item> -->
                     </v-list-item-group>
                 </v-card>
+                <v-card-title class="ml-n4 text-uppercase">Para cotizaciones e instalaciones:</v-card-title>
+                <l-map
+                    v-if="showMap"
+                    :zoom="zoom"
+                    :center="center"
+                    :options="mapOptions"
+                    style="width: 100%; z-index: 0"
+                    :style="$vuetify.breakpoint.mdAndUp ? 'height: 47%; ' : 'height: 100%; '"
+                    @update:center="centerUpdate"
+                    @update:zoom="zoomUpdate"
+                  >
+                    <l-tile-layer :url="url" :attribution="attribution" />
+                    <div v-for="(itemMark, index) in arrCities" :key="index">
+                      <l-marker :lat-lng="itemMark.location">
+                        <l-tooltip :options="{ permanent: true, interactive: true }">
+                          <div>
+                            {{itemMark.city}}
+                          </div>
+                        </l-tooltip>
+                      </l-marker>
+                    </div>
+                </l-map>
             </v-col>
-            <v-col cols="12" md="6" sm="12" align-self="center">
+            <v-col cols="12" xl="6" lg="6" md="6" sm="12" >
                 <v-card flat>
                     <v-form class="ma-4">
                         <v-select
@@ -75,6 +97,9 @@
 </template>
 
 <script>
+import { latLng } from "leaflet";
+import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from "vue2-leaflet";
+import "leaflet/dist/leaflet.css";
 export default {
     data(){
         return{
@@ -88,12 +113,48 @@ export default {
             ],
             messages: [
                 'Para cualquier pregunta acerca de un producto u orden',
-                'Si un problema técnico ocurrre en este sitio web' ]
+                'Si un problema técnico ocurrre en este sitio web' ],
+
+            zoom: 5,
+            center: latLng(23.6043041, -102.7332577),
+            url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+            arrCities: [
+              {city: 'Morelia', location: latLng(19.7038033, -101.2761649)},
+              {city: 'Aguascalientes', location: latLng(21.8830692, -102.2978658)},
+              {city: 'Querétaro', location: latLng(20.5725833, -100.3889541)},
+              {city: 'Toluca', location: latLng(19.2901055, -99.6613604)},
+              {city: 'Acapulco', location: latLng(16.8530356, -99.8204611)},
+              {city: 'Oaxaca', location: latLng(17.0550731, -96.7715414)},
+              {city: 'Saltillo', location: latLng(25.4390194, -100.9740975)},
+              {city: 'Tijuana', location: latLng(32.5137784, -117.0638385)},
+              {city: 'Villahermosa', location: latLng(17.9919465, -92.9449881)}
+            ],
+            currentZoom: 11.5,
+            currentCenter: latLng(23.6043041, -102.7332577),
+            showParagraph: false,
+            mapOptions: {
+              zoomSnap: 0.5,
+            },
+            showMap: true,
         }
     },
 
-    methods:{
+    components:{
+        LMap,
+        LTileLayer,
+        LMarker,
+        LPopup,
+        LTooltip,
+    },
 
+    methods:{
+        zoomUpdate(zoom) {
+          this.currentZoom = zoom;
+        },
+        centerUpdate(center) {
+          this.currentCenter = center;
+        },
     },
 
     computed:{
