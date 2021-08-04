@@ -19,8 +19,20 @@ class Variant extends Model implements Searchable
         'weave_id',
         'subweave_id',
         'type_id',
-
+        'weight',
+        'polyester',
+        'acrylic',
+        'pvc',
+        'fiberglass',
+        'linen',
+        'pet',
+        'whiteback',
     ];
+
+    
+    
+    
+    
     public $timestamps = false;
     // protected $hidden = ['pivot'];
 
