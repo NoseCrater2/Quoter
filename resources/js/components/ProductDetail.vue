@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div >
         <v-container fluid style="max-width: 1200px" class="my-4">
-            <v-card flat>
+            <v-card flat v-if="details">
                 <v-row>
                     <v-col cols="12" md="4" sm="12">
                          <v-card width="400" flat>
@@ -125,55 +125,91 @@
                             @changeIndex="changeIndex"
                             :colors="details.colors" />
                         </v-card-text>
-                        <v-list dense>
-                        <v-list-item>
-                            <v-list-item-content>
-                                <v-list-item-title>TIPO</v-list-item-title>
-                                <v-list-item-subtitle class="text--primary">
-                                    {{ details.type.name }}
-                                </v-list-item-subtitle>
-                            </v-list-item-content>
-                        </v-list-item>
-                        <v-list-item>
-                            <v-list-item-content>
-                                <v-list-item-title>LÍNEA</v-list-item-title>
-                                <v-list-item-subtitle class="text--primary">
-                                    {{ details.line.name }}
-                                </v-list-item-subtitle>
-                            </v-list-item-content>
-                        </v-list-item>
-                        <v-list-item v-if="details.subweave != null">
-                            <v-list-item-content >
-                                <v-list-item-title>MODELO</v-list-item-title>
-                                <v-list-item-subtitle class="text--primary">
-                                    {{ details.subweave.name }}
-                                </v-list-item-subtitle>
-                            </v-list-item-content>
-                        </v-list-item>
-                        <v-list-item v-if="details.weave != null">
-                            <v-list-item-content>
-                                <v-list-item-title>TEJIDO</v-list-item-title>
-                                <v-list-item-subtitle class="text--primary">
-                                    {{ details.weave.name }}
-                                </v-list-item-subtitle>
-                            </v-list-item-content>
-                        </v-list-item>
-                        <v-list-item v-if="details.rotate != 0">
-                            <v-list-item-avatar>
-                              <v-icon color="#47a5ad" dark>
-                                mdi-format-rotate-90
-                              </v-icon>
-                            </v-list-item-avatar>
-                            <v-list-item-content>
-                                <v-list-item-title>ROTABLE</v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                    </v-list>
+                            <v-row>
+                                <v-col cols="5">
+                                    <v-chip  class="ma-1" color="#404042" text-color="white">
+                                        <v-icon left>mdi-check-circle</v-icon>
+                                        TIPO: {{ details.type.name }}
+                                    </v-chip>
+                                    <v-chip  class="ma-1" color="#404042" text-color="white">
+                                        <v-icon left>mdi-check-circle</v-icon>
+                                        LÍNEA:  {{ details.line.name }}
+                                    </v-chip>
+                                    <v-chip v-if="details.subweave != null" class="ma-1" color="#404042" text-color="white">
+                                        <v-icon left>mdi-check-circle</v-icon>
+                                        MODELO:   {{ details.subweave.name }}
+                                    </v-chip>
+                                    <v-chip v-if="details.weave != null" class="ma-1" color="#404042" text-color="white">
+                                        <v-icon left>mdi-check-circle</v-icon>
+                                        TEJIDO:   {{ details.weave.name }}
+                                    </v-chip>
+                                    <v-chip v-if="details.rotate != 0" class="ma-1" color="#404042" text-color="white">
+                                        <v-icon left> mdi-format-rotate-90</v-icon>
+                                        ROTABLE
+                                    </v-chip>
+                                </v-col>
+                                <v-divider vertical inset></v-divider>
+                                <v-col cols="4" style="font-family: Montserrat">
+                                    <span>Composición</span>
+                                    <v-chip v-if="details.width > 1" class="ma-1" color="teal" text-color="white">
+                                        <v-icon left>mdi-check-circle</v-icon>
+                                        ANCHO: {{ details.width }} M
+                                    </v-chip>
+                                    <v-chip v-if="details.weight != null" class="ma-1" color="teal" text-color="white">
+                                        <v-icon left>mdi-check-circle</v-icon>
+                                        PESO: {{ details.weight }} g/m<sup>2</sup>
+                                    </v-chip>
+                                    <v-chip v-if="details.polyester != null" class="ma-1" color="teal" text-color="white">
+                                        <v-icon left>mdi-check-circle</v-icon>
+                                        POLYESTER: {{ details.polyester }}%
+                                    </v-chip>
+                                    <v-chip v-if="details.acrylic != null" class="ma-1" color="teal" text-color="white">
+                                        <v-icon left>mdi-check-circle</v-icon>
+                                        ACRÍLICO: {{ details.acrylic }}%
+                                    </v-chip>
+                                    <v-chip v-if="details.pvc != null" class="ma-1" color="teal" text-color="white">
+                                        <v-icon left>mdi-check-circle</v-icon>
+                                        PVC: {{ details.pvc }}%
+                                    </v-chip>
+                                    <v-chip v-if="details.fiberglass != null" class="ma-1" color="teal" text-color="white">
+                                        <v-icon left>mdi-check-circle</v-icon>
+                                        FIBRA DE VIDRIO: {{ details.fiberglass }}%
+                                    </v-chip>
+                                    <v-chip v-if="details.pet != null" class="ma-1" style="display: block; width: 110px" color="teal" text-color="white">
+                                        <v-icon left>mdi-check-circle</v-icon>
+                                        PET: {{ details.pet }}%
+                                    </v-chip>
+                                    <v-chip v-if="details.linen != null" class="ma-1" style="display: block; width: 120px" color="teal" text-color="white">
+                                        <v-icon left>mdi-check-circle</v-icon>
+                                        LINO: {{ details.linen }}%
+                                    </v-chip>
+                                    <v-chip v-if="details.whiteback != null" class="ma-1" color="teal" text-color="white">
+                                        <v-icon left>mdi-check-circle</v-icon>
+                                        WHITEBACK: {{ details.whiteback }}%
+                                    </v-chip>
+                                </v-col>
+                            </v-row>
+                            
                         </v-card>
                     </v-col>
                 </v-row>
             </v-card>
-
+             <v-row justify-center v-else>
+    <v-col cols="4">
+       <v-skeleton-loader
+        
+        width="300"
+        type="image, actions"
+      ></v-skeleton-loader>
+    </v-col>
+    <v-col cols="8">
+      <v-skeleton-loader
+        class="mx-auto"
+ 
+        type="list-item-two-line,table-heading, avatar"
+      ></v-skeleton-loader>
+    </v-col>
+  </v-row>
             <v-row>
                 <v-col cols="12">
                       <v-card tile flat>
@@ -254,6 +290,7 @@ import ItemColors from '../components/CustomCards/ItemColors';
 export default {
     data(){
         return{
+            details: null,
             attrs: {
             class: 'mb-6',
             boilerplate: true,
@@ -281,7 +318,7 @@ export default {
 
     computed:{
         ...mapState({
-        details: state => state.variantsModule.variant[0],
+      //  details: state => state.variantsModule.variant[0],
         relationed: state => state.variantsModule.related,
         user: state => state.user,
         }),
@@ -292,23 +329,33 @@ export default {
 
 
     },
+    beforeRouteEnter(to, from, next) {
 
-    mounted(){
-        if(this.slugDetail){
-             if(this.$route.params.id){
+      next(vm => {
+          if(vm.slugDetail){
+             if(vm.$route.params.id){
+                 axios.get("/api/variants/"+vm.$route.params.id).then( response => {
+                     console.log(response.data.data[0])
+                     vm.details = response.data.data[0]
+                      vm.$store.dispatch('getRelated', vm.$route.params.id);
+                 })
                 //  document.title = this.getProduct.name
-                this.$store.dispatch('getVariant',this.$route.params.id).then(()=>{
-                this.$store.dispatch('getRelated', this.$route.params.id);
-            })
+            //     vm.$store.dispatch('getVariant',vm.$route.params.id).then(()=>{
+               
+            // })
             }else{
                 //  document.title = this.getProduct.name
-                 this.$store.dispatch('getVariant',parseInt(this.slugDetail)).then(()=>{
-                this.$store.dispatch('getRelated', parseInt(this.slugDetail));
-                })
+                axios.get("/api/variants/"+vm.slugDetail).then( response => {
+                     console.log(response.data.data[0])
+                     vm.details = response.data.data[0]
+                      vm.$store.dispatch('getRelated', vm.slugDetail);
+                 })
+
             }
         }
+      });
+  },
 
-    },
 
     methods:{
         maskPrice(price){
@@ -358,6 +405,9 @@ export default {
 </script>
 
 <style>
+.v-chip__content{
+    font-family: 'Montserrat';
+}
 .cents{
   position: relative;
   bottom: 0.4em;
