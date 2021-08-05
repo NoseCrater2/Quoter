@@ -189,7 +189,7 @@
                                     </v-chip>
                                 </v-col>
                             </v-row>
-                            
+
                         </v-card>
                     </v-col>
                 </v-row>
@@ -197,7 +197,7 @@
              <v-row justify-center v-else>
     <v-col cols="4">
        <v-skeleton-loader
-        
+
         width="300"
         type="image, actions"
       ></v-skeleton-loader>
@@ -205,7 +205,7 @@
     <v-col cols="8">
       <v-skeleton-loader
         class="mx-auto"
- 
+
         type="list-item-two-line,table-heading, avatar"
       ></v-skeleton-loader>
     </v-col>
@@ -341,7 +341,7 @@ export default {
                  })
                 //  document.title = this.getProduct.name
             //     vm.$store.dispatch('getVariant',vm.$route.params.id).then(()=>{
-               
+
             // })
             }else{
                 //  document.title = this.getProduct.name
