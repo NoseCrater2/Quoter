@@ -124,7 +124,7 @@
                                                 }
 
                                                 if($order['cloth_holder']){
-                                                    $concat .= 'CON PORTATELA //';
+                                                    $concat .= 'CON '.$order['cloth_holder'].' //';
                                                 }
 
                                             ?>
@@ -142,6 +142,9 @@
                                             <?php
                                                 if(($order['extraEnrollable']) > 0){
                                                     $concat2 .= 'Cargo extra: $'.$order['extraEnrollable'].'.00 MXN // ' ;
+                                                }
+                                                if(($order['extraVertical']) > 0){
+                                                    $concat2 .= 'Cargo extra: $'.$order['extraVertical'].'.00 MXN // ' ;
                                                 }
                                             ?>
                                             <span><strong>{{$concat2}}</strong></span>
@@ -266,6 +269,7 @@
                                                     $order['motor']['galleryPrice'] +
                                                     $order['motor']['manufacturerPrice'] +
                                                     $order['motor']['stringPrice'] +
+                                                    $order['extraVertical'] +
                                                     $order['extraEnrollable'];
                                                     $total += $unitaryPrice;
                                                 ?>
@@ -321,7 +325,7 @@
                                                     $concat .= $order['color']['color'].' //';
                                                 }
                                                 if($order['cloth_holder']){
-                                                    $concat .= 'CON PORTATELA //';
+                                                    $concat .= 'CON '.$order['cloth_holder'].' //';
                                                 }
                                             ?>
                                             <span>{{$concat}}</span>
@@ -338,6 +342,9 @@
                                             <?php
                                                 if(($order['extraEnrollable']) > 0){
                                                     $concat2 .= 'Cargo extra: $'.$order['extraEnrollable'].'.00 MXN // ' ;
+                                                }
+                                                if(($order['extraVertical']) > 0){
+                                                    $concat2 .= 'Cargo extra: $'.$order['extraVertical'].'.00 MXN // ' ;
                                                 }
                                             ?>
                                             <span><strong>{{$concat2}}</strong></span>
@@ -461,6 +468,7 @@
                                                     $order['motor']['galleryPrice'] +
                                                     $order['motor']['manufacturerPrice'] +
                                                     $order['motor']['stringPrice'] +
+                                                    $order['extraVertical'] +
                                                     $order['extraEnrollable'];
                                                     $total += $unitaryPrice;
                                                 ?>
