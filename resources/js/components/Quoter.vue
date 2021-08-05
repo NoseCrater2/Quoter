@@ -83,7 +83,7 @@
                 class="ma-1"
               ></v-autocomplete>
               <v-autocomplete
-                v-if="getType"
+                v-if="getType && order.type != 'vertical'"
                 :rules="[(v) => !!v || 'Requerido']"
                 hide-details
                 dense
@@ -115,14 +115,16 @@
                 class="ma-1"
 
               ></v-autocomplete>
-              <div v-if="order.line == 'pvc-vertical'">
-                <v-radio-group
+              <div v-if="order.type == 'vertical'">
+              <v-radio-group
               row
               :mandatory="false"
               v-model="order.cloth_holder"
+              :append-icon="order.cloth_holder != null?'mdi-close-circle':undefined"
+              @click:append="order.cloth_holder = null"
               >
-                <v-radio  label="Con portatela"  color="#47a5ad" :value="true"></v-radio>
-                <v-radio  label="Sin portatela"  color="#47a5ad" :value="false"></v-radio>
+                <v-radio  label="Con galería PVC"  color="#47a5ad" value="Galería PVC"></v-radio>
+                <v-radio  label="Con galería Portatela"  color="#47a5ad" value="Galería Portatela"></v-radio>
               </v-radio-group>
               </div>
 
@@ -181,7 +183,7 @@
                 :rules="[
                   ...flexiballetWidthRules()]"
                 suffix="mts"
-                v-model="order.canvas[0].width"
+                v-model.number="order.canvas[0].width"
                 ></v-text-field>
                 <v-text-field
                 color="#47a5ad"
@@ -194,7 +196,7 @@
                 :rules="[
                   ...flexiballetHeightRules()]"
                 suffix="mts"
-                v-model="order.canvas[0].height"
+                v-model.number="order.canvas[0].height"
                 ></v-text-field>
               </div>
 
@@ -214,7 +216,7 @@
                   outlined
                   color="#47a5ad"
                   background-color="white"
-                  v-model="order.canvas[0].width"
+                  v-model.number="order.canvas[0].width"
                   :rules="[
                   buttonCanvasRules(maxwidth, 0),
                     ...widthCanvasRules(getType ? getType.min_width : 0, maxwidth,0)
@@ -238,7 +240,7 @@
                   outlined
                   color="#47a5ad"
 
-                  v-model="order.canvas[0].height"
+                  v-model.number="order.canvas[0].height"
                 ></v-text-field>
               </div>
               <div >
@@ -395,7 +397,7 @@
                 outlined
                 color="#47a5ad"
                 background-color="white"
-                v-model="order.canvas[0].width"
+                v-model.number="order.canvas[0].width"
                 :rules="[
                   ...widthWoodRules(),
                 ]"
@@ -415,7 +417,7 @@
                 :placeholder="heightMargins"
                 outlined
                 color="#47a5ad"
-                v-model="order.canvas[0].height"
+                v-model.number="order.canvas[0].height"
                 ></v-text-field>
                  <span style="font-size: 1em">
                   6.Marco
@@ -497,7 +499,7 @@
                 v-else-if="order.color"
                 max-height="328"
                 max-width="328"
-                :src=" `/img/modelos/medium/${order.type}/${order.manufacturer}/${order.color.code}.jpg`"
+                :src=" `/img/modelos/medium/${order.type}/${$store.getters.getVariant(order.variant).line.slug}/${order.color.code}.jpg`"
                 >
                   <template v-slot:placeholder>
                     <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
@@ -528,7 +530,7 @@
                </div>
 
                 <div v-else class="d-flex  justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
-                    {{mxCurrencyFormat.format(roundToOneDecimal(unitaryPrice) + parseFloat(extraEnrollablePrice))}} MXN
+                    {{mxCurrencyFormat.format(roundToOneDecimal(unitaryPrice) + parseFloat(extraEnrollablePrice) + parseFloat(extraVerticalPrice))}} MXN
                  </div>
 
                <v-divider></v-divider>
@@ -577,7 +579,7 @@
                   outlined
                   color="#47a5ad"
                   background-color="white"
-                  v-model="order.canvas[0].width"
+                  v-model.number="order.canvas[0].width"
                   :rules="[
                     ...widthCelularRules(order.celular_type),
                   ]"
@@ -597,7 +599,7 @@
                   :placeholder="heightMargins"
                   outlined
                   color="#47a5ad"
-                  v-model="order.canvas[0].height"
+                  v-model.number="order.canvas[0].height"
                 ></v-text-field>
                 <v-row v-if="order.celular_drive == 'Muelle' && order.motor.frame != null" no-gutters justify="center" align="center">
                   <v-col cols="12" md="6" sm="12">
@@ -784,7 +786,7 @@
                         <div >
                         <v-text-field
                           :placeholder="heightMargins"
-                          v-model="order.canvas[c - 1].height"
+                          v-model.number="order.canvas[c - 1].height"
                           :rules="[
                             ...heightCanvasRules(
                               getType ? getType.min_height : 0,
@@ -801,7 +803,7 @@
                         ></v-text-field>
                           <v-text-field
                           style="max-width: 255px"
-                          v-model="order.canvas[c - 1].width"
+                          v-model.number="order.canvas[c - 1].width"
                           :rules="[
                             ...widthCanvasRules(
                               getType ? getType.min_width : 0,
@@ -1372,10 +1374,11 @@ export default {
           { width: null, height: null},
         ],
         instalation_side: null,
-        cloth_holder: false,
+        cloth_holder: null,
         price: 0,
         rotate: false,
         motor_type: null,
+        extraVertical: 0,
         extraEnrollable: 0,
         motor: {
           side_control: null,
@@ -1420,10 +1423,11 @@ export default {
           { width: null, height: null},
         ],
         instalation_side: null,
-        cloth_holder: false,
+        cloth_holder: null,
         price: 0,
         rotate: false,
         motor_type: null,
+        extraVertical: 0,
         extraEnrollable: 0,
         motor: {
           price: 0,
@@ -1817,9 +1821,12 @@ export default {
             this.order.price = this.roundToOneDecimal(this.unitaryPrice)
             this.order.motor.price = this.roundToOneDecimal(this.motorCelularPrice())
 
+          }else if(this.order.type == 'vertical'){
+            this.order.extraVertical = this.extraVerticalPrice;
+            this.order.price = this.roundToOneDecimal(this.unitaryPrice)
           }else{
-              this.order.extraEnrollable = this.extraEnrollablePrice * 1;
-             this.order.price = this.roundToOneDecimal(this.unitaryPrice)
+            this.order.extraEnrollable = this.extraEnrollablePrice * 1;
+            this.order.price = this.roundToOneDecimal(this.unitaryPrice)
           }
 
 
@@ -2024,6 +2031,18 @@ export default {
 
   computed: {
 
+    extraVerticalPrice(){
+      if(this.order.type === 'vertical' && this.order.canvas[0].width != null){
+        if(this.order.cloth_holder === 'Galería PVC'){
+          return Math.ceil(this.order.canvas[0].width) * 250
+        }else if(this.order.cloth_holder === 'Galería Portatela'){
+          return Math.ceil(this.order.canvas[0].width) * 120
+        }
+      }else{
+        return 0
+      }
+    },
+
     celularMotors (){
       if(this.order.canvas[0].width){
         return this.motorizations.filter(m => m.type === "PERSIANAS CELULARES" && parseFloat(m.width) >= this.order.canvas[0].width)
@@ -2142,7 +2161,12 @@ export default {
     },
 
     variants() {
-      if (this.order.type && this.order.line && this.order.manufacturer) {
+      if(this.order.type === 'vertical' && this.order.line){
+        return this.$store.state.productsModule.variants.filter(
+          (variant) => variant.type.slug === this.order.type && variant.weave.slug === this.order.line
+        );
+      }
+      else if (this.order.type && this.order.line && this.order.manufacturer) {
         return this.$store.state.productsModule.variants.filter(
           (variant) => variant.type.slug === this.order.type && variant.weave.slug === this.order.line && variant.line.slug === this.order.manufacturer
         );

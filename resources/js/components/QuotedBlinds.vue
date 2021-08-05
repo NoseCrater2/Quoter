@@ -26,7 +26,8 @@
                           o.motor.galleryPrice +
                           o.motor.manufacturerPrice +
                           o.motor.stringPrice +
-                          o.extraEnrollable
+                          o.extraEnrollable +
+                          o.extraVertical
                         )}} MXN
                     </v-toolbar-title>
                     <v-spacer> </v-spacer>
@@ -163,14 +164,20 @@
                       {{mxCurrencyFormat.format(o.price)}} MXN
                     </v-list-item-subtitle>
                   </v-list-item>
-                    <v-list-item class="overline" dense v-if="extraEnrollablePrice(index) > 0">
+                    <v-list-item class="overline" dense v-if="o.extraEnrollable > 0">
                         <v-list-item-title class="blue--text">CARGO EXTRA</v-list-item-title>
                         <v-list-item-subtitle class="blue--text text-right">
-                          {{mxCurrencyFormat.format(extraEnrollablePrice(index))}} MXN
+                          {{mxCurrencyFormat.format(o.extraEnrollable)}} MXN
                         </v-list-item-subtitle>
                     </v-list-item>
-                  <v-list-item class="overline" v-if="o.cloth_holder" dense>
-                    <v-list-item-title>CON PORTATELA</v-list-item-title>
+                    <v-list-item class="overline" dense v-if="o.extraVertical > 0">
+                        <v-list-item-title class="blue--text">CARGO EXTRA</v-list-item-title>
+                        <v-list-item-subtitle class="blue--text text-right">
+                          {{mxCurrencyFormat.format(o.extraVertical)}} MXN
+                        </v-list-item-subtitle>
+                    </v-list-item>
+                  <v-list-item class="overline" v-if="o.cloth_holder != null" dense>
+                    <v-list-item-title>CON {{o.cloth_holder}}</v-list-item-title>
                   </v-list-item>
                   <v-list-item class="overline" v-if="o.celular_type != null" dense>
                     <v-list-item-title>Tipo</v-list-item-title>
