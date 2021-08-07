@@ -294,6 +294,16 @@
       <v-main>
         <router-view :key="$route.path"></router-view>
       </v-main>
+      <v-footer color="#47a5ad" style="height: 100px" >
+        <v-row justify="center" align="center" no-gutters>
+          <v-col cols="12">
+             <div class="white--text text-center"  style="font-weight: bolder">¿Tienes dudas?</div>
+          </v-col>
+          <v-col cols="12">
+            <div class="white--text text-center">Envíanos un correo a distribuidores@rollux.com.mx</div>
+          </v-col>
+        </v-row>
+      </v-footer>
 
     </v-app>
 
@@ -398,6 +408,9 @@ async  beforeCreate(){
 </script>
 
 <style scoped>
+*{
+    font-family: 'Raleway';
+}
 #inspire {
   background: rgba(0, 0, 0, 0);
 }
