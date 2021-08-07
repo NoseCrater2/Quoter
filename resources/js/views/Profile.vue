@@ -221,6 +221,8 @@ export default {
 
    		editar(){
     	 	this.$store.dispatch('editUser',this.user).then(()=>{
+				 console.log(this.user)
+				 console.log('intento de edición')
     	      	if(this.status=== 200){
 
     	      	}

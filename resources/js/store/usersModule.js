@@ -97,7 +97,7 @@ const usersModule = {
             }
             try {
                 const response = await axios
-                .post("/api/users/",u)
+                .post("/api/users",u)
                 
                 commit('setUsersStatus',response.status);
                 commit('saveUser',response.data.data);
