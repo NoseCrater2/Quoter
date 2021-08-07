@@ -2,7 +2,6 @@
     <div id="app">
         <div class="text-center">
             <h2 class="mt-2 mb-5">USUARIOS</h2>
-
              	<v-card>
                 	<v-data-table
                 	:headers="headers"

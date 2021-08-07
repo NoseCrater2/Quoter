@@ -15,6 +15,10 @@ const routes = [
         },
         children: [
             {
+                path: '',
+                component: () => import("./views/Dashboard.vue"),
+            },
+            {
                 path: "quoting",
                 component: () => import("./components/Quoter.vue"),
 

@@ -51,8 +51,7 @@ class UserController extends Controller
             'discount_percent' => 'required|numeric|min:0|max:99',
             'ship_address' => 'string|nullable',
             'second_ship_address' => 'string|nullable',
-            'role' => 'required|exists:roles,name',
-            'logo' => 'nullable|image'
+            'role' => 'required|exists:roles,name'
         ];
 
         $validator= Validator::make($data,$rules, ErrorMessages::getMessages());
