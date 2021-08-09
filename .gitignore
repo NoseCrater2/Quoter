@@ -33,3 +33,5 @@ storage/framework/laravel-excel/
 
 package-lock.json
 >>>>>>> master
+
+webpack.mix.js

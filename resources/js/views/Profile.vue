@@ -54,7 +54,7 @@
                       		    </v-col>
 
                           	    <v-col cols="12" xl="6" lg="6" md="6" sm="12">
-                                	<v-btn @click="editar()" large color="#3ba2a9" class="white--text" block>Guardar</v-btn>
+                                	<v-btn @click="editar()" :loading="isEditingButton" :disabled="isEditingButton" large color="#3ba2a9" class="white--text" block>Guardar</v-btn>
                                 </v-col>
 				    		</v-row>
               	    	</v-card>
@@ -97,7 +97,7 @@
         		            <v-text-field outlined prepend-inner-icon="mdi-truck-delivery-outline" v-model="user.ship_address" placeholder="Direccón de envío" dense :error-messages="errors.shipping_address"></v-text-field>
 				    		<v-text-field outlined prepend-inner-icon="mdi-truck-delivery" v-model="user.second_ship_address" placeholder="Direccón de envío" dense :error-messages="errors.shipping_address"></v-text-field>
         		            <v-text-field outlined prepend-inner-icon="mdi-whatsapp" v-model="user.phone" placeholder="WhatsApp" dense :error-messages="errors.movil_number"></v-text-field>
-                            <v-btn @click="editar()" color="#3ba2a9" class="white--text" block>Guardar</v-btn>
+                            <v-btn @click="editar()" :loading="isEditingButton" :disabled="isEditingButton" color="#3ba2a9" class="white--text" block>Guardar</v-btn>
         		        </v-col>
         		    </v-row>
                 </v-container>
@@ -140,6 +140,19 @@
                 	</v-card-actions>
             	</v-card>
      	</v-dialog>
+         <v-fab-transition>
+            <v-snackbar
+                :timeout="localSnackbar.time"
+                :value="localSnackbar.isActive"
+                :color="localSnackbar.color"
+                absolute
+                right
+                bottom
+                rounded="pill"
+              >
+                {{localSnackbar.message}}
+            </v-snackbar>
+         </v-fab-transition>
 	</div>
 </template>
 
@@ -148,6 +161,13 @@ import {mapGetters,mapState } from 'vuex';
 export default {
   	data() {
     	return {
+            isEditingButton: false,
+            localSnackbar: {
+                message: '',
+                time: 0,
+                isActive: false,
+                color: ''
+            },
       		intent: null,
       		noAccess: null,
       		urlTemporal: null,
@@ -190,6 +210,12 @@ export default {
   	},
 
   	methods: {
+          resetLocalSnackbar(){
+                this.localSnackbar.message = ''
+                this.localSnackbar.time = 0
+                this.localSnackbar.isActive = false
+                this.localSnackbar.color = ''
+          },
     	confirmPassword(){
       		this.dialog = true;
     	},
@@ -220,13 +246,24 @@ export default {
    		},
 
    		editar(){
+            this.isEditingButton = true;
+            this.resetLocalSnackbar();
     	 	this.$store.dispatch('editUser',this.user).then(()=>{
-				 console.log(this.user)
+                 this.isEditingButton = false;
 				 console.log('intento de edición')
     	      	if(this.status=== 200){
-
+                    this.localSnackbar.message = 'Datos guardados correctamente'
+                    this.localSnackbar.time = 3000
+                    this.localSnackbar.isActive = true
+                    this.localSnackbar.color = 'success'
     	      	}
-    	  	})
+    	  	}).catch(()=>{
+                  this.isEditingButton = false;
+                this.localSnackbar.message = 'Ha ocurrido un error al guardar'
+                this.localSnackbar.time = 3000
+                this.localSnackbar.isActive = true
+                this.localSnackbar.color = 'red'
+              })
    		}
   	},
 

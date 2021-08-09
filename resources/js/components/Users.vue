@@ -218,12 +218,30 @@
                 		  	<v-icon small class="mr-2" @click="editItem(item)">
                 		    	mdi-pencil
                 		  	</v-icon>
-                		  	<v-icon small @click="deleteItem(item)">
+                		  	<v-icon :disabled="user.id == item.id ? true : false" small @click="deleteItem(item)">
                 		  	  	mdi-delete
                 		  	</v-icon>
                 		</template>
                 	</v-data-table>
             	</v-card>
+
+            <!-- Dialogo eliminar usuario -->
+        	<v-dialog v-model="deleteUserDialog" max-width="500px" persistent>
+        		<v-card tile>
+        	    	<v-card-title>
+        	    	  	¿ELIMINAR USUARIO?
+        	    	</v-card-title>
+        	    	<v-card-text>
+        	      		¿Esta seguro de eliminar al usuario? Esta acción no se puede deshacer
+        	    	</v-card-text>
+        	    	<v-card-actions class="mt-n6">
+        	    	  	<v-spacer></v-spacer>
+        	    	  	<v-btn color="red" text @click="closeDialogDeleteUser">CANCELAR</v-btn>
+        	    	  	<v-btn color="blue darken-1" text @click="dialogAcceptDeleteUser">ELIMINAR</v-btn>
+        	    	</v-card-actions>
+        		</v-card>
+        	</v-dialog>
+
 
         </div>
 
@@ -475,13 +493,15 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 export default {
     data(){
         return {
 			urlTemporal: null,
       		currentLogo: null,
           loadingTable: false,
+          deleteUserDialog: false,
+          localDeletinItem: {},
             usersDialog: Object.keys(this.$route.query).length == 0?false:true,
             tab: null,
             search: "",
@@ -550,6 +570,7 @@ export default {
     },
 
     mounted(){
+        console.log(this.user)
       	this.loadingTable = true,
      	this.$store.dispatch('getusers').then(()=>{
           	if(this.getUsersStatus === 200){
@@ -570,6 +591,7 @@ export default {
      ...mapState({
        status: state => state.usersModule.usersStatus,
       users: state => state.usersModule.users,
+      user: state => state.user,
       roles: state => state.rolesModule.roles,
       errors: state => state.usersModule.usersErrors,
     }),
@@ -581,7 +603,7 @@ export default {
   },
 
   methods:{
-
+      ...mapActions(['actionDeleteUserAXIOS']),
 	selectImage(event){
     	this.currentLogo = event.target.files[0]
     	this.editedItem.logo = this.currentLogo
@@ -599,9 +621,26 @@ export default {
       this.usersDialog = true
     },
 
+    dialogAcceptDeleteUser(){
+        this.actionDeleteUserAXIOS(this.localDeletinItem).then(()=>{
+            this.closeDialogDeleteUser();
+        }).catch(()=>{
+            this.closeDialogDeleteUser();
+        });
+    },
+
+    closeDialogDeleteUser(){
+        this.deleteUserDialog = false;
+        this.localDeletinItem = {}
+        console.log(this.localDeletinItem)
+    },
+
     deleteItem (item) {
-      const index = this.users.indexOf(item)
-      confirm('Are you sure you want to delete this item?') && this.users.splice(index, 1)
+        this.deleteUserDialog = true;
+        Object.assign(this.localDeletinItem, item);
+
+     // const index = this.users.indexOf(item)
+    //   confirm('Are you sure you want to delete this item?') && this.users.splice(index, 1)
     },
 
     close () {

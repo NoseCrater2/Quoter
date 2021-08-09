@@ -3,8 +3,8 @@
         <v-card  width="1200px" class="d-flex" max-height="77" tile flat>
             <v-card tile flat class="mr-auto" :to="{name: 'Home'}">
                 <v-img width="200"  src="/img/logo.svg" ></v-img>
-            </v-card>                          
-                
+            </v-card>
+
             <v-card tile  flat class="mt-6" >
                 <v-btn  x-small icon color="#3b5999" fab href="https://www.facebook.com/rolluxmexico"  target="_blank" class="mr-3">
                     <v-icon  size="30">mdi-facebook</v-icon>
@@ -18,7 +18,7 @@
                 <v-btn icon  x-small color="#cc2127" href="https://www.pinterest.com.mx/rolluxmexico" target="_blank" fab class="mr-3" >
                     <v-icon size="30">mdi-pinterest</v-icon>
                 </v-btn>
-            </v-card>    
+            </v-card>
         </v-card>
     </v-row>
 </template>

@@ -85,7 +85,7 @@ Route::get('getRelatedBlinds/{sunblind}' , 'SunblindController@getRelatedBlinds'
 
 
 Route::get('getColors/{variant}' , 'VariantController@getColors');
-Route::post('users' , 'UserController@store')->name('users.store');
+// Route::post('users' , 'UserController@store')->name('users.store');
 Route::get('distributors' , 'UserController@distributors');
 Route::middleware(['auth:sanctum'])->group(function()
 {
@@ -112,12 +112,13 @@ Route::middleware(['auth:sanctum'])->group(function()
 
     //users
 
-    Route::get('users','UserController@index')->name('users.index');
+    Route::resource('users', 'UserController')->only('index','show', 'store', 'update','destroy');
+    // Route::get('users','UserController@index')->name('users.index');
     //Route::get('products/create' , 'ProductController@create')->name('products.create')->middleware('permission:products.create');
-    Route::put('users/{user}','UserController@update')->name('users.update');
-    Route::get('users/{user}','UserController@show')->name('users.show');
-    Route::delete('users/{user}','UserController@destroy')->name('users.destroy');
-    Route::get('users/{user}/edit','UserController@edit')->name('users.edit');
+    // Route::put('users/{user}','UserController@update')->name('users.update');
+    // Route::get('users/{user}','UserController@show')->name('users.show');
+    // Route::delete('users/{user}','UserController@destroy')->name('users.destroy');
+    // Route::get('users/{user}/edit','UserController@edit')->name('users.edit');
 
 });
 
