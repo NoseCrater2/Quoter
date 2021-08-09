@@ -13,7 +13,7 @@ use App\Http\Resources\UserIndexResource;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\UserSaved;
 use Illuminate\Support\Facades\Storage;
- 
+
 
 class UserController extends Controller
 {
@@ -55,10 +55,10 @@ class UserController extends Controller
         ];
 
         $validator= Validator::make($data,$rules, ErrorMessages::getMessages());
-        
+
         if($validator->fails()){
             return response($validator->errors(),422);
-            
+
         }else{
            $pass = User::make_password();
            if($request->hasFile('logo')){
@@ -72,13 +72,13 @@ class UserController extends Controller
 
             Mail::to($user->email)->send(new UserSaved($user));
             $user->password = bcrypt($user->password);
-            
+
             $user->save();
             // $user->roles()->sync($request->get('roleIds'));
-        
+
             return new UserIndexResource(User::findOrFail($user->id));
-            
-            
+
+
         }
    }
 
@@ -93,7 +93,7 @@ class UserController extends Controller
         return view('users.show', compact('user'));
     }
 
-   
+
 
     /**
      * Update the specified resource in storage.
@@ -118,7 +118,7 @@ class UserController extends Controller
             'role' => 'exists:roles,name',
             'password'  => 'min:6|confirmed|nullable'
         ];
-       
+
         $validator= Validator::make($data,$rules, ErrorMessages::getMessages());
         if($validator->fails()){
             return response($validator->errors(),422);
@@ -137,7 +137,7 @@ class UserController extends Controller
             $user->syncRoles($data['role']);
 
             return new UserIndexResource(User::findOrFail($user->id));
-        } 
+        }
 
     }
 
@@ -151,31 +151,31 @@ class UserController extends Controller
     {
         $user->delete();
 
-        return back()->with('info', 'Eliminado correctamente');
+        return response(['data'=> $user],200);
     }
 
     public function getMyInfo(Request $request)
     {
         $this->authorize('view', $request->user());
         return new MyInfoResource(User::findOrFail($request->user()->id));
-    
+
     }
 
     public function signup(Request $request)
     {
-       
+
         $data = $request->all();
         $rules =[
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed'    
+            'password' => 'required|confirmed'
         ];
 
         $validator= Validator::make($data,$rules, ErrorMessages::getMessages());
-        
+
         if($validator->fails()){
             return response($validator->errors(),422);
-            
+
         }else{
             $data['password'] = bcrypt('password');
             $user = User::create($data);
@@ -190,7 +190,7 @@ class UserController extends Controller
         if(Hash::check($request->intent, $request->user()->password)){
             return response(['Message' => "Acceso autorizado"],200);
         }
-        
+
         return response(['Message' => "Acceso No autorizado"],401);
     }
 

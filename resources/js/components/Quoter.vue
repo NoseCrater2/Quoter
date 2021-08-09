@@ -1286,6 +1286,46 @@
         </v-card>
       </v-dialog>
 
+
+    <v-dialog v-model="distributorPrintDialog" persistent max-width="390">
+        <v-card>
+          <v-card-title class="px-4 justify-center">
+           IMPRIMIR PDF CON LOGO
+          </v-card-title>
+          <v-card-text>
+              <div v-if="user.logo != 'logos/rollux.png'">
+              <v-row justify="center" class="ml-1">
+                <v-hover>
+                    <template v-slot:default="{ hover }">
+                        <v-img contain width="150" height="100" @click="distributorImagePrint = false" :style="[hover ? {border: '4px solid #47a5ad'} : {}, distributorImagePrint == false  ? {border: '4px solid green'} : {}]" src="/img/logos/rollux.png"></v-img>
+                    </template>
+                </v-hover>
+                <v-hover>
+                    <template v-slot:default="{ hover }">
+                        <v-img contain width="150" height="100" @click="distributorImagePrint = true" :style="[hover ? {border: '4px solid #47a5ad'} : {}, distributorImagePrint == true  ? {border: '4px solid green'} : {}]" :src="`/img/${user.logo}`"></v-img>
+                    </template>
+                </v-hover>
+              </v-row>
+              </div>
+              <div v-else class="d-flex flex-column align-center">
+                <v-hover>
+                    <template v-slot:default="{ hover }">
+                        <v-img contain width="150" height="100" @click="distributorImagePrint = false" :style="[hover ? {border: '4px solid #47a5ad'} : {}, distributorImagePrint == false  ? {border: '4px solid green'} : {}]" src="/img/logos/rollux.png"></v-img>
+                    </template>
+                </v-hover>
+                (Logo por defecto debido a que este usuario actualmente no tiene un logo propio guardado)
+              </div>
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+          <v-btn tile depressed @click="closeDistributorPrintDialog()" color="red" class="white--text">CANCELAR</v-btn>
+          <v-spacer></v-spacer>
+           <v-btn tile depressed color="#47a5ad" :loading="isPrintinDistributorPDF" :disabled="(distributorImagePrint == null || isPrintinDistributorPDF == true) ? true : false" @click="dialogAcceptPrintPdfDistribuitor" class="white--text">IMPRIMIR</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+
     </v-row>
     <!-- <PreviewPDF :distributor="selectedUser"></PreviewPDF>
     <PreviewPdfRollux></PreviewPdfRollux> -->
@@ -1312,6 +1352,10 @@ export default {
   name: "Quoter",
   data() {
     return {
+        distributorPrintDialog: false,
+        distributorImagePrint: null,
+        isPrintinDistributorPDF: false,
+
         urlPdfVisor: '',
         pdfDialog: '',
         numPdfPages: 0,
@@ -1546,6 +1590,30 @@ export default {
 
        this.beforePrint = false
     },
+    dialogAcceptPrintPdfDistribuitor(){
+        this.isPrintinDistributorPDF = true;
+        console.log(this.distributorImagePrint)
+        // this.$children[5].$refs.html2Pdf2.generatePdf()
+        axios.post("/api/auth-order-list-pdf", {orders: this.orders, user: this.user, distributorImagePrint: this.distributorImagePrint}, {responseType: 'blob',}).then((response)=>{
+        this.isPrintinDistributorPDF = false;
+        const objectUrl = URL.createObjectURL(response.data);
+        this.urlPdfVisor = objectUrl;
+        this.downloadButtonPdf = response.data;
+        this.pdfDialog = true;
+        this.closeDistributorPrintDialog();
+        }).catch(()=>{
+            this.isPrintinDistributorPDF = false;
+        })
+    },
+
+    closeDistributorPrintDialog(){
+        this.distributorPrintDialog = false;
+        this.distributorImagePrint = null;
+    },
+    viewAndPrintPdfDistribuitor(){
+        //Distribuidor
+        this.distributorPrintDialog = true
+    },
 
     openPDFView(){
       if(this.$store.state.isLoggedIn == true){
@@ -1556,14 +1624,8 @@ export default {
           })
 
         }else{
-        //   this.$children[5].$refs.html2Pdf2.generatePdf()
-            axios.post("/api/auth-order-list-pdf", {orders: this.orders, user: this.user}, {responseType: 'blob',}).then((response)=>{
-            const objectUrl = URL.createObjectURL(response.data);
-            this.urlPdfVisor = objectUrl;
-            this.downloadButtonPdf = response.data;
-            this.pdfDialog = true;
-                this.sellerPrint = false
-            })
+            //Opciones de visualizacion e impresion para distribuidores
+            this.viewAndPrintPdfDistribuitor();
         }
 
       }else{

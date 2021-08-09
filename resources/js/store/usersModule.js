@@ -6,7 +6,7 @@ const usersModule = {
         registerStatus: 0,
         users: [],
         usersStatus: null,
-        usersErrors: [], 
+        usersErrors: [],
     },
 
     getters: {
@@ -44,28 +44,41 @@ const usersModule = {
             });
           },
 
+          mutationDeleteUser(state, idDeletedUser){
+              //No usé el indexOf metodo de Js por que me daba error
+              let idFinded = -1;
+              state.users.forEach((itemUser, index)=>{
+                  if(itemUser.id == idDeletedUser){
+                    idFinded = index;
+                  }
+              })
+              if(idFinded > 0){
+                state.users.splice(idFinded, 1);
+              }
+          },
+
           saveUser(state,newUser){
             state.users.push(newUser);
-           
+
           },
     },
 
     actions: {
         getusers: async function ({ commit, state }){
-           
+
             try {
                 const response = await axios
                 .get("/api/users",{
                     headers: {Authorization: "Bearer "+localStorage.getItem('access_token')}})
-                
+
                 commit('setUsersStatus',response.status);
                 commit('setUsers',response.data.data);
-                
+
               } catch (error) {
                  commit('setUsersErrors',error.response.data)
                  commit('setUsersStatus',error.response.status);
               }
-            
+
 
           },
 
@@ -79,10 +92,10 @@ const usersModule = {
             try {
                 const response = await axios
                 .post("/api/users/"+editUser.id,u)
-                
+
                 commit('setUsersStatus',response.status);
                 commit('editUser',response.data.data);
-                
+
               } catch (error) {
                  commit('setUsersErrors',error.response.data)
                  commit('setUsersStatus',error.response.status);
@@ -98,10 +111,23 @@ const usersModule = {
             try {
                 const response = await axios
                 .post("/api/users",u)
-                
+
                 commit('setUsersStatus',response.status);
                 commit('saveUser',response.data.data);
-                
+
+              } catch (error) {
+                 commit('setUsersErrors',error.response.data)
+                 commit('setUsersStatus',error.response.status);
+              }
+          },
+
+          actionDeleteUserAXIOS: async function ({ commit }, deletedUser){
+
+            try {
+                const response = await axios.delete(`/api/users/${deletedUser.id}`)
+                commit('setUsersStatus',response.status);
+                commit('mutationDeleteUser', deletedUser.id);
+
               } catch (error) {
                  commit('setUsersErrors',error.response.data)
                  commit('setUsersStatus',error.response.status);
@@ -109,7 +135,7 @@ const usersModule = {
           },
 
           registerClient: async function ({ commit, state },  data){
-           
+
             try {
                 const request = await axios
                 .post("/api/register-client", data)
@@ -120,7 +146,7 @@ const usersModule = {
             }
           },
 
-        
+
     }
 }
 

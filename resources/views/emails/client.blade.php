@@ -1,9 +1,9 @@
 @component('mail::message')
-Hola {{ $user->name }}
-
+<!-- <img style="width:400px; height: 153px;" src="{{asset('/img/logo.png')}}"/><br> -->
+Hola {{ $user->name }} <br>
 Recibimos tu petición para añadirte como interiorista en Rollux México.
 Revisaremos la información y posteriormente te enviaremos un nuevo email con tu contraseña de acceso.
-A continuación se muestra la información que nos hiciste legar: 
+A continuación se muestra la información que nos hiciste legar:
 @component('mail::table')
 | Campo         | Información         |
 | ------------- |---------------------------------------:|
