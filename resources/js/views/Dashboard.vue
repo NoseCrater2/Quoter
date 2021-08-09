@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-carousel  :hide-delimiters="isMobile?false:true" :show-arrows="!isMobile" height="55vh" style="min-height: 350px" continuous  cycle  > 
+        <v-carousel  :hide-delimiters="isMobile?false:true" :show-arrows="!isMobile" height="55vh" style="min-height: 350px" continuous  cycle  >
             <v-carousel-item
             eager
             :to="item.to"
@@ -27,7 +27,7 @@
             </div>
         </v-col>
         <v-row class="justify-center align-center my-16" no-gutters>
-            
+
             <v-col class="pa-0" cols="12" md="4" sm="12" v-for="(b, index) in benefits" :key="index">
                 <v-card flat max-height="330">
                     <div class="d-flex justify-center">
@@ -37,19 +37,19 @@
                         </v-avatar>
                     </div>
                     <div class="justify-center mt-10 mb-5" >
-                        <h2 class="text-center">{{b.title}}</h2> 
+                        <h2 class="text-center">{{b.title}}</h2>
                     </div>
                     <div class="d-flex justify-center">
                         <p class="text-center" style="font-size: 20px; max-width: 250px">
                             {{b.text}}
-                        </p> 
+                        </p>
                     </div>
                     <div class="d-flex justify-center">
                         <v-btn color="#47a5ad" rounded class="white--text" :to="b.route">ENTRAR</v-btn>
                     </div>
                 </v-card>
             </v-col>
-         
+
         </v-row>
     </div>
 </template>
@@ -80,7 +80,7 @@ export default {
                     title: 'Lista de Precios',
                     text: 'Descarga las listas de precios Rollux y mantente siempre actualizado',
                     icon:'/img/dashboard/icon_pdf.png',
-                    route: '#'
+                    route: {name: 'PriceList'}
                 },
                 {
                     title: 'Tus Pedidos',

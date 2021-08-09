@@ -29,6 +29,7 @@ class UserCreatedClient extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.client')->from('contacto@rollux.com.mx')->subject('Confirmación de petición');
+        $image = env('APP_URL')."/img/logo.png";
+        return $this->markdown('emails.client')->from('contacto@rollux.com.mx')->subject('Confirmación de petición')->with(['image' => $image]);
     }
 }

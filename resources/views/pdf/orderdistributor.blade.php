@@ -44,8 +44,9 @@
         <tbody>
             <tr>
                 <td style="width: 20%; padding-top: -13px; padding-left: 9px; height: 124px;">
-                @if(File::exists('img/logos/'.$orders['user']['logo'].'.png'))
-                    <img width="210px" src="{{'img/logos/'.$orders['user']['logo'].'.png'}}" >
+
+                @if($orders['distributorImagePrint'] == true)
+                    <img width="210px" src="{{'img/'.$orders['user']['logo']}}" >
                     @else
                     <img width="210px" src="img/logos/rollux.png" >
                 @endif
@@ -580,13 +581,18 @@
         </div>
         <div style="width: 87%; margin: auto; font-size: 8px; line-height: 10px; text-align: center;">
             <div>
+            @if($orders['distributorImagePrint'] == false)
                 <strong>Deposito a la cuenta de Banorte: 0892608267 // CLABE: 072 470 0089 2608 2678 // A nombre de Materiales Decorativos S. de R.L, M</strong>
+            @endif
             </div>
             <i>
                 Favor de revisar importes y cantidades descritas en este documento // Cualquier variación será motivo de otra cotización // La fecha del pedido se toma en cuenta a partir de la fecha de pago
                 No se procesan pedidos que no estén pagados // La mercancía viaja por cuenta y riesgo del comprador // Los tonos de las telas pueden variar ligeramente a los del muestrario
                 Para precios en dólares se tomará en cuenta tipo de cambio emitido por Banorte el día del pago. // No hay cambios ni devoluciones una vez cortada la tela. Precios sujetos a cambios sin previo aviso.
             </i>
+            @if(File::exists('img/black-r.png'))
+                <img width="150px" src="img/black-r.png" >
+            @endif
         </div>
     </div>
 

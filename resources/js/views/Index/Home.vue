@@ -25,6 +25,14 @@
               <v-list-item-title>Perfil</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+        <v-list-item :to="'/'">
+            <v-list-item-icon>
+              <v-icon>mdi-home</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Ir a Rollux.com</v-list-item-title>
+            </v-list-item-content>
+        </v-list-item>
           <v-list-item @click="showComponent = 1">
             <v-list-item-icon>
               <v-icon>mdi-calculator</v-icon>
@@ -79,8 +87,8 @@
 
         <v-spacer v-if="!$vuetify.breakpoint.mdAndUp"></v-spacer>
 
-        <v-card color="transparent" flat tile :to="{name: 'Home'}">
-           <v-img  v-if="user" max-width="128" :src="`/img/${user.logo}`"></v-img>
+        <v-card color="transparent" flat tile :to="'/dashboard'">
+           <v-img  max-width="128" :src="`/img/logos/rollux.png`"></v-img>
         </v-card>
 
 
@@ -192,6 +200,17 @@
                             >
                                 <v-icon left>mdi-account</v-icon>
                                 Perfil
+                            </v-btn>
+                            <v-divider class="my-3"></v-divider>
+                            <v-btn
+                              depressed
+                              rounded
+                              text
+                              color="#3ba2a9"
+                              :to="'/'"
+                            >
+                                <v-icon left>mdi-home</v-icon>
+                                Ir a Rollux.com
                             </v-btn>
                             <v-divider class="my-3"></v-divider>
                             <v-btn
