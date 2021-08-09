@@ -1293,27 +1293,29 @@
            IMPRIMIR PDF CON LOGO
           </v-card-title>
           <v-card-text>
-              <div v-if="user.logo != 'logos/rollux.png'">
-              <v-row justify="center" class="ml-1">
-                <v-hover>
-                    <template v-slot:default="{ hover }">
-                        <v-img contain width="150" height="100" @click="distributorImagePrint = false" :style="[hover ? {border: '4px solid #47a5ad'} : {}, distributorImagePrint == false  ? {border: '4px solid green'} : {}]" src="/img/logos/rollux.png"></v-img>
-                    </template>
-                </v-hover>
-                <v-hover>
-                    <template v-slot:default="{ hover }">
-                        <v-img contain width="150" height="100" @click="distributorImagePrint = true" :style="[hover ? {border: '4px solid #47a5ad'} : {}, distributorImagePrint == true  ? {border: '4px solid green'} : {}]" :src="`/img/${user.logo}`"></v-img>
-                    </template>
-                </v-hover>
-              </v-row>
-              </div>
-              <div v-else class="d-flex flex-column align-center">
-                <v-hover>
-                    <template v-slot:default="{ hover }">
-                        <v-img contain width="150" height="100" @click="distributorImagePrint = false" :style="[hover ? {border: '4px solid #47a5ad'} : {}, distributorImagePrint == false  ? {border: '4px solid green'} : {}]" src="/img/logos/rollux.png"></v-img>
-                    </template>
-                </v-hover>
-                (Logo por defecto debido a que este usuario actualmente no tiene un logo propio guardado)
+              <div v-if="user != null">
+                <div v-if="user.logo != 'logos/rollux.png'">
+                <v-row justify="center" class="ml-1">
+                  <v-hover>
+                      <template v-slot:default="{ hover }">
+                          <v-img contain width="150" height="100" @click="distributorImagePrint = false" :style="[hover ? {border: '4px solid #47a5ad'} : {}, distributorImagePrint == false  ? {border: '4px solid green'} : {}]" src="/img/logos/rollux.png"></v-img>
+                      </template>
+                  </v-hover>
+                  <v-hover>
+                      <template v-slot:default="{ hover }">
+                          <v-img contain width="150" height="100" @click="distributorImagePrint = true" :style="[hover ? {border: '4px solid #47a5ad'} : {}, distributorImagePrint == true  ? {border: '4px solid green'} : {}]" :src="`/img/${user.logo}`"></v-img>
+                      </template>
+                  </v-hover>
+                </v-row>
+                </div>
+                <div v-else class="d-flex flex-column align-center">
+                  <v-hover>
+                      <template v-slot:default="{ hover }">
+                          <v-img contain width="150" height="100" @click="distributorImagePrint = false" :style="[hover ? {border: '4px solid #47a5ad'} : {}, distributorImagePrint == false  ? {border: '4px solid green'} : {}]" src="/img/logos/rollux.png"></v-img>
+                      </template>
+                  </v-hover>
+                  (Logo por defecto debido a que este usuario actualmente no tiene un logo propio guardado)
+                </div>
               </div>
           </v-card-text>
           <v-divider></v-divider>
