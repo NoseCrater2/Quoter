@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subweave extends Model
 {
-    protected $fillable = ['name', 'slug','line_id','type_id'];
+    protected $fillable = ['name', 'slug','description','line_id','type_id'];
     public $timestamps = false;
     protected $hidden = ['pivot'];
-    
+
     public function weaves()
     {
         return $this->belongsToMany(Weave::class);

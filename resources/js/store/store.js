@@ -3,7 +3,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 Vue.use(Vuex)
-// import loginModule from './loginModule';
+import loginModule from './loginModule';
 import userModule from './userModule';
 import usersModule from './usersModule';
 import rolesModule from './rolesModule';
@@ -19,7 +19,7 @@ const store = new Vuex.Store({
 
 
   modules:{
-  
+
    userModule,
    usersModule,
    rolesModule,
@@ -29,6 +29,7 @@ const store = new Vuex.Store({
    ordersModule,
    sunblindModule,
    motorizationModule,
+   loginModule
   },
   state:{
     loginErrors : [],
@@ -38,28 +39,12 @@ const store = new Vuex.Store({
     checkStatus: null,
     isLoggedIn: localStorage.getItem('isLoggedIn') || false,
     user: null,
-   
+
 },
 
 
 getters:{
-   
-    loggedIn(state) {
-        
-        return state.token !== null
-      },
 
-    getLoginErrors(state){
-        return state.loginErrors
-    },
-
-    getLoginStatus(state){
-        return state.loginStatus
-    },
-
-    getSignupStatus(state){
-        return state.signupStatus
-    },
 
 
 },
@@ -96,20 +81,20 @@ mutations:{
 actions:{
   async loadUser({commit, dispatch}){
     if(isLoggedIn()){
-      
+
       try {
         const response = await axios.get("/user")
-        
+
         commit("setUser", response.data.data)
-       
+
         commit("setLoggedIn", true)
 
       } catch (error) {
           dispatch("logout")
-        
+
       }
     }
-  }, 
+  },
 
   logout({commit}){
     commit("setUser", null)
@@ -118,15 +103,15 @@ actions:{
   },
 
   //   retrieveToken: async function ({ commit, state }, credentials){
-       
+
   //       try {
   //           const request = await axios
   //           .post("/api/login",credentials)
   //           localStorage.setItem('access_token', request.data.token)
   //           commit('retrieveToken',request.data.token);
   //           commit('setStatus',request.status);
-            
-           
+
+
   //         } catch (error) {
   //           commit('setErrors',error.response.data)
   //           commit('setStatus',error.response.status);
@@ -140,17 +125,17 @@ actions:{
   //          const response = await axios
   //          .post("/api/logout", '',{
   //              headers: {Authorization: "Bearer "+state.token}})
-               
+
   //              commit('setErrors',response.data.message)
   //              commit('setStatus',response.status)
   //              commit('destroyToken', state)
   //      } catch (error) {
-           
+
   //      }
   // },
 
   signup: async function ({ commit, state }, credentials){
-       
+
     try {
         const request = await axios
         .post("/api/register",credentials)
@@ -164,9 +149,9 @@ actions:{
   },
 
   checkPasword: async function ({ commit, state }, intent){
-       
+
     try {
-       
+
         const request = await axios
         .post("/api/checkPassword",{'intent': intent },{
             headers: {Authorization: "Bearer "+state.token}})
@@ -183,9 +168,9 @@ actions:{
     context.commit("setLoggedIn", isLoggedIn());
 },
 
-      
+
 },
- 
+
 })
 
 

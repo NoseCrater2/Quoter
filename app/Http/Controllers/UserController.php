@@ -116,7 +116,8 @@ class UserController extends Controller
             'second_ship_address' => 'string|nullable',
             'email' => 'email|unique:users,email,'.$user->id,
             'role' => 'exists:roles,name',
-            'password'  => 'min:6|confirmed|nullable'
+            'password'  => 'min:6|confirmed|nullable',
+            'password_confirmation' => 'nullable'
         ];
 
         $validator= Validator::make($data,$rules, ErrorMessages::getMessages());

@@ -7,7 +7,7 @@
                 <v-col cols="12" class="text-center pa-0 ma-0" style="min-width: 300px" >
                     <div  class="d-inline-flex my-1">
                         <h1>BENEFICIOS</h1>
-                    </div> 
+                    </div>
                     <div  class="d-inline-flex my-1" style="color: #47a5ad;">
                         <h1>EXCLUSIVOS</h1>
                     </div>
@@ -27,7 +27,7 @@
         </v-card>
         <v-container class="pa-0" fluid style="max-width: 1200px; margin: auto">
         <v-row class="space-between pa-0 ma-0"  >
-            
+
             <v-col class="pa-0" cols="12" md="4" sm="12" v-for="(b, index) in benefits" :key="index">
                 <v-card flat max-height="330">
                     <div class="d-flex justify-center">
@@ -37,16 +37,16 @@
                         </v-avatar>
                     </div>
                     <div class="justify-center mt-10 mb-5" >
-                        <h3 class="text-center">{{b.title}}</h3> 
+                        <h3 class="text-center">{{b.title}}</h3>
                     </div>
                     <div class="justify-center">
                         <p class="text-center mx-15" style="font-size: 17.5px;">
                             {{b.text}}
-                        </p> 
+                        </p>
                     </div>
                 </v-card>
             </v-col>
-         
+
         </v-row>
         </v-container>
         <v-row style="background-color: #EEEEEE" class="pa-0 ma-0">
@@ -71,50 +71,50 @@
                     </v-col>
                 </v-row>
             <v-container class="pa-0" fluid style="max-width: 950px; margin: auto">
-                
-            
-                <v-form ref="form" id="formulary" class="mb-16" >
+
+
+                <v-form @submit.prevent="register" ref="form" id="formulary" class="mb-16" >
                     <div class="justify-center" >
-                        <h1 class="text-center">DATOS BÁSICOS</h1> 
+                        <h1 class="text-center">DATOS BÁSICOS</h1>
                     </div>
                     <v-text-field
                     :error-messages="registerErrors.name"
                     color="#47a5ad"
                     background-color="white"
                     solo
-                    v-model="client_information.name" 
-                    label="Tu Nombre (requerido)" 
-                  
+                    v-model="client_information.name"
+                    label="Tu Nombre (requerido)"
+
                     rounded>
                     </v-text-field>
                     <v-text-field
                     :error-messages="registerErrors.last_name"
-                    v-model="client_information.last_name" 
-                    label="Tu Apellido (requerido)" 
-                    solo 
+                    v-model="client_information.last_name"
+                    label="Tu Apellido (requerido)"
+                    solo
                     rounded>
                     </v-text-field>
                     <v-text-field v-model="client_information.company" label="Nombre de tu empresa" solo rounded>
                     </v-text-field>
                     <v-text-field
                     :error-messages="registerErrors.email"
-                    v-model="client_information.email" 
-                    label="Email (requerido)" 
+                    v-model="client_information.email"
+                    label="Email (requerido)"
                     solo rounded>
                     </v-text-field>
-                    <v-text-field 
+                    <v-text-field
                     :error-messages="registerErrors.phone"
-                    v-model="client_information.phone" 
-                    label="Teléfono (requerido)" 
+                    v-model="client_information.phone"
+                    label="Teléfono (requerido)"
                     solo rounded>
                     </v-text-field>
                     <div class="justify-center" >
-                        <h1 class="text-center">DIRECCIÓN</h1> 
+                        <h1 class="text-center">DIRECCIÓN</h1>
                     </div>
-                    <v-text-field 
+                    <v-text-field
                     :error-messages="registerErrors.address"
-                    v-model="client_information.address" 
-                    label="Calle, Número y Colonia (requerido)" 
+                    v-model="client_information.address"
+                    label="Calle, Número y Colonia (requerido)"
                     solo rounded>
                     </v-text-field>
                     <v-text-field v-model="client_information.city" label="Ciudad" solo rounded>
@@ -127,14 +127,14 @@
                         <v-col class="pr-0" cols="12" md="6" sm="12">
                             <v-text-field
                             :error-messages="registerErrors.zip_code"
-                            v-model="client_information.zip_code" 
-                            label="Código Postal (requerido)" 
+                            v-model="client_information.zip_code"
+                            label="Código Postal (requerido)"
                             solo rounded>
                             </v-text-field>
                         </v-col>
                     </v-row>
                     <div class="justify-center" >
-                        <h1 class="text-center">COMENTARIOS</h1> 
+                        <h1 class="text-center">COMENTARIOS</h1>
                     </div>
                     <v-textarea v-model="client_information.comments" label="Mensaje: Déjanos cualquier información adicional" solo rounded>
                     </v-textarea>
@@ -142,11 +142,19 @@
                         <v-checkbox :rules="[v => !!v || 'Debes aceptar los términos para continuar']" v-model="checkbox" color="#47a5ad" label="Acepto los Términos de Privacidad y Condiciones de Uso">
                         </v-checkbox>
                     </div>
+                    <!-- INICIA CAPTCHA -->
+                    <div class="d-flex justify-center mb-5">
+                        <vue-recaptcha ref="recaptcha"
+                            v-if="checkbox"
+                          @verify="onVerifyCaptcha" sitekey='6Lds0O0bAAAAADGJgJ5vvOIfKnsGrVmmYqzBJEBJ' :loadRecaptchaScript="true" >
+                        </vue-recaptcha>
+                    </div>
+                    <!-- TERMINA CAPTCHA -->
                     <div class="d-flex justify-center" >
-                        <v-btn :loading="loading"  @click="register()" rounded dark x-large color="#47a5ad">
+                        <v-btn type="submit" :loading="loading" :disabled="!captchaRobot" rounded class="white--text" x-large color="#47a5ad">
                             Enviar
                         </v-btn>
-                        
+
                     </div>
                     <div class="d-block ma-4">
                         <v-alert
@@ -156,7 +164,7 @@
                         text
                         type="success"
                         >
-                         Su petición ha sido enviada, en unos momentos le llegará un email de confirmación de envío. Cuando aprobemos su petición le llegará una clave de acceso al sistema. 
+                         Su petición ha sido enviada, en unos momentos le llegará un email de confirmación de envío. Cuando aprobemos su petición le llegará una clave de acceso al sistema.
                         </v-alert>
                         <v-alert
                         dismissible
@@ -181,9 +189,11 @@
 // import DialogInvite from '../components/DialogInvite';
 // import FakeNotification from '../components/FakeNotification';
 import { mapState} from 'vuex';
+import VueRecaptcha from 'vue-recaptcha';
 export default {
     data(){
         return{
+            captchaRobot: false,
             success: false,
             error : false,
             checkbox: false,
@@ -222,19 +232,28 @@ export default {
 
     methods:{
         register(){
-            if(this.$refs.form.validate()){
-                this.loading = true
-                this.$store.dispatch('registerClient',this.client_information)
-                .then(()=>{ 
-                   this.loading = false
-                  this.$refs.form.reset()
-                })
+            if (this.captchaRobot) {
+                if(this.$refs.form.validate()){
+                    this.loading = true
+                    this.$store.dispatch('registerClient',this.client_information)
+                    .then(()=>{
+                        this.loading = false;
+                        this.$refs.form.reset();
+                        this.$refs.recaptcha.reset();
+                        this.checkbox = false;
+                        this.captchaRobot = false;
+                    })
+                }
             }
-            
+        },
+        onVerifyCaptcha(response) {
+            if (response) {
+                this.captchaRobot = true
+            }
         },
     },
 
-  
+
 
     computed: {
         ...mapState({
@@ -244,6 +263,7 @@ export default {
     },
 
     components:{
+        'vue-recaptcha': VueRecaptcha
         // FakeNotification,
         // DialogInvite,
     }
