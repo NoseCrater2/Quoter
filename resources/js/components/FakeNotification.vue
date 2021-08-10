@@ -6,7 +6,7 @@
 
         <div v-if="variant" style="color: black" class="d-flex flex-no-wrap   mb-2 mx-2">
              <v-avatar size="90" tile>
-                <v-img :src="`/img/modelos/medium/${variant.image}.jpg`"></v-img>
+                <v-img :src="`/img/modelos/medium/${variant.type.slug}/${variant.line.slug}/${variant.image}.jpg`"></v-img>
             </v-avatar>
             <div>
                 <v-card-subtitle class="py-1 px-4">

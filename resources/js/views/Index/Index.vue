@@ -301,8 +301,8 @@
                <!-- <btnSocialMedia/> -->
             </v-main>
                  <LegalPopUp v-if="isLoadedPromises"></LegalPopUp>
-            <!-- <DialogInvite/>
-             <FakeNotification/> -->
+           <!-- <DialogInvite/> -->
+             <FakeNotification/>
              <!-- EMPIEZA FOOTER -->
              <theFooter v-if="!$route.path.includes('quoter')"  :isMobile="isMobile"/>
              <!-- TERMINA FOOTER -->
@@ -329,7 +329,7 @@ import mailDialog from '../../components/Index/TheMailDialog';
 import LegalPopUp from '../../components/LegalPopUp.vue'
 
 // import DialogInvite from '../../components/DialogInvite';
-// import FakeNotification from '../../components/FakeNotification';
+import FakeNotification from '../../components/FakeNotification';
 
 
 export default {
@@ -356,10 +356,10 @@ export default {
       blackBar,
       theFooter,
       mailDialog,
-      LegalPopUp
+      LegalPopUp,
 
       // DialogInvite,
-      // FakeNotification,
+      FakeNotification
     },
     watch:{
       query(after, before){

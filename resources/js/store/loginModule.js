@@ -10,14 +10,14 @@ const loginModule = {
         signupErrors: [],
         checkStatus: null,
         isLoggedIn: false,
-       
+
     },
 
 
     getters:{
-       
+
         loggedIn(state) {
-            
+
             return state.token !== null
           },
 
@@ -41,7 +41,7 @@ const loginModule = {
        },
 
        destroyToken(state){
-        
+
         localStorage.removeItem('access_token')
 
        },
@@ -73,14 +73,14 @@ const loginModule = {
     },
     actions:{
         retrieveToken: async function ({ commit, state }, credentials){
-           
+
             try {
                 const request = await axios
                 .post("/api/login",credentials)
                 commit('retrieveToken',request.data.token);
                 commit('setStatus',request.status);
-                
-               
+
+
               } catch (error) {
                 commit('setErrors',error.response.data)
                 commit('setStatus',error.response.status);
@@ -94,17 +94,17 @@ const loginModule = {
                const response = await axios
                .post("/api/logout", '',{
                    headers: {Authorization: "Bearer "+state.token}})
-                   
+
                    commit('setErrors',response.data.message)
                    commit('setStatus',response.status)
                    commit('destroyToken', state)
            } catch (error) {
-               
+
            }
       },
 
       signup: async function ({ commit, state }, credentials){
-           
+
         try {
             const request = await axios
             .post("/api/register",credentials)
@@ -118,7 +118,7 @@ const loginModule = {
       },
 
       registerClient: async function ({ commit, state },  data){
-           
+
         try {
             const request = await axios
             .post("/api/registerClient", data)
@@ -128,12 +128,12 @@ const loginModule = {
       },
 
       checkPasword: async function ({ commit, state }, intent){
-           
+
         try {
-           
+
             const request = await axios
-            .post("/api/checkPassword",{'intent': intent },{
-                headers: {Authorization: "Bearer "+state.token}})
+            .post("/api/checkPassword",{'intent': intent })
+            console.log(request)
             commit('setCheckStatus',request.status);
             //commit('retrieveToken',request.data.token);
           } catch (error) {
@@ -143,7 +143,7 @@ const loginModule = {
 
       },
 
-          
+
     },
 }
 

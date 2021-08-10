@@ -42,11 +42,11 @@
                         	    </v-col>
 
                         	    <v-col cols="12" xl="6" lg="6" md="6" sm="12" :class="!$vuetify.breakpoint.mdAndUp ? 'mt-n2' : ''" v-if="ableToChangePassword">
-                        	    	<v-text-field  dense prepend-inner-icon="mdi-lock" placeholder="Nueva contraseña" v-model="user.password"  :error-messages="errors.password" outlined></v-text-field>
+                        	    	<v-text-field type="password" dense prepend-inner-icon="mdi-lock" placeholder="Nueva contraseña" v-model="user.password"  :error-messages="errors.password" outlined></v-text-field>
                       		    </v-col>
 
                       		    <v-col cols="12" xl="6" lg="6" md="6" sm="12" :class="!$vuetify.breakpoint.mdAndUp ? 'mt-n6' : ''" v-if="ableToChangePassword">
-                         	    	<v-text-field dense prepend-inner-icon="mdi-lock-alert" placeholder="Confirmar nueva contraseña" v-model="user.confirmed_password" outlined></v-text-field>
+                         	    	<v-text-field type="password" dense prepend-inner-icon="mdi-lock-alert" placeholder="Confirmar nueva contraseña" v-model="user.password_confirmation" outlined></v-text-field>
                         	    </v-col>
 
                       		    <v-col cols="12" xl="6" lg="6" md="6" sm="12" v-else>
@@ -54,7 +54,7 @@
                       		    </v-col>
 
                           	    <v-col cols="12" xl="6" lg="6" md="6" sm="12">
-                                	<v-btn @click="editar()" :loading="isEditingButton" :disabled="isEditingButton" large color="#3ba2a9" class="white--text" block>Guardar</v-btn>
+                                	<v-btn @click="editar()" :loading="isEditingButton" :disabled="(isEditingButton || computedBlockButtonWhenSetPass == true)" large color="#3ba2a9" class="white--text" block>Guardar</v-btn>
                                 </v-col>
 				    		</v-row>
               	    	</v-card>
@@ -97,7 +97,7 @@
         		            <v-text-field outlined prepend-inner-icon="mdi-truck-delivery-outline" v-model="user.ship_address" placeholder="Direccón de envío" dense :error-messages="errors.shipping_address"></v-text-field>
 				    		<v-text-field outlined prepend-inner-icon="mdi-truck-delivery" v-model="user.second_ship_address" placeholder="Direccón de envío" dense :error-messages="errors.shipping_address"></v-text-field>
         		            <v-text-field outlined prepend-inner-icon="mdi-whatsapp" v-model="user.phone" placeholder="WhatsApp" dense :error-messages="errors.movil_number"></v-text-field>
-                            <v-btn @click="editar()" :loading="isEditingButton" :disabled="isEditingButton" color="#3ba2a9" class="white--text" block>Guardar</v-btn>
+                            <v-btn @click="editar()" :loading="isEditingButton" :disabled="(isEditingButton || computedBlockButtonWhenSetPass == true)" color="#3ba2a9" class="white--text" block>Guardar</v-btn>
         		        </v-col>
         		    </v-row>
                 </v-container>
@@ -252,6 +252,9 @@ export default {
                  this.isEditingButton = false;
 				 console.log('intento de edición')
     	      	if(this.status=== 200){
+                      this.ableToChangePassword = false;
+                      this.user.password = '';
+                      this.user.password_confirmation = '';
                     this.localSnackbar.message = 'Datos guardados correctamente'
                     this.localSnackbar.time = 3000
                     this.localSnackbar.isActive = true
@@ -291,6 +294,9 @@ export default {
           return this.colors[this.r]
         }
     },
+    computedBlockButtonWhenSetPass(){
+        return ((this.user.password !== this.user.password_confirmation) && this.ableToChangePassword) || (((this.user.password == null || this.user.password_confirmation == null) || this.user.password == '' || this.user.password_confirmation == '') && this.ableToChangePassword) ? true : false;
+    }
 
   },
 };

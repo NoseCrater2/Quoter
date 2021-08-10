@@ -20,7 +20,7 @@
                 </div >
             </div>
             <div style="max-width: 500px; margin: auto; text-align: center; color: #404042">
-                 <h1> Este espacio en <strong>Rollux</strong> está espcialmente pensado para ti.</h1>
+                 <h1> Este espacio en <strong>Rollux</strong> está especialmente pensado para ti.</h1>
             </div>
             <div class="d-flex justify-center">
                 <hr align="center" noshade="noshade" class="divider" style="height: 5px; background-color: #47a5ad;" size="3" width="25%" />

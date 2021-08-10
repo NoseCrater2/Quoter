@@ -68,7 +68,7 @@ class SunblindsImport implements WithHeadingRow, ToCollection, SkipsOnError, Wit
                 ],[
                     'name' => $row['modelo'],
                     'slug' => str_replace(' ', '-', mb_strtolower($row['modelo'])),
-                    'description' =>  $row->has('descripcion')&&$row['descripcion']?$row['descripcion']:null,
+                    'description' =>  $row['descripcion'],
                     'line_id' => $line->id,
                     'type_id' => $type->id
                 ]);
