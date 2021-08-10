@@ -33,7 +33,7 @@
               <v-list-item-title>Ir a Rollux.com</v-list-item-title>
             </v-list-item-content>
         </v-list-item>
-          <v-list-item @click="showComponent = 1">
+          <v-list-item @click="showComponent = 1" :to="{name: 'Quoter'}">
             <v-list-item-icon>
               <v-icon>mdi-calculator</v-icon>
             </v-list-item-icon>
@@ -41,7 +41,7 @@
               <v-list-item-title>Cotizador</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item  @click="showComponent = 4">
+          <v-list-item  @click="showComponent = 4" :to="{name: 'Orders'}">
             <v-list-item-icon>
               <v-icon>mdi-truck</v-icon>
             </v-list-item-icon>
@@ -49,7 +49,7 @@
               <v-list-item-title>Pedidos</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item v-if="user.role === 'Administrador'" @click="showComponent = 5">
+          <v-list-item v-if="user.role === 'Administrador'" @click="showComponent = 5" :to="{name: 'Stock', params: {slugProduct: 'PERSIANAS'}}">
             <v-list-item-icon>
               <v-icon>mdi-clipboard-list</v-icon>
             </v-list-item-icon>
@@ -57,7 +57,7 @@
               <v-list-item-title>Inventario</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item v-if="user.role === 'Administrador'" @click="showComponent = 2">
+          <v-list-item v-if="user.role === 'Administrador'" @click="showComponent = 2" :to="{name: 'Users'}">
             <v-list-item-icon>
               <v-icon>mdi-account-multiple</v-icon>
             </v-list-item-icon>
@@ -88,7 +88,7 @@
         <v-spacer v-if="!$vuetify.breakpoint.mdAndUp"></v-spacer>
 
         <v-card color="transparent" flat tile :to="'/dashboard'">
-           <v-img  max-width="128" :src="`/img/logos/rollux.png`"></v-img>
+           <v-img  max-width="128" :src="`/img/white-logo.png`"></v-img>
         </v-card>
 
 
@@ -120,6 +120,9 @@
                    <v-list-item :to="{name: 'Galleries'}">
                     <v-list-item-title>GALERÍAS</v-list-item-title>
                   </v-list-item>
+                <v-list-item :to="{name: 'ImportPdfs'}">
+                    <v-list-item-title>PDFS</v-list-item-title>
+                </v-list-item>
                 </v-list>
               </v-menu>
             <v-divider inset vertical></v-divider>

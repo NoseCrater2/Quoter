@@ -10,69 +10,88 @@
                          <h2> {{slugType.toUpperCase().split('-').join(" ")}} </h2>
                     </div>
                </v-col>
-                <v-col cols="12" align-self="center" class="text-center">
+                <!-- IF DE VERIFICACION INICIA -->
+                <!-- SI NO HAY DESCRIPCION NI IMAGEN, SE PONE ESTE -->
+                <v-col cols="12" align-self="center" class="text-center" v-if="computedArrayParagraphs.length == 0">
                     <div class="d-inline-flex">
                          <h1>TEJIDOS</h1>
                     </div>
                    <div class="d-inline-flex"  v-if="subweaves" style="color: #47a5ad;">
                          <h1> {{subweaves.name}} </h1>
                     </div>
-                     <div class="d-flex justify-center">
-                  <hr align="center" noshade="noshade" class="divider" style="height: 5px" size="3" width="35%" />
-              </div>
-                   
+                    <div class="d-flex justify-center">
+                        <hr align="center" noshade="noshade" class="divider" style="height: 5px" size="3" width="35%" />
+                    </div>
                 </v-col>
-                <!-- <v-col cols="12" align-self="center" class="text-center" v-if="getProduct.name == 'TERRACE'">
-                    <p style="font-size: 1.5em" >
-                        Es un toldo de caída vertical ideal para restaurantes, terrazas, areas de fumar y/o 
-                        lugar de esparcimiento donde quieres un espacio cubierto, pero al mismo tiempo que
-                        permita la circulación de aire.
-                    </p>
-                    <p style="font-size: 1.5em" >
-                        ¡Conoce nuestra variedad de tejidos!
+                <!-- SI HAY DESCRIPCION NI IMAGEN, SE PONE ESTE -->
+                <v-col cols="12" align-self="center" class="text-center" v-else>
+                   <div class="d-inline-flex"  v-if="subweaves" style="color: #47a5ad; font-size: 2em">
+                         <h1> {{subweaves.name}} </h1>
+                    </div>
+                    <div class="d-flex justify-center">
+                        <hr align="center" noshade="noshade" class="divider" style="height: 5px" size="3" width="35%" />
+                    </div>
+                </v-col>
+                <!-- IF DE VERIFICACION TERMINA -->
+           </v-row>
+            <!-- DESCRIPCION INICIA -->
+            <v-row justify="space-between" class="mx-4" v-if="computedArrayParagraphs.length > 0">
+                <div>
+                    <v-col cols="12" align-self="center" class="text-center">
+                        <p style="font-size: 1.5em" >
+                            {{computedArrayParagraphs[0]}}
+                        </p>
+                    </v-col>
+                </div>
+            </v-row>
+            <!-- https://via.placeholder.com/500x300 -->
+            <!-- /img/subweaves/descriptions/${slugType}-${slugSubweave}.jpg -->
+            <v-col cols="12" class="d-flex justify-center">
+                <v-img :src="`/img/subweaves/descriptions/${slugType}-${slugSubweave}.jpg`" :max-height="$vuetify.breakpoint.xl ? 600 : $vuetify.breakpoint.lg ? 500 : 500" ></v-img>
+            </v-col>
+            <div v-if="computedArrayParagraphs.length > 0">
+                <v-col cols="12" align-self="center" class="text-center">
+                    <p v-for="(item, index) in computedArrayParagraphs" :key="index" style="font-size: 1.5em" >
+                        {{index > 0 ? item : ''}}
                     </p>
                 </v-col>
-                <v-col cols="12" align-self="center" class="text-center" v-if="getProduct.name == 'ARION'">
-                    <p style="font-size: 1.5em" >
-                        Es un toldo de sistema enrrollable de grandes dimensiones y son perfectos para espacios amplios,
-                        ya sea para exterior o interior.
-                    </p>
-                    <p style="font-size: 1.5em" >
-                        ¡Conoce nuestra variedad de tejidos!
-                    </p>
+            </div>
+            <!-- DESCRIPCION TERMINA -->
+            <v-row justify="space-between" class="mx-4">
+                <v-col cols="12" align-self="center" class="text-center" v-if="computedArrayParagraphs.length > 0">
+                    <div class="d-inline-flex">
+                         <h1>TEJIDOS</h1>
+                    </div>
+                   <div class="d-inline-flex"  v-if="subweaves" style="color: #47a5ad;">
+                         <h1> {{subweaves.name}} </h1>
+                    </div>
+                    <div class="d-flex justify-center">
+                        <hr align="center" noshade="noshade" class="divider" style="height: 5px" size="3" width="35%" />
+                    </div>
                 </v-col>
-                <v-col cols="12" align-self="center" class="text-center" v-if="getProduct.name == 'BALCONY'">
-                    <p style="font-size: 1.5em" >
-                        Este toldo te ofrece una caída vertical libre con capacidad de incuir un ángulo
-                        gracias a la extensión de sus brazos, o que hace que sea una excelente opción 
-                        para terrazas ubicadas en edificios.
-                    </p>
-                    <p style="font-size: 1.5em" >
-                        ¡Conoce nuestra variedad de tejidos!
-                    </p>
-                </v-col> -->
+
+
                 <v-col cols="12" align-self="center" class="text-center">
                    <v-row v-if="subweaves"  justify="center" align="center" >
                        <v-col cols="12" md="4" sm="6"  v-for="weave in subweaves.weaves" :key="weave.id">
                            <v-card
                            :to="{name: 'Catalogo', params: {slugProduct: slugProduct, slugType: slugType, slugLine: slugLine, slugSubweave: subweaves.slug, slugWeave: weave.slug}}"
-                           height="340" 
-                           width="380" 
-                           tile flat 
+                           height="340"
+                           width="380"
+                           tile flat
                            >
                            <v-hover v-slot="{ hover }">
                                 <v-img :src="`/img/weaves/${weave.slug}.png`" class="align-end"  height="340" width="380" :class="{'opacado':hover}">
-                                    <div class="weave d-flex justify-center"  > 
-                                        <h3 class="text-center">{{ weave.name}}</h3> 
-                                    </div> 
+                                    <div class="weave d-flex justify-center"  >
+                                        <h3 class="text-center">{{ weave.name}}</h3>
+                                    </div>
                                 </v-img>
                              </v-hover>
                            </v-card>
-                          
                        </v-col>
                    </v-row>
                 </v-col>
-                <v-col cols="12"   class="text-center mt-5">
+                <v-col cols="12" class="text-center mt-5">
                     <v-btn rounded color="#47a5ad" x-large dark>Ver Galería</v-btn>
                 </v-col>
             </v-row>
@@ -85,7 +104,7 @@
 export default {
     data(){
         return{
-        
+
         }
     },
 
@@ -98,8 +117,17 @@ export default {
     },
      computed:{
         subweaves(){
-            return this.$store.state.productsModule.subweaves.find(sw => sw.line.slug === this.slugLine && sw.type.slug === this.slugType)
+            return this.$store.state.productsModule.subweaves.find(sw => sw.line.slug === this.slugLine && sw.type.slug === this.slugType && sw.slug === this.slugSubweave)
         },
+        computedArrayParagraphs(){
+            let arr = [];
+            if(typeof(this.subweaves.description) != 'undefined'){
+                if(this.subweaves.description != null){
+                    arr = this.subweaves.description.split("\n");
+                }
+            }
+            return arr.filter(item => item != '');
+        }
     },
 
     props: {
@@ -107,15 +135,15 @@ export default {
         //     type: String,
         //     required: false
         // },
-        // slugSubweave: {
-        //     type: String,
-        //     required: false
-        // },
+        slugSubweave: {
+            type: String,
+            required: false
+        },
         slugLine: {
             type: String,
             required: false
         },
-        
+
         slugType: {
             type: String,
             required: false
@@ -125,7 +153,7 @@ export default {
             required: true,
         }
     },
-    
+
     // components:{
     //     SubweaveProductDetail
     // },

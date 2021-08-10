@@ -86,6 +86,15 @@ const routes = [
 
             },
             {
+                path: "importPdfs",
+                component: () => import("./components/ProductsTables/ImportPdfs.vue"),
+                name: "ImportPdfs",
+                meta: {
+                    requiresAuth: true,
+                }
+
+            },
+            {
                 path: "orders",
                 component: () => import("./components/Orders.vue"),
                 name: "Orders",
@@ -184,7 +193,7 @@ const routes = [
                 props: true,
             },
             {
-                path: '/:slugProduct/:slugType/weaves/:slugLine',
+                path: '/:slugProduct/:slugType/weaves/:slugLine/:slugSubweave',
                 component: () => import("./views/TejidosToldos.vue"),
                 name: 'TejidosToldos',
                 props: true,

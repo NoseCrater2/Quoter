@@ -34,7 +34,7 @@
 
               <p class="text-center">
                 ¿Quieres cotizar y no eres distribuidor?
-                <router-link :to="{name:'Register', hash: '#formulary'}"> Reguistrate aquí</router-link>
+                <router-link :to="{name:'Register', hash: '#formulary'}"> Regístrate aquí</router-link>
               </p>
             <v-card-actions>
             <v-btn color="red" dark @click="cancel()">

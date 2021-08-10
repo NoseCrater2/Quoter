@@ -49,7 +49,7 @@
             </v-col>
             <v-col cols="12" xl="6" lg="6" md="6" sm="12" >
                 <v-card flat>
-                    <v-form class="ma-4">
+                    <v-form ref="form" @submit.prevent="sendInformation" class="ma-4">
                         <v-select
                         v-model="select"
                         :items="items"
@@ -71,25 +71,31 @@
                         outlined
                         >
                         </v-text-field>
-                    </v-form>
-                </v-card>
-                    <v-card flat>
                         <v-textarea
                         rows="6"
-                        class="ma-5"
                         outlined
                         name="input-7-4"
                         label="Mensaje"
                         ></v-textarea>
-                        <v-card-actions>
+                        <!-- INICIA CAPTCHA -->
+                        <div class="d-flex justify-center mb-6 mt-n4">
+                            <vue-recaptcha ref="recaptcha"
+                              @verify="onVerifyCaptcha" sitekey='6Lds0O0bAAAAADGJgJ5vvOIfKnsGrVmmYqzBJEBJ' :loadRecaptchaScript="true" >
+                            </vue-recaptcha>
+                        </div>
+                        <!-- TERMINA CAPTCHA -->
+                        <v-card-actions class="ml-n2 mt-n7">
                             <v-btn
-                            dark
-                            class="ml-2 mt-n10"
+                            :loading="loading"
+                            :disabled="!captchaRobot"
+                            type="submit"
+                            class="white--text"
                             color="#47a5ad"
                             >Enviar</v-btn>
                             <v-spacer></v-spacer>
                         </v-card-actions>
-                    </v-card>
+                    </v-form>
+                </v-card>
             </v-col>
         </v-row>
         </v-container>
@@ -100,9 +106,12 @@
 import { latLng } from "leaflet";
 import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from "vue2-leaflet";
 import "leaflet/dist/leaflet.css";
+import VueRecaptcha from 'vue-recaptcha';
 export default {
     data(){
         return{
+            captchaRobot: false,
+            loading: false,
             reference: null,
             email: null,
             select: null,
@@ -146,6 +155,7 @@ export default {
         LMarker,
         LPopup,
         LTooltip,
+        'vue-recaptcha': VueRecaptcha
     },
 
     methods:{
@@ -154,6 +164,25 @@ export default {
         },
         centerUpdate(center) {
           this.currentCenter = center;
+        },
+        sendInformation(){
+            if (this.captchaRobot) {
+                if(this.$refs.form.validate()){
+                    this.loading = true
+                    // this.$store.dispatch('registerClient',this.client_information)
+                    // .then(()=>{
+                        this.loading = false;
+                        this.$refs.form.reset();
+                        this.$refs.recaptcha.reset();
+                        this.captchaRobot = false;
+                    // })
+                }
+            }
+        },
+        onVerifyCaptcha(response) {
+            if (response) {
+                this.captchaRobot = true
+            }
         },
     },
 
