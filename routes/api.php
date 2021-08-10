@@ -37,7 +37,11 @@ Route::resource('weaves', 'WeaveController')->only('index','show');
 Route::resource('sunblinds', 'SunblindController')->only('index','show');
 
 Route::resource('colors', 'ColorController')->only('index','show');
-Route::resource('variants', 'VariantController')->only('index','show','update');
+
+Route::get('variants/{slug}', 'VariantController@show');
+Route::resource('variants', 'VariantController')->only('index','update');
+
+
 Route::resource('products', 'Api\ProductController')->only('index','show');
 
 Route::resource('motorization_types', 'MotorizationTypeController')->only('index','show');

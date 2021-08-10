@@ -60,19 +60,10 @@ class AuthController extends Controller
         {
             return response($validator->errors(), 422);
         }else{
-            $user = User::make($data);
-            Mail::to('contacto@rollux.com.mx')->send(new UserCreated($user));
-            Mail::to($user)->send(new UserCreatedClient($user));
-            // Mail::send('email',[
-            //     'name' => $request->get('name'),
-            //     'email' => $request->get('email'),
-            //     'comment' => $request->get('comments')],
-            //     function($message){
-            //         $message->from('youremail@your_domain');
-            //         $message->to('youremail@your_domain', 'Your Name')
-            //         ->subject('Your Website Contact Form');
-            //     }
-            // );
+            $data['active'] = 0;
+            $user = User::create($data);
+            // Mail::to('contacto@rollux.com.mx')->send(new UserCreated($user));
+            // Mail::to($user)->send(new UserCreatedClient($user));
             return response('Email enviado',200);
         }
        

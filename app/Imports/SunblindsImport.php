@@ -8,6 +8,7 @@ use App\Color;
 use App\Weave;
 use App\Subweave;
 use App\Variant;
+use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -100,7 +101,7 @@ class SunblindsImport implements WithHeadingRow, ToCollection, SkipsOnError, Wit
                        'subweave_id' => $subweave->id,
                    ],
                    [
-                       'slug' =>  preg_replace("[\W]", "-", $row['modelo']),
+                       'slug' => Str::slug($row['producto']),
                        'width' => $row->has('ancho') && $row['ancho']?floatval(preg_replace("[\,]",'.',$row['ancho'])):1,
                        'price' => $row->has('precio')?$row['precio']:0,
                        'rotate' =>$row->has('rotacion')?$row['rotacion']:0,
