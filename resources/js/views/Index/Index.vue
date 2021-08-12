@@ -150,7 +150,7 @@
                         <!-- '/:slugProduct/:slugType/:slugLine?/detalles/:slugDetail' -->
                         <template v-for="(item, index) in items" >
                           <v-list-item :key="index" style="background-color: white"
-                          :to="{name: 'Details', params: {slugProduct:item.type.product_id == 1 ? 'PERSIANAS' : 'TOLDOS',slugType:item.type.slug,slugDetail: item.slug, id: item.id}}"
+                          :to="{name: 'Details', params: {slugProduct:item.type.product_id == 1 ? 'PERSIANAS' : 'TOLDOS',slugType:item.type.slug,slugDetail: item.slug}}"
                           >
 
                             <v-list-item-content class="ma-1">

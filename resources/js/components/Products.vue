@@ -276,7 +276,7 @@
                         md="4">
 
                           <v-hover v-slot="{ hover }" v-if="item">
-                            <v-card width="240"  color="grey lighten-4" flat :to="{name: 'Details', params: {slugWeave:item.weave != null ? item.weave.slug : null, slugDetail: item.id.toString()}}">
+                            <v-card width="240"  color="grey lighten-4" flat :to="{name: 'Details', params: {slugWeave:item.weave != null ? item.weave.slug : null, slugDetail: item.slug}}">
                               <v-img class="tag" width="85"  v-if="item.rotate == 1" src="/img/modelos/rotable.png"></v-img>
                               <v-img
                               class="white--text align-end"
@@ -297,7 +297,7 @@
                                   class="d-flex transition-fast-in-fast-out  v-card--reveal white--text "
                                   style="height: 100%;">
                                     <v-hover v-slot="{ hover }">
-                                      <v-btn :to="{name: 'Details', params: {slugWeave:item.weave != null ? item.weave.slug : null, slugDetail: item.id.toString()}}" depressed :outlined="!hover" tile color="white"  small>Detalles del producto</v-btn>
+                                      <v-btn :to="{name: 'Details', params: {slugWeave:item.weave != null ? item.weave.slug : null, slugDetail: item.slug}}" depressed :outlined="!hover" tile color="white"  small>Detalles del producto</v-btn>
                                     </v-hover>
                                   </div>
                                 </v-slide-x-transition>

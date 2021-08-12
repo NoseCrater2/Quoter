@@ -34,7 +34,7 @@ export default {
             items: [
                 {
                     title: 'PERSIANAS',
-                    subtext: 'Contamos con la más amplia gama de texturas y colores de todo el Mercado Nacional para el recubrimiento de ventanas, suficiente para cubrir cualquier necesidad, requerimiento y gusto',
+                    subtext: 'Contamos con la más amplia gama de texturas y colores de todo el mercado nacional para el recubrimiento de ventanas, suficiente para cubrir cualquier necesidad, requerimiento y gusto',
                     img: 'img/home/PERSIANAS.svg',
                     height: '150',
                   

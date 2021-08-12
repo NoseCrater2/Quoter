@@ -19,7 +19,7 @@
                
                  <div class="d-block">
                      <div class="d-inline-flex">
-                         <h1>''Para nosotros</h1>
+                         <h1>''Para nosotros,</h1>
                           <h1 style="color: #47a5ad;">&nbsp;las persianas&nbsp;</h1>
                           <h1>no son solo </h1>
                     </div>

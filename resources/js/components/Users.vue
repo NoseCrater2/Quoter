@@ -2,19 +2,21 @@
     <div id="app">
         <div class="text-center">
             <h2 class="mt-2 mb-5">USUARIOS</h2>
-             	<v-card>
+             	<v-card flat>
                 	<v-data-table
+					:item-class="rowClass"
                 	:headers="headers"
-                	:items="users"
+                	:items="filtered"
                 	:search="search"
                 	:loading="loadingTable"
                 	color="#3ba2a9"
+					:items-per-page="10"
                 	>
                 		<template v-slot:top>
                             <v-row no-gutters justify="space-between">
-                                <v-col cols="11">
+                                <v-col cols="6">
                                     <v-text-field
-                                    class="mx-2"
+                                    class="ma-2"
                 		            v-model="search"
                                     outlined
                                     dense
@@ -24,6 +26,23 @@
                 		            hide-details
                 		            ></v-text-field>
                                 </v-col>
+								<v-col cols="2">
+									<v-switch
+									color="#47a5ad"
+      								v-model="swToInactive"
+      								label="Mostrar solo inactivos"
+      								></v-switch>
+									<!-- <v-select
+									v-model="selectedRoles"
+									outlined
+									dense
+									multiple 
+									:items="roles"
+									label="filtrar"
+									item-value="nombre" 
+									item-text="name">
+									</v-select> -->
+								</v-col>
                                 <v-col cols="1">
         					        	<v-dialog v-model="usersDialog" max-width="500px" persistent>
         					        	  	<template v-slot:activator="{ on, attrs }">
@@ -44,10 +63,19 @@
         					        	      		<v-container>
         					        	        		<v-row>
         					        	          			<v-col class="pb-0" cols="12" md="6" sm="12">
-        					        	          			  	<v-text-field dense hide-details outlined v-model="editedItem.name" label="Nombre" prepend-inner-icon="mdi-account" :error-messages="errors.name"></v-text-field>
+        					        	          			  	<v-text-field
+																dense
+																hide-details
+																outlined
+																v-model="editedItem.name"
+																label="Nombre"
+																prepend-inner-icon="mdi-account" 
+																:error-messages="errors.name">
+																</v-text-field>
         					        	          			</v-col>
         					        	          			<v-col class="pb-0" cols="12" md="6" sm="12">
         					        	          			  	<v-text-field
+																:error-messages="errors.last_name"
 							        							hide-details
         					        	          			  	dense
         					        	          			  	outlined
@@ -62,6 +90,7 @@
         					        	        		    	<v-text-field
 							        							hide-details
         					        	        		    	dense
+																:error-messages="errors.phone"
         					        	        		    	outlined
         					        	        		    	v-model="editedItem.phone"
                                                                 prepend-inner-icon="mdi-phone"
@@ -75,6 +104,7 @@
         					        	        		<v-row>
         					        	        		  	<v-col class="pb-0" cols="12" md="6" sm="12">
         					        	        		    	<v-text-field
+																:error-messages="errors.address"
 							        							hide-details
         					        	        		    	dense
         					        	        		    	outlined
@@ -91,6 +121,7 @@
         					        	        		  	  	v-model="editedItem.city"
         					        	        		  	  	label="Ciudad"
                                                                 prepend-inner-icon="mdi-city"
+																:error-messages="errors.city"
         					        	        		  	  	></v-text-field>
         					        	        		  	</v-col>
         					        	        		</v-row>
@@ -103,6 +134,7 @@
         					        	          			  	v-model="editedItem.state"
         					        	          			  	label="Estado"
                                                                 prepend-inner-icon="mdi-map"
+																:error-messages="errors.state"
         					        	          			  	></v-text-field>
         					        	          			</v-col>
         					        	          			<v-col class="pb-0" cols="12" md="6" sm="12">
@@ -113,6 +145,7 @@
         					        	          			  	v-model="editedItem.zip_code"
         					        	          			  	label="Código Postal"
                                                                 prepend-inner-icon="mdi-mailbox"
+																:error-messages="errors.zip_code"
         					        	          			  	></v-text-field>
         					        	          			</v-col>
         					        	        		</v-row>
@@ -125,6 +158,7 @@
         					        	            			v-model="editedItem.company"
         					        	            			label="Compañía"
                                                                 prepend-inner-icon="mdi-domain"
+																:error-messages="errors.company"
         					        	            			></v-text-field>
         					        	          			</v-col>
         					        	          			<v-col class="pb-0" cols="12" md="6" sm="12">
@@ -136,6 +170,7 @@
         					        	          			  	type="number"
         					        	          			  	outlined
         					        	          			  	label="Descuento"
+																:error-messages="errors.discount_percent"
         					        	          			  	></v-text-field>
         					        	          			</v-col>
         					        	        		</v-row>
@@ -148,6 +183,7 @@
         					        	            			v-model="editedItem.ship_address"
         					        	            			label="Dirección de envío"
                                                                 prepend-inner-icon="mdi-truck-delivery-outline"
+																:error-messages="errors.ship_address"
         					        	            			></v-text-field>
         					        	          			</v-col>
         					        	          			<v-col class="pb-0" cols="12">
@@ -156,6 +192,7 @@
         					        	          			  	v-model="editedItem.second_ship_address"
         					        	          			  	dense
         					        	          			  	outlined
+																:error-messages="errors.second_ship_address"
         					        	          			  	label="Dirección de envío alterna"
                                                                 prepend-inner-icon="mdi-truck-delivery"
         					        	          			  	></v-text-field>
@@ -164,7 +201,7 @@
 							        					<v-row>
 							        						<v-col cols="12">
 							        							<v-select
-							        							hide-details
+																:error-messages="errors.role"
 							        							v-model="editedItem.role"
         					        	          			  	:items="roles"
 							        							item-value="name"
@@ -218,8 +255,11 @@
                 		  	<v-icon small class="mr-2" @click="editItem(item)">
                 		    	mdi-pencil
                 		  	</v-icon>
-                		  	<v-icon :disabled="user.id == item.id ? true : false" small @click="deleteItem(item)">
+                		  	<v-icon class="mr-2" :disabled="user.id == item.id ? true : false" small @click="deleteItem(item)">
                 		  	  	mdi-delete
+                		  	</v-icon>
+							<v-icon  v-if="!item.active" small @click="openActitveUserDialog(item)">
+                		  	  	mdi-shield-check
                 		  	</v-icon>
                 		</template>
                 	</v-data-table>
@@ -241,254 +281,23 @@
         	    	</v-card-actions>
         		</v-card>
         	</v-dialog>
-
-
+			<v-dialog v-model="activeUserDialog" max-width="500px" persistent>
+        		<v-card tile>
+        	    	<v-card-title>
+        	    	  	¿ACTIVAR USUARIO?
+        	    	</v-card-title>
+        	    	<v-card-text>
+        	      		Asegurese de revisar la información de este usuario ya que al activarlo se le enviará un email
+						con la contraseña de acceso a Rollux
+        	    	</v-card-text>
+        	    	<v-card-actions class="mt-n6">
+        	    	  	<v-spacer></v-spacer>
+        	    	  	<v-btn color="red" text @click="activeUserDialog = false">CANCELAR</v-btn>
+        	    	  	<v-btn color="#47a5ad" text @click="active" :loading="loadingActive">Activar</v-btn>
+        	    	</v-card-actions>
+        		</v-card>
+        	</v-dialog>
         </div>
-
-        <!-- <v-tabs v-model="tab" fixed-tabs color="#17767c" background-color="white" >
-            <v-tab>Usuarios</v-tab>
-		</v-tabs>
-		<v-tabs-items v-model="tab">
-            <v-tab-item >
-              	<v-row justify="center">
-                 	<v-card >
-                  		<v-card-title>
-                    		<v-text-field
-                    		v-model="search"
-                    		append-icon="mdi-magnify"
-                    		label="Buscar Usuario"
-                    		single-line
-                    		hide-details
-                    		></v-text-field>
-                  		</v-card-title>
-                    	<v-data-table
-                    	:headers="headers"
-                    	:items="users"
-                    	:search="search"
-                    	:loading="loadingTable"
-                    	color="#3ba2a9"
-                    	>
-                    		<template v-slot:item.name="{ item }">
-                    		  {{item.name+' '+item.last_name}}
-                    		</template>
-                    		<template v-slot:top>
-        						<v-toolbar flat color="white">
-									<v-spacer></v-spacer>
-        							<v-dialog v-model="usersDialog" max-width="500px">
-        							  	<template v-slot:activator="{ on, attrs }">
-        							  	  	<v-btn
-        							  	  	color="black"
-        							  	  	dark
-        							  	  	class="mb-2"
-        							  	  	v-bind="attrs"
-        							  	  	v-on="on"
-        							  	  	>NUEVO</v-btn>
-        							  	</template>
-        								<v-card>
-        							    	<v-card-title>
-        							    	  	<span class="headline">{{ formTitle }}</span>
-        							    	</v-card-title>
-
-        							    	<v-card-text>
-        							      		<v-container>
-        							        		<v-row>
-        							          			<v-col class="pb-0" cols="12" md="6" sm="12">
-        							          			  	<v-text-field dense hide-details outlined v-model="editedItem.name" label="Nombre" :error-messages="errors.name"></v-text-field>
-        							          			</v-col>
-        							          			<v-col class="pb-0" cols="12" md="6" sm="12">
-        							          			  	<v-text-field
-															hide-details
-        							          			  	dense
-        							          			  	outlined
-        							          			  	v-model="editedItem.last_name"
-        							          			  	label="Apellido(s)"
-        							          			  	></v-text-field>
-        							          			</v-col>
-        							        		</v-row>
-
-        							        		<v-row>
-        							        		   <v-col class="pb-0" cols="12" md="6" sm="12">
-        							        		    	<v-text-field
-															hide-details
-        							        		    	dense
-        							        		    	outlined
-        							        		    	v-model="editedItem.phone"
-        							        		    	label="Teléfono"
-        							        		    	></v-text-field>
-        							        		  	</v-col>
-        							        		  	<v-col class="pb-0" cols="12" md="6" sm="12">
-        							        		    	<v-text-field dense hide-details outlined v-model="editedItem.email" label="Email" :error-messages="errors.email"></v-text-field>
-        							        		  	</v-col>
-        							        		</v-row>
-        							        		<v-row>
-        							        		  	<v-col class="pb-0" cols="12" md="6" sm="12">
-        							        		    	<v-text-field
-															hide-details
-        							        		    	dense
-        							        		    	outlined
-        							        		    	v-model="editedItem.address"
-        							        		    	label="Dirección"
-        							        		    	></v-text-field>
-        							        		  		</v-col>
-        							        		  	<v-col class="pb-0" cols="12" md="6" sm="12">
-        							        		  	  	<v-text-field
-															hide-details
-        							        		  	  	dense
-        							        		  	  	outlined
-        							        		  	  	v-model="editedItem.city"
-        							        		  	  	label="Ciudad"
-        							        		  	  	></v-text-field>
-        							        		  	</v-col>
-        							        		</v-row>
-        							        		<v-row>
-        							          			<v-col class="pb-0" cols="12" md="6" sm="12">
-        							          			  	<v-text-field
-															hide-details
-        							          			  	dense
-        							          			  	outlined
-        							          			  	v-model="editedItem.state"
-        							          			  	label="Estado"
-        							          			  	></v-text-field>
-        							          			</v-col>
-        							          			<v-col class="pb-0" cols="12" md="6" sm="12">
-        							          			  	<v-text-field
-															hide-details
-        							          			  	dense
-        							          			  	outlined
-        							          			  	v-model="editedItem.zip_code"
-        							          			  	label="Código Postal"
-        							          			  	></v-text-field>
-        							          			</v-col>
-        							        		</v-row>
-        							        		<v-row>
-        							           			<v-col class="pb-0" cols="12" md="6" sm="12">
-        							            			<v-text-field
-															hide-details
-        							            			dense
-        							            			outlined
-        							            			v-model="editedItem.company"
-        							            			label="Empresa"
-        							            			></v-text-field>
-        							          			</v-col>
-        							          			<v-col class="pb-0" cols="12" md="6" sm="12">
-        							          			  	<v-text-field
-															hide-details
-        							          			  	prefix="%"
-        							          			  	v-model="editedItem.discount_percent"
-        							          			  	dense
-        							          			  	type="number"
-        							          			  	outlined
-        							          			  	label="Descuento"
-        							          			  	></v-text-field>
-        							          			</v-col>
-        							        		</v-row>
-													<v-row>
-        							           			<v-col class="pb-0" cols="12">
-        							            			<v-text-field
-															hide-details
-        							            			dense
-        							            			outlined
-        							            			v-model="editedItem.ship_address"
-        							            			label="Dirección de envío"
-        							            			></v-text-field>
-        							          			</v-col>
-        							          			<v-col class="pb-0" cols="12">
-        							          			  	<v-text-field
-															hide-details
-        							          			  	v-model="editedItem.second_ship_address"
-        							          			  	dense
-        							          			  	outlined
-        							          			  	label="Dirección de envío alterna"
-        							          			  	></v-text-field>
-        							          			</v-col>
-        							        		</v-row>
-
-													<v-row>
-														<v-col cols="12">
-															<v-select
-															hide-details
-															v-model="editedItem.role"
-        							          			  	:items="roles"
-															item-value="name"
-															item-text="name"
-        							          			  	dense
-        							          			  	outlined
-        							          			  	label="Tipo de usuario"
-        							          			  	></v-select>
-														</v-col>
-													</v-row>
-
-													<v-row class="my-2" align="center">
-														<v-col cols="12">
-															<input type="file" ref="btnUploadImage" style="display:none" @change="selectImage($event)" accept="image/*"/>
-															<v-card width="100%" class="d-flex justify-center align-center" height="100"  @click="$refs.btnUploadImage.click()">
-																<v-img v-if="urlTemporal != null"  width="100%" height="100%" :src="urlTemporal">
-																</v-img>
-
-																<v-img v-else-if="editedItem.logo != null && editedItem.logo != Object"  width="100%" height="100%" :src="`/img/${editedItem.logo}`">
-																</v-img>
-																<div v-else >
-																	<v-icon size="50">mdi-image</v-icon>
-																</div>
-															</v-card>
-															<v-card-text class="d-block">
-																Haz clic sobre el recuadro para subir el logo
-															</v-card-text>
-														</v-col>
-													</v-row>
-        							      		</v-container>
-        							    	</v-card-text>
-        							    	<v-card-actions>
-        							    	  	<v-spacer></v-spacer>
-        							    	  	<v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
-        							    	  	<v-btn color="blue darken-1" text @click="save">Guardar</v-btn>
-        							    	</v-card-actions>
-        								</v-card>
-        							</v-dialog>
-        						</v-toolbar>
-      						</template>
-                    		<template v-slot:item.actions="{ item }">
-                    		  	<v-icon small class="mr-2" @click="editItem(item)">
-                    		    	mdi-pencil
-                    		  	</v-icon>
-                    		  	<v-icon small @click="deleteItem(item)">
-                    		  	  	mdi-delete
-                    		  	</v-icon>
-                    		</template>
-                    	</v-data-table>
-                	</v-card>
-              	</v-row>
-            </v-tab-item>
-            <v-tab-item >
-               <v-row justify="center">
-                 <v-card >
-                  <v-card-title>
-                    <v-text-field
-                      v-model="search"
-                      append-icon="mdi-magnify"
-                      label="Buscar Rol"
-                      single-line
-                      hide-details
-                    ></v-text-field>
-                  </v-card-title>
-                    <v-data-table
-                    :headers="headersRoles"
-                    :items="roles"
-                    :search="search"
-                    >
-                    <template v-slot:item.actions="{ item }">
-                      <v-icon small class="mr-2" @click="editItem(item)">
-                        mdi-pencil
-                      </v-icon>
-                      <v-icon small @click="deleteItem(item)">
-                        mdi-delete
-                      </v-icon>
-                    </template>
-                    </v-data-table>
-                </v-card>
-              </v-row>
-            </v-tab-item>
-        </v-tabs-items> -->
     </div>
 </template>
 
@@ -497,11 +306,15 @@ import { mapState, mapGetters, mapActions } from 'vuex';
 export default {
     data(){
         return {
+			loadingActive: false,
+			activeUserDialog: false,
+			swToInactive: false,
+			selectedRoles: [],
 			urlTemporal: null,
       		currentLogo: null,
-          loadingTable: false,
-          deleteUserDialog: false,
-          localDeletinItem: {},
+          	loadingTable: false,
+          	deleteUserDialog: false,
+          	localDeletinItem: {},
             usersDialog: Object.keys(this.$route.query).length == 0?false:true,
             tab: null,
             search: "",
@@ -518,7 +331,7 @@ export default {
                 { text: 'Compañia', value: 'company', align: 'center' },
                 { text: 'Rol', value: 'role', align: 'center' },
                 { text: 'Descuento(%)', value: 'discount_percent', align: 'center' },
-                { text: 'Acciones', value: 'actions', align: 'center', sortable: false },
+				{ text: 'Acciones', value: 'actions', align: 'center', sortable: false },
 
             ],
       //  headersRoles: [
@@ -550,6 +363,7 @@ export default {
 		role: null,
 		logo: null,
         discount_percent: 0,
+		active: 1,
     },
     defaultItem: {
       name: null,
@@ -564,13 +378,13 @@ export default {
 	  role: null,
 	  logo: null,
       discount_percent: 0,
+	  active: 1,
     },
 
         }
     },
 
     mounted(){
-        console.log(this.user)
       	this.loadingTable = true,
      	this.$store.dispatch('getusers').then(()=>{
           	if(this.getUsersStatus === 200){
@@ -600,6 +414,15 @@ export default {
       return this.editedIndex === -1 ? 'Nuevo Usuario' : 'Editar Usuario'
     },
 
+	filtered(){
+		if(this.swToInactive){
+			return this.users.filter(user => !user.active)
+		}else{
+			return this.users
+		}
+		
+	}
+
   },
 
   methods:{
@@ -615,11 +438,18 @@ export default {
 			};
     	this.currentLogo = null
    	},
+	
      editItem (item) {
       this.editedIndex = this.users.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.usersDialog = true
     },
+
+	rowClass(item){
+		if(item.active === 0){
+			return 'no-active'
+		}
+	},
 
     dialogAcceptDeleteUser(){
         this.actionDeleteUserAXIOS(this.localDeletinItem).then(()=>{
@@ -638,10 +468,19 @@ export default {
     deleteItem (item) {
         this.deleteUserDialog = true;
         Object.assign(this.localDeletinItem, item);
-
-     // const index = this.users.indexOf(item)
-    //   confirm('Are you sure you want to delete this item?') && this.users.splice(index, 1)
     },
+	openActitveUserDialog(item){
+		Object.assign(this.localDeletinItem, item);
+		this.activeUserDialog = true
+	},
+
+	active(){
+		this.loadingActive = true
+		this.$store.dispatch('activeUser',this.localDeletinItem.id).then(()=>{
+			this.loadingActive = false
+			this.activeUserDialog = false
+		})
+	},
 
     close () {
       this.usersDialog = false
@@ -676,3 +515,9 @@ export default {
 
 }
 </script>
+<style>
+.no-active{
+	color: white;
+    background-color: #f4433694!important;
+}
+</style>

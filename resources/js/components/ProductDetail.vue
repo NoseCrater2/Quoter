@@ -333,25 +333,11 @@ export default {
 
       next(vm => {
           if(vm.slugDetail){
-             if(vm.$route.params.id){
-                 axios.get("/api/variants/"+vm.$route.params.id).then( response => {
-                     console.log(response.data.data[0])
-                     vm.details = response.data.data[0]
-                      vm.$store.dispatch('getRelated', vm.$route.params.id);
-                 })
-                //  document.title = this.getProduct.name
-            //     vm.$store.dispatch('getVariant',vm.$route.params.id).then(()=>{
 
-            // })
-            }else{
-                //  document.title = this.getProduct.name
                 axios.get("/api/variants/"+vm.slugDetail).then( response => {
-                     console.log(response.data.data[0])
-                     vm.details = response.data.data[0]
+                     vm.details = response.data.data
                       vm.$store.dispatch('getRelated', vm.slugDetail);
                  })
-
-            }
         }
       });
   },

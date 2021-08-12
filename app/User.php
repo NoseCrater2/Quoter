@@ -36,6 +36,7 @@ class User extends Authenticatable
         'logo',
         'comments',
         'discount_percent',
+        'active'
     ];
 
     /**
