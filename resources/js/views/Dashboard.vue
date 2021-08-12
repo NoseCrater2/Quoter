@@ -71,7 +71,7 @@ export default {
 
             benefits:[
                 {
-                    title: 'Cotizador en Líena',
+                    title: 'Cotizador en Línea',
                     text: 'Realiza cotizaciones y pedidos en línea en nuestro cotizador web',
                     icon:'/img/dashboard/icon_cotizador.png',
                     route: {name: 'Quoter'}

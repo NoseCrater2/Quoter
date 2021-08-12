@@ -146,7 +146,14 @@ const usersModule = {
             }
           },
 
-
+          activeUser: async function ({ commit },id){
+            try {
+                const request = await axios
+                .get("/api/active-user/"+id)
+                commit('editUser',request.data.data);
+              } catch (error) {
+              }
+          },
     }
 }
 

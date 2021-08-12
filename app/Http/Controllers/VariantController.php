@@ -65,12 +65,12 @@ class VariantController extends Controller
      * @param  \App\Variant  $variant
      * @return \Illuminate\Http\Response
      */
-    public function show(Variant $variant)
+    public function show(String $slug)
     {
         $v = Variant::
         with(['type:id,slug,name,product_id','line:id,slug,name','weave:id,slug,name','subweave:id,slug,name','colors'])
-        ->where('id',$variant->id)
-        ->get();
+        ->where('slug',$slug)
+        ->firstOrFail();
         return response(['data'=> $v],200);
     }
 
@@ -133,15 +133,16 @@ class VariantController extends Controller
         }
     }
 
-    public function getRelated(Variant $variant)
+    public function getRelated(String $slug)
     {
+        $v = Variant::where('slug',$slug)->firstOrFail();
         $variant = Variant::addSelect(
             ['image' => Color::select('code')
             ->whereColumn('variant_id', 'variants.id')
             ->limit(1)],
         )
         ->with(['type:id,slug,product_id','line:id,slug','weave:id,slug','subweave:id,slug'])
-        ->where('type_id', $variant->type_id)
+        ->where('type_id', $v->type_id)
         ->limit(4)
         ->get();
         return response(['data'=> $variant],200);

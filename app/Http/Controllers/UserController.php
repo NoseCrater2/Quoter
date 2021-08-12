@@ -12,6 +12,7 @@ use App\Http\Resources\MyInfoResource;
 use App\Http\Resources\UserIndexResource;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\UserSaved;
+use App\Http\Resources\UserShowResource;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -197,8 +198,22 @@ class UserController extends Controller
 
     public function distributors()
     {
-        $distribuitors = User::role('Distribuidor')->select('id','name','last_name','discount_percent','logo','ship_address','phone','company')->get();
+        $distribuitors = User::role('Distribuidor')
+        ->where('active',1)
+        ->select('id','name','last_name','discount_percent','logo','ship_address','phone','company')->get();
         return response(['data'=> $distribuitors],200);
+    }
+
+    public function activeUser(User $user)
+    {
+        $password = User::make_password();
+        $user->password = $password;
+        $user->active = 1;
+        Mail::to($user->email)->send(new UserSaved($user));
+        $user->password =  bcrypt($user->password);
+        $user->save();
+        
+        return new UserIndexResource($user);
     }
 
 }

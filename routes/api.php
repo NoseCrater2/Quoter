@@ -37,7 +37,11 @@ Route::resource('weaves', 'WeaveController')->only('index','show');
 Route::resource('sunblinds', 'SunblindController')->only('index','show');
 
 Route::resource('colors', 'ColorController')->only('index','show');
-Route::resource('variants', 'VariantController')->only('index','show','update');
+
+Route::get('variants/{slug}', 'VariantController@show');
+Route::resource('variants', 'VariantController')->only('index','update');
+
+
 Route::resource('products', 'Api\ProductController')->only('index','show');
 
 Route::resource('motorization_types', 'MotorizationTypeController')->only('index','show');
@@ -113,7 +117,7 @@ Route::middleware(['auth:sanctum'])->group(function()
     //users
 
     Route::resource('users', 'UserController')->only('index','show', 'store', 'update','destroy');
-    // Route::get('users','UserController@index')->name('users.index');
+    Route::get('active-user/{user}','UserController@activeUser');
     //Route::get('products/create' , 'ProductController@create')->name('products.create')->middleware('permission:products.create');
     // Route::put('users/{user}','UserController@update')->name('users.update');
     // Route::get('users/{user}','UserController@show')->name('users.show');
