@@ -63,10 +63,19 @@
         					        	      		<v-container>
         					        	        		<v-row>
         					        	          			<v-col class="pb-0" cols="12" md="6" sm="12">
-        					        	          			  	<v-text-field dense hide-details outlined v-model="editedItem.name" label="Nombre" prepend-inner-icon="mdi-account" :error-messages="errors.name"></v-text-field>
+        					        	          			  	<v-text-field
+																dense
+																hide-details
+																outlined
+																v-model="editedItem.name"
+																label="Nombre"
+																prepend-inner-icon="mdi-account" 
+																:error-messages="errors.name">
+																</v-text-field>
         					        	          			</v-col>
         					        	          			<v-col class="pb-0" cols="12" md="6" sm="12">
         					        	          			  	<v-text-field
+																:error-messages="errors.last_name"
 							        							hide-details
         					        	          			  	dense
         					        	          			  	outlined
@@ -81,6 +90,7 @@
         					        	        		    	<v-text-field
 							        							hide-details
         					        	        		    	dense
+																:error-messages="errors.phone"
         					        	        		    	outlined
         					        	        		    	v-model="editedItem.phone"
                                                                 prepend-inner-icon="mdi-phone"
@@ -94,6 +104,7 @@
         					        	        		<v-row>
         					        	        		  	<v-col class="pb-0" cols="12" md="6" sm="12">
         					        	        		    	<v-text-field
+																:error-messages="errors.address"
 							        							hide-details
         					        	        		    	dense
         					        	        		    	outlined
@@ -110,6 +121,7 @@
         					        	        		  	  	v-model="editedItem.city"
         					        	        		  	  	label="Ciudad"
                                                                 prepend-inner-icon="mdi-city"
+																:error-messages="errors.city"
         					        	        		  	  	></v-text-field>
         					        	        		  	</v-col>
         					        	        		</v-row>
@@ -122,6 +134,7 @@
         					        	          			  	v-model="editedItem.state"
         					        	          			  	label="Estado"
                                                                 prepend-inner-icon="mdi-map"
+																:error-messages="errors.state"
         					        	          			  	></v-text-field>
         					        	          			</v-col>
         					        	          			<v-col class="pb-0" cols="12" md="6" sm="12">
@@ -132,6 +145,7 @@
         					        	          			  	v-model="editedItem.zip_code"
         					        	          			  	label="Código Postal"
                                                                 prepend-inner-icon="mdi-mailbox"
+																:error-messages="errors.zip_code"
         					        	          			  	></v-text-field>
         					        	          			</v-col>
         					        	        		</v-row>
@@ -144,6 +158,7 @@
         					        	            			v-model="editedItem.company"
         					        	            			label="Compañía"
                                                                 prepend-inner-icon="mdi-domain"
+																:error-messages="errors.company"
         					        	            			></v-text-field>
         					        	          			</v-col>
         					        	          			<v-col class="pb-0" cols="12" md="6" sm="12">
@@ -155,6 +170,7 @@
         					        	          			  	type="number"
         					        	          			  	outlined
         					        	          			  	label="Descuento"
+																:error-messages="errors.discount_percent"
         					        	          			  	></v-text-field>
         					        	          			</v-col>
         					        	        		</v-row>
@@ -167,6 +183,7 @@
         					        	            			v-model="editedItem.ship_address"
         					        	            			label="Dirección de envío"
                                                                 prepend-inner-icon="mdi-truck-delivery-outline"
+																:error-messages="errors.ship_address"
         					        	            			></v-text-field>
         					        	          			</v-col>
         					        	          			<v-col class="pb-0" cols="12">
@@ -175,6 +192,7 @@
         					        	          			  	v-model="editedItem.second_ship_address"
         					        	          			  	dense
         					        	          			  	outlined
+																:error-messages="errors.second_ship_address"
         					        	          			  	label="Dirección de envío alterna"
                                                                 prepend-inner-icon="mdi-truck-delivery"
         					        	          			  	></v-text-field>
@@ -183,7 +201,7 @@
 							        					<v-row>
 							        						<v-col cols="12">
 							        							<v-select
-							        							hide-details
+																:error-messages="errors.role"
 							        							v-model="editedItem.role"
         					        	          			  	:items="roles"
 							        							item-value="name"
@@ -240,7 +258,7 @@
                 		  	<v-icon class="mr-2" :disabled="user.id == item.id ? true : false" small @click="deleteItem(item)">
                 		  	  	mdi-delete
                 		  	</v-icon>
-							<v-icon  v-if="!item.active" small @click="activeUserDialog = true">
+							<v-icon  v-if="!item.active" small @click="openActitveUserDialog(item)">
                 		  	  	mdi-shield-check
                 		  	</v-icon>
                 		</template>
@@ -275,7 +293,7 @@
         	    	<v-card-actions class="mt-n6">
         	    	  	<v-spacer></v-spacer>
         	    	  	<v-btn color="red" text @click="activeUserDialog = false">CANCELAR</v-btn>
-        	    	  	<v-btn color="blue darken-1" text @click="active">Activar</v-btn>
+        	    	  	<v-btn color="#47a5ad" text @click="active" :loading="loadingActive">Activar</v-btn>
         	    	</v-card-actions>
         		</v-card>
         	</v-dialog>
@@ -288,6 +306,7 @@ import { mapState, mapGetters, mapActions } from 'vuex';
 export default {
     data(){
         return {
+			loadingActive: false,
 			activeUserDialog: false,
 			swToInactive: false,
 			selectedRoles: [],
@@ -450,9 +469,17 @@ export default {
         this.deleteUserDialog = true;
         Object.assign(this.localDeletinItem, item);
     },
+	openActitveUserDialog(item){
+		Object.assign(this.localDeletinItem, item);
+		this.activeUserDialog = true
+	},
 
 	active(){
-	
+		this.loadingActive = true
+		this.$store.dispatch('activeUser',this.localDeletinItem.id).then(()=>{
+			this.loadingActive = false
+			this.activeUserDialog = false
+		})
 	},
 
     close () {

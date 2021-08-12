@@ -17,7 +17,7 @@ class ErrorMessages extends Model
             'min' => 'Debe ser mínimo de :min',
             'date_format' => 'Debe ser en formato HH:mm',
             'after' => 'Debe ser una hora mayor ',
-            'exists' => 'Debe ser un id válido de :attribute',
+            'exists' => 'Debe ser un :attribute válido',
             'in' => 'Debe ser uno de estos campos :values',
             'email' => 'Debe ser un email válido',
             'timezone' => 'Debe ser una zona horaria válida',

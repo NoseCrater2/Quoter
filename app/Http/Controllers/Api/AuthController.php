@@ -61,9 +61,12 @@ class AuthController extends Controller
             return response($validator->errors(), 422);
         }else{
             $data['active'] = 0;
-            $user = User::create($data);
-            // Mail::to('contacto@rollux.com.mx')->send(new UserCreated($user));
-            // Mail::to($user)->send(new UserCreatedClient($user));
+            $data['password'] = 'password';
+            $user = User::make($data);
+            $user->assignRole('Distribuidor');
+            Mail::to('contacto@rollux.com.mx')->send(new UserCreated($user));
+            Mail::to($user)->send(new UserCreatedClient($user));
+            $user->save();
             return response('Email enviado',200);
         }
        

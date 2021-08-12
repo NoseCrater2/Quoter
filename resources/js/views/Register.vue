@@ -65,7 +65,7 @@
                     <v-col  cols="12" md="7" sm="12" class="text-center pa-0" style="margin:auto;">
                         <p style="font-size: 1.4em">
                            Completa la siguiente forma y recibirás un correo de bienvenida con todos
-                           los detalles para que puedas aprovechar los beneficios y hacer tus primeas
+                           los detalles para que puedas aprovechar los beneficios y hacer tus primeras
                            compras de forma inmediata.
                         </p>
                     </v-col>
@@ -223,7 +223,7 @@ export default {
                 },
                 {
                     title: 'ATENCIÓN PERSONALIZADA',
-                    text: 'Comunicate con nosotros por correo electrónico o Whatsapp y con gusto te asesoraremos',
+                    text: 'Comunícate con nosotros por correo electrónico o Whatsapp y con gusto te asesoraremos',
                     icon:'/img/register/atencion_cliente_icon.png'
                 },
             ]

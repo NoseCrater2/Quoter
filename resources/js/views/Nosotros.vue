@@ -27,7 +27,7 @@
                         <p style="text-align: justify">
                             <b class="especial">Rollux</b> integra en su línea de textiles para persianas
                             Enrollables la mas amplia gama de texturas y colores de todo
-                            Mercado Nacional para el recubrimiento de ventanas, suficiente
+                            mercado nacional para el recubrimiento de ventanas, suficiente
                             para cubrir cualquier necesidad, requerimiento y gusto.
                         </p>
                     </div>
@@ -58,7 +58,7 @@
                         </div>
                         <div class="d-block">
                             <h1  :style="$vuetify.breakpoint.mobile?'font-size: 16px;':'font-size: 32px;'">
-                                Más de 25 años en el mercado marcan Garantía y Reconocimiento
+                                Más de 25 años en el mercado marcan garantía y reconocimiento
                                 de la calidad de nuestros productos.
                             </h1>
                         </div>
@@ -97,19 +97,19 @@
                 <v-row justify="center">
                     <v-col cols="12" md="7" sm="12" align-self="center">
                         <p :style="$vuetify.breakpoint.mobile?'font-size: 1em':'font-size: 1.4em'"  class="ma-4" style="text-align: justify">
-                            Como empresa solcialmente responsable nos preocupamos
+                            Como empresa solcialmente responsable, nos preocupamos
                             por crear ambientes limpios y saludables, somos defensores
-                            activos del cuidado del ecosistema por ello, muchos de nuestros
+                            activos del cuidado del ecosistema, por ello, muchos de nuestros
                             tejidos cuentan con características especiales en su composición
-                            y fabricación en pro del medio ambiente y el cuidado de la salud
+                            y fabricación, en pro del medio ambiente y el cuidado de la salud
                         </p>
                        
                     </v-col>
                     <v-col cols="12" md="5" sm="12">
-                        <v-img max-width="500" src="../../img/nosotros/5.jpg"></v-img>
+                        <v-img max-width="500" src="/img/nosotros/5.jpg"></v-img>
                     </v-col>
                     <v-col cols="12" align-self="center" >
-                         <v-img class="ma-16" max-width="250" src="../../img/nosotros/6.png"></v-img>
+                         <v-img class="ma-16" max-width="250" src="/img/nosotros/6.png"></v-img>
                     </v-col>
                 </v-row>
             </v-container>
@@ -129,7 +129,7 @@ export default {
                 {title: 'Además, proveemos...',
                 text: 'Ambientes de trabajo en el que cada individuo encuentra las condiciones perfectas para maximizar su potencial, lo que permite una mejor calidad de vida y un mejor desarrollo de ideas que se verán reflejadas en la satisfacción de nuestros clientes.'},
                 {title: 'Todos son importantes para nosotros', 
-                text: 'Nuestros clientes, proveedores, distribuidores y empleados son igual de importantes para nosotros, por lo que tenemos una filosofía de respeto y valor por igual para todos.'},
+                text: 'Nuestros clientes, proveedores, distribuidores y empleados, son igual de importantes para nosotros, por lo que tenemos una filosofía de respeto y valor por igual para todos.'},
             ],
         }
     },

@@ -117,7 +117,7 @@ Route::middleware(['auth:sanctum'])->group(function()
     //users
 
     Route::resource('users', 'UserController')->only('index','show', 'store', 'update','destroy');
-    // Route::get('users','UserController@index')->name('users.index');
+    Route::get('active-user/{user}','UserController@activeUser');
     //Route::get('products/create' , 'ProductController@create')->name('products.create')->middleware('permission:products.create');
     // Route::put('users/{user}','UserController@update')->name('users.update');
     // Route::get('users/{user}','UserController@show')->name('users.show');

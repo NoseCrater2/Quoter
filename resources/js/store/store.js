@@ -149,9 +149,7 @@ actions:{
   },
 
   checkPasword: async function ({ commit, state }, intent){
-
     try {
-
         const request = await axios
         .post("/api/checkPassword",{'intent': intent },{
             headers: {Authorization: "Bearer "+state.token}})
@@ -161,7 +159,6 @@ actions:{
         //commit('setSignupErrors',error.response.data)
         //commit('setSignupStatus',error.response.status);
       }
-
   },
 
   loadStoredState(context) {
