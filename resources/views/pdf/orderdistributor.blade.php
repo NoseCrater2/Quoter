@@ -43,57 +43,50 @@
     <table style="border-collapse:collapse; width: 100%; margin-top: -13px">
         <tbody>
             <tr>
-                <td style="width: 20%; padding-top: -13px; padding-left: 9px; height: 124px;">
-
-                @if($orders['distributorImagePrint'] == true)
-                    <img width="210px" src="{{'img/'.$orders['user']['logo']}}" >
-                    @else
-                    <img width="210px" src="img/logos/rollux.png" >
-                @endif
+                <td style="width: 20%; padding-top: -13px; padding-left: 9px; height: 124px; border-right: solid #47a5ad 4px; ">
+                    <img width="180px" src="img/logos/rollux.png" >
                 </td>
-                <td style="width: 26%;">
+                <td style="text-align: center; width: 55%; padding-right: 15px; padding-left: 7px; padding-top: 11px;">
                     <div style="border-left: solid #47a5ad 4px; padding-top: 7px;">
-                        <div style="padding-left: 7px;">
-                            <div class="d-block" style="font-weight: bolder; font-size: 12px;" >Rollux | Atención a Distribuidores</div>
-                            <div class="d-block" style="font-size: 10px;">Whatsapp: 55 4894 8279</div>
-                            <div class="d-block" style="font-size: 10px;">Correo:  ventas@rolllux.com.mx</div>
-
-                            <div class="d-block" style="font-weight: bolder;font-size: 12px; margin-top: 5px;" >Cotización</div>
-                            <div class="d-block" style="font-size: 12px;">Folio <span style="font-weight: bolder; color: #47a5ad">R200421/001</span></div>
-                            <div class="d-block" style="font-size: 12px;">Fecha: {!! $date->now()->format('d/m/Y'); !!}</div>
-                            <div class="d-block" style="font-size: 12px;">Valida hasta: {!! $date->addDays(8)->format('d/m/Y'); !!}</div>
-                        </div>
                     </div>
-                </td>
-                <td style="text-align: center; width: 54%; padding-right: 15px; padding-left: 7px; padding-top: 11px">
-                    <table style="width: 100%; border: 1px solid #d1d3d4; border-radius: 5px;">
+                    <table style="width: 100%; border: 1px solid #d1d3d4; border-radius: 5px; margin-left: 9px; padding-bottom: 11px;">
                         <tbody>
                             <tr>
                                 <th colspan="2" style="background-color: #d1d3d4; padding-top: 3px; padding-bottom: 3px;">
-                                    <div style="font-weight: bolder; font-size: 13px;">CLIENTE / Dirección de Envío</div>
+                                    @if($orders['user']['company'] != null || $orders['user']['company'] != '')
+                                        <div style="font-weight: bolder; font-size: 13px;">{!! $orders['user']['company'] !!} | <span style="font-weight: normal;">Distribuidor Autorizado</span></div>
+                                    @else
+                                        <div style="font-weight: bolder; font-size: 13px;">{!! $orders['user']['name'].' '.$orders['user']['last_name'] !!} | <span style="font-weight: normal;">Distribuidor Autorizado</span></div>
+                                    @endif
                                 </th>
                             </tr>
                             <tr>
-                                <td style="width: 57%; padding-left: 13px;">
-                                    <div style="font-weight: bolder; font-size: 13px; margin-top: -15px">{!! $orders['user']['name'].' '.$orders['user']['last_name'] !!}</div>
-                                    <div style="font-size: 12px;">
-                                        <span>{!! $orders['user']['ship_address'] !!}</span>
-                                    </div>
+                                <td style="width: 45%; padding-left: 13px;">
+                                    <div class="d-block" style="font-weight: bolder; margin-top: 3px;" >Cotización</div>
+                                    <div class="d-block" style="font-size: 12px;">Folio <span style="font-weight: bolder; color: #47a5ad">R200421/001</span></div>
+                                    <div class="d-block" style="font-size: 12px;">Fecha: {!! $date->now()->format('d/m/Y'); !!}</div>
+                                    <div class="d-block" style="font-size: 12px;">Valida hasta: {!! $date->addDays(8)->format('d/m/Y'); !!}</div>
                                 </td>
-                                <td style="width: 43%;">
-                                    <div style="font-size: 13px; margin-top: 5px">
-                                        <span style="font-weight: bolder;">RFC: </span><span>JVEXXXXXALXX</span>
-                                    </div>
-                                    <div style="font-size: 12px; margin-bottom: 7px;">
-                                        <div>Teléfono: {!! $orders['user']['phone'] !!}</div>
-                                        <div>Embarcado por:</div>
+                                <td style="width: 55%;">
+                                    <div style="font-size: 9px; margin-top: 1px;">
+                                        @if($orders['user']['company'] != null || $orders['user']['company'] != '')
+                                            <div style="font-weight: bolder;">Cliente: {!! $orders['user']['name'].' '.$orders['user']['last_name'] !!}</div>
+                                        @endif
+                                        <div><span>Dirección: {!! $orders['user']['ship_address'] !!}</span></div>
+                                        <div>RFC: <span>JVEXXXXXALXX</span></div>
+                                        <div><span>Teléfono: {!! $orders['user']['phone'] !!}</span></div>
+                                        <div><span>Email: {!! $orders['user']['email'] !!}</span></div>
+                                        <!-- <div>Embarcado por:</div>
                                         <div>Fecha de entrega:</div>
-                                        <div>Realizado por: RolluxWeb</div>
+                                        <div>Realizado por: RolluxWeb</div> -->
                                     </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                </td>
+                <td style="width: 25%;">
+                    <img width="180px" src="{{'img/'.$orders['user']['logo']}}" >
                 </td>
             </tr>
         </tbody>
@@ -581,9 +574,9 @@
         </div>
         <div style="width: 87%; margin: auto; font-size: 8px; line-height: 10px; text-align: center;">
             <div>
-            @if($orders['distributorImagePrint'] == false)
+
                 <strong>Deposito a la cuenta de Banorte: 0892608267 // CLABE: 072 470 0089 2608 2678 // A nombre de Materiales Decorativos S. de R.L, M</strong>
-            @endif
+
             </div>
             <i>
                 Favor de revisar importes y cantidades descritas en este documento // Cualquier variación será motivo de otra cotización // La fecha del pedido se toma en cuenta a partir de la fecha de pago

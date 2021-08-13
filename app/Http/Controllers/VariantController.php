@@ -32,7 +32,7 @@ class VariantController extends Controller
             ->whereColumn('variant_id', 'variants.id')
             ->limit(1)],
         )
-        ->with(['type:id,slug,product_id','line:id,slug','weave:id,slug','subweave:id,slug'])
+        ->with(['type:id,name,slug,product_id','line:id,slug','weave:id,slug','subweave:id,slug'])
         ->orderBy('price','desc')
         ->get();
         return response(['data'=> $variants],200);
