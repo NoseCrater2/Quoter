@@ -152,9 +152,13 @@
                           <v-list-item :key="index" style="background-color: white"
                           :to="{name: 'Details', params: {slugProduct:item.type.product_id == 1 ? 'PERSIANAS' : 'TOLDOS',slugType:item.type.slug,slugDetail: item.slug}}"
                           >
-
+                            <v-list-item-icon>
+                              <v-icon v-if="item.type.product_id == 1" v-text="'mdi-blinds'" size="50" color="#47a5ad"></v-icon>
+                              <v-icon v-else v-text="'mdi-storefront'" size="50" color="#47a5ad"></v-icon>
+                            </v-list-item-icon>
                             <v-list-item-content class="ma-1">
-                              <v-list-item-title style="font-size: 1em;" >{{item.name}}</v-list-item-title>
+                              <v-list-item-title style="font-size: 1em;" class="font-weight-bold" >{{item.name}}</v-list-item-title>
+                              <v-list-item-title style="font-size: 1em;" class="text-uppercase" >{{item.type.name}}</v-list-item-title>
                               <v-list-item-subtitle style="color: #47a5ad; font-size: 1em" >${{item.price}}MXN</v-list-item-subtitle>
                             </v-list-item-content>
                           </v-list-item>
@@ -240,9 +244,13 @@
                   <v-list-item :key="index" style="background-color: white"
                   :to="{name: 'Details', params: {slugProduct:item.type.product_id == 1 ? 'PERSIANAS' : 'TOLDOS',slugType:item.type.slug,slugDetail: item.slug, id: item.id}}"
                   >
-
+                    <v-list-item-icon>
+                      <v-icon v-if="item.type.product_id == 1" v-text="'mdi-blinds'" size="50" color="#47a5ad"></v-icon>
+                      <v-icon v-else v-text="'mdi-storefront'" size="50" color="#47a5ad"></v-icon>
+                    </v-list-item-icon>
                     <v-list-item-content class="ma-1">
-                      <v-list-item-title style="font-size: 1em;" >{{item.name}}</v-list-item-title>
+                      <v-list-item-title style="font-size: 1em;" class="font-weight-bold" >{{item.name}}</v-list-item-title>
+                      <v-list-item-title style="font-size: 1em;" class="text-uppercase" >{{item.type.name}}</v-list-item-title>
                       <v-list-item-subtitle style="color: #47a5ad; font-size: 1em" >${{item.price}}MXN</v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>

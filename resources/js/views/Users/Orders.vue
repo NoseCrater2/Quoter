@@ -26,10 +26,11 @@
                     <v-col v-for="item in props.items" :key="item.id" cols="12" sm="6" md="4" lg="3">
                         <v-hover v-slot="{ hover }">
                             <v-card class="mx-auto" :color="hover?'#3ba2a9':'white'"  :dark="hover?true:false" >
-                              
+
                                 <v-list-item three-line>
                                     <v-list-item-content>
-                                        <div class="overline mb-4">{{ item.blinds}} PERSIANA(S)</div>
+                                        <div class="mb-4">{{ item.user}}</div>
+                                        <div class="mb-4">{{ item.blinds}} PERSIANA(S)</div>
                                         <v-list-item-title class="headline mb-1">
                                             {{item.state}}
                                         </v-list-item-title>
@@ -62,7 +63,7 @@
                                 </v-list-item>
                                 <v-list-item>
                                     <v-list-item-content >
-                                        Fecha de creación: 
+                                        Fecha de creación:
                                     </v-list-item-content>
                                     <v-list-item-icon>
                                         {{item.created_at}}
@@ -70,7 +71,7 @@
                                 </v-list-item>
                                 <v-list-item>
                                     <v-list-item-content >
-                                        Última actualización: 
+                                        Última actualización:
                                     </v-list-item-content>
                                     <v-list-item-icon>
                                         {{item.updated_at}}
@@ -144,18 +145,18 @@
                                             </div>
                                             <div class="d-block">
                                                 <b> Color:</b>{{blind.color.color}}
-                                                <b>Código:</b>{{blind.color.code}} 
+                                                <b>Código:</b>{{blind.color.code}}
                                             </div>
                                             <div class="d-block" v-if="blind.second_color != null">
                                                 <b> Color 2:</b>{{blind.second_color.color}}
-                                                <b>Código:</b>{{blind.second_color.code}} 
+                                                <b>Código:</b>{{blind.second_color.code}}
                                             </div>
                                             <div class="d-block">
                                                 <b>Tipo:</b>Persiana {{blind.type}}
                                                 <b>Línea: </b>{{blind.line}}
                                             </div>
                                             <div  class="d-block">
-                                                <b v-if="blind.cloth_holder">CON PORTATELA</b> 
+                                                <b v-if="blind.cloth_holder">CON PORTATELA</b>
                                                 <div style="display: inline" v-if="blind.celular_type != null">
                                                   {{blind.celular_type}}
                                                 </div>
@@ -184,7 +185,7 @@
                                                 </div>
                                             </div>
                                             <div class="d-block">
-                                                <b>Precio (m2):</b>${{$store.getters.getVariant(blind.variant).price}} MXN | 
+                                                <b>Precio (m2):</b>${{$store.getters.getVariant(blind.variant).price}} MXN |
                                                 <b>Subtotal:</b>${{blind.price}} MXN
                                             </div>
                                             <br>
@@ -209,18 +210,18 @@
                                                 <b>Galeria/Fascia:</b>{{blind.motor.gallery.model}}
                                                 <div style="color: #47a5ad;display: inline" v-if="blind.motor.galleryPrice > 0">(+${{blind.motor.galleryPrice}})</div>
                                                 <div style="color: #47a5ad;display: inline" v-else > 0">(+${{blind.motor.gallery.price}})</div>
-                                                <b v-if="blind.motor.gallery.color != null">Color: {{blind.motor.gallery.color}}</b> 
+                                                <b v-if="blind.motor.gallery.color != null">Color: {{blind.motor.gallery.color}}</b>
                                                 <b v-else>Color: n/a</b>
                                             </div>
                                             <div class="d-block" v-if="blind.motor.motor != 0 && blind.motor.motor != null">
                                                 <b>Motor:</b>
-                                                <div style="display: inline">{{$store.getters.getMotor(blind.motor.motor).system}}</div> 
+                                                <div style="display: inline">{{$store.getters.getMotor(blind.motor.motor).system}}</div>
                                                 <div style="display: inline"> <b>Tipo: </b>{{$store.getters.getMotor(blind.motor.motor).motorizationType}}</div>
                                                 <div style="display: inline"> <b>Precio: </b>{{mxCurrencyFormat.format($store.getters.getMotor(blind.motor.motor).price)}}MXN</div>
                                             </div>
                                             <div class="d-block" v-if="blind.motor.control != null">
                                                 <b>Control: </b>
-                                                <div style="display: inline">{{blind.motor.control.description}}</div> 
+                                                <div style="display: inline">{{blind.motor.control.description}}</div>
                                                 <div style="display: inline; color: #47a5ad">{{mxCurrencyFormat.format(blind.motor.control.price)}}MXN</div>
                                             </div>
                                             <div class="d-block" v-if="blind.motor.flexiballetPrice > 0">
@@ -234,9 +235,9 @@
                                             </div>
                                         </div>
                                         <div style="width: 25%">
-                                            <v-img 
-                                            v-if="blind.second_color == null" 
-                                            width="150" 
+                                            <v-img
+                                            v-if="blind.second_color == null"
+                                            width="150"
                                             :src="`/img/modelos/medium/${blind.color.code}.jpg`"
                                             >
                                                 <template v-slot:placeholder>
@@ -248,7 +249,7 @@
                                                     <div class="d-block">DIA</div>
                                                     <v-img
                                                     :src="`/img/modelos/medium/${blind.color.code}.jpg`"
-                                                    width="100" 
+                                                    width="100"
                                                     height="130">
                                                         <template v-slot:placeholder>
                                                             <img src="/img/modelos/medium-unavailable.jpg">
@@ -259,7 +260,7 @@
                                                     <div>NOCHE</div>
                                                     <v-img
                                                     :src="`/img/modelos/medium/${blind.second_color.code}.jpg`"
-                                                    width="100" 
+                                                    width="100"
                                                     height="130">
                                                         <template v-slot:placeholder>
                                                             <img src="/img/modelos/medium-unavailable.jpg">
@@ -275,15 +276,15 @@
                                         <div class="d-inline">TOTAL: </div>
                                         <div class="d-inline" style="color: #47a5ad;">
                                             {{mxCurrencyFormat.format(
-                                            blind.price + 
+                                            blind.price +
                                             blind.motor.price +
                                             blind.motor.flexiballetPrice +
                                             blind.motor.galleryPrice +
                                             blind.motor.manufacturerPrice +
                                             blind.motor.stringPrice
                                             )}} MXN
-                                        </div> 
-                                    </div>   
+                                        </div>
+                                    </div>
                                 </v-card>
                             </v-card>
                         </v-col>
@@ -332,7 +333,7 @@ export default {
             this.$store.dispatch('getQuotedOrder',id).then(()=>{
                  this.dialog = true
             });
-           
+
         }
     },
 

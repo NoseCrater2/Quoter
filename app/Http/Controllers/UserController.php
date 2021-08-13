@@ -200,7 +200,7 @@ class UserController extends Controller
     {
         $distribuitors = User::role('Distribuidor')
         ->where('active',1)
-        ->select('id','name','last_name','discount_percent','logo','ship_address','phone','company')->get();
+        ->select('id','name','last_name','email','discount_percent','logo','ship_address','phone','company')->get();
         return response(['data'=> $distribuitors],200);
     }
 
@@ -212,7 +212,7 @@ class UserController extends Controller
         Mail::to($user->email)->send(new UserSaved($user));
         $user->password =  bcrypt($user->password);
         $user->save();
-        
+
         return new UserIndexResource($user);
     }
 

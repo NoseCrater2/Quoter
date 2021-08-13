@@ -26,12 +26,12 @@ class OrderShowResource extends JsonResource
                     }),
                     'celular_drive' => $blind->celular_drive,
                     'celular_type' => $blind->celular_type,
-                    'celular_variant' => $blind->celular_variant,
+                    'celular_variant' => json_decode($blind->celular_variant),
                     'cloth_holder' => $blind->cloth_holder,
                     'color' => $blind->color,
                     'instalation_side' => $blind->instalation_side,
                     'line' => $blind->variant->line->slug,
-                    'manufacturer' => $blind->variant->manufacturers[0]->id,
+                    'manufacturer' => $blind->variant->line->id,
                     'motor' => [
                         'canvas' => $blind->canvas,
                         'comment' => $blind->comment,
@@ -59,8 +59,8 @@ class OrderShowResource extends JsonResource
                     'motor_type' => $blind->motor_type,
                     'price' => floatval($blind->price),
                     'rotate' => $blind->rotate,
-                    'second_color' => $blind->second_color,//puede no tener                
-                    'type' => $blind->variant->type->slug,         
+                    'second_color' => $blind->second_color,//puede no tener
+                    'type' => $blind->variant->type->slug,
                     'variant' => $blind->variant_id,
                     'variant2' => $blind->second_variant_id,//puede no tener
                 ];
