@@ -295,8 +295,8 @@
                   mandatory
                   v-model="motor.motor"
                   active-class="teal--text">
-                  <template v-for="(c, index) in filteredControls">
-                    <v-list-item :key="c.id" :value="c.id">
+                  <template>
+                    <v-list-item v-for="(c) in filteredControls" :key="c.id" :value="c.id">
                       <template>
                         <v-list-item-content>
                           <v-list-item-title
@@ -317,10 +317,10 @@
                         </v-list-item-action>
                       </template>
                     </v-list-item>
-                    <v-divider
+                    <!-- <v-divider
                       v-if="index < filteredControls.length - 1"
                       :key="index"
-                    ></v-divider>
+                    ></v-divider> -->
                   </template>
                 </v-list-item-group>
                   <v-list-item v-else>
@@ -625,7 +625,7 @@ export default {
             this.motor.galleryPrice = this.addGalleryPrice
             this.motor.manufacturerPrice = this.addManufacturerPrice
             this.motor.stringPrice = this.addStringPrice
-            this.motor.price = Math.round(this.motorizationPrice * 10) / 10 
+            this.motor.price = Math.round(this.motorizationPrice * 10) / 10
 
             this.$emit('saveMotorization', this.motor)
             this.close()

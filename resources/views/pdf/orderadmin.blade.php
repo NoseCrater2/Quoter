@@ -78,7 +78,7 @@
                                 <td style="width: 46%;">
                                     <div style="font-size: 13px; margin-top: 5px">
                                         <span style="font-weight: bolder;">{!! $orders['user']['company'] !!}</span>
-                                        <div style="font-weight: bolder;">RFC: <span style="font-weight: normal;">JVEXXXXXALXX</span></div>
+                                        <div style="font-weight: bolder;">RFC: <span style="font-weight: normal;">{!! $orders['user']['rfc'] !!}</span></div>
                                     </div>
                                     <div style="font-size: 11px; margin-bottom: 7px;">
                                         <div><span>Teléfono: {!! $orders['user']['phone'] !!}</span></div>

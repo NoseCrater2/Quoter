@@ -14,7 +14,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
 
-    
+
     use Notifiable, HasRoles, HasApiTokens;
 
     /**
@@ -25,6 +25,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password',
         'last_name',
+        'rfc',
         'company',
         'address',
         'ship_address',

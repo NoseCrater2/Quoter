@@ -3,7 +3,7 @@
         <v-carousel  :hide-delimiters="isMobile?false:true" :show-arrows="!isMobile" height="55vh" style="min-height: 350px" continuous  cycle  >
             <v-carousel-item
             eager
-            :to="item.to"
+            :to="item.route"
             v-for="(item, i) in persianas"
             :key="i">
                 <v-img  :src="item.src" height="55vh" min-height="55vh" max-height="750"  position="center center" eager>
@@ -62,9 +62,11 @@ export default {
             isMobile: false,
             persianas: [
                 {
+                    route: {name: 'PriceList'},
                     src: '/img/dashboard/slide1.jpg'
                 },
                 {
+                    route: '#',
                     src: '/img/dashboard/slide2.jpg'
                 },
             ],

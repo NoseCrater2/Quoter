@@ -18,6 +18,7 @@ class UserShowResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
+            'rfc' => $this->rfc,
             'last_name' => $this->last_name,
             'company' => $this->company,
             'address' => $this->address,
@@ -29,7 +30,7 @@ class UserShowResource extends JsonResource
             'phone' => $this->phone,
             'logo' => $this->logo,
             'discount_percent' => $this->discount_percent,
-            'role' => $this->roles->isNotEmpty() ? $this->roles[0]->name : null, 
+            'role' => $this->roles->isNotEmpty() ? $this->roles[0]->name : null,
         ];
     }
 }

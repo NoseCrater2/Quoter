@@ -148,8 +148,8 @@
 
                       <v-list three-line max-height="500" color="white">
                         <!-- '/:slugProduct/:slugType/:slugLine?/detalles/:slugDetail' -->
-                        <template v-for="(item, index) in items" >
-                          <v-list-item :key="index" style="background-color: white"
+                        <template >
+                          <v-list-item v-for="(item, index) in items" :key="index" style="background-color: white"
                           :to="{name: 'Details', params: {slugProduct:item.type.product_id == 1 ? 'PERSIANAS' : 'TOLDOS',slugType:item.type.slug,slugDetail: item.slug}}"
                           >
                             <v-list-item-icon>
@@ -240,8 +240,8 @@
 
               <v-list three-line max-height="500" color="white">
                 <!-- '/:slugProduct/:slugType/:slugLine?/detalles/:slugDetail' -->
-                <template v-for="(item, index) in items" >
-                  <v-list-item :key="index" style="background-color: white"
+                <template>
+                  <v-list-item v-for="(item, index) in items" :key="index" style="background-color: white"
                   :to="{name: 'Details', params: {slugProduct:item.type.product_id == 1 ? 'PERSIANAS' : 'TOLDOS',slugType:item.type.slug,slugDetail: item.slug, id: item.id}}"
                   >
                     <v-list-item-icon>
