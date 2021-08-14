@@ -96,12 +96,24 @@
                     </v-text-field>
                     <v-text-field v-model="client_information.company" label="Nombre de tu empresa" solo rounded>
                     </v-text-field>
-                    <v-text-field
-                    :error-messages="registerErrors.email"
-                    v-model="client_information.email"
-                    label="Email (requerido)"
-                    solo rounded>
-                    </v-text-field>
+                    <v-row no-gutters justify="space-between">
+                        <v-col class="pl-0" cols="12" md="6" sm="12">
+                            <v-text-field
+                            :error-messages="registerErrors.email"
+                            v-model="client_information.email"
+                            label="Email (requerido)"
+                            solo rounded>
+                            </v-text-field>
+                        </v-col>
+                        <v-col class="pl-0" cols="12" md="5" sm="12">
+                            <v-text-field
+                            :error-messages="registerErrors.rfc"
+                            v-model="client_information.rfc"
+                            label="RFC"
+                            solo rounded>
+                            </v-text-field>
+                        </v-col>
+                    </v-row>
                     <v-text-field
                     :error-messages="registerErrors.phone"
                     v-model="client_information.phone"
@@ -199,6 +211,7 @@ export default {
             checkbox: false,
             client_information: {
                 name: null,
+                rfc: null,
                 last_name: null,
                 company: null,
                 email: null,

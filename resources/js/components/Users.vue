@@ -2,10 +2,10 @@
     <div id="app">
         <div class="text-center">
             <h2 class="mt-2 mb-5">USUARIOS</h2>
-             	<v-card flat>
+             	<v-card>
                 	<v-data-table
 					:item-class="rowClass"
-                	:headers="headers"
+                	:headers="computedTableHeaders"
                 	:items="filtered"
                 	:search="search"
                 	:loading="loadingTable"
@@ -13,8 +13,8 @@
 					:items-per-page="10"
                 	>
                 		<template v-slot:top>
-                            <v-row no-gutters justify="space-between">
-                                <v-col cols="6">
+                            <v-row no-gutters justify="space-between" align="center">
+                                <v-col cols="12" xl="11" lg="11" md="10" sm="10">
                                     <v-text-field
                                     class="ma-2"
                 		            v-model="search"
@@ -26,29 +26,14 @@
                 		            hide-details
                 		            ></v-text-field>
                                 </v-col>
-								<v-col cols="2">
-									<v-switch
-									color="#47a5ad"
-      								v-model="swToInactive"
-      								label="Mostrar solo inactivos"
-      								></v-switch>
-									<!-- <v-select
-									v-model="selectedRoles"
-									outlined
-									dense
-									multiple 
-									:items="roles"
-									label="filtrar"
-									item-value="nombre" 
-									item-text="name">
-									</v-select> -->
-								</v-col>
-                                <v-col cols="1">
+                                <v-col cols="12" xl="1" lg="1" md="2" sm="2" class="d-flex justify-end">
         					        	<v-dialog v-model="usersDialog" max-width="500px" persistent>
         					        	  	<template v-slot:activator="{ on, attrs }">
         					        	  	  	<v-btn
+                                                :block="!$vuetify.breakpoint.smAndUp"
+                                                :class="!$vuetify.breakpoint.smAndUp ? 'mx-2' : 'mr-3'"
         					        	  	  	color="black"
-                                                class="mt-2"
+                                                elevation="0"
         					        	  	  	dark
                                                 small
         					        	  	  	v-bind="attrs"
@@ -69,7 +54,7 @@
 																outlined
 																v-model="editedItem.name"
 																label="Nombre"
-																prepend-inner-icon="mdi-account" 
+																prepend-inner-icon="mdi-account"
 																:error-messages="errors.name">
 																</v-text-field>
         					        	          			</v-col>
@@ -175,6 +160,17 @@
         					        	          			</v-col>
         					        	        		</v-row>
 							        					<v-row>
+                                                            <v-col class="pb-0" cols="12">
+        					        	            			<v-text-field
+							        							hide-details
+        					        	            			dense
+        					        	            			outlined
+        					        	            			v-model="editedItem.rfc"
+        					        	            			label="RFC"
+                                                                prepend-inner-icon="mdi-account"
+																:error-messages="errors.rfc"
+        					        	            			></v-text-field>
+        					        	          			</v-col>
         					        	           			<v-col class="pb-0" cols="12">
         					        	            			<v-text-field
 							        							hide-details
@@ -244,14 +240,31 @@
         					        	    	</v-card-actions>
         					        		</v-card>
         					        	</v-dialog>
-
                                 </v-col>
+                            </v-row>
+                            <v-row class="my-n2" :class="$vuetify.breakpoint.smAndUp ? 'mr-3' : ''" justify="center" justify-xl="end" justify-lg="end" justify-md="end" justify-sm="end">
+							    <v-switch
+                                    inset
+							        color="#47a5ad"
+      						        v-model="swToInactive"
+      						        label="Mostrar solo usuarios inactivos"
+      						    ></v-switch>
+							    <!-- <v-select
+							    v-model="selectedRoles"
+							    outlined
+							    dense
+							    multiple
+							    :items="roles"
+							    label="filtrar"
+							    item-value="nombre"
+							    item-text="name">
+							    </v-select> -->
                             </v-row>
       					</template>
                         <template v-slot:item.name="{ item }">
                 		  {{item.name+' '+item.last_name}}
                 		</template>
-                		<template v-slot:item.actions="{ item }">
+                		<template v-if="user.role == 'Superadministrador'" v-slot:item.actions="{ item }">
                 		  	<v-icon small class="mr-2" @click="editItem(item)">
                 		    	mdi-pencil
                 		  	</v-icon>
@@ -353,6 +366,7 @@ export default {
     editedItem: {
         name: this.$route.query.name || null,
         last_name: this.$route.query.last_name || null,
+        rfc: this.$route.query.rfc || null,
         email: this.$route.query.email || null,
         phone: this.$route.query.phone || null,
         address: this.$route.query.address || null,
@@ -368,6 +382,7 @@ export default {
     defaultItem: {
       name: null,
       last_name: null,
+      rfc: null,
       email: null,
       phone: null,
       address: null,
@@ -409,7 +424,16 @@ export default {
       roles: state => state.rolesModule.roles,
       errors: state => state.usersModule.usersErrors,
     }),
-
+    computedTableHeaders(){
+        if(this.user.role === 'Superadministrador'){
+            return this.headers;
+        }
+        else if(this.user.role === 'Vendedor'){
+            let arr = this.headers;
+            arr.pop()
+            return arr;
+        }
+    },
     formTitle () {
       return this.editedIndex === -1 ? 'Nuevo Usuario' : 'Editar Usuario'
     },
@@ -420,7 +444,7 @@ export default {
 		}else{
 			return this.users
 		}
-		
+
 	}
 
   },
@@ -438,7 +462,7 @@ export default {
 			};
     	this.currentLogo = null
    	},
-	
+
      editItem (item) {
       this.editedIndex = this.users.indexOf(item)
       this.editedItem = Object.assign({}, item)

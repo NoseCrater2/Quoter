@@ -57,7 +57,7 @@
               <v-list-item-title>Inventario</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item v-if="user.role === 'Superadministrador'" @click="showComponent = 2" :to="{name: 'Users'}">
+          <v-list-item v-if="user.role === 'Superadministrador' || user.role === 'Vendedor'" @click="showComponent = 2" :to="{name: 'Users'}">
             <v-list-item-icon>
               <v-icon>mdi-account-multiple</v-icon>
             </v-list-item-icon>
@@ -98,7 +98,14 @@
 
           <v-toolbar-items v-if="$vuetify.breakpoint.mdAndUp">
               <v-btn
-              v-if="user.role === 'Superadministrador'"
+                class="white--text"
+                text
+                :to="{name: 'Home'}">
+                  Ir a Rollux.com
+              </v-btn>
+              <v-divider inset vertical></v-divider>
+              <v-btn
+              v-if="user.role === 'Superadministrador' || user.role === 'Vendedor'"
               class="white--text"
               text
               :to="{name: 'Users'}">

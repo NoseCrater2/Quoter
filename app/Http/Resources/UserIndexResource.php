@@ -19,6 +19,7 @@ class UserIndexResource extends JsonResource
             'name' => $this->name,
             'last_name' => $this->last_name,
             'email' => $this->email,
+            'rfc' => $this->rfc,
             'company' => $this->company,
             'address' => $this->address,
             'ship_address' => $this->ship_address,
@@ -31,7 +32,7 @@ class UserIndexResource extends JsonResource
             'discount_percent' => $this->discount_percent,
             'role' => $this->roles->isNotEmpty()? $this->getRoleNames()[0]: null,
             'active' => $this->active
-           
+
         ];
     }
 }

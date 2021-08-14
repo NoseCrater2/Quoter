@@ -14,11 +14,11 @@
             </v-btn>
         </div>
 
-        <div  class="d-flex justify-center">
+        <!-- <div  class="d-flex justify-center">
             <v-btn tile dark color="#0084ff" icon min-width="20" width="20" >
                 <v-img src="/img/facebook-messenger.png" width="30"></v-img>
             </v-btn>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -41,7 +41,7 @@ export default {
     border-radius: 15px 0px 0px 15px;
     min-width: 24px;
     width: 50px;
-    height: 110px;
+    height: 72px;
     background-color:#47a5ad;
 }
 

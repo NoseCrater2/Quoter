@@ -45,6 +45,7 @@ class UserController extends Controller
         $rules =[
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'rfc' => 'nullable|string|size:13',
             'last_name' => 'required|string|max:255',
             'phone' => 'required|string|max:15',
             'address' => 'required|max:255',
@@ -109,6 +110,7 @@ class UserController extends Controller
         $rules = [
             'name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'rfc' => 'nullable|string|size:13',
             'phone' => 'required|string|max:15',
             'address' => 'required|max:255',
             'zip_code' => 'required|max:10',
@@ -200,7 +202,7 @@ class UserController extends Controller
     {
         $distribuitors = User::role('Distribuidor')
         ->where('active',1)
-        ->select('id','name','last_name','email','discount_percent','logo','ship_address','phone','company')->get();
+        ->select('id','name','last_name','email','rfc','discount_percent','logo','ship_address','phone','company')->get();
         return response(['data'=> $distribuitors],200);
     }
 

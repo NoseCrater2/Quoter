@@ -73,7 +73,7 @@
                                             <div style="font-weight: bolder;">Cliente: {!! $orders['user']['name'].' '.$orders['user']['last_name'] !!}</div>
                                         @endif
                                         <div><span>Dirección: {!! $orders['user']['ship_address'] !!}</span></div>
-                                        <div>RFC: <span>JVEXXXXXALXX</span></div>
+                                        <div>RFC: <span>{!! $orders['user']['rfc'] !!}</span></div>
                                         <div><span>Teléfono: {!! $orders['user']['phone'] !!}</span></div>
                                         <div><span>Email: {!! $orders['user']['email'] !!}</span></div>
                                         <!-- <div>Embarcado por:</div>

@@ -1211,32 +1211,45 @@
           <v-card-text>
               <v-card-actions>
                   <v-row justify="space-between">
-                      <v-btn :disabled="isPrintingSuperAdminUserPDF" color="#47a5ad" small fab v-if="showUserForm || showUserSelectDialog" @click="function(){showUserForm = false; showUserSelectDialog = false; resetSelectedUser();}">
-                        <v-icon color="white">
-                            mdi-arrow-left
-                        </v-icon>
-                      </v-btn>
-                      <v-btn ref="btnShowUserSelectDialog" :disabled="isPrintRolluxQuotingPDF" color="#47a5ad" fab @click="showUserSelectDialog = true" v-if="!showUserForm && !showUserSelectDialog">
-                        <v-icon color="white">
-                            mdi-account
-                        </v-icon>
-                      </v-btn>
-                      <v-btn ref="btnShowUserForm" :disabled="isPrintRolluxQuotingPDF" color="#47a5ad" fab @click="showUserForm = true" v-if="!showUserForm && !showUserSelectDialog">
+                      <v-col cols="12" class="mb-n8">
+                        <v-btn :disabled="isPrintingSuperAdminUserPDF" color="#47a5ad" small fab v-if="showUserForm || showUserSelectDialog" @click="fnArrowLeftFromPrintOptions">
                           <v-icon color="white">
-                            mdi-plus
-                        </v-icon>
-                      </v-btn>
-                      <v-btn color="#47a5ad" :loading="isPrintRolluxQuotingPDF" :disabled="isPrintRolluxQuotingPDF" fab @click="printRolluxQuoting" v-if="(showUserForm==false) && (showUserSelectDialog == false) && (!enableBtnPrintLogInAdmin)">
-                        <v-icon color="white">
-                            mdi-printer
-                        </v-icon>
-                      </v-btn>
+                              mdi-arrow-left
+                          </v-icon>
+                        </v-btn>
+
+                        <p style="font-size: 1rem;" class="text-uppercase text-center font-weight-bold">{{showUserSelectDialog ? 'Seleccionar distribuidor' : showUserForm ? 'Distribuidor no registrado' : ''}}</p>
+                      </v-col>
+                      <v-col cols="4" class="d-flex flex-column align-center">
+                        <v-btn ref="btnShowUserSelectDialog" :disabled="isPrintRolluxQuotingPDF" color="#47a5ad" fab @click="showUserSelectDialog = true" v-if="!showUserForm && !showUserSelectDialog">
+                          <v-icon color="white">
+                              mdi-account
+                          </v-icon>
+                        </v-btn>
+                        <div v-if="!showUserForm && !showUserSelectDialog" style="font-size: 0.85rem; line-height: 15px;" class="text-center font-weight-bold mt-1">Seleccionar distribuidor</div>
+                      </v-col>
+                      <v-col cols="4" class="d-flex flex-column align-center">
+                        <v-btn ref="btnShowUserForm" :disabled="isPrintRolluxQuotingPDF" color="#47a5ad" fab @click="showUserForm = true" v-if="!showUserForm && !showUserSelectDialog">
+                            <v-icon color="white">
+                              mdi-plus
+                          </v-icon>
+                        </v-btn>
+                        <div v-if="!showUserForm && !showUserSelectDialog" style="font-size: 0.85rem; line-height: 15px;" class="text-center font-weight-bold mt-1">Distribuidor no registrado</div>
+                      </v-col>
+                      <v-col cols="4" class="d-flex flex-column align-center">
+                        <v-btn color="#47a5ad" :loading="isPrintRolluxQuotingPDF" :disabled="isPrintRolluxQuotingPDF" fab @click="printRolluxQuoting" v-if="(showUserForm==false) && (showUserSelectDialog == false) && (!enableBtnPrintLogInAdmin)">
+                          <v-icon color="white">
+                              mdi-printer
+                          </v-icon>
+                        </v-btn>
+                        <div v-if="!showUserForm && !showUserSelectDialog" style="font-size: 0.85rem; line-height: 15px;" class="text-center font-weight-bold mt-1">Imprimir sin distribuidor</div>
+                      </v-col>
                   </v-row>
               </v-card-actions>
             <v-autocomplete
             v-if="showUserSelectDialog"
             :items="distributors"
-            class="mt-7"
+            class="mt-4"
             prepend-inner-icon="mdi-account"
             item-text="name"
             return-object
@@ -1264,7 +1277,7 @@
                 </template>
               </template>
             </v-autocomplete>
-          <v-form ref="userForm" v-show="showUserForm" class="mt-7">
+          <v-form ref="userForm" v-show="showUserForm" class="mt-4">
             <v-text-field
             prepend-inner-icon="mdi-account"
             outlined
@@ -1299,6 +1312,30 @@
             label="Telefono"
             ></v-text-field>
             <v-text-field
+            prepend-inner-icon="mdi-email"
+            outlined
+            dense
+            :rules="[(v) => !!v || 'Requerido']"
+            v-model="selectedUser.email"
+            label="Email"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-account"
+            outlined
+            dense
+            :rules="[(v) => !!v || 'Requerido']"
+            v-model="selectedUser.rfc"
+            label="RFC"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-domain"
+            outlined
+            dense
+            :rules="[(v) => !!v || 'Requerido']"
+            v-model="selectedUser.company"
+            label="Nombre de la empresa"
+            ></v-text-field>
+            <v-text-field
             prepend-inner-icon="mdi-truck"
             outlined
             dense
@@ -1310,7 +1347,7 @@
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
-          <v-btn tile depressed @click="function(){sellerPrint = false; resetSelectedUser('cancelar');}" color="red" class="white--text">CANCELAR</v-btn>
+          <v-btn tile depressed @click="fnCancelFromPrintOptions" color="red" class="white--text">CANCELAR</v-btn>
           <v-spacer></v-spacer>
            <v-btn v-if="(showUserForm || showUserSelectDialog) && enableBtnPrintLogInAdmin" tile depressed :loading="isPrintingSuperAdminUserPDF" :disabled="isPrintingSuperAdminUserPDF" color="#47a5ad" @click="checkUserValid" class="white--text">IMPRIMIR</v-btn>
           </v-card-actions>
@@ -1401,11 +1438,13 @@ export default {
       showUserSelectDialog: false,
       selectedUser: {
         name: null,
+        rfc: null,
         last_name: null,
         email: null,
         discount_percent: 0,
         phone: null,
-        ship_address: null
+        ship_address: null,
+        company: null
       },
       sellerPrint: false,
       beforePrint: false,
@@ -1577,6 +1616,15 @@ export default {
     };
   },
   methods: {
+      fnCancelFromPrintOptions(){
+        this.sellerPrint = false;
+        this.resetSelectedUser('cancelar');
+      },
+      fnArrowLeftFromPrintOptions(){
+        this.showUserForm = false;
+        this.showUserSelectDialog = false;
+        this.resetSelectedUser();
+      },
       resetSelectedUser(stateDialog = 'default'){
         this.selectedUser = {
             name: null,
@@ -2165,7 +2213,7 @@ export default {
   computed: {
       enableBtnPrintLogInAdmin(){
           //Longitud >= 6 por que es el numero minimo de propiedades de usuario para poder imprimir
-          return Object.values(this.selectedUser).filter(el=> el!=null).length >= 6 ? true : false
+          return Object.values(this.selectedUser).filter(el=> el!=null).length >= 8 ? true : false
       },
 
     extraVerticalPrice(){

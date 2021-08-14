@@ -94,6 +94,7 @@
 				    			<v-text-field outlined prepend-inner-icon="mdi-map" v-model="user.state" placeholder="Estado" :error-messages="errors.state" dense></v-text-field>
 				    		</v-row>
 
+                            <v-text-field outlined prepend-inner-icon="mdi-account" v-model="user.rfc" placeholder="RFC" :error-messages="errors.rfc" dense></v-text-field>
         		            <v-text-field outlined prepend-inner-icon="mdi-truck-delivery-outline" v-model="user.ship_address" placeholder="Direccón de envío" dense :error-messages="errors.shipping_address"></v-text-field>
 				    		<v-text-field outlined prepend-inner-icon="mdi-truck-delivery" v-model="user.second_ship_address" placeholder="Direccón de envío" dense :error-messages="errors.shipping_address"></v-text-field>
         		            <v-text-field outlined prepend-inner-icon="mdi-whatsapp" v-model="user.phone" placeholder="WhatsApp" dense :error-messages="errors.movil_number"></v-text-field>

@@ -12,7 +12,7 @@
                 <v-btn icon  x-small color="#2caae1" fab href="https://twitter.com/rolluxmexico"  target="_blank" class="mr-3">
                     <v-icon size="30">mdi-twitter</v-icon>
                 </v-btn>
-                <v-btn  icon x-small fab  class="mr-3">
+                <v-btn  icon x-small fab  class="mr-3" href="https://www.instagram.com/rolluxmx/" target="_blank">
                     <v-img src="/img/instagram-logo.png" ></v-img>
                 </v-btn>
                 <v-btn icon  x-small color="#cc2127" href="https://www.pinterest.com.mx/rolluxmexico" target="_blank" fab class="mr-3" >
