@@ -43,69 +43,46 @@
     <table style="border-collapse:collapse; width: 100%; margin-top: -13px">
         <tbody>
             <tr>
-                <td style="width: 20%; padding-top: -13px; padding-left: 9px; height: 124px; border-right: solid #47a5ad 4px; ">
-                    <img width="180px" src="img/logos/rollux.png" >
+                <td style="width: 20%; padding-top: -13px; padding-left: 9px; height: 124px;">
+                    <img width="210px" src="img/logos/rollux.png" >
                 </td>
-                <td style="text-align: center; width: 53%; padding-right: 5px; padding-left: 7px; padding-top: 11px;">
+                <td style="width: 26%;">
                     <div style="border-left: solid #47a5ad 4px; padding-top: 7px;">
+                        <div style="padding-left: 7px;">
+                            <div class="d-block" style="font-weight: bolder; font-size: 12px;" >Rollux | Atención a Distribuidores</div>
+                            <div class="d-block" style="font-size: 10px;">Whatsapp: 55 4894 8279</div>
+                            <div class="d-block" style="font-size: 10px;">Correo:  ventas@rolllux.com.mx</div>
+
+                            <!-- <div class="d-block" style="font-weight: bolder;font-size: 12px; margin-top: 5px;" >Cotización</div> -->
+                            <div class="d-block" style="font-size: 12px;">Folio <span style="font-weight: bolder; color: #47a5ad">R200421/001</span></div>
+                            <div class="d-block" style="font-size: 12px;">Fecha: {!! $date->now()->format('d/m/Y'); !!}</div>
+                            <div class="d-block" style="font-size: 12px;">Valida hasta: {!! $date->addDays(8)->format('d/m/Y'); !!}</div>
+                        </div>
                     </div>
-                    <table style="width: 100%; border: 1px solid #d1d3d4; border-radius: 5px; margin-left: 9px; padding-bottom: 11px;">
+                </td>
+                <td style="text-align: center; width: 54%; padding-right: 15px; padding-left: 7px; padding-top: 11px">
+                    <table style="width: 100%; border: 1px solid #d1d3d4; border-radius: 5px;">
                         <tbody>
                             <tr>
                                 <th colspan="2" style="background-color: #d1d3d4; padding-top: 3px; padding-bottom: 3px;">
-                                    @if(array_key_exists('company', $orders['user']))
-                                        @if($orders['user']['company'] != null || $orders['user']['company'] != '')
-                                            <div style="font-weight: bolder; font-size: 13px;">{!! $orders['user']['company'] !!} | <span style="font-weight: normal;">Distribuidor Autorizado</span></div>
-                                        @else
-                                            <div style="font-weight: bolder; font-size: 13px;">{!! $orders['user']['name'].' '.$orders['user']['last_name'] !!} | <span style="font-weight: normal;">Distribuidor Autorizado</span></div>
-                                        @endif
-                                    @else
-                                        <div style="font-weight: bolder; font-size: 13px;">{!! $orders['user']['name'].' '.$orders['user']['last_name'] !!} | <span style="font-weight: normal;">Distribuidor Autorizado</span></div>
-                                    @endif
+                                    <div style="font-weight: bolder; font-size: 13px;">CLIENTE / Dirección de Envío</div>
                                 </th>
                             </tr>
                             <tr>
-                                <td style="width: 45%; padding-left: 13px;">
-                                    <div class="d-block" style="font-weight: bolder; margin-top: 3px;" >Cotización</div>
-                                    <div class="d-block" style="font-size: 12px;">Folio <span style="font-weight: bolder; color: #47a5ad">R200421/001</span></div>
-                                    <div class="d-block" style="font-size: 12px;">Fecha: {!! $date->now()->format('d/m/Y'); !!}</div>
-                                    <div class="d-block" style="font-size: 12px;">Valida hasta: {!! $date->addDays(8)->format('d/m/Y'); !!}</div>
+                                <td style="width: 54%; padding-left: 13px;">
+                                    <div style="font-weight: bolder; font-size: 13px; margin-top: -15px">{!! $orders['user']['name'].' '.$orders['user']['last_name'] !!}</div>
+                                    <div style="font-size: 12px;">
+                                        <span>{!! $orders['user']['ship_address'] !!}</span>
+                                    </div>
                                 </td>
-                                <td style="width: 55%;">
-                                    <div style="font-size: 9px; margin-top: 1px;">
-                                        @if(array_key_exists('company', $orders['user']))
-                                            @if($orders['user']['company'] != null || $orders['user']['company'] != '')
-                                                <div style="font-weight: bolder;">Cliente: {!! $orders['user']['name'].' '.$orders['user']['last_name'] !!}</div>
-                                            @endif
-                                        @endif
-                                        @if(array_key_exists('ship_address', $orders['user']))
-                                            @if($orders['user']['ship_address'] != null || $orders['user']['ship_address'] != '')
-                                                <div>
-                                                    <span>Dirección: {!! $orders['user']['ship_address'] !!}</span>
-                                                </div>
-                                            @endif
-                                        @endif
-                                        @if(array_key_exists('rfc', $orders['user']))
-                                            @if($orders['user']['rfc'] != null || $orders['user']['rfc'] != '')
-                                                <div>
-                                                    <span>RFC: {!! $orders['user']['rfc'] !!}</span>
-                                                </div>
-                                            @endif
-                                        @endif
-                                        @if(array_key_exists('phone', $orders['user']))
-                                            @if($orders['user']['phone'] != null || $orders['user']['phone'] != '')
-                                                <div>
-                                                    <span>Teléfono: {!! $orders['user']['phone'] !!}</span>
-                                                </div>
-                                            @endif
-                                        @endif
-                                        @if(array_key_exists('email', $orders['user']))
-                                            @if($orders['user']['email'] != null || $orders['user']['email'] != '')
-                                                <div>
-                                                    <span>Email: {!! $orders['user']['email'] !!}</span>
-                                                </div>
-                                            @endif
-                                        @endif
+                                <td style="width: 46%;">
+                                    <div style="font-size: 13px; margin-top: 5px">
+                                        <span style="font-weight: bolder;">{!! $orders['user']['company'] !!}</span>
+                                        <div style="font-weight: bolder;">RFC: <span style="font-weight: normal;">{!! $orders['user']['rfc'] !!}</span></div>
+                                    </div>
+                                    <div style="font-size: 11px; margin-bottom: 7px;">
+                                        <div><span>Teléfono: {!! $orders['user']['phone'] !!}</span></div>
+                                        <div><span>Email: {!! $orders['user']['email'] !!}</span></div>
                                         <!-- <div>Embarcado por:</div>
                                         <div>Fecha de entrega:</div>
                                         <div>Realizado por: RolluxWeb</div> -->
@@ -114,13 +91,6 @@
                             </tr>
                         </tbody>
                     </table>
-                </td>
-                <td style="width: 25%;">
-                @if(array_key_exists('logo', $orders['user']))
-                    @if (File::exists('img/'.$orders['user']['logo']))
-                        <img width="180px" src="{{'img/'.$orders['user']['logo']}}" >
-                    @endif
-                @endif
                 </td>
             </tr>
         </tbody>
@@ -608,16 +578,15 @@
         </div>
         <div style="width: 87%; margin: auto; font-size: 8px; line-height: 10px; text-align: center;">
             <div>
-
+            @if($orders['distributorImagePrint'] == false)
                 <strong>Deposito a la cuenta de Banorte: 0892608267 // CLABE: 072 470 0089 2608 2678 // A nombre de Materiales Decorativos S. de R.L, M</strong>
-
+            @endif
             </div>
             <i>
                 Favor de revisar importes y cantidades descritas en este documento // Cualquier variación será motivo de otra cotización // La fecha del pedido se toma en cuenta a partir de la fecha de pago
                 No se procesan pedidos que no estén pagados // La mercancía viaja por cuenta y riesgo del comprador // Los tonos de las telas pueden variar ligeramente a los del muestrario
                 Para precios en dólares se tomará en cuenta tipo de cambio emitido por Banorte el día del pago. // No hay cambios ni devoluciones una vez cortada la tela. Precios sujetos a cambios sin previo aviso.
             </i>
-
         </div>
     </div>
 

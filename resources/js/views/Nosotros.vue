@@ -4,12 +4,12 @@
             <v-row align="center" justify="center">
                 <v-col class="text-center" cols="11" md="7" sm="12" style="background-color: rgba(10, 10, 10, 0.5);">
                     <h1>NOSOTROS</h1>
-                   
+
                 </v-col>
             </v-row>
         </v-parallax>
         <v-container fluid style="max-width: 1200px" class="my-4">
-        
+
         <Slogan/>
         <!-- <iframe width="100%" height="500"  src="http://test.siilkaab.com/bookings/1" frameborder="0">
 
@@ -34,7 +34,7 @@
                     <br>
                     <div class="d-block" :style="$vuetify.breakpoint.mobile?'0.7':'font-size: 1.4em'" style="color: white; max-width: 750px">
                         <p style="text-align: justify">
-                      <b class="especial">Rollux</b> es innovación y evolución por lo que costantamente nos
+                      <b class="especial">Rollux</b> es innovación y evolución, por lo que costantamente nos
                       actualizamos para brindar nuevos y mejores productos, la autorización
                       y la tecnología de nuestros motores para persianas, cortinas y toldos
                       están pensados siempre con el objetivo de dar mayor satisfacción.
@@ -75,17 +75,17 @@
                             <v-card-title>
                                   <p style="font-size: 1.3em" class="especial">{{ t.title}}</p>
                             </v-card-title>
-                            <v-card-text>
-                                <p style="font-size: 1.4em; text-align: justify">
+                            <v-card-text style="font-size: 1.4em; ">
+                                <p class="pJustify" >
                                     {{ t.text }}
                                 </p>
                             </v-card-text>
                         </v-card>
                         <div class="d-block" >
-                           
+
                         </div>
                         <div class="d-block">
-                            
+
                         </div>
                     </v-col>
                 </v-row>
@@ -103,7 +103,7 @@
                             tejidos cuentan con características especiales en su composición
                             y fabricación, en pro del medio ambiente y el cuidado de la salud
                         </p>
-                       
+
                     </v-col>
                     <v-col cols="12" md="5" sm="12">
                         <v-img max-width="500" src="/img/nosotros/5.jpg"></v-img>
@@ -128,7 +128,7 @@ export default {
             team: [
                 {title: 'Además, proveemos...',
                 text: 'Ambientes de trabajo en el que cada individuo encuentra las condiciones perfectas para maximizar su potencial, lo que permite una mejor calidad de vida y un mejor desarrollo de ideas que se verán reflejadas en la satisfacción de nuestros clientes.'},
-                {title: 'Todos son importantes para nosotros', 
+                {title: 'Todos son importantes para nosotros',
                 text: 'Nuestros clientes, proveedores, distribuidores y empleados, son igual de importantes para nosotros, por lo que tenemos una filosofía de respeto y valor por igual para todos.'},
             ],
         }
@@ -158,14 +158,16 @@ export default {
     font-weight: 900;
 }
 
-
+.pJustify:first-line {
+text-align:justify
+}
 
 
 @keyframes blink {
   0%, 100% {
     opacity: 1;
   }
-  
+
   50% {
     opacity: 0;
   }

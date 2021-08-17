@@ -3,7 +3,7 @@
         <v-carousel  :hide-delimiters="isMobile?false:true" :show-arrows="!isMobile" height="55vh" style="min-height: 350px" continuous  cycle  >
             <v-carousel-item
             eager
-            :to="item.to"
+            :to="item.route"
             v-for="(item, i) in persianas"
             :key="i">
                 <v-img  :src="item.src" height="55vh" min-height="55vh" max-height="750"  position="center center" eager>
@@ -26,6 +26,22 @@
                 <hr align="center" noshade="noshade" class="divider" style="height: 5px; background-color: #47a5ad;" size="3" width="25%" />
             </div>
         </v-col>
+
+
+        <div class="mt-5">
+            <div class="grey lighten-2 pa-5 text-center font-weight-bold">
+                Area del Cliente
+            </div>
+            <v-row class="grey lighten-3 pt-8 pb-11 mt-0" justify="center">
+                <v-col cols="12" xl="4" lg="4" md="4" sm="12" v-for="(itemClientArea, index) in clientArea" :key="index" class="d-flex justify-center">
+                    <v-img width="300" :src="itemClientArea.icon"></v-img>
+                </v-col>
+            </v-row>
+        </div>
+
+
+
+
         <v-row class="justify-center align-center my-16" no-gutters>
 
             <v-col class="pa-0" cols="12" md="4" sm="12" v-for="(b, index) in benefits" :key="index">
@@ -62,9 +78,11 @@ export default {
             isMobile: false,
             persianas: [
                 {
+                    route: {name: 'PriceList'},
                     src: '/img/dashboard/slide1.jpg'
                 },
                 {
+                    route: '#',
                     src: '/img/dashboard/slide2.jpg'
                 },
             ],
@@ -86,6 +104,23 @@ export default {
                     title: 'Tus Pedidos',
                     text: 'Consulta en cualquier momento tus órdenes y cotizaciones',
                     icon:'/img/dashboard/icon_pedidos.png',
+                    route: {name: 'Orders'}
+                },
+            ],
+            clientArea: [
+                {
+                    title: 'Cotizaciones',
+                    icon:'/img/dashboard/cotizacion_index.png',
+                    route: {name: 'Orders'}
+                },
+                {
+                    title: 'Ordenes',
+                    icon:'/img/dashboard/ordenes_index.png',
+                    route: {name: 'Orders'}
+                },
+                {
+                    title: 'Carrito',
+                    icon:'/img/dashboard/carrito_de_compra.png',
                     route: {name: 'Orders'}
                 },
             ]

@@ -136,11 +136,20 @@ class ProductController extends Controller
         return $pdf->download('order-list.pdf');
     }
 
-    public function authExportPdf(Request $request)
+    public function exportPdfDistributor(Request $request)
     {
         //Recuperar el request en un objeto
         $orders = $request->all();
         $pdf = PDF::loadView('pdf.orderdistributor', compact('orders'));
+
+        return $pdf->download('order-list.pdf');
+    }
+
+    public function authExportPdf(Request $request)
+    {
+        //Recuperar el request en un objeto
+        $orders = $request->all();
+        $pdf = PDF::loadView('pdf.orderadmin', compact('orders'));
 
         return $pdf->download('order-list.pdf');
     }

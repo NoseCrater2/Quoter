@@ -148,13 +148,17 @@
 
                       <v-list three-line max-height="500" color="white">
                         <!-- '/:slugProduct/:slugType/:slugLine?/detalles/:slugDetail' -->
-                        <template v-for="(item, index) in items" >
-                          <v-list-item :key="index" style="background-color: white"
+                        <template >
+                          <v-list-item v-for="(item, index) in items" :key="index" style="background-color: white"
                           :to="{name: 'Details', params: {slugProduct:item.type.product_id == 1 ? 'PERSIANAS' : 'TOLDOS',slugType:item.type.slug,slugDetail: item.slug}}"
                           >
-
+                            <v-list-item-icon>
+                              <v-icon v-if="item.type.product_id == 1" v-text="'mdi-blinds'" size="50" color="#47a5ad"></v-icon>
+                              <v-icon v-else v-text="'mdi-storefront'" size="50" color="#47a5ad"></v-icon>
+                            </v-list-item-icon>
                             <v-list-item-content class="ma-1">
-                              <v-list-item-title style="font-size: 1em;" >{{item.name}}</v-list-item-title>
+                              <v-list-item-title style="font-size: 1em;" class="font-weight-bold" >{{item.name}}</v-list-item-title>
+                              <v-list-item-title style="font-size: 1em;" class="text-uppercase" >{{item.type.name}}</v-list-item-title>
                               <v-list-item-subtitle style="color: #47a5ad; font-size: 1em" >${{item.price}}MXN</v-list-item-subtitle>
                             </v-list-item-content>
                           </v-list-item>
@@ -236,13 +240,17 @@
 
               <v-list three-line max-height="500" color="white">
                 <!-- '/:slugProduct/:slugType/:slugLine?/detalles/:slugDetail' -->
-                <template v-for="(item, index) in items" >
-                  <v-list-item :key="index" style="background-color: white"
+                <template>
+                  <v-list-item v-for="(item, index) in items" :key="index" style="background-color: white"
                   :to="{name: 'Details', params: {slugProduct:item.type.product_id == 1 ? 'PERSIANAS' : 'TOLDOS',slugType:item.type.slug,slugDetail: item.slug, id: item.id}}"
                   >
-
+                    <v-list-item-icon>
+                      <v-icon v-if="item.type.product_id == 1" v-text="'mdi-blinds'" size="50" color="#47a5ad"></v-icon>
+                      <v-icon v-else v-text="'mdi-storefront'" size="50" color="#47a5ad"></v-icon>
+                    </v-list-item-icon>
                     <v-list-item-content class="ma-1">
-                      <v-list-item-title style="font-size: 1em;" >{{item.name}}</v-list-item-title>
+                      <v-list-item-title style="font-size: 1em;" class="font-weight-bold" >{{item.name}}</v-list-item-title>
+                      <v-list-item-title style="font-size: 1em;" class="text-uppercase" >{{item.type.name}}</v-list-item-title>
                       <v-list-item-subtitle style="color: #47a5ad; font-size: 1em" >${{item.price}}MXN</v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
@@ -333,6 +341,21 @@ import FakeNotification from '../../components/FakeNotification';
 
 
 export default {
+    //insert the following code for vue-meta to work
+    metaInfo() {
+        return {
+            title: 'Rollux México',
+            meta: [
+                // { name: 'description', content: 'Connect and follow ' + this.userData.name + ' on Epiloge - ' + this.userData.tagline},
+                // { property: 'og:title', content: this.userData.name + ' - Epiloge'},
+                // { property: 'og:site_name', content: 'Epiloge'},
+                { property: 'og:description', content: 'Rollux integra en su línea de textiles para persianas Enrollables la mas amplia gama de texturas y colores de todo Mercado Nacional para el recubrimiento de ventanas, suficiente para cubrir cualquier necesidad, requerimiento y gusto'},
+                // { property: 'og:type', content: 'profile'},
+                // { property: 'og:url', content: 'https://epiloge.com/@' + this.userData.username},
+                // { property: 'og:image', content: this.aws_url + '/users/' + this.userData.profileurl + '-main.jpg' }
+            ]
+        }
+    },
     data(){
         return{
           blindView: null,

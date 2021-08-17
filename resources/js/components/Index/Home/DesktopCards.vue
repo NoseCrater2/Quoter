@@ -8,8 +8,8 @@
                     </v-card-title>
                     <div style="display: grid; height: 240px">
                         <v-hover v-slot:default="{ hover }" >
-                            <v-img 
-                            :width="item.height" style="margin: auto;" 
+                            <v-img
+                            :width="item.height" style="margin: auto;"
                             :class="{'opacado':hover}" :src="item.img">
                             </v-img>
                         </v-hover>
@@ -34,10 +34,10 @@ export default {
             items: [
                 {
                     title: 'PERSIANAS',
-                    subtext: 'Contamos con la más amplia gama de texturas y colores de todo el mercado nacional para el recubrimiento de ventanas, suficiente para cubrir cualquier necesidad, requerimiento y gusto',
+                    subtext: 'Contamos con la más amplia gama de texturas y colores de todo el mercado nacional para el recubrimiento de ventanas, suficiente para cubrir cualquier necesidad, requerimiento y gusto.',
                     img: 'img/home/PERSIANAS.svg',
                     height: '150',
-                  
+
                 },
                 {
                     title: 'TOLDOS',
@@ -53,14 +53,14 @@ export default {
 
 <style  scoped>
 .on-hover {
-    
+
     transform: scale(1.02);
     -moz-transform: scale(1.02);
     -webkit-transform: scale(1.02);
     -o-transform: scale(1.02);
     -ms-transform: scale(1.02);
     transition-duration: .25s;
-    
+
  }
 
  .condensed{
@@ -68,7 +68,7 @@ export default {
      font-weight: normal !important;
       transition-duration: 1.5s;
       font-weight: bolder !important;
-     
+
  }
 
  .reset {
@@ -78,7 +78,7 @@ export default {
 
 .marco{
     border: 4px solid white;
-   
+
 }
 
 .force-center{

@@ -49,7 +49,7 @@
               <v-list-item-title>Pedidos</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item v-if="user.role === 'Administrador'" @click="showComponent = 5" :to="{name: 'Stock', params: {slugProduct: 'PERSIANAS'}}">
+          <v-list-item v-if="user.role === 'Superadministrador'" @click="showComponent = 5" :to="{name: 'Stock', params: {slugProduct: 'PERSIANAS'}}">
             <v-list-item-icon>
               <v-icon>mdi-clipboard-list</v-icon>
             </v-list-item-icon>
@@ -57,7 +57,7 @@
               <v-list-item-title>Inventario</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item v-if="user.role === 'Administrador'" @click="showComponent = 2" :to="{name: 'Users'}">
+          <v-list-item v-if="user.role === 'Superadministrador' || user.role === 'Administrador' || user.role === 'Vendedor'" @click="showComponent = 2" :to="{name: 'Users'}">
             <v-list-item-icon>
               <v-icon>mdi-account-multiple</v-icon>
             </v-list-item-icon>
@@ -98,15 +98,22 @@
 
           <v-toolbar-items v-if="$vuetify.breakpoint.mdAndUp">
               <v-btn
-              v-if="user.role === 'Administrador'"
+                class="white--text"
+                text
+                :to="{name: 'Home'}">
+                  Ir a Rollux.com
+              </v-btn>
+              <v-divider inset vertical></v-divider>
+              <v-btn
+              v-if="user.role === 'Superadministrador' || user.role === 'Administrador' || user.role === 'Vendedor'"
               class="white--text"
               text
               :to="{name: 'Users'}">
                 Usuarios
               </v-btn>
 
-              <v-divider  v-if="user.role === 'Administrador'" inset vertical></v-divider>
-              <v-menu offset-y  v-if="user.role === 'Administrador'" >
+              <v-divider  v-if="user.role === 'Superadministrador'" inset vertical></v-divider>
+              <v-menu offset-y  v-if="user.role === 'Superadministrador'" >
                 <template v-slot:activator="{attrs, on}">
                   <v-btn v-bind="attrs" v-on="on" class="white--text"  text  >Inventario</v-btn>
                 </template>
@@ -135,7 +142,7 @@
                   <v-list-item :to="{name: 'Orders'}">
                     <v-list-item-title >ORDENES</v-list-item-title>
                   </v-list-item>
-                  <v-list-item :to="{name: 'Quotations'}">
+                  <v-list-item v-if="user.role !== 'Superadministrador'" :to="{name: 'Quotations'}">
                     <v-list-item-title >COTIZACIONES</v-list-item-title>
                   </v-list-item>
                 </v-list>

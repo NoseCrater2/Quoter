@@ -3,21 +3,21 @@
          <v-card >
             <v-toolbar color="black" class="white--text">
                 <v-toolbar-title>Tipos</v-toolbar-title>
-            </v-toolbar>  
+            </v-toolbar>
             <v-list >
                 <v-list-item-group
                 active-class="black--text"
                 multiple
                 >
-                    <template v-for="(type, t) in types">
-                        <v-list-item :key="type.id">
+                    <template>
+                        <v-list-item v-for="(type) in types" :key="type.id">
                             <template >
                                 <v-list-item-content>
                                     <v-list-item-title v-text="type.name"></v-list-item-title>
-                                </v-list-item-content> 
+                                </v-list-item-content>
                             </template>
                         </v-list-item>
-                        <v-divider :key="type.name"></v-divider>
+                        <!-- <v-divider :key="type.name"></v-divider> -->
                     </template>
 
                 </v-list-item-group>
@@ -31,12 +31,12 @@ import { mapActions, mapState } from 'vuex';
 export default {
     data(){
         return {
-            
+
         }
     },
 
     mounted(){
-       this.$store.dispatch('getTypes',this.product.id)  
+       this.$store.dispatch('getTypes',this.product.id)
     },
 
     computed:{
@@ -46,9 +46,9 @@ export default {
     },
     props:{
         product: {
-            type: Object, 
+            type: Object,
             required: true,
-        }, 
+        },
     },
 
 

@@ -670,8 +670,8 @@
                <v-tooltip top>
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
-                      :disabled="orders.length > 0 ? false: true"
-
+                      :disabled="(orders.length > 0 && !isPrintRolluxQuotingPDF) ? false: true"
+                      :loading="isPrintRolluxQuotingPDF"
                       small
                       v-bind="attrs"
                       v-on="on"
@@ -687,14 +687,14 @@
 
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs }">
-                    <v-btn   small v-bind="attrs" v-on="on" color="#47a5ad" dark fab>
-                      <v-icon>mdi-email-send</v-icon>
+                    <v-btn small v-bind="attrs" v-on="on" color="#47a5ad" :disabled="orders.length > 0 ? false: true" fab>
+                      <v-icon color="white">mdi-email-send</v-icon>
                     </v-btn>
                   </template>
                   <span>Enviar por Email</span>
                 </v-tooltip>
             </v-col>
-            <v-col cols="12" md="4" sm="12">
+            <v-col v-if="(orders.length > 0) && !verifyUserSuperadminRole" cols="12" md="4" sm="12">
                <v-btn class="mb-2"  block @click="saveOrders" dark depressed  color="#3ca927">
                  Realizar pedido
               </v-btn>
@@ -1205,14 +1205,56 @@
 
       <v-dialog v-model="sellerPrint" persistent max-width="390">
         <v-card>
-          <v-card-title class="px-4 py-0 justify-center">
-           Elija usuario
+          <v-card-title class="px-4 py-2 justify-center">
+           Opciones de impresión
           </v-card-title>
           <v-card-text>
+              <v-card-actions>
+                  <v-row justify="space-between">
+                      <v-col cols="12" class="mb-n8">
+                        <v-btn :disabled="isPrintingSuperAdminUserPDF" color="#47a5ad" small fab v-if="showUserForm || showUserSelectDialog" @click="fnArrowLeftFromPrintOptions">
+                          <v-icon color="white">
+                              mdi-arrow-left
+                          </v-icon>
+                        </v-btn>
+
+                        <p style="font-size: 1rem;" class="text-uppercase text-center font-weight-bold">{{showUserSelectDialog ? 'Seleccionar distribuidor' : showUserForm ? 'Distribuidor no registrado' : ''}}</p>
+                      </v-col>
+                      <v-col cols="4" class="d-flex flex-column align-center">
+                        <v-btn ref="btnShowUserSelectDialog" :disabled="isPrintRolluxQuotingPDF" color="#47a5ad" fab @click="showUserSelectDialog = true" v-if="!showUserForm && !showUserSelectDialog">
+                          <v-icon color="white">
+                              mdi-account
+                          </v-icon>
+                        </v-btn>
+                        <div v-if="!showUserForm && !showUserSelectDialog" style="font-size: 0.85rem; line-height: 15px;" class="text-center font-weight-bold mt-1">Seleccionar distribuidor</div>
+                      </v-col>
+                      <v-col cols="4" class="d-flex flex-column align-center">
+                        <v-btn ref="btnShowUserForm" :disabled="isPrintRolluxQuotingPDF" color="#47a5ad" fab @click="showUserForm = true" v-if="!showUserForm && !showUserSelectDialog">
+                            <v-icon color="white">
+                              mdi-plus
+                          </v-icon>
+                        </v-btn>
+                        <div v-if="!showUserForm && !showUserSelectDialog" style="font-size: 0.85rem; line-height: 15px;" class="text-center font-weight-bold mt-1">Distribuidor no registrado</div>
+                      </v-col>
+                      <v-col cols="4" class="d-flex flex-column align-center">
+                        <v-btn color="#47a5ad" :loading="isPrintRolluxQuotingPDF" :disabled="isPrintRolluxQuotingPDF" fab @click="printRolluxQuoting" v-if="(showUserForm==false) && (showUserSelectDialog == false) && (!enableBtnPrintLogInAdmin)">
+                          <v-icon color="white">
+                              mdi-printer
+                          </v-icon>
+                        </v-btn>
+                        <div v-if="!showUserForm && !showUserSelectDialog" style="font-size: 0.85rem; line-height: 15px;" class="text-center font-weight-bold mt-1">Imprimir sin distribuidor</div>
+                      </v-col>
+                  </v-row>
+              </v-card-actions>
             <v-autocomplete
+            :disabled="isPrintingSuperAdminUserPDF"
+            v-if="showUserSelectDialog"
             :items="distributors"
+            class="mt-4"
+            prepend-inner-icon="mdi-account"
             item-text="name"
             return-object
+            @change="fnOnChangeResetObjectSelectedUser"
             v-model="selectedUser"
             label="Selecciona un usuario registrado"
             outlined
@@ -1236,42 +1278,64 @@
                 </template>
               </template>
             </v-autocomplete>
-            <p class="text-center">ó</p>
-          <v-btn block v-if="showBtnUserForm"
-          @click="function(){showUserForm = true; cancelShowBtnUserForm = true;showBtnUserForm = false}"
-          outlined color="#47a5ad">Ingresa información de usuario</v-btn>
-           <v-btn
-           block
-           v-if="cancelShowBtnUserForm"
-           @click="function(){showBtnUserForm = true; cancelShowBtnUserForm = false; showUserForm = false}"
-           outlined
-           color="red"
-           >Cancelar formulario</v-btn>
-          <v-form ref="userForm" v-show="showUserForm">
+          <v-form ref="userForm" :disabled="isPrintingSuperAdminUserPDF" v-show="showUserForm" class="mt-4">
             <v-text-field
+            prepend-inner-icon="mdi-account"
+            outlined
+            dense
             :rules="[(v) => !!v || 'Requerido']"
             v-model="selectedUser.name"
             label="Nombre"
             ></v-text-field>
             <v-text-field
+            prepend-inner-icon="mdi-account"
+            outlined
+            dense
             :rules="[(v) => !!v || 'Requerido']"
             v-model="selectedUser.last_name"
             label="Apellidos"
             ></v-text-field>
             <v-text-field
+            prepend-inner-icon="mdi-sale"
+            outlined
+            dense
             :rules="[(v) => !!v || 'Requerido']"
             v-model="selectedUser.discount_percent"
             type="number"
-            suffix="%"
             label="Descuento"
             ></v-text-field>
             <v-text-field
-            :rules="[(v) => !!v || 'Requerido']"
+            prepend-inner-icon="mdi-phone"
+            outlined
+            dense
             v-model="selectedUser.phone"
             label="Telefono"
             ></v-text-field>
             <v-text-field
-            :rules="[(v) => !!v || 'Requerido']"
+            prepend-inner-icon="mdi-email"
+            outlined
+            dense
+            v-model="selectedUser.email"
+            label="Email"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-account"
+            outlined
+            dense
+            v-model="selectedUser.rfc"
+            label="RFC"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-domain"
+            outlined
+            dense
+            v-model="selectedUser.company"
+            label="Nombre de la empresa"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-truck"
+            outlined
+            dense
             v-model="selectedUser.ship_address"
             label="Dirección de envío"
             ></v-text-field>
@@ -1279,15 +1343,15 @@
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
-          <v-btn tile depressed @click="sellerPrint = false" color="red" class="white--text">CANCELAR</v-btn>
+          <v-btn tile depressed @click="fnCancelFromPrintOptions" color="red" class="white--text">CANCELAR</v-btn>
           <v-spacer></v-spacer>
-           <v-btn tile depressed color="#47a5ad" @click="checkUserValid" class="white--text">IMPRIMIR</v-btn>
+           <v-btn v-if="(showUserForm || showUserSelectDialog) && enableBtnPrintLogInAdmin" tile depressed :loading="isPrintingSuperAdminUserPDF" :disabled="isPrintingSuperAdminUserPDF" color="#47a5ad" @click="checkUserValid" class="white--text">IMPRIMIR</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
 
 
-    <v-dialog v-model="distributorPrintDialog" persistent max-width="390">
+    <!-- <v-dialog v-model="distributorPrintDialog" persistent max-width="390">
         <v-card>
           <v-card-title class="px-4 justify-center">
            IMPRIMIR PDF CON LOGO
@@ -1325,7 +1389,7 @@
            <v-btn tile depressed color="#47a5ad" :loading="isPrintinDistributorPDF" :disabled="(distributorImagePrint == null || isPrintinDistributorPDF == true) ? true : false" @click="dialogAcceptPrintPdfDistribuitor" class="white--text">IMPRIMIR</v-btn>
           </v-card-actions>
         </v-card>
-      </v-dialog>
+      </v-dialog> -->
 
 
     </v-row>
@@ -1357,7 +1421,8 @@ export default {
         distributorPrintDialog: false,
         distributorImagePrint: null,
         isPrintinDistributorPDF: false,
-
+        isPrintingSuperAdminUserPDF: false,
+        isPrintRolluxQuotingPDF: false,
         urlPdfVisor: '',
         pdfDialog: '',
         numPdfPages: 0,
@@ -1366,12 +1431,16 @@ export default {
       cancelShowBtnUserForm: false,
       showBtnUserForm: true,
       showUserForm: false,
+      showUserSelectDialog: false,
       selectedUser: {
         name: null,
+        rfc: null,
         last_name: null,
+        email: null,
         discount_percent: 0,
         phone: null,
-        ship_address: null
+        ship_address: null,
+        company: null
       },
       sellerPrint: false,
       beforePrint: false,
@@ -1476,6 +1545,7 @@ export default {
         extraVertical: 0,
         extraEnrollable: 0,
         motor: {
+          side_control: null,
           price: 0,
           action: null,
           type: null,
@@ -1512,6 +1582,7 @@ export default {
       selected: null,
 
       defaultMotor: {
+        side_control: null,
         price: 0,
         action: null,
         type: null,
@@ -1531,6 +1602,7 @@ export default {
         rail_color: null,
         drive: null,
         extra: 0,
+        height_control: null,
         flexiballetPrice: 0,
         galleryPrice: 0,
         manufacturerPrice: 0,
@@ -1540,6 +1612,33 @@ export default {
     };
   },
   methods: {
+      fnCancelFromPrintOptions(){
+        this.sellerPrint = false;
+        this.resetSelectedUser('cancelar');
+      },
+      fnArrowLeftFromPrintOptions(){
+        this.showUserForm = false;
+        this.showUserSelectDialog = false;
+        this.resetSelectedUser();
+      },
+      resetSelectedUser(stateDialog = 'default'){
+        this.selectedUser = {
+            name: null,
+            last_name: null,
+            discount_percent: 0,
+            phone: null,
+            ship_address: null
+        }
+        if(stateDialog == 'cancelar'){
+            this.showUserForm = false;
+            this.showUserSelectDialog = false;
+        }
+      },
+      fnOnChangeResetObjectSelectedUser(objectLocalSelectedUser){
+        if(objectLocalSelectedUser == null){
+            this.resetSelectedUser();
+        }
+      },
     roundToOneDecimal (value ) {
       return Math.round(value * 10) / 10
 
@@ -1563,15 +1662,32 @@ export default {
         this.numPdfPages = 0;
     },
     checkUserValid(){
+        this.isPrintingSuperAdminUserPDF = true;
       if(this.$refs.userForm.validate()){
         // this.$children[6].$refs.html2Pdf2.generatePdf()
-        axios.post("/api/auth-order-list-pdf", {orders: this.orders, user: this.selectedUser}, {responseType: 'blob',}).then((response)=>{
+        // axios.post("/api/auth-order-list-pdf-admins", {orders: this.orders, user: this.selectedUser, distributorImagePrint: false}, {responseType: 'blob',}).then((response)=>{
+        //     this.isPrintingSuperAdminUserPDF = false;
+        //     this.resetSelectedUser();
+        //     //FileDownload(response.data, 'modelos.pdf')
+        //     const objectUrl = URL.createObjectURL(response.data);
+        //     this.urlPdfVisor = objectUrl;
+        //     this.downloadButtonPdf = response.data;
+        //     this.pdfDialog = true;
+        //     this.sellerPrint = false
+        // }).catch(()=>{
+        //     this.isPrintingSuperAdminUserPDF = false;
+        // })
+        axios.post("/api/auth-order-list-pdf-distributor", {orders: this.orders, user: this.selectedUser}, {responseType: 'blob',}).then((response)=>{
+            this.isPrintingSuperAdminUserPDF = false;
+            this.resetSelectedUser('cancelar');
             //FileDownload(response.data, 'modelos.pdf')
             const objectUrl = URL.createObjectURL(response.data);
             this.urlPdfVisor = objectUrl;
             this.downloadButtonPdf = response.data;
             this.pdfDialog = true;
             this.sellerPrint = false
+        }).catch(()=>{
+            this.isPrintingSuperAdminUserPDF = false;
         })
       }
     },
@@ -1581,12 +1697,17 @@ export default {
     },
 
 	  printRolluxQuoting(){
+          this.isPrintRolluxQuotingPDF = true;
     //    this.$children[7].$refs.html2Pdf.generatePdf()
     axios.post("/api/order-list-pdf", this.orders, {responseType: 'blob',}).then((response)=>{
+        this.isPrintRolluxQuotingPDF = false;
         const objectUrl = URL.createObjectURL(response.data);
+            this.sellerPrint = false;
             this.urlPdfVisor = objectUrl;
             this.downloadButtonPdf = response.data;
             this.pdfDialog = true;
+    }).catch(()=>{
+        this.isPrintRolluxQuotingPDF = false;
     })
     // this.$store.dispatch('printOrders', this.orders)
 
@@ -1594,16 +1715,19 @@ export default {
     },
     dialogAcceptPrintPdfDistribuitor(){
         this.isPrintinDistributorPDF = true;
+        this.isPrintRolluxQuotingPDF = true;
         console.log(this.distributorImagePrint)
         // this.$children[5].$refs.html2Pdf2.generatePdf()
-        axios.post("/api/auth-order-list-pdf", {orders: this.orders, user: this.user, distributorImagePrint: this.distributorImagePrint}, {responseType: 'blob',}).then((response)=>{
+        axios.post("/api/auth-order-list-pdf-distributor", {orders: this.orders, user: this.user}, {responseType: 'blob',}).then((response)=>{
         this.isPrintinDistributorPDF = false;
+        this.isPrintRolluxQuotingPDF = false;
         const objectUrl = URL.createObjectURL(response.data);
         this.urlPdfVisor = objectUrl;
         this.downloadButtonPdf = response.data;
         this.pdfDialog = true;
         this.closeDistributorPrintDialog();
         }).catch(()=>{
+            this.isPrintRolluxQuotingPDF = false;
             this.isPrintinDistributorPDF = false;
         })
     },
@@ -1615,12 +1739,13 @@ export default {
     viewAndPrintPdfDistribuitor(){
         //Distribuidor
         this.distributorPrintDialog = true
+        this.dialogAcceptPrintPdfDistribuitor();
     },
 
     openPDFView(){
       if(this.$store.state.isLoggedIn == true){
 
-        if(this.user.role === 'Vendedor' || this.user.role === 'Administrador'){
+        if(this.user.role === 'Superadministrador' || this.user.role === 'Administrador' || this.user.role === 'Vendedor'){
           this.$store.dispatch('getDistributors').then(() => {
             this.sellerPrint = true
           })
@@ -1663,12 +1788,13 @@ export default {
         this.$route.query.redirect = 'quoter'
          this.$router.push({name: "login"})
       }else{
-        if(this.$route.params.order_id){
-          this.$store.dispatch('updateOrders', {'orders': this.orders, 'id': this.$route.params.order_id,'is_quotation': false})
-        }else{
-          this.$store.dispatch('saveOrders', this.orders)
-        }
-
+          if(!this.verifyUserSuperadminRole){
+            if(this.$route.params.order_id){
+              this.$store.dispatch('updateOrders', {'orders': this.orders, 'id': this.$route.params.order_id,'is_quotation': false})
+            }else{
+              this.$store.dispatch('saveOrders', this.orders)
+            }
+          }
       }
     },
 
@@ -1677,13 +1803,13 @@ export default {
         this.$route.query.redirect = 'quoter'
          this.$router.push({name: "login"})
       }else{
-        if(this.$route.params.order_id){
-          this.$store.dispatch('updateQuotations', {'orders': this.orders, 'id': this.$route.params.order_id})
-        }else{
-          this.$store.dispatch('saveQuotations', this.orders)
-        }
-
-
+          if(!this.verifyUserSuperadminRole){
+            if(this.$route.params.order_id){
+              this.$store.dispatch('updateQuotations', {'orders': this.orders, 'id': this.$route.params.order_id})
+            }else{
+              this.$store.dispatch('saveQuotations', this.orders)
+            }
+          }
       }
     },
 
@@ -2094,6 +2220,31 @@ export default {
 
 
   computed: {
+      verifyUserSuperadminRole(){
+          if(this.user != null){
+              if(this.user.role === 'Superadministrador' || this.user.role === 'Administrador'){
+                  return true;
+              }
+              else{
+                  return false;
+              }
+          }
+          return false;
+      },
+      enableBtnPrintLogInAdmin(){
+
+        // name: null,
+        // last_name: null,
+        // discount_percent: 0,
+        let filteredArray = Object.values(this.selectedUser).filter(el=> (el!=null && el!=''));
+        //Longitud >= 3 por que es el numero minimo de propiedades de usuario para poder imprimir
+        if((filteredArray.length >= 3) && ((this.selectedUser['name'] != null && this.selectedUser['name'] != '') && (this.selectedUser['last_name'] != null && this.selectedUser['last_name'] != '') && (this.selectedUser['discount_percent'] != null && this.selectedUser['discount_percent'] != ''))){
+            return true;
+        }
+        else{
+            return false;
+        }
+      },
 
     extraVerticalPrice(){
       if(this.order.type === 'vertical' && this.order.canvas[0].width != null){

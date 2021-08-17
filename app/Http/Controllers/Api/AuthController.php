@@ -50,11 +50,12 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'rfc' => 'nullable|string|size:13',
             'last_name' => 'required|string|max:255',
             'phone' => 'required|string|max:15',
             'address' => 'required|max:255',
             'zip_code' => 'required|max:10',
-            
+
         ], ErrorMessages::getMessages());
         if ($validator->fails())
         {
@@ -69,8 +70,8 @@ class AuthController extends Controller
             $user->save();
             return response('Email enviado',200);
         }
-       
-        
+
+
     }
 
     public function login(Request $request)
@@ -87,7 +88,7 @@ class AuthController extends Controller
             }
             $user = User::where('email', $request->email)->first();
             if ($user) {
-                
+
                 if (Hash::check($request->password, $user->password)) {
                     $token = $user->createToken('Laravel Password Grant Client')->accessToken;
                     $response = ['token' => $token];
@@ -106,9 +107,9 @@ class AuthController extends Controller
     {
         $token = auth('api')->user()->token();
         $token->revoke();
-        
+
         $response = [
-            
+
             'message' => "Has cerrado tu sesión existosamente"
         ];
         return response($response, 200);
