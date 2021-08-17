@@ -194,8 +194,8 @@
         					        	          			  	></v-text-field>
         					        	          			</v-col>
         					        	        		</v-row>
-							        					<v-row>
-							        						<v-col cols="12">
+							        					<v-row v-if="user.role == 'Superadministrador'">
+							        						<v-col cols="12" >
 							        							<v-select
 																:error-messages="errors.role"
 							        							v-model="editedItem.role"
@@ -264,7 +264,7 @@
                         <template v-slot:item.name="{ item }">
                 		  {{item.name+' '+item.last_name}}
                 		</template>
-                		<template v-if="user.role == 'Superadministrador'" v-slot:item.actions="{ item }">
+                		<template v-if="user.role == 'Superadministrador' || user.role == 'Administrador'" v-slot:item.actions="{ item }">
                 		  	<v-icon small class="mr-2" @click="editItem(item)">
                 		    	mdi-pencil
                 		  	</v-icon>
@@ -274,6 +274,7 @@
 							<v-icon  v-if="!item.active" small @click="openActitveUserDialog(item)">
                 		  	  	mdi-shield-check
                 		  	</v-icon>
+                              <!-- editUserActiveState(item) -->
                 		</template>
                 	</v-data-table>
             	</v-card>
@@ -425,7 +426,7 @@ export default {
       errors: state => state.usersModule.usersErrors,
     }),
     computedTableHeaders(){
-        if(this.user.role === 'Superadministrador'){
+        if(this.user.role === 'Superadministrador' || this.user.role === 'Administrador'){
             return this.headers;
         }
         else if(this.user.role === 'Vendedor'){
@@ -439,6 +440,7 @@ export default {
     },
 
 	filtered(){
+        console.log(this.users)
 		if(this.swToInactive){
 			return this.users.filter(user => !user.active)
 		}else{
@@ -467,6 +469,18 @@ export default {
       this.editedIndex = this.users.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.usersDialog = true
+    },
+
+    editUserActiveState(item){
+        this.editedIndex = this.users.indexOf(item)
+        if(item.active == 1){
+            item.active = 0;
+        }
+        else if(item.active == 0){
+            item.active = 1;
+        }
+        this.editedItem = Object.assign({}, item)
+        this.save();
     },
 
 	rowClass(item){

@@ -8,7 +8,7 @@
         :sort-desc="false"
         hide-default-footer>
             <template v-slot:header>
-                <v-toolbar dark color="#3ba2a9" class="mb-2" flat>
+                <v-toolbar dark color="#3ba2a9" class="mb-4" flat>
                     <v-text-field
                     v-model="search"
                     clearable
@@ -24,142 +24,145 @@
             <template v-slot:default="props">
                 <v-row>
                     <v-col v-for="item in props.items" :key="item.id" cols="12" xl="2" lg="3" md="4" sm="6">
-                        <v-card outlined width="300">
-                            <v-row>
-                                <v-col cols="6">
-                                    <!-- <div class="ma-1">
-                                        <v-badge
-                                          class="mb-n2"
-                                          :content="item.blinds"
-                                          :value="item.blinds"
-                                          color="#3ba2a9"
-                                          overlap
-                                          :offset-x="item.blinds > 9 ? '39' : '37'"
-                                          offset-y="28"
-                                        >
-                                          <v-icon size="55">
-                                            mdi-blinds
-                                          </v-icon>
-                                        </v-badge>
-                                        <div class="caption ml-1">{{ item.blinds > 1 ? 'Persianas' : 'Persiana'}}</div>
-                                    </div> -->
-                                </v-col>
-                                <v-col cols="6" class="d-flex justify-end">
-                                    <div>
-                                      <v-menu offset-y>
-                                        <template v-slot:activator="{ on, attrs }">
-                                          <v-btn
-                                            class="ma-1"
-                                            icon
-                                            color="#3ba2a9"
-                                            dark
-                                            v-bind="attrs"
-                                            v-on="on"
-                                          >
-                                          <v-icon size="30">mdi-dots-vertical</v-icon>
-                                          </v-btn>
-                                        </template>
-                                        <v-list>
-                                          <v-list-item link @click="openDetailsDialog(item.id)">
-                                            <v-list-item-icon><v-icon>mdi-clipboard-list</v-icon></v-list-item-icon>
-                                            <v-list-item-title>Ver detalles</v-list-item-title>
-                                          </v-list-item>
-                                          <v-list-item link @click="changeQuotation(item.id)">
-                                            <v-list-item-icon><v-icon>mdi-truck</v-icon></v-list-item-icon>
-                                            <v-list-item-title>Hacer orden</v-list-item-title>
-                                          </v-list-item>
-                                           <v-list-item link @click="editQuotation(item.id)">
-                                            <v-list-item-icon><v-icon>mdi-pencil</v-icon></v-list-item-icon>
-                                            <v-list-item-title>Ver en cotizador</v-list-item-title>
-                                          </v-list-item>
-                                           <v-list-item link @click="deleteQuotation(item.id)">
-                                            <v-list-item-icon><v-icon>mdi-delete</v-icon></v-list-item-icon>
-                                            <v-list-item-title>Eliminar</v-list-item-title>
-                                          </v-list-item>
-                                        </v-list>
-                                      </v-menu>
-                                    </div>
-                                </v-col>
-                            </v-row>
-                            <v-list-item>
-                                <v-list-item-content class="mx-n3">
-                                        <v-col cols="3">
-                                            <div>
-                                                <v-badge
-                                                  class="mb-n2 font-weight-bold"
-                                                  :content="item.blinds"
-                                                  :value="item.blinds"
-                                                  color="#3ba2a9"
-                                                  overlap
-                                                  :offset-x="item.blinds > 9 ? '39' : '37'"
-                                                  offset-y="28"
-                                                >
-                                                  <v-icon color="#3ba2a9" size="55">
-                                                    mdi-blinds
-                                                  </v-icon>
-                                                </v-badge>
-                                                <!-- <div class="caption ml-1">{{ item.blinds > 1 ? 'Persianas' : 'Persiana'}}</div> -->
-                                            </div>
-                                        </v-col>
-                                        <v-col cols="9" class="text-right">
-                                            <span style="font-size: 2rem" class="font-weight-bold">
-                                               {{mxCurrencyFormat.format(item.total)}}
-                                            </span>
-                                            <span class="text-center">MXN</span>
-                                        </v-col>
-                                </v-list-item-content>
-                            </v-list-item>
-                            <v-list-item class="mt-5 mb-n4">
-                                <v-list-item-content class="mx-n4">
+                        <v-hover v-slot="{ hover }">
+                            <v-card width="335" :color="hover?'#3ba2a9':'white'" :dark="hover?true:false">
+                                <v-row class="ml-1">
                                     <v-col cols="6">
-                                        <v-row>
-                                            <v-col cols="2">
-                                                <v-icon>mdi-calendar-check</v-icon>
-                                            </v-col>
-                                            <v-col cols="10">
-                                                <span class="subtitle-2">Fecha de cotización</span>
-                                                <div class="caption">
-                                                    {{item.created_at}}
+                                        <!-- <div class="ma-1">
+                                            <v-badge
+                                              class="mb-n2"
+                                              :content="item.blinds"
+                                              :value="item.blinds"
+                                              color="#3ba2a9"
+                                              overlap
+                                              :offset-x="item.blinds > 9 ? '39' : '37'"
+                                              offset-y="28"
+                                            >
+                                              <v-icon size="55">
+                                                mdi-blinds
+                                              </v-icon>
+                                            </v-badge>
+                                            <div class="caption ml-1">{{ item.blinds > 1 ? 'Persianas' : 'Persiana'}}</div>
+                                        </div> -->
+                                    </v-col>
+                                    <v-col cols="6" class="d-flex justify-end">
+                                        <div>
+                                          <v-menu offset-y>
+                                            <template v-slot:activator="{ on, attrs }">
+                                              <v-btn
+                                                icon
+                                                color="#3ba2a9"
+                                                dark
+                                                v-bind="attrs"
+                                                v-on="on"
+                                              >
+                                              <v-icon :color="hover?'white':'#3ba2a9'" size="30">mdi-dots-vertical</v-icon>
+                                              </v-btn>
+                                            </template>
+                                            <v-list>
+                                              <v-list-item link @click="openDetailsDialog(item.id)">
+                                                <v-list-item-icon><v-icon>mdi-clipboard-list</v-icon></v-list-item-icon>
+                                                <v-list-item-title>Ver detalles</v-list-item-title>
+                                              </v-list-item>
+                                              <v-list-item link @click="openMakeToOrderDialog(item.id)">
+                                                <v-list-item-icon><v-icon>mdi-truck</v-icon></v-list-item-icon>
+                                                <v-list-item-title>Hacer orden</v-list-item-title>
+                                              </v-list-item>
+                                               <v-list-item link @click="editQuotation(item.id)">
+                                                <v-list-item-icon><v-icon>mdi-pencil</v-icon></v-list-item-icon>
+                                                <v-list-item-title>Ver en cotizador</v-list-item-title>
+                                              </v-list-item>
+                                               <v-list-item link @click="openDeleteDialogQuotation(item.id)">
+                                                <v-list-item-icon><v-icon>mdi-delete</v-icon></v-list-item-icon>
+                                                <v-list-item-title>Eliminar</v-list-item-title>
+                                              </v-list-item>
+                                            </v-list>
+                                          </v-menu>
+                                        </div>
+                                    </v-col>
+                                </v-row>
+                                <v-list-item>
+                                    <v-list-item-content class="mx-n3">
+                                            <v-col cols="3">
+                                                <div>
+                                                    <v-badge
+                                                      class="mb-n2 font-weight-bold"
+                                                      :content="item.blinds"
+                                                      :value="item.blinds"
+                                                      :color="hover?'white':'#3ba2a9'"
+                                                      overlap
+                                                      :offset-x="item.blinds > 9 ? '39' : '37'"
+                                                      offset-y="28"
+                                                    >
+                                                      <v-icon :color="hover?'white':'#3ba2a9'" size="55">
+                                                        mdi-blinds
+                                                      </v-icon>
+                                                    </v-badge>
+                                                    <!-- <div class="caption ml-1">{{ item.blinds > 1 ? 'Persianas' : 'Persiana'}}</div> -->
                                                 </div>
                                             </v-col>
-                                        </v-row>
-                                    </v-col>
-                                    <v-divider vertical></v-divider>
-                                    <v-col cols="6">
-                                        <v-row>
-                                            <v-col cols="2">
-                                                <v-icon>mdi-calendar-edit</v-icon>
+                                            <v-col cols="9" class="text-right">
+                                                <span style="font-size: 2rem" class="font-weight-bold">
+                                                   {{mxCurrencyFormat.format(item.total)}}
+                                                </span>
+                                                <span class="text-center">MXN</span>
                                             </v-col>
-                                            <v-col cols="10">
-                                                <span class="subtitle-2">Última modificación</span>
-                                                <div class="caption">
-                                                    {{item.updated_at}}
-                                                </div>
-                                            </v-col>
-                                        </v-row>
-                                    </v-col>
-                                </v-list-item-content>
-                            </v-list-item>
-                            <!-- <v-card-actions>
-                                <v-hover v-slot="{ hover }">
-                                    <v-btn :outlined="hover?false:true" :class="hover?'white--text':''" rounded color="#3ba2a9"  >
-                                        Ver detalles
-                                        <v-icon>mdi-clipboard-list</v-icon>
-                                    </v-btn>
-                                </v-hover>
-                                <v-spacer></v-spacer>
-                                    <v-btn outlined rounded color="#3ba2a9" >
-                                        Editar
-                                        <v-icon right>mdi-calculator</v-icon>
-                                    </v-btn>
-                                <v-spacer></v-spacer>
-                                    <v-btn outlined rounded color="#3ba2a9" >
-                                        Eliminar
-                                        <v-icon right>mdi-delete</v-icon>
-                                    </v-btn>
-                            </v-card-actions> -->
-                        </v-card>
-
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-col v-if="item.user" cols="12" class="text-end mt-n9">
+                                    <v-icon size="17">mdi-account</v-icon><span class="mb-4 caption">{{item.user}}</span>
+                                </v-col>
+                                <v-list-item class="mb-n4">
+                                    <v-list-item-content class="mx-n4">
+                                        <v-col cols="6">
+                                            <v-row>
+                                                <v-col cols="3">
+                                                    <v-icon>mdi-calendar-check</v-icon>
+                                                </v-col>
+                                                <v-col cols="9">
+                                                    <span class="subtitle-2">Fecha de cotización</span>
+                                                    <div class="caption">
+                                                        {{item.created_at}}
+                                                    </div>
+                                                </v-col>
+                                            </v-row>
+                                        </v-col>
+                                        <v-divider vertical></v-divider>
+                                        <v-col cols="6">
+                                            <v-row>
+                                                <v-col cols="3">
+                                                    <v-icon>mdi-calendar-edit</v-icon>
+                                                </v-col>
+                                                <v-col cols="9">
+                                                    <span class="subtitle-2">Última edición</span>
+                                                    <div class="caption">
+                                                        {{item.updated_at}}
+                                                    </div>
+                                                </v-col>
+                                            </v-row>
+                                        </v-col>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <!-- <v-card-actions>
+                                    <v-hover v-slot="{ hover }">
+                                        <v-btn :outlined="hover?false:true" :class="hover?'white--text':''" rounded color="#3ba2a9"  >
+                                            Ver detalles
+                                            <v-icon>mdi-clipboard-list</v-icon>
+                                        </v-btn>
+                                    </v-hover>
+                                    <v-spacer></v-spacer>
+                                        <v-btn outlined rounded color="#3ba2a9" >
+                                            Editar
+                                            <v-icon right>mdi-calculator</v-icon>
+                                        </v-btn>
+                                    <v-spacer></v-spacer>
+                                        <v-btn outlined rounded color="#3ba2a9" >
+                                            Eliminar
+                                            <v-icon right>mdi-delete</v-icon>
+                                        </v-btn>
+                                </v-card-actions> -->
+                            </v-card>
+                        </v-hover>
                     </v-col>
                 </v-row>
             </template>
@@ -368,6 +371,33 @@
                 </v-card>
             </v-dialog>
         <!-- TERMINA DIALOGO DE DETALLES -->
+        <v-dialog v-model="dialogDelete" persistent max-width="290">
+          <v-card>
+            <v-card-title class="headline">¿Eliminar cotización?</v-card-title>
+            <v-card-text>
+              Está a punto de eliminar está cotización.
+              Esta acción no se puede deshacer. ¿Continuar?
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="gray darken-1" text @click="closeDeleteDialogQuotation()">CANCELAR</v-btn>
+              <v-btn color="red darken-1" text @click="deleteQuotation(localIDQuotation)">ELIMINAR</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog v-model="dialogMakeToOrder" persistent max-width="290">
+          <v-card>
+            <v-card-title class="headline">¿Ordenar persiana(s)?</v-card-title>
+            <v-card-text>
+              Está a punto de cerrar la cotización y crear una orden. ¿Continuar?
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="gray darken-1" text @click="closeMakeToOrderDialog()">CANCELAR</v-btn>
+              <v-btn color="primary" text @click="changeQuotation(localIDQuotation)">HACER ORDEN</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
@@ -377,6 +407,9 @@ import DashboardQuotedBlindsView from '../../views/Users/DashboardQuotedBlindsVi
 export default {
     data(){
         return{
+            localIDQuotation: -1,
+            dialogDelete: false,
+            dialogMakeToOrder: false,
             orderNameDetails: {},
             dialog: false,
             page: 1,
@@ -410,6 +443,22 @@ export default {
     },
 
     methods:{
+        openDeleteDialogQuotation(id){
+            this.dialogDelete = true;
+            this.localIDQuotation = id;
+        },
+        closeDeleteDialogQuotation(){
+            this.dialogDelete = false;
+            this.localIDQuotation = -1;
+        },
+        openMakeToOrderDialog(id){
+            this.dialogMakeToOrder = true;
+            this.localIDQuotation = id;
+        },
+        closeMakeToOrderDialog(){
+            this.dialogMakeToOrder = false;
+            this.localIDQuotation = -1;
+        },
         causeError(event){
             console.log(event)
         },
@@ -430,9 +479,14 @@ export default {
 
         },
         deleteQuotation(id){
-            this.$store.dispatch('deleteQuotingOrder',id).then(()=>{
-                //  this.dialog = true
-            });
+            if(id > -1){
+                this.$store.dispatch('deleteQuotingOrder',id).then(()=>{
+                    this.closeDeleteDialogQuotation();
+                    //  this.dialog = true
+                }).catch(()=>{
+                    this.closeDeleteDialogQuotation();
+                });
+            }
         },
 
         editQuotation(id){
@@ -442,15 +496,22 @@ export default {
         },
 
         changeQuotation(id){
-            this.$store.dispatch('changeToOrder',id).then(()=>{
-
-            });
+            if(id > -1){
+                this.$store.dispatch('changeToOrder',id).then(()=>{
+                    this.closeMakeToOrderDialog();
+                }).catch(()=>{
+                    this.closeMakeToOrderDialog();
+                });
+            }
         }
     },
 
     mounted(){
-        this.$store.dispatch('getQuotingOrders');
-
+        if(this.user.role != 'Superadministrador'){
+            this.$store.dispatch('getQuotingOrders').then(()=>{
+                console.log(this.orders)
+            });
+        }
     }
 }
 </script>
@@ -459,5 +520,9 @@ export default {
   writing-mode: vertical-lr;
   transform: rotate(180deg);
   text-align:center;
+}
+/* /ESTE ES UN DEEP SELECTOR >>> */
+>>>.v-badge__badge.white{
+    color: #3ba2a9;
 }
 </style>

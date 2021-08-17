@@ -18,7 +18,7 @@ class RolePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->roles->contains('name','Superadministrador');
+        return $user->hasRole(['Superadministrador', 'Administrador', 'Vendedor']);
     }
 
     /**

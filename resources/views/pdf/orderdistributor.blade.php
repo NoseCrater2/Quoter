@@ -46,15 +46,19 @@
                 <td style="width: 20%; padding-top: -13px; padding-left: 9px; height: 124px; border-right: solid #47a5ad 4px; ">
                     <img width="180px" src="img/logos/rollux.png" >
                 </td>
-                <td style="text-align: center; width: 55%; padding-right: 15px; padding-left: 7px; padding-top: 11px;">
+                <td style="text-align: center; width: 53%; padding-right: 5px; padding-left: 7px; padding-top: 11px;">
                     <div style="border-left: solid #47a5ad 4px; padding-top: 7px;">
                     </div>
                     <table style="width: 100%; border: 1px solid #d1d3d4; border-radius: 5px; margin-left: 9px; padding-bottom: 11px;">
                         <tbody>
                             <tr>
                                 <th colspan="2" style="background-color: #d1d3d4; padding-top: 3px; padding-bottom: 3px;">
-                                    @if($orders['user']['company'] != null || $orders['user']['company'] != '')
-                                        <div style="font-weight: bolder; font-size: 13px;">{!! $orders['user']['company'] !!} | <span style="font-weight: normal;">Distribuidor Autorizado</span></div>
+                                    @if(array_key_exists('company', $orders['user']))
+                                        @if($orders['user']['company'] != null || $orders['user']['company'] != '')
+                                            <div style="font-weight: bolder; font-size: 13px;">{!! $orders['user']['company'] !!} | <span style="font-weight: normal;">Distribuidor Autorizado</span></div>
+                                        @else
+                                            <div style="font-weight: bolder; font-size: 13px;">{!! $orders['user']['name'].' '.$orders['user']['last_name'] !!} | <span style="font-weight: normal;">Distribuidor Autorizado</span></div>
+                                        @endif
                                     @else
                                         <div style="font-weight: bolder; font-size: 13px;">{!! $orders['user']['name'].' '.$orders['user']['last_name'] !!} | <span style="font-weight: normal;">Distribuidor Autorizado</span></div>
                                     @endif
@@ -69,13 +73,39 @@
                                 </td>
                                 <td style="width: 55%;">
                                     <div style="font-size: 9px; margin-top: 1px;">
-                                        @if($orders['user']['company'] != null || $orders['user']['company'] != '')
-                                            <div style="font-weight: bolder;">Cliente: {!! $orders['user']['name'].' '.$orders['user']['last_name'] !!}</div>
+                                        @if(array_key_exists('company', $orders['user']))
+                                            @if($orders['user']['company'] != null || $orders['user']['company'] != '')
+                                                <div style="font-weight: bolder;">Cliente: {!! $orders['user']['name'].' '.$orders['user']['last_name'] !!}</div>
+                                            @endif
                                         @endif
-                                        <div><span>Dirección: {!! $orders['user']['ship_address'] !!}</span></div>
-                                        <div>RFC: <span>{!! $orders['user']['rfc'] !!}</span></div>
-                                        <div><span>Teléfono: {!! $orders['user']['phone'] !!}</span></div>
-                                        <div><span>Email: {!! $orders['user']['email'] !!}</span></div>
+                                        @if(array_key_exists('ship_address', $orders['user']))
+                                            @if($orders['user']['ship_address'] != null || $orders['user']['ship_address'] != '')
+                                                <div>
+                                                    <span>Dirección: {!! $orders['user']['ship_address'] !!}</span>
+                                                </div>
+                                            @endif
+                                        @endif
+                                        @if(array_key_exists('rfc', $orders['user']))
+                                            @if($orders['user']['rfc'] != null || $orders['user']['rfc'] != '')
+                                                <div>
+                                                    <span>RFC: {!! $orders['user']['rfc'] !!}</span>
+                                                </div>
+                                            @endif
+                                        @endif
+                                        @if(array_key_exists('phone', $orders['user']))
+                                            @if($orders['user']['phone'] != null || $orders['user']['phone'] != '')
+                                                <div>
+                                                    <span>Teléfono: {!! $orders['user']['phone'] !!}</span>
+                                                </div>
+                                            @endif
+                                        @endif
+                                        @if(array_key_exists('email', $orders['user']))
+                                            @if($orders['user']['email'] != null || $orders['user']['email'] != '')
+                                                <div>
+                                                    <span>Email: {!! $orders['user']['email'] !!}</span>
+                                                </div>
+                                            @endif
+                                        @endif
                                         <!-- <div>Embarcado por:</div>
                                         <div>Fecha de entrega:</div>
                                         <div>Realizado por: RolluxWeb</div> -->
@@ -86,7 +116,11 @@
                     </table>
                 </td>
                 <td style="width: 25%;">
-                    <img width="180px" src="{{'img/'.$orders['user']['logo']}}" >
+                @if(array_key_exists('logo', $orders['user']))
+                    @if (File::exists('img/'.$orders['user']['logo']))
+                        <img width="180px" src="{{'img/'.$orders['user']['logo']}}" >
+                    @endif
+                @endif
                 </td>
             </tr>
         </tbody>
@@ -583,9 +617,7 @@
                 No se procesan pedidos que no estén pagados // La mercancía viaja por cuenta y riesgo del comprador // Los tonos de las telas pueden variar ligeramente a los del muestrario
                 Para precios en dólares se tomará en cuenta tipo de cambio emitido por Banorte el día del pago. // No hay cambios ni devoluciones una vez cortada la tela. Precios sujetos a cambios sin previo aviso.
             </i>
-            @if(File::exists('img/black-r.png'))
-                <img width="150px" src="img/black-r.png" >
-            @endif
+
         </div>
     </div>
 

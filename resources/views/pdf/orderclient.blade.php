@@ -529,9 +529,6 @@
                 No se procesan pedidos que no estén pagados // La mercancía viaja por cuenta y riesgo del comprador // Los tonos de las telas pueden variar ligeramente a los del muestrario
                 Para precios en dólares se tomará en cuenta tipo de cambio emitido por Banorte el día del pago. // No hay cambios ni devoluciones una vez cortada la tela. Precios sujetos a cambios sin previo aviso.
             </i>
-            @if(File::exists('img/black-r.png'))
-                <img width="150px" src="img/black-r.png" >
-            @endif
         </div>
     </div>
 </body>

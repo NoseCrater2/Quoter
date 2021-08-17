@@ -687,14 +687,14 @@
 
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs }">
-                    <v-btn   small v-bind="attrs" v-on="on" color="#47a5ad" dark fab>
-                      <v-icon>mdi-email-send</v-icon>
+                    <v-btn small v-bind="attrs" v-on="on" color="#47a5ad" :disabled="orders.length > 0 ? false: true" fab>
+                      <v-icon color="white">mdi-email-send</v-icon>
                     </v-btn>
                   </template>
                   <span>Enviar por Email</span>
                 </v-tooltip>
             </v-col>
-            <v-col cols="12" md="4" sm="12">
+            <v-col v-if="(orders.length > 0) && !verifyUserSuperadminRole" cols="12" md="4" sm="12">
                <v-btn class="mb-2"  block @click="saveOrders" dark depressed  color="#3ca927">
                  Realizar pedido
               </v-btn>
@@ -1247,6 +1247,7 @@
                   </v-row>
               </v-card-actions>
             <v-autocomplete
+            :disabled="isPrintingSuperAdminUserPDF"
             v-if="showUserSelectDialog"
             :items="distributors"
             class="mt-4"
@@ -1277,7 +1278,7 @@
                 </template>
               </template>
             </v-autocomplete>
-          <v-form ref="userForm" v-show="showUserForm" class="mt-4">
+          <v-form ref="userForm" :disabled="isPrintingSuperAdminUserPDF" v-show="showUserForm" class="mt-4">
             <v-text-field
             prepend-inner-icon="mdi-account"
             outlined
@@ -1307,7 +1308,6 @@
             prepend-inner-icon="mdi-phone"
             outlined
             dense
-            :rules="[(v) => !!v || 'Requerido']"
             v-model="selectedUser.phone"
             label="Telefono"
             ></v-text-field>
@@ -1315,7 +1315,6 @@
             prepend-inner-icon="mdi-email"
             outlined
             dense
-            :rules="[(v) => !!v || 'Requerido']"
             v-model="selectedUser.email"
             label="Email"
             ></v-text-field>
@@ -1323,7 +1322,6 @@
             prepend-inner-icon="mdi-account"
             outlined
             dense
-            :rules="[(v) => !!v || 'Requerido']"
             v-model="selectedUser.rfc"
             label="RFC"
             ></v-text-field>
@@ -1331,7 +1329,6 @@
             prepend-inner-icon="mdi-domain"
             outlined
             dense
-            :rules="[(v) => !!v || 'Requerido']"
             v-model="selectedUser.company"
             label="Nombre de la empresa"
             ></v-text-field>
@@ -1339,7 +1336,6 @@
             prepend-inner-icon="mdi-truck"
             outlined
             dense
-            :rules="[(v) => !!v || 'Requerido']"
             v-model="selectedUser.ship_address"
             label="Dirección de envío"
             ></v-text-field>
@@ -1669,9 +1665,21 @@ export default {
         this.isPrintingSuperAdminUserPDF = true;
       if(this.$refs.userForm.validate()){
         // this.$children[6].$refs.html2Pdf2.generatePdf()
-        axios.post("/api/auth-order-list-pdf-admins", {orders: this.orders, user: this.selectedUser, distributorImagePrint: false}, {responseType: 'blob',}).then((response)=>{
+        // axios.post("/api/auth-order-list-pdf-admins", {orders: this.orders, user: this.selectedUser, distributorImagePrint: false}, {responseType: 'blob',}).then((response)=>{
+        //     this.isPrintingSuperAdminUserPDF = false;
+        //     this.resetSelectedUser();
+        //     //FileDownload(response.data, 'modelos.pdf')
+        //     const objectUrl = URL.createObjectURL(response.data);
+        //     this.urlPdfVisor = objectUrl;
+        //     this.downloadButtonPdf = response.data;
+        //     this.pdfDialog = true;
+        //     this.sellerPrint = false
+        // }).catch(()=>{
+        //     this.isPrintingSuperAdminUserPDF = false;
+        // })
+        axios.post("/api/auth-order-list-pdf-distributor", {orders: this.orders, user: this.selectedUser}, {responseType: 'blob',}).then((response)=>{
             this.isPrintingSuperAdminUserPDF = false;
-            this.resetSelectedUser();
+            this.resetSelectedUser('cancelar');
             //FileDownload(response.data, 'modelos.pdf')
             const objectUrl = URL.createObjectURL(response.data);
             this.urlPdfVisor = objectUrl;
@@ -1712,14 +1720,14 @@ export default {
         // this.$children[5].$refs.html2Pdf2.generatePdf()
         axios.post("/api/auth-order-list-pdf-distributor", {orders: this.orders, user: this.user}, {responseType: 'blob',}).then((response)=>{
         this.isPrintinDistributorPDF = false;
-        this.isPrintRolluxQuotingPDF = true;
+        this.isPrintRolluxQuotingPDF = false;
         const objectUrl = URL.createObjectURL(response.data);
         this.urlPdfVisor = objectUrl;
         this.downloadButtonPdf = response.data;
         this.pdfDialog = true;
         this.closeDistributorPrintDialog();
         }).catch(()=>{
-            this.isPrintRolluxQuotingPDF = true;
+            this.isPrintRolluxQuotingPDF = false;
             this.isPrintinDistributorPDF = false;
         })
     },
@@ -1737,7 +1745,7 @@ export default {
     openPDFView(){
       if(this.$store.state.isLoggedIn == true){
 
-        if(this.user.role === 'Administrador' || this.user.role === 'Superadministrador'){
+        if(this.user.role === 'Superadministrador' || this.user.role === 'Administrador' || this.user.role === 'Vendedor'){
           this.$store.dispatch('getDistributors').then(() => {
             this.sellerPrint = true
           })
@@ -1780,12 +1788,13 @@ export default {
         this.$route.query.redirect = 'quoter'
          this.$router.push({name: "login"})
       }else{
-        if(this.$route.params.order_id){
-          this.$store.dispatch('updateOrders', {'orders': this.orders, 'id': this.$route.params.order_id,'is_quotation': false})
-        }else{
-          this.$store.dispatch('saveOrders', this.orders)
-        }
-
+          if(!this.verifyUserSuperadminRole){
+            if(this.$route.params.order_id){
+              this.$store.dispatch('updateOrders', {'orders': this.orders, 'id': this.$route.params.order_id,'is_quotation': false})
+            }else{
+              this.$store.dispatch('saveOrders', this.orders)
+            }
+          }
       }
     },
 
@@ -1794,13 +1803,13 @@ export default {
         this.$route.query.redirect = 'quoter'
          this.$router.push({name: "login"})
       }else{
-        if(this.$route.params.order_id){
-          this.$store.dispatch('updateQuotations', {'orders': this.orders, 'id': this.$route.params.order_id})
-        }else{
-          this.$store.dispatch('saveQuotations', this.orders)
-        }
-
-
+          if(!this.verifyUserSuperadminRole){
+            if(this.$route.params.order_id){
+              this.$store.dispatch('updateQuotations', {'orders': this.orders, 'id': this.$route.params.order_id})
+            }else{
+              this.$store.dispatch('saveQuotations', this.orders)
+            }
+          }
       }
     },
 
@@ -2211,9 +2220,30 @@ export default {
 
 
   computed: {
+      verifyUserSuperadminRole(){
+          if(this.user != null){
+              if(this.user.role === 'Superadministrador' || this.user.role === 'Administrador'){
+                  return true;
+              }
+              else{
+                  return false;
+              }
+          }
+          return false;
+      },
       enableBtnPrintLogInAdmin(){
-          //Longitud >= 6 por que es el numero minimo de propiedades de usuario para poder imprimir
-          return Object.values(this.selectedUser).filter(el=> el!=null).length >= 8 ? true : false
+
+        // name: null,
+        // last_name: null,
+        // discount_percent: 0,
+        let filteredArray = Object.values(this.selectedUser).filter(el=> (el!=null && el!=''));
+        //Longitud >= 3 por que es el numero minimo de propiedades de usuario para poder imprimir
+        if((filteredArray.length >= 3) && ((this.selectedUser['name'] != null && this.selectedUser['name'] != '') && (this.selectedUser['last_name'] != null && this.selectedUser['last_name'] != '') && (this.selectedUser['discount_percent'] != null && this.selectedUser['discount_percent'] != ''))){
+            return true;
+        }
+        else{
+            return false;
+        }
       },
 
     extraVerticalPrice(){
