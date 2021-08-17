@@ -57,7 +57,7 @@
               <v-list-item-title>Inventario</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item v-if="user.role === 'Superadministrador' || user.role === 'Vendedor'" @click="showComponent = 2" :to="{name: 'Users'}">
+          <v-list-item v-if="user.role === 'Superadministrador' || user.role === 'Administrador' || user.role === 'Vendedor'" @click="showComponent = 2" :to="{name: 'Users'}">
             <v-list-item-icon>
               <v-icon>mdi-account-multiple</v-icon>
             </v-list-item-icon>
@@ -105,7 +105,7 @@
               </v-btn>
               <v-divider inset vertical></v-divider>
               <v-btn
-              v-if="user.role === 'Superadministrador' || user.role === 'Vendedor'"
+              v-if="user.role === 'Superadministrador' || user.role === 'Administrador' || user.role === 'Vendedor'"
               class="white--text"
               text
               :to="{name: 'Users'}">
@@ -142,7 +142,7 @@
                   <v-list-item :to="{name: 'Orders'}">
                     <v-list-item-title >ORDENES</v-list-item-title>
                   </v-list-item>
-                  <v-list-item :to="{name: 'Quotations'}">
+                  <v-list-item v-if="user.role !== 'Superadministrador'" :to="{name: 'Quotations'}">
                     <v-list-item-title >COTIZACIONES</v-list-item-title>
                   </v-list-item>
                 </v-list>

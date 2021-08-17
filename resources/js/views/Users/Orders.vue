@@ -30,26 +30,24 @@
                 <v-row>
                     <v-col v-for="item in props.items" :key="item.id" cols="12" xl="2" lg="3" md="4" sm="6">
                         <v-hover v-slot="{ hover }">
-                            <v-card width="300" :color="hover?'#3ba2a9':'white'"  :dark="hover?true:false" >
+                            <v-card width="303" :color="hover?'#3ba2a9':'white'"  :dark="hover?true:false" >
                                 <v-list-item>
                                     <v-list-item-content>
-                                        <div class="mb-4">{{ item.user}}</div>
-                                        <div class="mb-4">{{ item.blinds}} PERSIANA(S)</div>
-                                        <v-list-item-title class="headline mb-1">
+                                        <v-list-item-title style="font-size: 1.15rem" class="text-uppercase font-weight-bold text-start">
                                             {{item.state}}
                                         </v-list-item-title>
                                     </v-list-item-content>
-                                    <v-list-item-avatar  tile size="80">
-                                        <v-icon size="80" :color="hover?'white':'#3ba2a9'"  v-if="item.state=='Orden recibida'">
+                                    <v-list-item-avatar tile size="67">
+                                        <v-icon size="67" :color="hover?'white':'#3ba2a9'"  v-if="item.state=='Orden recibida'">
                                            mdi-clipboard-check
                                         </v-icon>
-                                        <v-icon size="80" :color="hover?'white':'#CDDC39'"  v-else-if="item.state=='Orden en proceso'">
+                                        <v-icon size="67" :color="hover?'white':'#CDDC39'"  v-else-if="item.state=='Orden en proceso'">
                                            mdi-progress-wrench
                                         </v-icon>
-                                        <v-icon size="80" :color="hover?'white':'#8BC34A'"  v-else-if="item.state=='Orden en envío'">
+                                        <v-icon size="67" :color="hover?'white':'#8BC34A'"  v-else-if="item.state=='Orden en envío'">
                                            mdi-truck-fast
                                         </v-icon>
-                                        <v-icon size="80" :color="hover?'white':'#4CAF50'"  v-else-if="item.state=='Orden entregada'">
+                                        <v-icon size="67" :color="hover?'white':'#4CAF50'"  v-else-if="item.state=='Orden entregada'">
                                            mdi-truck-check
                                         </v-icon>
                                     </v-list-item-avatar>
@@ -66,7 +64,7 @@
                                             <v-col cols="3">
                                                 <div>
                                                     <v-badge
-                                                      class="mb-n2 font-weight-bold"
+                                                      class="mb-n2 font-weight-bold isHoverBadge"
                                                       :content="item.blinds"
                                                       :value="item.blinds"
                                                       :color="hover?'white':'#3ba2a9'"
@@ -89,13 +87,32 @@
                                             </v-col>
                                     </v-list-item-content>
                                 </v-list-item>
-
-
-
-                                <v-card-actions>
-                                    <v-btn outlined rounded text @click="openDetailsDialog(item.id)">Ver detalles</v-btn>
-                                    <v-spacer></v-spacer>
-                                </v-card-actions>
+                                <v-col v-if="item.user" cols="12" class="text-end mt-n9">
+                                    <v-icon size="17">mdi-account</v-icon><span class="mb-4 caption">{{item.user}}</span>
+                                </v-col>
+                                <v-list-item class="mb-n4">
+                                    <v-list-item-content class="mx-n4">
+                                        <v-col cols="6">
+                                            <v-row>
+                                                <v-col cols="3">
+                                                    <v-icon>mdi-calendar-check</v-icon>
+                                                </v-col>
+                                                <v-col cols="9">
+                                                    <span class="subtitle-2">Fecha de pedido</span>
+                                                    <div class="caption">
+                                                        {{item.created_at}}
+                                                    </div>
+                                                </v-col>
+                                            </v-row>
+                                        </v-col>
+                                        <v-divider vertical></v-divider>
+                                        <v-col cols="6">
+                                            <v-card-actions class="ml-n2">
+                                                <v-btn outlined rounded text @click="openDetailsDialog(item.id)">Ver Detalles</v-btn>
+                                            </v-card-actions>
+                                        </v-col>
+                                    </v-list-item-content>
+                                </v-list-item>
                             </v-card>
                         </v-hover>
                     </v-col>
@@ -382,5 +399,9 @@ export default {
   writing-mode: vertical-lr;
   transform: rotate(180deg);
   text-align:center;
+}
+/* /ESTE ES UN DEEP SELECTOR >>> */
+>>>.v-badge__badge.white{
+    color: #3ba2a9;
 }
 </style>

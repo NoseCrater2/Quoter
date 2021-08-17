@@ -17,10 +17,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        if($user->can('users.index')){
-            return true;
-        }
-        return false;
+        return $user->hasRole(['Superadministrador', 'Administrador', 'Vendedor']);
     }
 
     /**
@@ -92,5 +89,5 @@ class UserPolicy
     }
 
 
-    
+
 }
