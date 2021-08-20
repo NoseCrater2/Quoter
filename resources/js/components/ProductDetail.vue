@@ -18,6 +18,7 @@
                             @changeIndex="changeIndex"
                             :type="details.type.slug"
                             :manufacturer="details.line.slug"
+                            :indexPositionColor="position"
                             :colors="details.colors" />
 
                         </v-card-actions>
@@ -27,6 +28,7 @@
                             @changeIndex="changeIndex"
                             :type="details.type.slug"
                             :manufacturer="details.line.slug"
+                            :indexPositionColor="position"
                             :colors="details.colors" />
                         </v-card-actions>
                     </v-card>
@@ -35,16 +37,18 @@
                     <v-col cols="12" md="8" sm="12">
                         <v-card flat>
                             <v-card-title class="text-center font-weight-black" :style="$vuetify.breakpoint.mobile?'font-size: 1.1em':'font-size: 1.6em'" >
-                                {{ details.name}}
-
+                                <div>{{ details.name}}</div>
                             <v-chip label class="mx-2 white--text" color="#47a5ad" style="font-family: 'Montserrat';">
                                 SKU: {{ details.colors[position].code}}
                             </v-chip>
                             </v-card-title>
+                            <v-card-title :class="$vuetify.breakpoint.mobile?'text-center mt-n10 mb-n5 font-weight-bold':'text-center mt-n7 mb-n3 font-weight-bold'" :style="$vuetify.breakpoint.mobile?'font-size: 0.7em':'font-size: 1.2em'" >
+                                <div>Color: {{details.colors[position].color}}</div>
+                            </v-card-title>
                              <v-divider></v-divider>
                              <v-card-text>
                         <div v-if="details.type.product_id != 3 " class="d-inline"  >
-                        <div  v-if="user != null">
+                        <!-- <div  v-if="user != null">
                             <div >
                                 <div  class=" d-inline-flex" style="color: #47a5ad; font-size: 28px;">$ </div>
                             <div
@@ -74,8 +78,8 @@
                             </div>
                             <div class="display-1 d-inline-flex" style="color: red">MXN </div>
                             </div>
-                        </div>
-                        <div v-else class="d-inline">
+                        </div> -->
+                        <div  class="d-inline">
                         <div  class="display-1 d-inline-flex" style="color: #47a5ad">$ </div>
 
                         <div  class="display-2 d-inline-flex" style="color: #47a5ad; font-weight: bolder;">
@@ -115,13 +119,14 @@
                         </div>
 
                             <v-row align="center" class="mt-6" no-gutters>
-                                <b> SELECCIONA MÁS COLORES:</b>
+                                <span class="font-weight-bold text-uppercase">SELECCIONA MÁS COLORES: <span style="color: #3ba2a9">({{details.colors.length}} COLORES)</span></span>
                             </v-row>
 
                             <ItemColors
                             v-if="!$vuetify.breakpoint.mobile"
                             :type="details.type.slug"
                             :manufacturer="details.line.slug"
+                            :indexPositionColor="position"
                             @changeIndex="changeIndex"
                             :colors="details.colors" />
                         </v-card-text>
@@ -230,7 +235,7 @@
                               style="height: 100%;"
                               >
                               <v-hover v-slot="{ hover }">
-                              <v-btn :to="{name: 'Details', params: {slugWeave:r.weave != null ? r.weave.slug : null, slugDetail: r.id.toString()}}" depressed :outlined="!hover" tile color="white"  x-small>VER</v-btn>
+                              <v-btn :to="{name: 'Details', params: {slugWeave:r.weave != null ? r.weave.slug : null, slugDetail: r.slug}}" depressed :outlined="!hover" tile color="white"  x-small>VER</v-btn>
                               </v-hover>
                               </div>
 
@@ -329,17 +334,16 @@ export default {
 
 
     },
-    beforeRouteEnter(to, from, next) {
 
-      next(vm => {
-          if(vm.slugDetail){
+    mounted() {
 
-                axios.get("/api/variants/"+vm.slugDetail).then( response => {
-                     vm.details = response.data.data
-                      vm.$store.dispatch('getRelated', vm.slugDetail);
+          if(this.slugDetail){
+
+                axios.get("/api/variants/"+this.slugDetail+'/'+this.slugType).then( response => {
+                     this.details = response.data.data
+                      this.$store.dispatch('getRelated', this.slugDetail);
                  })
         }
-      });
   },
 
 

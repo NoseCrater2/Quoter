@@ -320,7 +320,7 @@
                               <v-card-text
                               v-if="item.type != 'horizontal-madera-2'"
                               style="position: relative">
-                                <h2 v-if="user != null" class="text-center">
+                                <!-- <h2 v-if="user != null" class="text-center">
                                   <div class="d-block font-weight-light ">
                                     $<div class="d-inline text-decoration-line-through">{{ maskPrice(item.price)[0] }}</div>
                                     <div class="d-inline cents" >{{ maskPrice(item.price)[1] }}</div>
@@ -334,8 +334,8 @@
                                       {{ maskPrice(item.price - ((user.discount_percent / 100) * item.price))[1] }}
                                     </div> MXN
                                   </div>
-                                </h2>
-                                <h2 v-else class="font-weight-light black--text text-center">
+                                </h2> -->
+                                <h2 class="font-weight-light black--text text-center">
                                   $<div class="d-inline">{{ maskPrice(item.price)[0] }}</div>
                                   <div class="d-inline cents">{{ maskPrice(item.price)[1] }}</div>
                                   MXN
