@@ -43,9 +43,10 @@ const routes = [
             },
 
             {
-                path: "orders",
+                path: "lists/:option",
                 component: () => import("./views/Users/Orders.vue"),
                 name: "Orders",
+                props: true,
             },
 
             {
@@ -65,11 +66,11 @@ const routes = [
                 name: "PriceList",
             },
 
-            {
-                path: "quotations",
-                component: () => import("./views/Users/Quotations.vue"),
-                name: "Quotations",
-            },
+            // {
+            //     path: "quotations",
+            //     component: () => import("./views/Users/Quotations.vue"),
+            //     name: "Quotations",
+            // },
 
             {
                 path: "stock/:slugProduct",
@@ -103,15 +104,6 @@ const routes = [
                 path: "importPdfs",
                 component: () => import("./components/ProductsTables/ImportPdfs.vue"),
                 name: "ImportPdfs",
-                meta: {
-                    requiresAuth: true,
-                }
-
-            },
-            {
-                path: "orders",
-                component: () => import("./components/Orders.vue"),
-                name: "Orders",
                 meta: {
                     requiresAuth: true,
                 }
