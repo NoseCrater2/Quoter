@@ -65,12 +65,20 @@
               <v-list-item-title>Cotizador</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item  @click="showComponent = 4" :to="{name: 'Orders'}">
+          <v-list-item  @click="showComponent = 4" :to="{name: 'Orders', params: {option: 'ordenes'}}">
             <v-list-item-icon>
               <v-icon>mdi-truck</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Pedidos</v-list-item-title>
+              <v-list-item-title>Ordenes</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        <v-list-item  @click="showComponent = 4" :to="{name: 'Orders', params: {option: 'cotizaciones'}}">
+            <v-list-item-icon>
+              <v-icon>mdi-truck</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Cotizaciones</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item v-if="user.role === 'Superadministrador'" @click="showComponent = 5" :to="{name: 'Stock', params: {slugProduct: 'PERSIANAS'}}">

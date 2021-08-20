@@ -50,7 +50,7 @@ const routes = [
             },
 
             {
-                path: "Marketcar",
+                path: "marketcar",
                 component: () => import("./views/Users/Marketcar.vue"),
                 name: "Marketcar",
                 meta: {
