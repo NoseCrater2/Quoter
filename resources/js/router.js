@@ -50,6 +50,17 @@ const routes = [
             },
 
             {
+                path: "Marketcar",
+                component: () => import("./views/Users/Marketcar.vue"),
+                name: "Marketcar",
+                meta: {
+                    requiresAuth: true,
+                },
+
+
+            },
+
+            {
                 path: "priceList",
                 component: () => import("./views/Users/PriceList.vue"),
                 name: "PriceList",

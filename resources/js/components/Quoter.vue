@@ -1351,45 +1351,40 @@
       </v-dialog>
 
 
-    <!-- <v-dialog v-model="distributorPrintDialog" persistent max-width="390">
+    <v-dialog v-model="distributorPrintDialog" persistent max-width="390">
         <v-card>
-          <v-card-title class="px-4 justify-center">
-           IMPRIMIR PDF CON LOGO
+          <v-card-title class="px-4 py-2 justify-center">
+           Opciones de impresión
           </v-card-title>
           <v-card-text>
-              <div v-if="user != null">
-                <div v-if="user.logo != 'logos/rollux.png'">
-                <v-row justify="center" class="ml-1">
-                  <v-hover>
-                      <template v-slot:default="{ hover }">
-                          <v-img contain width="150" height="100" @click="distributorImagePrint = false" :style="[hover ? {border: '4px solid #47a5ad'} : {}, distributorImagePrint == false  ? {border: '4px solid green'} : {}]" src="/img/logos/rollux.png"></v-img>
-                      </template>
-                  </v-hover>
-                  <v-hover>
-                      <template v-slot:default="{ hover }">
-                          <v-img contain width="150" height="100" @click="distributorImagePrint = true" :style="[hover ? {border: '4px solid #47a5ad'} : {}, distributorImagePrint == true  ? {border: '4px solid green'} : {}]" :src="`/img/${user.logo}`"></v-img>
-                      </template>
-                  </v-hover>
-                </v-row>
-                </div>
-                <div v-else class="d-flex flex-column align-center">
-                  <v-hover>
-                      <template v-slot:default="{ hover }">
-                          <v-img contain width="150" height="100" @click="distributorImagePrint = false" :style="[hover ? {border: '4px solid #47a5ad'} : {}, distributorImagePrint == false  ? {border: '4px solid green'} : {}]" src="/img/logos/rollux.png"></v-img>
-                      </template>
-                  </v-hover>
-                  (Logo por defecto debido a que este usuario actualmente no tiene un logo propio guardado)
-                </div>
-              </div>
+              <v-card-actions>
+                  <v-row justify="space-between">
+                      <v-col cols="6" class="d-flex flex-column align-center">
+                        <v-btn ref="btnShowUserSelectDialog" color="#47a5ad" fab @click="dialogAcceptPrintPdfDistribuitor" :loading="isPrintinDistributorPDF" :disabled="(isPrintinDistributorPDF || isPrintRolluxQuotingPDF) ? true : false">
+                          <v-icon color="white">
+                              mdi-account
+                          </v-icon>
+                        </v-btn>
+                        <div style="font-size: 0.85rem; line-height: 15px;" class="text-center font-weight-bold mt-1">Imprimir como distribuidor</div>
+                      </v-col>
+                      <v-col cols="6" class="d-flex flex-column align-center">
+                        <v-btn color="#47a5ad" fab @click="printRolluxQuoting" :loading="(isPrintRolluxQuotingPDF && !isPrintinDistributorPDF) ? true : false" :disabled="isPrintRolluxQuotingPDF">
+                          <v-icon color="white">
+                              mdi-printer
+                          </v-icon>
+                        </v-btn>
+                        <div style="font-size: 0.85rem; line-height: 15px;" class="text-center font-weight-bold mt-1">Imprimir sin distribuidor</div>
+                      </v-col>
+                  </v-row>
+              </v-card-actions>
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
-          <v-btn tile depressed @click="closeDistributorPrintDialog()" color="red" class="white--text">CANCELAR</v-btn>
+          <v-btn tile depressed color="red" class="white--text" @click="closeDistributorPrintDialog">CANCELAR</v-btn>
           <v-spacer></v-spacer>
-           <v-btn tile depressed color="#47a5ad" :loading="isPrintinDistributorPDF" :disabled="(distributorImagePrint == null || isPrintinDistributorPDF == true) ? true : false" @click="dialogAcceptPrintPdfDistribuitor" class="white--text">IMPRIMIR</v-btn>
           </v-card-actions>
         </v-card>
-      </v-dialog> -->
+      </v-dialog>
 
 
     </v-row>
@@ -1706,6 +1701,7 @@ export default {
             this.urlPdfVisor = objectUrl;
             this.downloadButtonPdf = response.data;
             this.pdfDialog = true;
+            this.closeDistributorPrintDialog();
     }).catch(()=>{
         this.isPrintRolluxQuotingPDF = false;
     })
@@ -1739,7 +1735,6 @@ export default {
     viewAndPrintPdfDistribuitor(){
         //Distribuidor
         this.distributorPrintDialog = true
-        this.dialogAcceptPrintPdfDistribuitor();
     },
 
     openPDFView(){

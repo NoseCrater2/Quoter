@@ -14,6 +14,7 @@ use App\Http\Resources\VariantIndexResource;
 use App\Http\Resources\VariantShowResource;
 use App\Http\Resources\ColorIndexResource;
 use App\Imports\ModelsImport;
+use App\Type;
 use Carbon\Carbon;
 use Spatie\Searchable\Search;
 use Spatie\Searchable\ModelSearchAspect;
@@ -65,11 +66,13 @@ class VariantController extends Controller
      * @param  \App\Variant  $variant
      * @return \Illuminate\Http\Response
      */
-    public function show(String $slug)
+    public function show(String $slug, String $slugType)
     {
+        $type = Type::where('slug', $slugType)->firstOrFail();
         $v = Variant::
         with(['type:id,slug,name,product_id','line:id,slug,name','weave:id,slug,name','subweave:id,slug,name','colors'])
         ->where('slug',$slug)
+        ->where('type_id',$type->id)
         ->firstOrFail();
         return response(['data'=> $v],200);
     }

@@ -38,7 +38,7 @@ Route::resource('sunblinds', 'SunblindController')->only('index','show');
 
 Route::resource('colors', 'ColorController')->only('index','show');
 
-Route::get('variants/{slug}', 'VariantController@show');
+Route::get('variants/{slug}/{slugType}', 'VariantController@show');
 Route::resource('variants', 'VariantController')->only('index','update');
 
 
