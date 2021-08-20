@@ -74,11 +74,17 @@ class OrderController extends Controller
                     $blind->grouping = $b['motor']['selected_panel'];
                     $blind->manufacturer = $b['motor']['manufacturer'];
                     $blind->string_type = $b['motor']['string_type'];
-                    $blind->gallery_id = $b['motor']['gallery']['id'];
+                    if(isset($b['motor']['gallery']['id'])){
+                        $blind->gallery_id = $b['motor']['gallery']['id'];
+                    }
                     $blind->motorization_id = $b['motor']['motor'];
-                    $blind->control_id = $b['motor']['control']['id'];
+                    if(isset($b['motor']['control']['id'])){
+                        $blind->control_id = $b['motor']['control']['id'];
+                    }
                     $blind->second_variant_id = $b['variant2'];
-                    $blind->second_color_id = $b['second_color']['id'];
+                    if(isset($b['second_color']['id'])){
+                        $blind->second_color_id = $b['second_color']['id'];
+                    }
                     $blind->celular_drive = $b['celular_drive'];
                     $blind->celular_type = $b['celular_type'];
                     $blind->celular_variant = json_encode($b['celular_variant']);

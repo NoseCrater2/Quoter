@@ -139,10 +139,10 @@
                 <v-btn v-bind="attrs" v-on="on" class="white--text" text >Pedidos</v-btn>
               </template>
                <v-list>
-                  <v-list-item :to="{name: 'Orders'}">
+                  <v-list-item :to="{name: 'Orders', params: {option: 'ordenes'}}">
                     <v-list-item-title >ORDENES</v-list-item-title>
                   </v-list-item>
-                  <v-list-item v-if="user.role !== 'Superadministrador'" :to="{name: 'Quotations'}">
+                  <v-list-item  :to="{name: 'Orders' ,  params: {option: 'cotizaciones'}} ">
                     <v-list-item-title >COTIZACIONES</v-list-item-title>
                   </v-list-item>
                 </v-list>
