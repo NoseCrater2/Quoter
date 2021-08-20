@@ -39,10 +39,10 @@
             </div>
 
             <div v-else>
-              <v-list-item  :to="{name: 'Orders'}">
+              <v-list-item  :to="{name: 'Orders', params: {option: 'ordenes'}}">
                 <v-list-item-title  class="text-center">ORDENES</v-list-item-title>
               </v-list-item>
-              <v-list-item :to="{name: 'Quotations'}">
+              <v-list-item :to="{name: 'Orders', params: {option: 'cotizaciones'}}">
                 <v-list-item-title class="text-center">COTIZACIONES</v-list-item-title>
               </v-list-item>
               <v-list-item :to="{name: 'Profile'}">
@@ -52,7 +52,7 @@
 
           </v-list-group>
 
-          <v-list-item style="background-color: black;"  :to="{name: 'Quotations'}">
+          <v-list-item style="background-color: black;"  :to="{name: 'Orders', params:{option: 'cotizaciones'}}">
             <v-list-item-icon>
               <v-icon dark>mdi-cart</v-icon>
             </v-list-item-icon>
@@ -258,7 +258,7 @@
               </v-list>
               </v-menu>
               <v-btn
-              :to="{name: 'Quotations'}"
+              :to="{name: 'Orders', params: {option: 'cotizaciones'}}"
               height="65px"
               class="white--text ml-2"
               depressed tile color="#404042">

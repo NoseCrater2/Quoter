@@ -125,19 +125,19 @@ export default {
                     title: 'Tus Pedidos',
                     text: 'Consulta en cualquier momento tus órdenes y cotizaciones',
                     icon:'/img/dashboard/icon_pedidos.png',
-                    route: {name: 'Orders'}
+                    route: '#'
                 },
             ],
             clientArea: [
                 {
                     title: 'Cotizaciones',
                     icon:'/img/dashboard/cotizacion_index.png',
-                    route: '#'
+                    route: {name: 'Orders', params: {option: 'cotizaciones'}}
                 },
                 {
                     title: 'Órdenes',
                     icon:'/img/dashboard/ordenes_index.png',
-                    route: {name: 'Orders'}
+                    route: {name: 'Orders', params: {option: 'ordenes'}}
                 },
                 {
                     title: 'Carrito',

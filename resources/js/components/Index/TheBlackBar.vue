@@ -1,10 +1,10 @@
 <template>
     <div class="d-flex justify-center" style="background-color: black; position: sticky; top: 0; z-index: 2;">
         <v-row no-gutters justify="space-between" style="max-width: 1180px;" class="white--text">
-                <h1 
+                <h1
                 v-if="user != null"
                 style="font-size: 14px;margin-top: 4px;font-weight: normal">
-                    Hola {{ user.name }},&nbsp; 
+                    Hola {{ user.name }},&nbsp;
                 </h1>
                 <h1 class="text-center" style="font-size: 14px;margin-top: 4px;font-weight: normal">
                     Bienvenido(a) a Rollux México
@@ -23,9 +23,9 @@
                   <template v-slot:activator="{attrs, on}">
                     <v-btn
                     small
-                    v-bind="attrs" 
-                    v-on="on" 
-                    class="white--text" 
+                    v-bind="attrs"
+                    v-on="on"
+                    class="white--text"
                     text >
                     Mi cuenta
                     <v-icon right>mdi-menu-down</v-icon>
@@ -38,10 +38,10 @@
                             </v-list-item>
                         </div>
                         <div v-else>
-                            <v-list-item  :to="{name: 'Orders'}">
+                            <v-list-item  :to="{name: 'Orders', params: {option: 'ordenes'}}">
                               <v-list-item-title >Ordenes</v-list-item-title>
                             </v-list-item>
-                            <v-list-item :to="{name: 'Quotations'}">
+                            <v-list-item :to="{name: 'Orders', params: {option: 'cotizaciones'}}">
                               <v-list-item-title >Cotizaciones</v-list-item-title>
                             </v-list-item>
                             <v-list-item :to="{name: 'Profile'}">
