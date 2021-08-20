@@ -19,7 +19,7 @@ class OrderIndexResource extends JsonResource
             'id' => $this->id,
             'state' => $this->state,
             'blinds' => $this->blinds->count(),
-            // 'total' => $this->total,
+            
             'total' => $this->blinds->map( function( $blind ){
                 return $blind->price +
                         ( isset($blind->motorization) ? $blind->motorization->price: 0) +
