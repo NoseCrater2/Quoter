@@ -29,12 +29,28 @@
 
 
         <div class="mt-5">
-            <div class="grey lighten-2 pa-5 text-center font-weight-bold">
-                Area del Cliente
+            <div class="grey lighten-2 pa-5 text-center" style="font-size: 1.35rem">
+                Area del cliente
             </div>
             <v-row class="grey lighten-3 pt-8 pb-11 mt-0" justify="center">
-                <v-col cols="12" xl="4" lg="4" md="4" sm="12" v-for="(itemClientArea, index) in clientArea" :key="index" class="d-flex justify-center">
-                    <v-img width="300" :src="itemClientArea.icon"></v-img>
+                <v-col cols="12" xl="4" lg="4" md="4" sm="12" v-for="(itemClientArea, index) in clientArea" :key="index">
+                    <v-card
+                    :to="itemClientArea.route"
+                      class="mx-auto rounded-lg"
+                      max-width="390"
+                    >
+                      <v-img aspect-ratio="1" height="170px" class="white--text text-uppercase align-end" :src="itemClientArea.icon">
+                          <div class="text-end ma-4">
+                              <div class="font-weight-bold mb-n5" style="font-size: 3.8rem" :value="quotedOrders.length">
+                                  {{itemClientArea.title == 'Cotizaciones' ? quotingOrders.length : itemClientArea.title == 'Órdenes' ? quotedOrders.length : 0}}
+                              </div>
+                              <div style="font-size: 1.4rem">
+                                {{itemClientArea.title}}
+                              </div>
+                          </div>
+                      </v-img>
+
+                    </v-card>
                 </v-col>
             </v-row>
         </div>
@@ -73,6 +89,11 @@
 <script>
 import { mapState } from 'vuex';
 export default {
+    mounted(){
+        if(this.user.role != 'Superadministrador' || this.user.role != 'Administrador'){
+            this.$store.dispatch('getQuotedOrders');
+        }
+    },
     data () {
         return {
             isMobile: false,
@@ -111,17 +132,17 @@ export default {
                 {
                     title: 'Cotizaciones',
                     icon:'/img/dashboard/cotizacion_index.png',
-                    route: {name: 'Orders'}
+                    route: '#'
                 },
                 {
-                    title: 'Ordenes',
+                    title: 'Órdenes',
                     icon:'/img/dashboard/ordenes_index.png',
                     route: {name: 'Orders'}
                 },
                 {
                     title: 'Carrito',
                     icon:'/img/dashboard/carrito_de_compra.png',
-                    route: {name: 'Orders'}
+                    route: '#'
                 },
             ]
         }
@@ -134,7 +155,9 @@ export default {
     },
     computed: {
          ...mapState({
-            user: state => state.user
+            user: state => state.user,
+            quotedOrders: state => state.ordersModule.quotedOrders,
+            quotingOrders: state => state.ordersModule.quotingOrders,
         }),
     }
 }

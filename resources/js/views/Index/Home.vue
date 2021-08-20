@@ -25,6 +25,30 @@
               <v-list-item-title>Perfil</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+        <v-list-item >
+            <v-list-item-icon>
+              <v-icon>mdi-cart</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Carrito de compra</v-list-item-title>
+            </v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-bell</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Notificaciones</v-list-item-title>
+            </v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+            <v-list-item-icon class="ml-n1 pr-n2">
+              <v-img contain height="30px" width="35px" src="/img/dashboard/cotizacion.svg" ></v-img>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Cotizaciones</v-list-item-title>
+            </v-list-item-content>
+        </v-list-item>
         <v-list-item :to="'/'">
             <v-list-item-icon>
               <v-icon>mdi-home</v-icon>
@@ -82,6 +106,7 @@
         color="#3ba2a9"
         class="white--text"
         dense
+        elevation="0"
       >
         <v-app-bar-nav-icon class="white--text" v-if="!$vuetify.breakpoint.mdAndUp" @click.stop="drawer = true"></v-app-bar-nav-icon>
 
@@ -162,7 +187,32 @@
 
           <!-- <v-btn icon class="ma-1" rounded depressed dark> -->
 
+          <v-btn icon x-small fab class="mx-2">
+            <v-badge color="blue"
+            offset-x="17"
+            offset-y="12"
+            :content="quotingOrders.length"
+            :value="quotingOrders.length"
+            overlap>
+                <v-img contain height="30px" width="35px" src="/img/dashboard/cotizacion_white.png" ></v-img>
+            </v-badge>
+          </v-btn>
+
+          <v-divider inset vertical></v-divider>
+
           <v-btn icon large class="ma-2" rounded depressed dark>
+
+            <v-badge color="red"
+            :content="orders.length"
+            :value="orders.length"
+            overlap>
+              <v-icon>mdi-bell</v-icon>
+            </v-badge>
+          </v-btn>
+
+          <v-divider inset vertical></v-divider>
+
+          <v-btn icon large class="ma-2" rounded depressed dark >
 
             <v-badge color="red"
             :content="orders.length"
@@ -362,7 +412,11 @@ export default {
   },
 
 async  beforeCreate(){
-  this.$store.dispatch("loadUser")
+  this.$store.dispatch("loadUser").then(()=>{
+     if(this.user.role != 'Superadministrador'){
+        this.$store.dispatch('getQuotingOrders')
+     }
+  })
 },
 
   mounted() {
@@ -398,6 +452,7 @@ async  beforeCreate(){
       products: state => state.productsModule.products,
       loggedIn: state => state.loggedIn,
       orders: state => state.ordersModule.orders,
+      quotingOrders: state => state.ordersModule.quotingOrders,
     }),
 
       ...mapGetters([
