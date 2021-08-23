@@ -203,7 +203,7 @@
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </v-toolbar>
-                    <DashboardQuotedBlindsView :localOrders="order.blinds" :localOrder="orderNameDetails"></DashboardQuotedBlindsView>
+                    <!-- <DashboardQuotedBlindsView :localOrders="order.blinds" :localOrder="orderNameDetails"></DashboardQuotedBlindsView> -->
                     <!-- <v-row align="center" justify="center" >
                         <v-col cols="12" v-for="blind in order.blinds" :key="blind.id">
 
@@ -403,7 +403,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import DashboardQuotedBlindsView from '../../views/Users/DashboardQuotedBlindsView.vue';
+// import DashboardQuotedBlindsView from '../../views/Users/DashboardQuotedBlindsView.vue';
 export default {
     data(){
         return{
@@ -439,7 +439,7 @@ export default {
     },
 
     components:{
-        DashboardQuotedBlindsView
+        // DashboardQuotedBlindsView
     },
 
     methods:{

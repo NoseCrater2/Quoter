@@ -6,11 +6,10 @@
             <h1 class="d-inline" style="color: #3ba2a9">{{option.toUpperCase()}}</h1>
         </div>
 
-        <OrdersSuperadminTableView 
-        @editItemOrdersView="openDetailsDialog" 
+        <OrdersSuperadminTableView
         v-if="user.role === 'Superadministrador' || user.role === 'Administrador' || user.role === 'Vendedor'">
         </OrdersSuperadminTableView>
-        
+
         <ItemListDistributors  v-else-if="user.role === 'Distribuidor'"  :option="option" />
 
 
@@ -57,16 +56,16 @@ export default {
     },
 
     methods: {
-        openDetailsDialog(id){
-            this.$store.dispatch('getQuotedOrder',id).then(()=>{
-                this.orderNameDetails = this.orders.find(el => el.id == id)
-                this.dialog = true
-            });
+        // openDetailsDialog(id){
+        //     this.$store.dispatch('getQuotedOrder',id).then(()=>{
+        //         this.orderNameDetails = this.orders.find(el => el.id == id)
+        //         this.dialog = true
+        //     });
 
-        }
+        // }
     },
     computed:{
-       
+
         ...mapState({
             orders: state => state.ordersModule.quotedOrders,
             // order: state => state.ordersModule.quotedOrder,
@@ -81,7 +80,7 @@ export default {
         ]),
     },
 
-    
+
 
     components:{
         OrdersSuperadminTableView,

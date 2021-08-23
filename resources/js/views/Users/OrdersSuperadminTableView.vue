@@ -72,7 +72,7 @@
             <template v-slot:item.total="{ item }">
                  {{mxCurrencyFormat.format(item.total)}} MXN
             </template>
-            
+
             <template v-slot:item.state="{ item }">
                 <div class="d-inline">
                     {{ item.state}}
@@ -109,7 +109,7 @@
                         diameter-variant
                     </v-icon>
                 </div>
-                
+
                 <div class="d-inline" >
                     <v-menu bottom offset-x>
                       <template v-slot:activator="{ on, attrs }">
@@ -140,20 +140,24 @@
                 </div>
             </template>
             <template v-slot:item.actions="{ item }">
-              	<v-icon small class="mr-2" @click="editItemOrdersView(item)">
+              	<v-icon small class="mr-2" @click="isOrdersAndQuotationsDialogActivated = true">
                 	mdi-magnify
               	</v-icon>
             </template>
         </v-data-table>
         </v-col>
+        <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated"></DashboardOrdersAndQuotationsDialog>
     </v-row>
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/OrdersAndQuotations/DashboardOrdersAndQuotationsDialog.vue'
+
 export default {
     data() {
         return {
+            isOrdersAndQuotationsDialogActivated: false,
             search: null,
             mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
             modelsHeaders: [
@@ -196,9 +200,12 @@ export default {
         ]),
     },
     methods:{
-        editItemOrdersView(item){
-            this.$emit('editItemOrdersView', item.id);
+        emitClickCloseFromOrdersAndQuotationsDialog(){
+            this.isOrdersAndQuotationsDialogActivated = false;
         }
+    },
+    components:{
+        DashboardOrdersAndQuotationsDialog
     }
 }
 </script>

@@ -1,14 +1,11 @@
 <template>
     <v-hover v-slot="{ hover }">
-        <v-card width="303" :color="hover?'#3ba2a9':'white'"  :dark="hover?true:false" >
+        <v-card min-width="228" max-width="228" :class="!$vuetify.breakpoint.smAndUp ? 'mx-auto' : ''" :color="hover?'#3ba2a9':'white'"  :dark="hover?true:false" >
             <v-list-item>
-                <v-list-item-content>
+                <v-list-item-content class="mt-n3">
                     <v-list-item-subtitle>
                         {{item.blinds}} PERSIANA(S)
                     </v-list-item-subtitle>
-                    <v-list-item-title style="font-size: 1.15rem; font-weight: bold">
-                        Orden recibida
-                    </v-list-item-title>
                 </v-list-item-content>
                 <v-list-item-avatar tile size="67">
                     <v-icon size="67" :color="hover?'white':'#3ba2a9'" >
@@ -25,7 +22,9 @@
                     </v-icon> -->
                 </v-list-item-avatar>
             </v-list-item>
-
+            <div style="font-size: 1.3rem; font-weight: bold" class="mt-n3 ml-3">
+                Orden recibida
+            </div>
             <v-list-item>
                 <v-list-item-content class="mx-n3">
                         <v-col cols="3">
@@ -46,21 +45,21 @@
                             </div>
                         </v-col>
                         <v-col cols="9" class="text-right">
-                            <span style="font-size: 2rem" class="font-weight-bold">
+                            <span :style="$vuetify.breakpoint.lgAndUp ? 'font-size: 1.2rem' : $vuetify.breakpoint.md ? 'font-size: 1.1rem' : 'font-size: 1.2rem'" class="font-weight-bold">
                                {{mxCurrencyFormat.format(item.total)}}
                             </span>
-                            <span class="text-center">MXN</span>
+                            <span class="text-center" style="font-size: 0.85rem">MXN</span>
                         </v-col>
                 </v-list-item-content>
             </v-list-item>
-            <v-card-actions class="ml-n2">
-                <v-btn outlined rounded text @click="openDetailsDialog(item.id)">Ver Detalles</v-btn>
+            <v-card-actions class="">
+                <v-btn x-small outlined rounded text @click="isOrdersAndQuotationsDialogActivated = true">Ver Detalles</v-btn>
                 <v-spacer></v-spacer>
-                <v-chip color="white" text-color="black">
-                    <v-avatar left class="green" >
-                      
+                <v-chip small :color="hover?'#3ba2a9':'white'" :text-color="hover?'white':'black'">
+                    <v-avatar size="1" left class="white" >
+                        <v-icon size="22" color="green">mdi-checkbox-blank-circle</v-icon>
                     </v-avatar>
-                        Entregada
+                    Entregada
                 </v-chip>
             </v-card-actions>
             <!-- <v-col v-if="item.user" cols="12" class="text-end mt-n9">
@@ -83,20 +82,31 @@
                     </v-col>
                     <v-divider vertical></v-divider>
                     <v-col cols="6">
-                        
+
                     </v-col>
                 </v-list-item-content>
             </v-list-item> -->
+            <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated"></DashboardOrdersAndQuotationsDialog>
         </v-card>
     </v-hover>
 </template>
 
 <script>
+import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/OrdersAndQuotations/DashboardOrdersAndQuotationsDialog.vue'
 export default {
     data(){
         return {
+            isOrdersAndQuotationsDialogActivated: false,
             mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
         }
+    },
+    methods:{
+        emitClickCloseFromOrdersAndQuotationsDialog(){
+            this.isOrdersAndQuotationsDialogActivated = false;
+        }
+    },
+    components:{
+        DashboardOrdersAndQuotationsDialog
     },
     props: {
         item: {

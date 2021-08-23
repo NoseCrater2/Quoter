@@ -1,0 +1,197 @@
+<template>
+<v-dialog v-model="isOrdersAndQuotationsDialogActivated" fullscreen persistent transition="dialog-bottom-transition">
+    <v-card tile flat>
+        <v-toolbar flat color="#3ba2a9">
+            <v-btn icon dark @click="emitClickCloseFromOrdersAndQuotationsDialog()">
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
+            <div class="white--text text-uppercase" :style="$vuetify.breakpoint.mdAndUp ? 'font-size: 1.43rem': 'font-size: 1.0rem'">Detalles de la
+                <span>Cotización / </span>
+                <span>#R140821/001</span>
+            </div>
+            <v-spacer></v-spacer>
+            <div class="mr-1">
+                <v-btn :large="$vuetify.breakpoint.mdAndUp ? true : false" :icon="!$vuetify.breakpoint.mdAndUp ? true : false" elevation="0" color="orange darken-1" class="white--text font-weight-bold mr-2">
+                    {{$vuetify.breakpoint.mdAndUp ? 'Agregar al carrito' : ''}}
+                    <v-icon size="30" right>mdi-cart</v-icon>
+                </v-btn>
+                <v-btn icon color="white">
+                    <v-icon size="30">mdi-square-edit-outline</v-icon>
+                </v-btn>
+                <v-btn icon color="white">
+                    <v-icon size="30">mdi-printer</v-icon>
+                </v-btn>
+                <v-btn icon color="white">
+                    <v-icon size="30">mdi-delete</v-icon>
+                </v-btn>
+            </div>
+            <!-- <div class="mr-1">
+                <v-btn large elevation="0" color="orange darken-1" class="white--text font-weight-bold mr-2">
+                    Comprar
+                    <v-icon size="30" right>mdi-arrow-right</v-icon>
+                </v-btn>
+                <v-btn icon color="white">
+                    <v-icon size="30">mdi-square-edit-outline</v-icon>
+                </v-btn>
+                <v-btn icon color="white">
+                    <v-icon size="30">mdi-printer</v-icon>
+                </v-btn>
+                <v-btn icon color="white">
+                    <v-icon size="30">mdi-delete</v-icon>
+                </v-btn>
+            </div> -->
+            <!-- <div class="mr-1">
+                <v-row no-gutters align="center">
+                    <div class="white--text mr-1">Estado de la orden: </div>
+                    <div style="background-color: black" class="mx-2">
+                        <v-chip color="black" text-color="black">
+                            <v-avatar size="22" class="green" >
+                            </v-avatar>
+                        </v-chip>
+                        <span class="white--text font-weight-bold mr-4">Entregada</span>
+                    </div>
+                    <v-btn icon color="white">
+                        <v-icon size="30">mdi-printer</v-icon>
+                    </v-btn>
+                </v-row>
+            </div> -->
+        </v-toolbar>
+        <v-row no-gutters align="center" class="mt-4">
+            <v-col cols="3">
+                <v-img class="mx-auto" width="300" src="/img/logos/rollux.png" ></v-img>
+            </v-col>
+            <v-col cols="6" style="border-left: 4px solid #47a5ad">
+                <v-card outlined class="ml-5">
+                    <v-col cols="12" style="background-color: #E0E0E0">
+                        <div class="text-center my-n3" style="font-size: 1.27rem">
+                            <span class="font-weight-bold">GL MX</span> | <span>Distribuidor Autorizado</span>
+                        </div>
+                    </v-col>
+                    <v-row no-gutters justify="center" class="pa-5" align="start">
+                        <v-col cols="12" xl="5" lg="5" md="5" sm="12" style="font-size: 1.15rem" class="mt-n4" :class="!$vuetify.breakpoint.mdAndUp ? 'text-center':''">
+                            <div class="font-weight-bold" style="font-size: 1.6rem">Cotización</div>
+                            <div>Folio <span class="font-weight-bold" style="color: #47a5ad">R120821/001</span></div>
+                            <div>Fecha: 14/08/21</div>
+                            <div style="font-size: 1.0rem">Vigencia hasta: 22/08/21</div>
+                        </v-col>
+                        <v-col cols="12" xl="7" lg="7" md="7" sm="12" style="font-size: 0.85rem" :class="$vuetify.breakpoint.mdAndUp ? 'mt-n2' : 'text-center'">
+                            <div class="font-weight-bold">Cliente: Ivan Ross</div>
+                            <div>
+                                <span>Dirección: Abasolo Col. EL Llanito, Moroleón, Guanajuato</span>
+                            </div>
+                            <div>
+                                <span>RFC: </span>
+                            </div>
+                            <div>
+                                <span>Teléfono: +524436878220</span>
+                            </div>
+
+                            <div>
+                                <span>Email: ivan@lidhber.com</span>
+                            </div>
+                        </v-col>
+                    </v-row>
+                </v-card>
+            </v-col>
+            <v-col cols="3" >
+                <v-img class="mx-auto" width="300" src="/img/logos/D1R3RyaytP4Pq2QqLKslwsasCBQCb0fVfZHIUXBP.png" ></v-img>
+            </v-col>
+        </v-row>
+        <v-col cols="12" style="font-size: 0.85rem;">
+            <div class="mx-15 text-center">
+                La emisión de este documento es solo para fines informativos y no representan ningún compromiso de fabricación para la empresa, ni para el cliente.
+                Se considerará en firme cuando se realice el pago del importe acordado. Precios sujetos a cambios sin previo aviso.
+            </div>
+        </v-col>
+        <v-col cols="12">
+            <div style="border: 1px dashed black;">
+
+            </div>
+        </v-col>
+        <v-row no-gutters justify="center" justify-xl="end" justify-lg="end" justify-md="end" justify-sm="center" class="mr-3 mt-3">
+            <v-col cols="12" xl="4" lg="4" md="4" sm="12">
+                <v-row no-gutters class="font-weight-bold" style="border: 1px solid black">
+                    <v-col cols="6" class="text-center" style="border: 1px solid black">
+                        <div>
+                            SUBTOTAL
+                        </div>
+                    </v-col>
+                    <v-col cols="6" class="text-end" style="border: 1px solid black">
+                        <div>
+                            $10,229.00 MXN
+                        </div>
+                    </v-col>
+                    <v-col cols="6" class="text-center" style="border: 1px solid black">
+                        <div>
+                            IVA
+                        </div>
+                    </v-col>
+                    <v-col cols="6" class="text-end" style="border: 1px solid black">
+                        <div>
+                            INCLUIDO
+                        </div>
+                    </v-col>
+                    <v-col cols="6" class="white--text text-center" style="background-color: #47a5ad; font-size: 1.3rem; border: 1px solid black">
+                        <div>
+                            TOTAL
+                        </div>
+                    </v-col>
+                    <v-col cols="6" class="white--text text-end" style="background-color: #47a5ad; font-size: 1.3rem; border: 1px solid black">
+                        <div>
+                            $10,229.00 MXN
+                        </div>
+                    </v-col>
+                </v-row>
+            </v-col>
+        </v-row>
+        <v-row no-gutters justify="center">
+            <v-col cols="3" class="mt-7">
+                <div>
+                    <v-divider style="border: 2px solid #47a5ad"></v-divider>
+                </div>
+            </v-col>
+        </v-row>
+        <v-col cols="12" class="text-center mt-n2">
+            <div class="mx-15 text-center">
+                <div class="font-weight-bold" style="font-size: 0.9rem">
+                    Deposito a la cuenta de Banorte: 0892608267 // CLABE: 072 470 0089 2608 2678 // A nombre de Materiales Decorativos S. de R.L, MI.
+                </div>
+                <div style="font-size: 0.75rem">
+                    Favor de revisar importes y cantidades descritas en este documento // Cualquier variación será motivo de otra cotización // La fecha del pedido se toma en cuenta a partir de la fecha de pago
+                    No se procesan pedidos que no estén pagados // La mercancía viaja por cuenta y riesgo del comprador // Los tonos de las telas pueden variar ligeramente a los del muestrario
+                    Para precios en dólares se tomará en cuenta tipo de cambio emitido por Banorte el día del pago. // No hay cambios ni devoluciones una vez cortada la tela. Precios sujetos a cambios sin previo aviso.
+                </div>
+            </div>
+        </v-col>
+        <DashboardBlindsProductDetailCards></DashboardBlindsProductDetailCards>
+    </v-card>
+</v-dialog>
+</template>
+
+<script>
+import { mapState } from "vuex";
+import DashboardBlindsProductDetailCards from '../../Dashboard/BlindsProductDetailCards/DashboardBlindsProductDetailCards.vue'
+export default {
+  data() {
+    return {
+
+    }
+  },
+  components: {
+      DashboardBlindsProductDetailCards
+  },
+  methods:{
+      emitClickCloseFromOrdersAndQuotationsDialog(){
+          this.$emit('emitClickCloseFromOrdersAndQuotationsDialog', false);
+      }
+  },
+  props:{
+      isOrdersAndQuotationsDialogActivated: {
+          type: Boolean
+      },
+      idOrderQuotationOrdersAndQuotationsDialog:{
+          type: Number
+      }
+  }
+}
+</script>
