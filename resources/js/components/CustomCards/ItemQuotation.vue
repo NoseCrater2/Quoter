@@ -1,6 +1,6 @@
 <template>
     <v-hover v-slot="{ hover }">
-        <v-card min-width="240" max-width="303" :flat="hover?false:true"  :outlined="hover?false:true" :class="hover?'grow':''">
+        <v-card min-width="228" max-width="228" :flat="hover?false:true"  :outlined="hover?false:true" :class="[hover?'grow':'', !$vuetify.breakpoint.mdAndUp ? 'mx-auto' : '']">
             <v-card-title class="py-1">
                 {{ item.blinds }} PERSIANA(S)
                 <v-spacer></v-spacer>
@@ -11,7 +11,7 @@
                             </v-btn>
                         </template>
                         <v-list dense>
-                            <v-list-item dense link>
+                            <v-list-item dense link @click="isOrdersAndQuotationsDialogActivated = true">
                                 <v-list-item-icon>
                                     <v-icon >mdi-clipboard-list</v-icon>
                                 </v-list-item-icon>
@@ -45,7 +45,7 @@
                             </v-list-item>
                         </v-list>
                     </v-menu>
-               
+
             </v-card-title>
             <v-card-title class="font-weight-bold py-1">
                 <h3>Cotizacion</h3>
@@ -71,7 +71,7 @@
                         </div>
                     </v-col>
                     <v-col cols="9" class="text-right">
-                        <span style="font-size: 1.5rem" class="font-weight-bold">
+                        <span :style="$vuetify.breakpoint.lgAndUp ? 'font-size: 1.2rem' : $vuetify.breakpoint.md ? 'font-size: 1.1rem' : 'font-size: 1.2rem'" class="font-weight-bold">
                            {{mxCurrencyFormat.format(item.total)}}
                         </span>
                         <span class="text-center">MXN</span>
@@ -79,9 +79,9 @@
                 </v-list-item-content>
             </v-list-item>
             <v-card-actions >
-                <v-btn small outlined rounded text @click="openDetailsDialog(item.id)">Ver Detalles</v-btn>
+                <v-btn x-small outlined rounded text @click="isOrdersAndQuotationsDialogActivated = true">Ver Detalles</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn small rounded color="#f99404" class="white--text">
+                <v-btn x-small rounded color="#f99404" class="white--text">
                     <v-icon left>mdi-cart</v-icon>
                     Comprar
                 </v-btn>
@@ -112,16 +112,27 @@
                 </v-list-item-content>
             </v-list-item>
             </v-card-text>
+            <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated"></DashboardOrdersAndQuotationsDialog>
         </v-card>
     </v-hover>
 </template>
 
 <script>
+import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/OrdersAndQuotations/DashboardOrdersAndQuotationsDialog.vue'
 export default {
     data(){
         return {
+            isOrdersAndQuotationsDialogActivated: false,
             mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
         }
+    },
+    methods:{
+        emitClickCloseFromOrdersAndQuotationsDialog(){
+            this.isOrdersAndQuotationsDialogActivated = false;
+        }
+    },
+    components:{
+        DashboardOrdersAndQuotationsDialog
     },
     props: {
         item: {
@@ -137,7 +148,7 @@ export default {
         position: absolute;
         transition: 0.1s ease-in-out 0.1s;
         box-shadow: 0 9.7906861202px 11.7906861202px rgba(0, 0, 0, 0.3), 0 9.7906861202px 11.7906861202px rgba(0, 0, 0, 0.06) !important;
-        z-index: 160 !important;
+        z-index: 2 !important;
         transform: translateY(-2px) !important;
     }
 </style>

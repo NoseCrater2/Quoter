@@ -57,13 +57,13 @@
                     </v-toolbar>
                 </template>
                 <template v-slot:default="props">
-                    <v-row v-if="option === 'ordenes'">
-                        <v-col v-for="item in props.items" :key="item.id" cols="12" md="3" sm="6">
+                    <v-row justify="center" justify-xl="start" justify-lg="start" justify-md="start" v-if="option === 'ordenes'">
+                        <v-col v-for="item in props.items" :key="item.id" cols="12" xl="2" lg="3" md="4" sm="5">
                             <ItemOrder :item="item"  />
                         </v-col>
                     </v-row>
-                    <v-row v-if="option === 'cotizaciones'">
-                        <v-col v-for="item in props.items" :key="item.id" cols="12" md="3" sm="6">
+                    <v-row justify="center" justify-xl="start" justify-lg="start" justify-md="start" v-if="option === 'cotizaciones'">
+                        <v-col v-for="item in props.items" :key="item.id" cols="12" xl="2" lg="3" md="4" sm="5">
                             <ItemQuotation :item="item" />
                         </v-col>
                     </v-row>
@@ -130,7 +130,7 @@
                         <td class="text-center">{{ item.created_at }}</td>
                         <td class="text-center">{{ item.total }}</td>
                         <td class="text-center">
-                            <v-btn icon>
+                            <v-btn icon @click="isOrdersAndQuotationsDialogActivated = true">
                                 <v-icon>mdi-magnify</v-icon>
                             </v-btn>
                             <v-btn icon>
@@ -144,6 +144,7 @@
                 </template>
             </v-simple-table>
         </v-col>
+        <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated"></DashboardOrdersAndQuotationsDialog>
     </v-row>
 </template>
 
@@ -151,10 +152,13 @@
 import { mapState} from "vuex";
 import ItemOrder from '../../components/CustomCards/ItemOrder.vue'
 import ItemQuotation from '../../components/CustomCards/ItemQuotation.vue'
+import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/OrdersAndQuotations/DashboardOrdersAndQuotationsDialog.vue'
+
 export default {
 
     data(){
         return{
+            isOrdersAndQuotationsDialogActivated: false,
             loading: false,
             dialog: false,
             page: 1,
@@ -211,7 +215,9 @@ export default {
         formerPage () {
             if (this.page - 1 >= 1) this.page -= 1
         },
-        
+        emitClickCloseFromOrdersAndQuotationsDialog(){
+            this.isOrdersAndQuotationsDialogActivated = false;
+        }
     },
 
     props: {
@@ -223,7 +229,8 @@ export default {
 
     components: {
         ItemOrder,
-        ItemQuotation
+        ItemQuotation,
+        DashboardOrdersAndQuotationsDialog
     }
 }
 </script>
