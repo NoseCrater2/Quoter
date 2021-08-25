@@ -7,7 +7,9 @@
         </div>
 
         <OrdersSuperadminTableView
-        v-if="user.role === 'Superadministrador' || user.role === 'Administrador' || user.role === 'Vendedor'">
+        v-if="user.role === 'Superadministrador' || user.role === 'Administrador' || user.role === 'Vendedor'"
+        :option="option"
+        >
         </OrdersSuperadminTableView>
 
         <ItemListDistributors  v-else-if="user.role === 'Distribuidor'"  :option="option" />

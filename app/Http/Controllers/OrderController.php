@@ -8,7 +8,9 @@ use App\Canvas;
 use App\Order;
 use App\ErrorMessages;
 use App\Http\Resources\AdministratorOrderIndexResource;
+use App\Http\Resources\AdministratorQuotationIndexResource;
 use App\Http\Resources\OrderIndexResource;
+use App\Http\Resources\QuotatioIndexResource;
 use App\Http\Resources\OrderShowResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -222,11 +224,23 @@ class OrderController extends Controller
 
     public function quotations()
     {
-        $user = User::find(auth()->user()->id);
+        // $user = User::find(auth()->user()->id);
 
-        return OrderIndexResource::collection(
-           $user->orders()->where('is_quotation',true)->get()
-        );
+        // return QuotatioIndexResource::collection(
+        //    $user->orders()->where('is_quotation',true)->get()
+        // );
+
+        $user = User::find(auth()->user()->id);
+        if($user->hasRole('Superadministrador')){
+            return AdministratorQuotationIndexResource::collection(
+                Order::where('is_quotation',true)->get()
+             );
+        }
+        else{
+            return AdministratorQuotationIndexResource::collection(
+                $user->orders()->where('is_quotation',true)->get()
+             );
+        }
 
     }
 

@@ -21,4 +21,9 @@ class Order extends Model
     {
         return $this->hasMany(Blind::class);
     }
+
+    public function ticket()
+    {
+        return $this->hasOne(Ticket::class);
+    }
 }
