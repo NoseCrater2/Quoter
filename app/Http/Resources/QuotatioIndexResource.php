@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AdministratorOrderIndexResource extends JsonResource
+class QuotatioIndexResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,25 +15,23 @@ class AdministratorOrderIndexResource extends JsonResource
      */
     public function toArray($request)
     {
-        $code = $this->ticket?'PT':'P';
         return [
             'id' => $this->id,
-            'state' => $this->state,
-            'order' => $code.Carbon::parse($this->created_at)->format('dmy').'/'.$this->id,
+            // 'state' => Carbon::now()->diffInDays() > 20 ?'Sí':'No',
+            'order' => 'PT'.Carbon::parse($this->created_at)->format('dmy').'/'.$this->id,
             'blinds' => $this->blinds->count(),
-            'user' => $this->user->name.' '.$this->user->last_name,
             'total' => $this->blinds->map( function( $blind ){
                 return $blind->price +
                         ( isset($blind->motorization) ? $blind->motorization->price: 0) +
                         ( isset($blind->control) ? $blind->control->price: 0) +
                         $blind->flexiballet_price +
                         $blind->gallery_price +
-                        $blind->manufacturar_price +
+                        $blind->manufacturer_price +
                         $blind->string_price;
             })->sum(),
             'created_at' => Carbon::parse($this->created_at)->toFormattedDateString(),
             'updated_at' =>Carbon::parse($this->updated_at)->toFormattedDateString(),
-
+            
         ];
     }
 }

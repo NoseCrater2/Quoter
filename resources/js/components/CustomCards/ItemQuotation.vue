@@ -49,7 +49,7 @@
             </v-card-title>
             <v-card-title class="font-weight-bold py-1">
                 <h3>Cotizacion</h3>
-                <h3 style="color: #3ba2a9">R140821/100</h3>
+                <h3 style="color: #3ba2a9">{{item.order}}</h3>
             </v-card-title>
             <v-list-item >
                 <v-list-item-content class="py-1" >

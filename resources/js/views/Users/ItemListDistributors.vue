@@ -6,24 +6,24 @@
                     Mi cuenta
                 </v-card-title>
                 <v-list dense color="#f0f0f0">
-                    <v-list-item link >
+                    <v-list-item link :to="{name: 'Profile'}">
                         <v-list-item-content>
                             <v-list-item-title>Mi Perfil</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                     <v-divider></v-divider>
-                     <v-list-item >
+                     <v-list-item link :to="{name: 'Orders', params: {option: 'ordenes'}}">
                         <v-list-item-content>
                             <v-list-item-title>Órdenes</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                     <v-list-item >
+                     <v-list-item link :to="{name: 'Orders', params: {option: 'cotizaciones'}}">
                         <v-list-item-content>
                             <v-list-item-title>Cotizaciones</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                     <v-divider></v-divider>
-                     <v-list-item >
+                     <v-list-item link :to="{name: 'Marketcar'}">
                         <v-list-item-content>
                             <v-list-item-title>Mis compras</v-list-item-title>
                         </v-list-item-content>

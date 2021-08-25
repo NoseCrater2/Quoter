@@ -6,7 +6,7 @@
                     Mi cuenta
                 </v-card-title>
                 <v-list dense color="#f0f0f0">
-                    <v-list-item >
+                    <v-list-item link :to="{name: 'Profile'}">
                         <v-list-item-icon>
                         </v-list-item-icon>
                         <v-list-item-content>
@@ -50,7 +50,7 @@
         <div class="text-center">
         </div>
         <v-data-table
-        :items="orders"
+        :items="items"
         :headers="modelsHeaders"
         :search="search"
         :items-per-page="15"
@@ -77,24 +77,24 @@
                 <div class="d-inline">
                     {{ item.state}}
                 </div>
-                <div class="d-inline">
+                <div class="d-inline" v-if="user.role === 'Administrador' || user.role === 'Superadministrador'">
                     <v-icon
-                    v-if="item.state === 'Orden recibida'"
+                    v-if="item.state === 'Recibida'"
                     icon color="#acacac" class="mb-1 ml-2">
                         mdi-checkbox-blank-circle
                     </v-icon>
                     <v-icon
-                    v-if="item.state === 'En Producción'"
+                    v-if="item.state === 'En Produccion'"
                     icon color="#ff8b00" class="mb-1 ml-2">
                         mdi-checkbox-blank-circle
                     </v-icon>
                     <v-icon
-                    v-if="item.state === 'Paquetería'"
+                    v-if="item.state === 'Paqueteria'"
                     icon color="#01afec" class="mb-1 ml-2">
                         mdi-checkbox-blank-circle
                     </v-icon>
                     <v-icon
-                    v-if="item.state === 'Entrega'"
+                    v-if="item.state === 'Entregada'"
                     icon color="#0eae02" class="mb-1 ml-2">
                         mdi-checkbox-blank-circle
                     </v-icon>
@@ -106,11 +106,11 @@
                     <v-icon
                     v-if="item.state === 'No Pagada'"
                     icon color="black" class="mb-1 ml-2">
-                        diameter-variant
+                        mdi-diameter-variant
                     </v-icon>
                 </div>
 
-                <div class="d-inline" >
+                <div class="d-inline" v-if="option === 'ordenes'" >
                     <v-menu bottom offset-x>
                       <template v-slot:activator="{ on, attrs }">
                             <v-btn icon v-bind="attrs" v-on="on" class="mb-1">
@@ -123,7 +123,7 @@
                         :class="item.state === option.text?'v-list-item--active':''"
                         :value="option.text"
                         dense
-                        v-for="(option, index) in items"
+                        v-for="(option, index) in states"
                         :key="index"
                         >
                         <v-list-item-icon>
@@ -162,34 +162,55 @@ export default {
             mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
             modelsHeaders: [
                 {
-                    text: 'ID Compra',
-                    value: 'id',
+                    text: '#Orden',
+                    value: 'order',
                     sortable: false,
                     align: 'center',
                 },
                 { text: 'Total', value: 'total', align: 'center' },
                 { text: 'Cliente', value: 'user', align: 'center' },
-                { text: 'Estado de la orden', value: 'state', align: 'center' },
+                { text: this.option === 'ordenes'?'Estado de la orden':'Vigente', value: 'state', align: 'center' },
                 { text: 'Fecha de creación', value: 'created_at', align: 'center' },
                 { text: 'Última actualización', value: 'updated_at', align: 'center' },
                 { text: 'Ver detalles', value: 'actions', align: 'center', sortable: false },
             ],
-            items: [
-                { text: 'Orden recibida', color: '#acacac' },
-                { text: 'En Producción', color: '#ff8b00' },
-                { text: 'Paquetería', color: '#01afec' },
-                { text: 'Entregado', color: '#0eae02' },
+            states: [
+                { text: 'Recibida', color: '#acacac' },
+                { text: 'En produccion', color: '#ff8b00' },
+                { text: 'Paqueteria', color: '#01afec' },
+                { text: 'Entregada', color: '#0eae02' },
                 { text: 'Cancelada', color: '#fd220c' },
-                { text: 'No pagada', color: 'black' },
+                { text: 'No Pagada', color: 'black' },
             ],
+            admins: [
+                {title: 'Mis Órdenes', route: '#'},
+                {title: 'Ordenes Distribuidores', route: '#'}
+            ],
+
+            cruds: [
+                {title: 'Mis Cotizaciones', route: '#'},
+                {title: 'Cotizaciones Distribuidores', route: '#'}
+            ]
+
+        }
+    },
+    mounted(){
+        if(this.option === 'ordenes'){
+            this.$store.dispatch('getQuotedOrders').then(()=>{
+                this.loading = false
+            })
+        }else if(this.option === 'cotizaciones'){
+            this.$store.dispatch('getQuotingOrders').then(()=>{
+                this.loading = false
+            })
         }
     },
     computed:{
         ...mapState({
           user: state => state.user,
-          products: state => state.productsModule.products,
           loggedIn: state => state.loggedIn,
           orders: state => state.ordersModule.quotedOrders,
+          cotizaciones: state => state.ordersModule.quotingOrders,
           order: state => state.ordersModule.quotedOrder,
         }),
         ...mapGetters([
@@ -198,6 +219,16 @@ export default {
           'getLoginStatus',
           'getUserStatus'
         ]),
+
+        items(){
+            if(this.option === 'ordenes'){
+                console.log('muestra ordenes')
+                return this.orders
+            } else if(this.option === 'cotizaciones'){
+                console.log('muestra ordenes')
+                return this.cotizaciones
+            }
+        }
     },
     methods:{
         emitClickCloseFromOrdersAndQuotationsDialog(){
@@ -206,6 +237,13 @@ export default {
     },
     components:{
         DashboardOrdersAndQuotationsDialog
-    }
+    },
+
+    props: {
+        option: {
+            type: String,
+            required: true,
+        }
+    },
 }
 </script>
