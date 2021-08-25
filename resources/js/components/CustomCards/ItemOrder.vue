@@ -22,9 +22,10 @@
                     </v-icon> -->
                 </v-list-item-avatar>
             </v-list-item>
-            <div style="font-size: 1.3rem; font-weight: bold" class="mt-n3 ml-3">
-                Orden recibida
-            </div>
+            <v-card-title class="font-weight-bold py-1">
+                <h3>Orden recibida</h3>
+                <h3 :style="hover?'color: white':'color: #3ba2a9'">{{item.order}}</h3>
+            </v-card-title>
             <v-list-item>
                 <v-list-item-content class="mx-n3">
                         <v-col cols="3">
@@ -56,10 +57,15 @@
                 <v-btn x-small outlined rounded text @click="isOrdersAndQuotationsDialogActivated = true">Ver Detalles</v-btn>
                 <v-spacer></v-spacer>
                 <v-chip small :color="hover?'#3ba2a9':'white'" :text-color="hover?'white':'black'">
-                    <v-avatar size="1" left class="white" >
-                        <v-icon size="22" color="green">mdi-checkbox-blank-circle</v-icon>
+                    <v-avatar class="white" >
+                        <v-icon v-if="item.state === 'Recibida'" size="22" color="grey lighten-1">mdi-checkbox-blank-circle</v-icon>
+                        <v-icon v-if="item.state === 'En produccion'" size="22" color="orange darken-1">mdi-checkbox-blank-circle</v-icon>
+                        <v-icon v-if="item.state === 'Paqueteria'" size="22" color="blue darken-1">mdi-checkbox-blank-circle</v-icon>
+                        <v-icon v-if="item.state === 'Entregada'" size="22" color="green darken-1">mdi-checkbox-blank-circle</v-icon>
+                        <v-icon v-if="item.state === 'Cancelada'" size="22" color="red darken-2">mdi-checkbox-blank-circle</v-icon>
+                        <v-icon v-if="item.state === 'No Pagada'" size="22" color="black">mdi-diameter-variant</v-icon>
                     </v-avatar>
-                    Entregada
+                   {{ item.state}}
                 </v-chip>
             </v-card-actions>
             <!-- <v-col v-if="item.user" cols="12" class="text-end mt-n9">

@@ -15,18 +15,19 @@ class OrderIndexResource extends JsonResource
      */
     public function toArray($request)
     {
+        $code = $this->ticket?'PT':'P';
         return [
             'id' => $this->id,
-            'state' => $this->state,
+            'order' => $code.Carbon::parse($this->created_at)->format('dmy').'/'.$this->id,
             'blinds' => $this->blinds->count(),
-            
+            'state' => $this->state,
             'total' => $this->blinds->map( function( $blind ){
                 return $blind->price +
                         ( isset($blind->motorization) ? $blind->motorization->price: 0) +
                         ( isset($blind->control) ? $blind->control->price: 0) +
                         $blind->flexiballet_price +
                         $blind->gallery_price +
-                        $blind->manufacturar_price +
+                        $blind->manufacturer_price +
                         $blind->string_price;
             })->sum(),
             'created_at' => Carbon::parse($this->created_at)->toFormattedDateString(),
