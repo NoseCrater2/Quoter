@@ -34,7 +34,7 @@ class Blind extends Model
         'string_price', // 0
 
         'cloth_holder',
-        'control_side', 
+        'control_side',
         'panels',
         'control_color',
         'grouping',
@@ -42,7 +42,10 @@ class Blind extends Model
         'string_type',
         'gallery_id',
         'motorization_id',
-        'control_id'
+        'control_id',
+
+        'extraEnrollable',
+        'extraVertical'
     ];
 
     public function order()
@@ -54,7 +57,7 @@ class Blind extends Model
     {
         return $this->belongsTo(Variant::class);
     }
-    
+
     public function color()
     {
         return $this->belongsTo(Color::class);

@@ -34,7 +34,7 @@
             $multiX2 = $localIndex * 2;
             return array_slice($localorders, ($multiX2 - 2), 2);
         }
-
+        $user = App\User::find(auth()->user()->id);
         $date = new Carbon\Carbon;
         $total = 0;
         setlocale(LC_MONETARY, 'es_MX');
@@ -42,6 +42,7 @@
     ?>
     <table style="border-collapse:collapse; width: 100%; margin-top: -13px">
         <tbody>
+            @if(isset($orders['user']['id']))
             <tr>
                 <td style="width: 20%; padding-top: -13px; padding-left: 9px; height: 124px; border-right: solid #47a5ad 4px; ">
                     <img width="180px" src="img/logos/rollux.png" >
@@ -123,6 +124,135 @@
                 @endif
                 </td>
             </tr>
+            @else
+            <tr>
+                <td style="width: 32%; padding-top: -13px; height: 30px;">
+                        <table style="width: 100%; height: 30px;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 20%; border-right: solid #47a5ad 4px;">
+                                        <img width="120px" src="img/color-r.png" />
+                                    </td>
+                                    <td style="width: 80%; padding-left: 13px;">
+                                        <div class="d-block" style="font-size: 11px; font-weight: bolder; margin-top: 3px;" >Cotización</div>
+                                        <div class="d-block" style="font-size: 10px;">Folio <span style="font-weight: bolder; color: #47a5ad">R200421/001</span></div>
+                                        <div class="d-block" style="font-size: 10px;">Fecha: {!! $date->now()->format('d/m/Y'); !!}</div>
+                                        <div class="d-block" style="font-size: 10px;">Valida hasta: {!! $date->addDays(8)->format('d/m/Y'); !!}</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                </td>
+                <td style="width: 43%;  padding-top: 11px;">
+                    <table style="width: 100%; border: 1px solid #d1d3d4; border-radius: 5px; margin-left: 9px; padding-bottom: 11px;">
+                        <tbody>
+                            <tr>
+                                <th style="background-color: #d1d3d4; padding-top: 3px; padding-bottom: 3px;">
+                                    @if(isset($user['company']))
+                                        @if($user['company'] != null || $user['company'] != '')
+                                            <div style="font-weight: bolder; font-size: 9px;">{!! $user['company'] !!} | <span style="font-weight: normal; font-size: 8px; font-style: italic;">Distribuidor Autorizado</span></div>
+                                        @else
+                                            <div style="font-weight: bolder; font-size: 9px;">{!! $user['name'].' '.$user['last_name'] !!} | <span style="font-weight: normal; font-size: 8px; font-style: italic;">Distribuidor Autorizado</span></div>
+                                        @endif
+                                    @else
+                                        <div style="font-weight: bolder; font-size: 9px;">{!! $user['name'].' '.$user['last_name'] !!} | <span style="font-weight: normal; font-size: 8px; font-style: italic;">Distribuidor Autorizado</span></div>
+                                    @endif
+                                </th>
+                                <th style="background-color: #EEEEEE; padding-top: 3px; padding-bottom: 3px;">
+                                    <div style="font-weight: bolder; font-size: 9px;">Consignatario</span></div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td style="width: 55%;">
+                                    <div style="font-size: 8px; margin-top: 1px; padding-left: 5px;">
+                                        @if(isset($user['company']))
+                                            @if($user['company'] != null || $user['company'] != '')
+                                                <div style="font-weight: bolder;">Asesor: {!! $user['name'].' '.$user['last_name'] !!}</div>
+                                            @endif
+                                        @endif
+                                        @if(isset($user['ship_address']))
+                                            @if($user['ship_address'] != null || $user['ship_address'] != '')
+                                                <div>
+                                                    <span>Dirección: {!! $user['ship_address'] !!}</span>
+                                                </div>
+                                            @endif
+                                        @endif
+                                        @if(isset($user['rfc']))
+                                            @if($user['rfc'] != null || $user['rfc'] != '')
+                                                <div>
+                                                    <span>RFC: {!! $user['rfc'] !!}</span>
+                                                </div>
+                                            @endif
+                                        @endif
+                                        @if(isset($user['phone']))
+                                            @if($user['phone'] != null || $user['phone'] != '')
+                                                <div>
+                                                    <span>Teléfono: {!! $user['phone'] !!}</span>
+                                                </div>
+                                            @endif
+                                        @endif
+                                        @if(isset($user['email']))
+                                            @if($user['email'] != null || $user['email'] != '')
+                                                <div>
+                                                    <span>Email: {!! $user['email'] !!}</span>
+                                                </div>
+                                            @endif
+                                        @endif
+                                        <!-- <div>Embarcado por:</div>
+                                        <div>Fecha de entrega:</div>
+                                        <div>Realizado por: RolluxWeb</div> -->
+                                    </div>
+                                </td>
+                                <td style="width: 45%;">
+                                    <div style="font-size: 7px; margin-top: 1px; padding-left: 5px;">
+                                        <div style="font-weight: bolder; font-size: 8px;">{!! $orders['user']['name'].' '.$orders['user']['last_name'] !!}</div>
+                                        @if(array_key_exists('ship_address', $orders['user']))
+                                            @if($orders['user']['ship_address'] != null || $orders['user']['ship_address'] != '')
+                                                <div>
+                                                    <span>Dirección: {!! $orders['user']['ship_address'] !!}</span>
+                                                </div>
+                                            @endif
+                                        @endif
+                                        @if(array_key_exists('rfc', $orders['user']))
+                                            @if($orders['user']['rfc'] != null || $orders['user']['rfc'] != '')
+                                                <div>
+                                                    <span>RFC: {!! $orders['user']['rfc'] !!}</span>
+                                                </div>
+                                            @endif
+                                        @endif
+                                        @if(array_key_exists('phone', $orders['user']))
+                                            @if($orders['user']['phone'] != null || $orders['user']['phone'] != '')
+                                                <div>
+                                                    <span>Teléfono: {!! $orders['user']['phone'] !!}</span>
+                                                </div>
+                                            @endif
+                                        @endif
+                                        @if(array_key_exists('email', $orders['user']))
+                                            @if($orders['user']['email'] != null || $orders['user']['email'] != '')
+                                                <div>
+                                                    <span>Email: {!! $orders['user']['email'] !!}</span>
+                                                </div>
+                                            @endif
+                                        @endif
+                                        <!-- <div>Embarcado por:</div>
+                                        <div>Fecha de entrega:</div>
+                                        <div>Realizado por: RolluxWeb</div> -->
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </td>
+                <td style="width: 23%;">
+                @if(isset($user['logo']))
+                    @if (File::exists('img/'.$user['logo']))
+                        <img width="165px" src="{{'img/'.$user['logo']}}" >
+                    @endif
+                @endif
+                </td>
+            </tr>
+            @endif
         </tbody>
     </table>
     <div style="width: 81%; font-size: 10px; text-align: center; margin: 1px auto 4px auto">
@@ -607,11 +737,11 @@
             <hr style="width:27%; text-align:left; margin-left:auto; margin-right: auto; border: 1px solid #47a5ad;">
         </div>
         <div style="width: 87%; margin: auto; font-size: 8px; line-height: 10px; text-align: center;">
-            <div>
+            <!-- <div>
 
                 <strong>Deposito a la cuenta de Banorte: 0892608267 // CLABE: 072 470 0089 2608 2678 // A nombre de Materiales Decorativos S. de R.L, M</strong>
 
-            </div>
+            </div> -->
             <i>
                 Favor de revisar importes y cantidades descritas en este documento // Cualquier variación será motivo de otra cotización // La fecha del pedido se toma en cuenta a partir de la fecha de pago
                 No se procesan pedidos que no estén pagados // La mercancía viaja por cuenta y riesgo del comprador // Los tonos de las telas pueden variar ligeramente a los del muestrario
@@ -620,6 +750,5 @@
 
         </div>
     </div>
-
 </body>
 </html>

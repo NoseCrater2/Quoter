@@ -89,14 +89,20 @@
                                 <span>#Orden <span class="font-weight-bold" style="color: #3ba2a9"> P010821/100</span></span>
                             </v-row>
                         </div>
-                        <div class="pa-4" style="border: 1px solid #BDBDBD">
-                          <v-img
-                            contain
-                            min-height="195"
-                            src="/img/dashboard/cart-outline.png"
-                          >
+                        <div class="pa-4 d-flex justify-center align-center" style="border: 1px solid #BDBDBD; min-height: 400px;">
+                            <!-- V-IF: SI EL CARRITO ESTÁ VACÍO -->
+                            <!-- <div>
+                                <v-img
+                                  contain
+                                  height="160"
+                                  src="/img/dashboard/cart-outline.png"
+                                ></v-img>
+                                <h3 class="text-h6 font-weight-light mb-2 text-center">
+                                  El carrito de compras está vacio
+                                </h3>
+                            </div> -->
 
-                            <!-- ESTE WINDOW INICIA AQUÍ Y HARÁ LA FUNCION DE LOS PASOS DE COMPRA -->
+                            <!-- V-ELSE: ESTE WINDOW INICIA AQUÍ Y HARÁ LA FUNCION DE LOS PASOS DE COMPRA -->
                             <v-window v-model="localWindowStepModel">
                                 <v-window-item v-for="(item, windowIndex) in 4" :key="windowIndex" :value="(windowIndex+1)">
                                 <!-- DENTRO DE ESTE WINDOW ITEM SE CARGARÁ EL COMPONENTE DE PASO CORRESPONDIENTE -->
@@ -107,10 +113,6 @@
                             </v-window>
                             <!-- ESTE WINDOW TERMINA AQUÍ Y HARÁ LA FUNCION DE LOS PASOS DE COMPRA -->
 
-                          </v-img>
-                          <!-- <h3 class="text-h6 font-weight-light mb-2 text-center">
-                            El carrito de compras está vacio
-                          </h3> -->
                         </div>
                         <div class="text-end">
                             <v-btn
