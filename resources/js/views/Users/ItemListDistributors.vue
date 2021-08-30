@@ -98,7 +98,7 @@
                     </v-row>
                 </template>
             </v-data-iterator>
-            <div class="d-flex">
+            <!-- <div class="d-flex">
                 <h1 class="font-weight-bolder" style="color: #3ba2a9">COTIZACIONES</h1>&nbsp;
                 <h1 class="font-weight-light">ANTERIORES</h1>
             </div>
@@ -142,7 +142,7 @@
                       </tr>
                     </tbody>
                 </template>
-            </v-simple-table>
+            </v-simple-table> -->
         </v-col>
         <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated"></DashboardOrdersAndQuotationsDialog>
     </v-row>

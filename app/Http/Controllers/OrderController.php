@@ -26,16 +26,11 @@ class OrderController extends Controller
     public function index()
     {
         $user = User::find(auth()->user()->id);
-        if($user->hasRole('Superadministrador')){
-            return AdministratorOrderIndexResource::collection(
-                Order::where('is_quotation',false)->get()
-             );
-        }
-        else{
-            return OrderIndexResource::collection(
-                $user->orders()->where('is_quotation',false)->get()
-             );
-        }
+        
+        return OrderIndexResource::collection(
+            $user->orders()->where('is_quotation',false)->get()
+        );
+
     }
 
 
@@ -224,24 +219,27 @@ class OrderController extends Controller
 
     public function quotations()
     {
-        // $user = User::find(auth()->user()->id);
-
-        // return QuotatioIndexResource::collection(
-        //    $user->orders()->where('is_quotation',true)->get()
-        // );
 
         $user = User::find(auth()->user()->id);
-        if($user->hasRole('Superadministrador')){
-            return AdministratorQuotationIndexResource::collection(
-                Order::where('is_quotation',true)->get()
-             );
-        }
-        else{
-            return AdministratorQuotationIndexResource::collection(
-                $user->orders()->where('is_quotation',true)->get()
-             );
-        }
+     
+        return QuotatioIndexResource::collection(
+            $user->orders()->where('is_quotation',true)->get()
+        );
 
+    }
+
+    public function quotationsAdmin()
+    {
+        return AdministratorQuotationIndexResource::collection(
+            Order::where('is_quotation',true)->get()
+         );
+    }
+
+    public function ordersAdmin()
+    {
+        return AdministratorOrderIndexResource::collection(
+            Order::where('is_quotation',false)->get()
+         );
     }
 
     public function changeToOrder(Order $order)

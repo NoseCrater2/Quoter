@@ -20,10 +20,11 @@
                           </v-list-item-content>
                         </template>
                         <v-list-item
+                        :to="option.route"
                         dense
-                          v-for="(option, i) in admins"
-                          :key="i"
-                          link
+                        v-for="(option, i) in admins"
+                        :key="i"
+                        link
                         >
                           <v-list-item-title v-text="option.title"></v-list-item-title>
                         </v-list-item>
@@ -35,7 +36,8 @@
                         </v-list-item-content>
                       </template>
                       <v-list-item
-                      dense
+                        :to="option.route"
+                        dense
                         v-for="(option, i) in cruds"
                         :key="i"
                         link
@@ -53,7 +55,7 @@
         :items="items"
         :headers="modelsHeaders"
         :search="search"
-        :items-per-page="15"
+        :items-per-page="8"
         class="elevation-1"
         >
             <template v-slot:top>
@@ -110,7 +112,7 @@
                     </v-icon>
                 </div>
 
-                <div class="d-inline" v-if="option === 'ordenes'" >
+                <div class="d-inline" v-if="option.includes('ordenes')" >
                     <v-menu bottom offset-x>
                       <template v-slot:activator="{ on, attrs }">
                             <v-btn icon v-bind="attrs" v-on="on" class="mb-1">
@@ -183,13 +185,13 @@ export default {
                 { text: 'No Pagada', color: 'black' },
             ],
             admins: [
-                {title: 'Mis Órdenes', route: '#'},
-                {title: 'Ordenes Distribuidores', route: '#'}
+                {title: 'Mis Órdenes', route: {name: 'Orders', params: {option: 'ordenes'}}},
+                {title: 'Ordenes Distribuidores', route: {name: 'Orders', params: {option: 'ordenes-admin'}}}
             ],
 
             cruds: [
-                {title: 'Mis Cotizaciones', route: '#'},
-                {title: 'Cotizaciones Distribuidores', route: '#'}
+                {title: 'Mis Cotizaciones', route: {name: 'Orders', params: {option: 'cotizaciones'}} },
+                {title: 'Cotizaciones Distribuidores', route: {name: 'Orders', params: {option: 'cotizaciones-admin'}}}
             ]
 
         }
@@ -201,6 +203,14 @@ export default {
             })
         }else if(this.option === 'cotizaciones'){
             this.$store.dispatch('getQuotingOrders').then(()=>{
+                this.loading = false
+            })
+        }else if(this.option === 'ordenes-admin'){
+            this.$store.dispatch('getAdminQuotedOrders').then(()=>{
+                this.loading = false
+            })
+        }else if(this.option === 'cotizaciones-admin'){
+            this.$store.dispatch('getAdminQuotingOrders').then(()=>{
                 this.loading = false
             })
         }
@@ -221,11 +231,9 @@ export default {
         ]),
 
         items(){
-            if(this.option === 'ordenes'){
-                console.log('muestra ordenes')
+            if(this.option.includes('ordenes')){
                 return this.orders
-            } else if(this.option === 'cotizaciones'){
-                console.log('muestra ordenes')
+            } else if(this.option.includes('cotizaciones')){
                 return this.cotizaciones
             }
         }
