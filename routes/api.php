@@ -103,6 +103,10 @@ Route::middleware(['auth:sanctum'])->group(function()
 
     Route::resource('orders', 'OrderController')->only('index','show', 'store', 'update','destroy');
     Route::get('quotations','OrderController@quotations');
+    Route::get('quotations-admin','OrderController@quotationsAdmin');
+    Route::get('orders-admin','OrderController@ordersAdmin');
+
+
     Route::get('changequoting/{order}','OrderController@changeToOrder');
 
     //Products
@@ -130,3 +134,10 @@ Route::post('order-list-pdf' , 'Api\ProductController@exportPdf');
 Route::post('auth-order-list-pdf-distributor' , 'Api\ProductController@exportPdfDistributor');
 Route::post('auth-order-list-pdf-admins' , 'Api\ProductController@authExportPdf');
 Route::post('sanctum/token','Auth\MobileAuthController@login');
+
+
+
+
+
+
+Route::resource('prices', 'PriceController')->only('index','show', 'store', 'update','destroy');

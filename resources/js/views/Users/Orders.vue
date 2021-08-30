@@ -1,9 +1,9 @@
 <template>
     <v-container fluid>
 
-        <div class="text-center">
-            <h1 class="font-weight-light d-inline">MIS</h1>
-            <h1 class="d-inline" style="color: #3ba2a9">{{option.toUpperCase()}}</h1>
+        <div class="text-center" v-if="option.includes('admin')">
+            <h1 class="font-weight-light d-inline">{{option.split('-')[0].toUpperCase()}}</h1>
+            <h1 class="d-inline" style="color: #3ba2a9">DISTRIBUIDORES</h1>
         </div>
 
         <OrdersSuperadminTableView
