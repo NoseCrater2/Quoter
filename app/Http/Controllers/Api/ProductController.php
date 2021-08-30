@@ -9,7 +9,9 @@ use App\Color;
 use App\Http\Resources\VariantIndexResource;
 use App\Http\Resources\TypeIndexResurce;
 use Barryvdh\DomPDF\Facade as PDF;
-
+use App\Mail\emailOrder;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -136,6 +138,7 @@ class ProductController extends Controller
         return $pdf->download('order-list.pdf');
     }
 
+
     public function exportPdfDistributor(Request $request)
     {
         //Recuperar el request en un objeto
@@ -154,6 +157,17 @@ class ProductController extends Controller
         return $pdf->download('order-list.pdf');
     }
 
+    public function sendOrderEmail(Request $request){
+        // auth()->user()->email;
+        $orders = $request->all();
+        $pdf = PDF::loadView('pdf.orderdistributor', compact('orders'));
+        $namePdf = explode("@", $orders['user']['email']);
+        $datePdf = date("Ymd");
+        $pdf->save('img/'.$namePdf[0].$datePdf.'.pdf');
 
+        // dd($pdf);
+        Mail::to($orders['user']['email'])->send(new emailOrder($orders));
+        Storage::delete($namePdf[0].$datePdf.'.pdf');
+    }
 
 }

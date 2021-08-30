@@ -101,6 +101,8 @@ class OrderController extends Controller
                     $blind->control_price = $b['motor']['price'];
                     $blind->rail_color = $b['motor']['rail_color'];
                     $blind->string_price = $b['motor']['stringPrice'];
+                    $blind->extraEnrollable = $b['extraEnrollable'];
+                    $blind->extraVertical = $b['extraVertical'];
                     $blind->save();
 
                     foreach ($b['canvas'] as $c) {
@@ -188,6 +190,8 @@ class OrderController extends Controller
                 $blind->control_price = $b['motor']['price'];
                 $blind->rail_color = $b['motor']['rail_color'];
                 $blind->string_price = $b['motor']['stringPrice'];
+                $blind->extraEnrollable = $b['extraEnrollable'];
+                $blind->extraVertical = $b['extraVertical'];
                 $blind->save();
                 $blind->canvases()->delete();
 
