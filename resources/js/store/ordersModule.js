@@ -212,6 +212,22 @@ const ordersModule = {
                 } catch (error) {}
             }
         },
+        getAdminQuotedOrders: async function ({ commit, state }){
+            try {
+                const response = await axios
+                .get("/api/orders-admin")//ENDPOINT ADMIN ORDERS
+                commit('setQuotedOrders',response.data.data);
+            } catch (error) {}
+        },
+        getAdminQuotingOrders: async function ({ commit, state }){
+            if(isLoggedIn()){
+                try {
+                    const response = await axios
+                    .get("/api/quotations-admin")//ENPOINT ADMIN COTIZACIONES
+                    commit('setQuotingOrders',response.data.data);
+                } catch (error) {}
+            }
+        },
 
         getQuotingOrder: async function ({ commit, state },id){
             try {
