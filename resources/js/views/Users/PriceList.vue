@@ -48,11 +48,19 @@
                             </v-card-title>
                             <v-card-actions  class="mt-0 pt-0 d-flex justify-center ">
                                 <v-btn
+<<<<<<< Updated upstream
                                 elevation="3"
                                 color="#47a5ad"
                                 class="rounded-lg white--text"
                                 target="_blank" :href="'https://rollux.com.mx/img/'+itemPdf.path"
                                 >
+=======
+                                    rounded
+                                    color="#47a5ad"
+                                    class="white--text"
+                                    target="_blank" :href="'https://rollux.com.mx/img/'+itemPdf.path"
+                                  >
+>>>>>>> Stashed changes
                                     Descargar
                                 </v-btn>
                               </v-card-actions>
