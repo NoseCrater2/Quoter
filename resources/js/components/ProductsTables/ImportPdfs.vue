@@ -185,8 +185,8 @@ export default {
                 this.isEditing = true
                 this.price.id = list.id
                 this.price.title = list.title
-                this.getImageFromServer('http://127.0.0.1:8000/img/'+list.thumbnail,list.title)
-                this.getFileFromServer('http://127.0.0.1:8000/img/'+list.path,list.title)
+                this.getImageFromServer('https://rollux.com.mx/img/'+list.thumbnail,list.title)
+                this.getFileFromServer('https://rollux.com.mx/img/'+list.path,list.title)
             }
            
             this.dialog1 = true
