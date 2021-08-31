@@ -30,8 +30,8 @@ class OrderShowResource extends JsonResource
                     'cloth_holder' => $blind->cloth_holder,
                     'color' => $blind->color,
                     'instalation_side' => $blind->instalation_side,
-                    'line' => $blind->variant->line->slug,
-                    'manufacturer' => $blind->variant->line->id,
+                    'line' => $blind->variant->weave? $blind->variant->weave->slug : null,
+                    'manufacturer' => $blind->variant->line->slug,
                     'motor' => [
                         'canvas' => $blind->canvas,
                         'comment' => $blind->comment,
@@ -63,6 +63,8 @@ class OrderShowResource extends JsonResource
                     'type' => $blind->variant->type->slug,
                     'variant' => $blind->variant_id,
                     'variant2' => $blind->second_variant_id,//puede no tener
+                    'extraVertical' => $blind->extraVertical,
+                    'extraEnrollable' => $blind->extraEnrollable
                 ];
             }),
         ];

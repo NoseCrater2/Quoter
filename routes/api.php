@@ -133,6 +133,7 @@ Route::middleware(['auth:sanctum'])->group(function()
 Route::post('order-list-pdf' , 'Api\ProductController@exportPdf');
 Route::post('auth-order-list-pdf-distributor' , 'Api\ProductController@exportPdfDistributor');
 Route::post('auth-order-list-pdf-admins' , 'Api\ProductController@authExportPdf');
+Route::post('send-order-email-pdf' , 'Api\ProductController@sendOrderEmail');
 Route::post('sanctum/token','Auth\MobileAuthController@login');
 
 

@@ -687,7 +687,7 @@
 
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs }">
-                    <v-btn small v-bind="attrs" v-on="on" color="#47a5ad" :disabled="orders.length > 0 ? false: true" fab>
+                    <v-btn @click="dialogSendEmail = true" small v-bind="attrs" v-on="on" color="#47a5ad" :disabled="orders.length > 0 ? false: true" fab>
                       <v-icon color="white">mdi-email-send</v-icon>
                     </v-btn>
                   </template>
@@ -1359,16 +1359,34 @@
           <v-card-text>
               <v-card-actions>
                   <v-row justify="space-between">
-                      <v-col cols="6" class="d-flex flex-column align-center">
-                        <v-btn ref="btnShowUserSelectDialog" color="#47a5ad" fab @click="dialogAcceptPrintPdfDistribuitor" :loading="isPrintinDistributorPDF" :disabled="(isPrintinDistributorPDF || isPrintRolluxQuotingPDF) ? true : false">
+                      <v-col v-if="showUserFormFromDistributorPrintDialog" cols="12" class="mb-n8">
+                        <v-btn color="#47a5ad" small fab @click="closeDistributorPrintDialog()">
+                          <v-icon color="white">
+                              mdi-arrow-left
+                          </v-icon>
+                        </v-btn>
+
+                        <p style="font-size: 1rem;" class="text-uppercase text-center font-weight-bold">{{showUserFormFromDistributorPrintDialog ? 'Imprimir para cliente' : ''}}</p>
+                      </v-col>
+
+                      <v-col v-if="!showUserFormFromDistributorPrintDialog" cols="4" class="d-flex flex-column align-center">
+                        <v-btn ref="btnShowUserSelectDialog" color="#47a5ad" fab @click="methodPrintFromDistributorDialog('distributor')" :loading="isPrintinDistributorPDF" :disabled="(isPrintinDistributorPDF || isPrintRolluxQuotingPDF) ? true : false">
                           <v-icon color="white">
                               mdi-account
                           </v-icon>
                         </v-btn>
                         <div style="font-size: 0.85rem; line-height: 15px;" class="text-center font-weight-bold mt-1">Imprimir como distribuidor</div>
                       </v-col>
-                      <v-col cols="6" class="d-flex flex-column align-center">
-                        <v-btn color="#47a5ad" fab @click="printRolluxQuoting" :loading="(isPrintRolluxQuotingPDF && !isPrintinDistributorPDF) ? true : false" :disabled="isPrintRolluxQuotingPDF">
+                      <v-col v-if="!showUserFormFromDistributorPrintDialog" cols="4" class="d-flex flex-column align-center">
+                        <v-btn :loading="isPrintingSpecificClientFromDistributorDialog" :disabled="(isPrintinDistributorPDF || isPrintRolluxQuotingPDF || isPrintingSpecificClientFromDistributorDialog) ? true : false" color="#47a5ad" fab @click="showUserFormFromDistributorPrintDialog = true">
+                          <v-icon color="white">
+                              mdi-account
+                          </v-icon>
+                        </v-btn>
+                        <div style="font-size: 0.85rem; line-height: 15px;" class="text-center font-weight-bold mt-1">Imprimir para cliente</div>
+                      </v-col>
+                      <v-col v-if="!showUserFormFromDistributorPrintDialog" cols="4" class="d-flex flex-column align-center">
+                        <v-btn color="#47a5ad" fab @click="methodPrintFromDistributorDialog('everyone')" :loading="(isPrintRolluxQuotingPDF && !isPrintinDistributorPDF) ? true : false" :disabled="isPrintRolluxQuotingPDF">
                           <v-icon color="white">
                               mdi-printer
                           </v-icon>
@@ -1377,14 +1395,190 @@
                       </v-col>
                   </v-row>
               </v-card-actions>
+
+          <v-form ref="userFormFromDistributorPrintDialog" :disabled="isPrintingSuperAdminUserPDF" v-show="showUserFormFromDistributorPrintDialog" class="mt-4">
+            <v-text-field
+            prepend-inner-icon="mdi-account"
+            outlined
+            dense
+            :rules="[(v) => !!v || 'Requerido']"
+            v-model="selectedUser.name"
+            label="Nombre"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-account"
+            outlined
+            dense
+            :rules="[(v) => !!v || 'Requerido']"
+            v-model="selectedUser.last_name"
+            label="Apellidos"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-sale"
+            outlined
+            dense
+            :rules="[(v) => !!v || 'Requerido']"
+            v-model="selectedUser.discount_percent"
+            type="number"
+            label="Descuento"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-phone"
+            outlined
+            dense
+            v-model="selectedUser.phone"
+            label="Telefono"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-email"
+            outlined
+            dense
+            v-model="selectedUser.email"
+            label="Email"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-account"
+            outlined
+            dense
+            v-model="selectedUser.rfc"
+            label="RFC"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-domain"
+            outlined
+            dense
+            v-model="selectedUser.company"
+            label="Nombre de la empresa"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-truck"
+            outlined
+            dense
+            v-model="selectedUser.ship_address"
+            label="Dirección de envío"
+            ></v-text-field>
+          </v-form>
+
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
-          <v-btn tile depressed color="red" class="white--text" @click="closeDistributorPrintDialog">CANCELAR</v-btn>
+          <v-btn tile depressed color="red" class="white--text" @click="closeDistributorPrintDialog('closeAndReset')">CANCELAR</v-btn>
           <v-spacer></v-spacer>
+          <v-btn v-if="(showUserFormFromDistributorPrintDialog) && enableBtnPrintLogInAdmin" tile depressed color="#47a5ad" class="white--text" :loading="isPrintingSpecificClientFromDistributorDialog" :disabled="isPrintingSpecificClientFromDistributorDialog" @click="methodPrintFromDistributorDialog('client')">IMPRIMIR</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
+
+
+      <v-dialog v-model="dialogSendEmail" persistent max-width="390">
+        <v-card>
+          <v-card-title class="px-4 py-2 justify-center">
+           Enviar email
+          </v-card-title>
+          <v-card-text>
+              <v-card-actions>
+                  <v-row justify="space-between">
+                      <v-col cols="12" class="mb-n8">
+                        <v-btn @click="closeAndResetSendEmailDialog()" :disabled="(isSendindEmailToLoginMyAccount || isSendindEmailToAnotherAccount) ? true : false" color="#47a5ad" small fab v-if="showEmailFormFromDialog">
+                          <v-icon color="white">
+                              mdi-arrow-left
+                          </v-icon>
+                        </v-btn>
+                        <p style="font-size: 1rem;" class="text-uppercase text-center font-weight-bold">{{showEmailFormFromDialog ? 'A otro email' : ''}}</p>
+                      </v-col>
+                      <v-col cols="6" class="d-flex flex-column align-center">
+                        <v-btn :loading="isSendindEmailToLoginMyAccount" :disabled="(isSendindEmailToLoginMyAccount || isSendindEmailToAnotherAccount) ? true : false" @click="methodSendEmailFromDialog('myAccount')" v-if="!showEmailFormFromDialog" ref="btnShowUserSelectDialog" color="#47a5ad" fab>
+                          <v-icon color="white">
+                              mdi-account
+                          </v-icon>
+                        </v-btn>
+                        <div v-if="!showEmailFormFromDialog" style="font-size: 0.85rem; line-height: 15px;" class="text-center font-weight-bold mt-1">A mi email</div>
+                      </v-col>
+                      <v-col cols="6" class="d-flex flex-column align-center">
+                        <v-btn ref="btnShowUserForm" color="#47a5ad" fab @click="showEmailFormFromDialog = true" :disabled="(isSendindEmailToLoginMyAccount || isSendindEmailToAnotherAccount) ? true : false" v-if="!showEmailFormFromDialog">
+                            <v-icon color="white">
+                              mdi-email
+                          </v-icon>
+                        </v-btn>
+                        <div v-if="!showEmailFormFromDialog" style="font-size: 0.85rem; line-height: 15px;" class="text-center font-weight-bold mt-1">A otro email</div>
+                      </v-col>
+                  </v-row>
+              </v-card-actions>
+          <v-form ref="dialogEmailForm" v-show="showEmailFormFromDialog" class="mt-4">
+
+            <v-text-field
+            prepend-inner-icon="mdi-account"
+            outlined
+            dense
+            :rules="[(v) => !!v || 'Requerido']"
+            v-model="selectedUser.name"
+            label="Nombre"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-account"
+            outlined
+            dense
+            :rules="[(v) => !!v || 'Requerido']"
+            v-model="selectedUser.last_name"
+            label="Apellidos"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-sale"
+            outlined
+            dense
+            :rules="[(v) => !!v || 'Requerido']"
+            v-model="selectedUser.discount_percent"
+            type="number"
+            label="Descuento"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-phone"
+            outlined
+            dense
+            v-model="selectedUser.phone"
+            label="Telefono"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-email"
+            outlined
+            dense
+            v-model="selectedUser.email"
+            label="Email"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-account"
+            outlined
+            dense
+            v-model="selectedUser.rfc"
+            label="RFC"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-domain"
+            outlined
+            dense
+            v-model="selectedUser.company"
+            label="Nombre de la empresa"
+            ></v-text-field>
+            <v-text-field
+            prepend-inner-icon="mdi-truck"
+            outlined
+            dense
+            v-model="selectedUser.ship_address"
+            label="Dirección de envío"
+            ></v-text-field>
+
+
+          </v-form>
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+          <v-btn @click="closeAndResetSendEmailDialog('resetAndClose')" tile depressed color="red" class="white--text">CANCELAR</v-btn>
+          <v-spacer></v-spacer>
+           <v-btn v-if="(showEmailFormFromDialog) && enableBtnPrintLogInAdmin" :loading="isSendindEmailToAnotherAccount" :disabled="(isSendindEmailToLoginMyAccount || isSendindEmailToAnotherAccount) ? true : false" @click="methodSendEmailFromDialog('anotherAccount')" tile depressed color="#47a5ad" class="white--text">ENVIAR</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
 
 
     </v-row>
@@ -1413,6 +1607,12 @@ export default {
   name: "Quoter",
   data() {
     return {
+        isSendindEmailToAnotherAccount: false,
+        isSendindEmailToLoginMyAccount: false,
+        isPrintingSpecificClientFromDistributorDialog: false,
+        showUserFormFromDistributorPrintDialog: false,
+        showEmailFormFromDialog: false,
+        dialogSendEmail: false,
         distributorPrintDialog: false,
         distributorImagePrint: null,
         isPrintinDistributorPDF: false,
@@ -1617,16 +1817,22 @@ export default {
         this.resetSelectedUser();
       },
       resetSelectedUser(stateDialog = 'default'){
+
         this.selectedUser = {
             name: null,
+            rfc: null,
             last_name: null,
+            email: null,
             discount_percent: 0,
             phone: null,
-            ship_address: null
+            ship_address: null,
+            company: null
         }
         if(stateDialog == 'cancelar'){
             this.showUserForm = false;
+            this.showUserFormFromDistributorPrintDialog = false;
             this.showUserSelectDialog = false;
+            this.distributorPrintDialog = false;
         }
       },
       fnOnChangeResetObjectSelectedUser(objectLocalSelectedUser){
@@ -1691,6 +1897,77 @@ export default {
       this.$router.push({name: 'login', query: {redirect: '/quoter'}})
     },
 
+    closeAndResetSendEmailDialog(option='reset'){
+        this.showEmailFormFromDialog = false;
+        this.isSendindEmailToLoginMyAccount = false;
+        this.isSendindEmailToAnotherAccount = false;
+        this.resetSelectedUser();
+        if(option == 'resetAndClose'){
+            this.dialogSendEmail = false;
+        }
+    },
+
+    methodPrintDistributorSpecificClient(){
+      this.isPrintingSpecificClientFromDistributorDialog = true;
+      if(this.$refs.userFormFromDistributorPrintDialog.validate()){
+        axios.post("/api/auth-order-list-pdf-distributor", {orders: this.orders, user: this.selectedUser}, {responseType: 'blob',}).then((response)=>{
+            this.isPrintingSpecificClientFromDistributorDialog = false;
+            this.resetSelectedUser('cancelar');
+            this.closeDistributorPrintDialog('closeAndReset');
+            //FileDownload(response.data, 'modelos.pdf')
+            const objectUrl = URL.createObjectURL(response.data);
+            this.urlPdfVisor = objectUrl;
+            this.downloadButtonPdf = response.data;
+            this.pdfDialog = true;
+        }).catch(()=>{
+
+        })
+      }
+    },
+
+
+    methodPrintFromDistributorDialog(printTo){
+        //distributor, client, everyone
+        if(printTo == 'distributor'){
+            this.dialogAcceptPrintPdfDistribuitor();
+        }
+        else if(printTo == 'client'){
+            this.methodPrintDistributorSpecificClient();
+        }
+        else if(printTo == 'everyone'){
+            this.printRolluxQuoting();
+        }
+    },
+    methodSendEmailFromDialog(isSendTo){
+        //myAccount and anotherAccount
+        if(isSendTo == 'myAccount'){
+            this.isSendindEmailToLoginMyAccount = true;
+            // axios.post("/api/auth-order-list-pdf-distributor", {orders: this.orders, user: this.user}, {responseType: 'blob',}).then((response)=>{
+            // const objectUrl = URL.createObjectURL(response.data);
+            // FileDownload(response.data, 'fromEmail.pdf');
+            // console.log(objectUrl);
+            // this.closeAndResetSendEmailDialog('resetAndClose');
+            // }).catch(()=>{
+
+            // })
+            axios.post("/api/send-order-email-pdf", {orders: this.orders, user: this.user}, {responseType: 'blob',}).then((response)=>{
+            this.closeAndResetSendEmailDialog('resetAndClose');
+            }).catch(()=>{
+                this.isSendindEmailToLoginMyAccount = false;
+            })
+
+        }
+        else if(isSendTo == 'anotherAccount'){
+            this.isSendindEmailToAnotherAccount = true;
+            axios.post("/api/send-order-email-pdf", {orders: this.orders, user: this.selectedUser}, {responseType: 'blob',}).then((response)=>{
+            this.closeAndResetSendEmailDialog('resetAndClose');
+            this.resetSelectedUser();
+            }).catch(()=>{
+                this.isSendindEmailToAnotherAccount = false;
+            })
+        }
+    },
+
 	  printRolluxQuoting(){
           this.isPrintRolluxQuotingPDF = true;
     //    this.$children[7].$refs.html2Pdf.generatePdf()
@@ -1728,9 +2005,13 @@ export default {
         })
     },
 
-    closeDistributorPrintDialog(){
-        this.distributorPrintDialog = false;
-        this.distributorImagePrint = null;
+    closeDistributorPrintDialog(option = 'close'){
+        this.showUserFormFromDistributorPrintDialog = false;
+        this.resetSelectedUser();
+        if(option == 'closeAndReset'){
+            this.distributorPrintDialog = false;
+            this.distributorImagePrint = null;
+        }
     },
     viewAndPrintPdfDistribuitor(){
         //Distribuidor
@@ -2233,7 +2514,7 @@ export default {
         // discount_percent: 0,
         let filteredArray = Object.values(this.selectedUser).filter(el=> (el!=null && el!=''));
         //Longitud >= 3 por que es el numero minimo de propiedades de usuario para poder imprimir
-        if((filteredArray.length >= 3) && ((this.selectedUser['name'] != null && this.selectedUser['name'] != '') && (this.selectedUser['last_name'] != null && this.selectedUser['last_name'] != '') && (this.selectedUser['discount_percent'] != null && this.selectedUser['discount_percent'] != ''))){
+        if((filteredArray.length >= 4) && ((this.selectedUser['name'] != null && this.selectedUser['name'] != '') && (this.selectedUser['last_name'] != null && this.selectedUser['last_name'] != '') && (this.selectedUser['discount_percent'] != null && this.selectedUser['discount_percent'] != '') && this.selectedUser['email'] != null && this.selectedUser['email'] != '')){
             return true;
         }
         else{
