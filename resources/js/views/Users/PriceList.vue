@@ -26,27 +26,33 @@
 
                     <v-row justify="center" justify-xl="start" justify-lg="start" justify-ms="start" justify-sm="start" class="mt-1">
 
-                        <v-col cols="12" xl="3" lg="3" md="3" sm="4" v-for="itemPdf in prices" :key="itemPdf.id">
+                        <v-col cols="12" xl="3" lg="3" md="3" sm="12" v-for="itemPdf in prices" :key="itemPdf.id">
                             <v-card
-                                outlined
                                 elevation="0"
                                 height="350"
-                                width="300"
+                                width="250"
                                 class="d-flex flex-column"
                             >
-                              <v-img
-                               height="310"
-                               width="300"
+                            <v-card-text >
+                                 <v-img
+                                 style="box-shadow: 17px 14px 25px -4px rgba(0,0,0,1);"
+                                height="210"
+                                width="250"
                                 :src="`/img/${itemPdf.thumbnail}`"
                               ></v-img>
-                              <v-card-title class="d-flex justify-center">{{itemPdf.title}}</v-card-title>
-                              <v-card-actions class="d-flex justify-center mb-2">
+                            </v-card-text>
+                            <v-card-title  class="d-flex justify-center">
+                                <span class="font-weight-bold">{{itemPdf.title}}</span>
+                                <!-- <span class="font-weight-bold" style="color: #47a5ad">{{itemPdf.title.split(' ')[1]}}</span> -->
+                                
+                            </v-card-title>
+                            <v-card-actions  class="mt-0 pt-0 d-flex justify-center ">
                                 <v-btn
-                                    rounded
-                                    color="#47a5ad"
-                                    class="white--text"
-                                    target="_blank" :href="'http://127.0.0.1:8000/img/'+itemPdf.path"
-                                  >
+                                elevation="3"
+                                color="#47a5ad"
+                                class="rounded-lg white--text"
+                                target="_blank" :href="'https://rollux.com.mx/img/'+itemPdf.path"
+                                >
                                     Descargar
                                 </v-btn>
                               </v-card-actions>
