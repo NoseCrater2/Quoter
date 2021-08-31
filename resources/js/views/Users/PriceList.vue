@@ -26,7 +26,7 @@
 
                     <v-row justify="center" justify-xl="start" justify-lg="start" justify-ms="start" justify-sm="start" class="mt-1">
 
-                        <v-col cols="12" xl="3" lg="3" md="3" sm="4" v-for="(itemPdf, index) in pdfRoute" :key="index">
+                        <v-col cols="12" xl="3" lg="3" md="3" sm="4" v-for="itemPdf in prices" :key="itemPdf.id">
                             <v-card
                                 outlined
                                 elevation="0"
@@ -35,16 +35,17 @@
                                 class="d-flex flex-column"
                             >
                               <v-img
-                                lazy-src="https://via.placeholder.com/3508x2480"
-                                src="/img/black-r.png"
+                               height="310"
+                               width="300"
+                                :src="`/img/${itemPdf.thumbnail}`"
                               ></v-img>
-                              <v-card-title class="d-flex justify-center">{{itemPdf.fileName}}</v-card-title>
+                              <v-card-title class="d-flex justify-center">{{itemPdf.title}}</v-card-title>
                               <v-card-actions class="d-flex justify-center mb-2">
                                 <v-btn
                                     rounded
                                     color="#47a5ad"
                                     class="white--text"
-                                    target="_blank" :href="itemPdf.link"
+                                    target="_blank" :href="'http://127.0.0.1:8000/img/'+itemPdf.path"
                                   >
                                     Descargar
                                 </v-btn>
@@ -60,6 +61,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 //NO LO IMPLEMENTE POR QUE NO SE PODIAN LEER TODO EL FOLDER DE PDFS
 // const fs = require('fs');
 export default {
@@ -76,6 +78,7 @@ export default {
         }
     },
     mounted() {
+        this.$store.dispatch('getPrices')
         // this.importAll(require.context('../../../../public/img/pdfs/', false, /\.(pdf)$/));
   },
 
@@ -85,6 +88,12 @@ export default {
     //   console.log(this.pdfs)
     // },
   },
+
+  computed: {
+    ...mapState({
+        prices: state => state.priceModule.prices,
+    }),
+  }
 };
 </script>
 
