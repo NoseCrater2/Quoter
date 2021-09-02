@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Blind;
+use App\Order;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\PDF;
+use Carbon\Carbon;
 
 class BlindController extends Controller
 {
@@ -15,7 +17,7 @@ class BlindController extends Controller
      */
     public function index()
     {
-        
+
     }
 
     /**
@@ -82,6 +84,19 @@ class BlindController extends Controller
     public function destroy(Blind $blind)
     {
         //
+    }
+
+    public function revalidateItemQuotation(Request $request, Order $order){
+        // dd($request->all());
+        $data = $request->all();
+        foreach ($data as $value) {
+            $blind = Blind::find($value['id']);
+            $blind->price = $value['price'];
+            $order->blinds()->save($blind);
+        }
+        $order->updated_at = Carbon::now()->format('Y-m-d H:i:s');
+        $order->save();
+
     }
 
 }

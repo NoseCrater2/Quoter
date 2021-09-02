@@ -166,7 +166,15 @@ class ProductController extends Controller
         $pdf->save('img/'.$namePdf[0].$datePdf.'.pdf');
 
         // dd($pdf);
-        Mail::to($orders['user']['email'])->send(new emailOrder($orders));
+        if(isset($orders['user']['id'])){
+            Mail::to($orders['user']['email'])->send(new emailOrder($orders));
+        }
+        else{
+            $emails = [auth()->user()->email, $orders['user']['email'], 'ventas@rollux.com.mx'];
+            foreach ($emails as $recipient) {
+                Mail::to($recipient)->send(new emailOrder($orders));
+            }
+        }
         Storage::delete($namePdf[0].$datePdf.'.pdf');
     }
 

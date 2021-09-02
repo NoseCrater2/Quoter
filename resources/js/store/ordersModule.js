@@ -237,6 +237,8 @@ const ordersModule = {
             } catch (error) {}
         },
 
+        //ELIMINA ORDENES O COTIZACIONES (EXISTENTES EN BD)
+        //MANDAR LOS CORREOS A DISTRIBUIRO Y VENTAS
         deleteQuotingOrder: async function ({ commit },id){
             try {
                 const response = await axios
@@ -244,7 +246,7 @@ const ordersModule = {
                 commit('deleteQuotingOrder',response.data.data);
             } catch (error) {}
         },
-
+        //TOMA PERSIANAS DE UNA ORDENE O COTIZACION Y LAS PONE EN EL COTIZADOR
         editQuotingOrder: async function ({ commit },id){
             try {
                 const response = await axios
@@ -252,7 +254,7 @@ const ordersModule = {
                 commit('assignOrder',response.data.data);
             } catch (error) {}
         },
-
+        //CAMBIA UNA COTIZATCION A ORDEN
         changeToOrder: async function ({ commit }, id){
             try {
                 const response = await axios

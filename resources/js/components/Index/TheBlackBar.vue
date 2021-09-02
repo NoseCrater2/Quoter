@@ -37,12 +37,16 @@
                                 <v-list-item-title >Iniciar Sesión</v-list-item-title>
                             </v-list-item>
                         </div>
+
                         <div v-else>
                             <v-list-item  :to="{name: 'Orders', params: {option: 'ordenes'}}">
                               <v-list-item-title >Ordenes</v-list-item-title>
                             </v-list-item>
                             <v-list-item :to="{name: 'Orders', params: {option: 'cotizaciones'}}">
                               <v-list-item-title >Cotizaciones</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item :to="{name: 'Dashboard'}">
+                              <v-list-item-title >Dashboard</v-list-item-title>
                             </v-list-item>
                             <v-list-item :to="{name: 'Profile'}">
                               <v-list-item-title >Mi perfil</v-list-item-title>

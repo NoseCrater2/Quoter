@@ -23,9 +23,10 @@
                         </v-list-item-content>
                     </v-list-item>
                     <v-divider></v-divider>
-                     <v-list-item link :to="{name: 'Marketcar'}">
+                     <v-list-item link >
+                         <!-- :to="{name: 'Marketcar'}" -->
                         <v-list-item-content>
-                            <v-list-item-title>Mis compras</v-list-item-title>
+                            <v-list-item-title>Mis compras <span style="color: red">(EN CONSTRUCCIÓN)</span></v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                 </v-list>
