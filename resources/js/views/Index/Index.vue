@@ -45,6 +45,9 @@
               <v-list-item :to="{name: 'Orders', params: {option: 'cotizaciones'}}">
                 <v-list-item-title class="text-center">COTIZACIONES</v-list-item-title>
               </v-list-item>
+              <v-list-item :to="{name: 'Dashboard'}">
+                <v-list-item-title class="text-center">DASHBOARD</v-list-item-title>
+              </v-list-item>
               <v-list-item :to="{name: 'Profile'}">
                 <v-list-item-title class="text-center">MI PERFIL</v-list-item-title>
               </v-list-item>

@@ -35,32 +35,21 @@
                             >
                             <v-card-text >
                                  <v-img
-                                 style="box-shadow: 17px 14px 25px -4px rgba(0,0,0,1);"
+                                 style="box-shadow: 17px 14px 25px -21px rgba(0,0,0,1);"
                                 height="210"
                                 width="250"
                                 :src="`/img/${itemPdf.thumbnail}`"
                               ></v-img>
                             </v-card-text>
-                            <v-card-title  class="d-flex justify-center">
-                                <span class="font-weight-bold">{{itemPdf.title}}</span>
+                                <span class="font-weight-bold" style="font-size: 13px">{{itemPdf.title}}</span>
                                 <!-- <span class="font-weight-bold" style="color: #47a5ad">{{itemPdf.title.split(' ')[1]}}</span> -->
-                                
-                            </v-card-title>
                             <v-card-actions  class="mt-0 pt-0 d-flex justify-center ">
                                 <v-btn
-<<<<<<< Updated upstream
-                                elevation="3"
-                                color="#47a5ad"
-                                class="rounded-lg white--text"
-                                target="_blank" :href="'https://rollux.com.mx/img/'+itemPdf.path"
-                                >
-=======
                                     rounded
                                     color="#47a5ad"
                                     class="white--text"
                                     target="_blank" :href="'https://rollux.com.mx/img/'+itemPdf.path"
                                   >
->>>>>>> Stashed changes
                                     Descargar
                                 </v-btn>
                               </v-card-actions>

@@ -1716,6 +1716,9 @@ export default {
           galleryPrice: 0,
           manufacturerPrice: 0,
           stringPrice: 0,
+          extraEnrollable: 0,
+          extraVertical: 0,
+
         },
       },
       defaultOrder: {
@@ -1765,6 +1768,8 @@ export default {
           galleryPrice: 0,
           manufacturerPrice: 0,
           stringPrice: 0,
+          extraEnrollable: 0,
+          extraVertical: 0,
         },
       },
       heightMargins: null,
@@ -1802,6 +1807,8 @@ export default {
         galleryPrice: 0,
         manufacturerPrice: 0,
         stringPrice: 0,
+        extraEnrollable: 0,
+        extraVertical: 0,
       },
 
     };

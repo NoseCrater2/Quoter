@@ -17,7 +17,7 @@ class QuotatioIndexResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            // 'state' => Carbon::now()->diffInDays() > 20 ?'Sí':'No',
+            'state' => Carbon::now()->diffInDays($this->updated_at, true) < 20,
             'order' => 'PT'.Carbon::parse($this->created_at)->format('dmy').'/'.$this->id,
             'blinds' => $this->blinds->count(),
             'total' => $this->blinds->map( function( $blind ){
@@ -31,7 +31,8 @@ class QuotatioIndexResource extends JsonResource
             })->sum(),
             'created_at' => Carbon::parse($this->created_at)->toFormattedDateString(),
             'updated_at' =>Carbon::parse($this->updated_at)->toFormattedDateString(),
-            
+            'validity' =>Carbon::parse($this->updated_at)->addDays(20)->format('d/m/Y')
+
         ];
     }
 }
