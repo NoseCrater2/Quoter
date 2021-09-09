@@ -105,6 +105,7 @@ Route::middleware(['auth:sanctum'])->group(function()
     Route::get('quotations','OrderController@quotations');
     Route::get('quotations-admin','OrderController@quotationsAdmin');
     Route::get('orders-admin','OrderController@ordersAdmin');
+    Route::post('revalidate-item-quotation/{order}','BlindController@revalidateItemQuotation');
 
 
     Route::get('changequoting/{order}','OrderController@changeToOrder');

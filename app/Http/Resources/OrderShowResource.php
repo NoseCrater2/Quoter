@@ -63,8 +63,8 @@ class OrderShowResource extends JsonResource
                     'type' => $blind->variant->type->slug,
                     'variant' => $blind->variant_id,
                     'variant2' => $blind->second_variant_id,//puede no tener
-                    'extraVertical' => $blind->extraVertical,
-                    'extraEnrollable' => $blind->extraEnrollable
+                    'extraVertical' => floatval($blind->extraVertical),
+                    'extraEnrollable' => floatval($blind->extraEnrollable)
                 ];
             }),
         ];

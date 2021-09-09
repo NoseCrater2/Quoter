@@ -61,8 +61,9 @@
               <v-col cols="12" xl="9" lg="9" md="9" sm="12">
                   <v-row align="center" no-gutters>
                       <v-col cols="3" v-for="(item, index) in marketStepsItems" :key="index">
+                          <!-- @click="changeStepWindowFromAlerts((index+1))" -->
                         <v-alert
-                            @click="changeStepWindowFromAlerts((index+1))"
+
                             class="mx-1"
                             :color="(index+1) == localWindowStepModel ? 'orange darken-1' : 'grey lighten-2'"
                         >
@@ -89,7 +90,7 @@
                                 <span>#Orden <span class="font-weight-bold" style="color: #3ba2a9"> P010821/100</span></span>
                             </v-row>
                         </div>
-                        <div class="pa-4 d-flex justify-center align-center" style="border: 1px solid #BDBDBD; min-height: 400px;">
+                        <div class="d-flex justify-center" :class="localWindowStepModel == 1 ? 'pa-4 align-center' : 'align-start'" style="border: 1px solid #BDBDBD; min-height: 400px;">
                             <!-- V-IF: SI EL CARRITO ESTÁ VACÍO -->
                             <!-- <div>
                                 <v-img
@@ -103,12 +104,17 @@
                             </div> -->
 
                             <!-- V-ELSE: ESTE WINDOW INICIA AQUÍ Y HARÁ LA FUNCION DE LOS PASOS DE COMPRA -->
-                            <v-window v-model="localWindowStepModel">
-                                <v-window-item v-for="(item, windowIndex) in 4" :key="windowIndex" :value="(windowIndex+1)">
+                            <v-window v-if="loadingOrdersToOrdersCardsStepOne" v-model="localWindowStepModel">
+                                <v-window-item v-for="(item, windowIndex) in modelWindowItemSteps" :key="windowIndex" :value="(windowIndex+1)">
                                 <!-- DENTRO DE ESTE WINDOW ITEM SE CARGARÁ EL COMPONENTE DE PASO CORRESPONDIENTE -->
                                     <!-- INICIA CARGA EL COMPONENTE DEL STEP 1 -->
-                                    <OrdersCardsStepOne v-if="localWindowStepModel == 1"></OrdersCardsStepOne>
+                                    <OrdersCardsStepOne @emitCheckAndBuyFromOrdersCardsStepOneView="localMethodStepThreeCheckAndBuy" @emitDetailsItemFromOrdersCardsStepOneView="localMethodIsOrdersAndQuotationsDialogActivatedOn" :itemOrder="computedNoPaidOrders" v-if="localWindowStepModel == 1"></OrdersCardsStepOne>
                                     <!-- TERMINA CARGA EL COMPONENTE DEL STEP 1 -->
+                                    <div v-else-if="localWindowStepModel == 3">
+                                        <v-col cols="12" v-for="(itemBlind, index) in quotingOrder.blinds" :key="itemBlind.id">
+                                            <DashboardBlindsProductDetailCards @emitEditBlindFromBlindsProductDetailCardsView="localMethodEditBlindStepThreeMarketcar" :propIsInMarketAndStepThree="true" :propIsOrderOrQuotationString="'quotation'" :propItemArrayBlindsObject="itemBlind" :propBlindCount="(index + 1)" :propBreakpointFromDialog="$vuetify.breakpoint"></DashboardBlindsProductDetailCards>
+                                        </v-col>
+                                    </div>
                                 </v-window-item>
                             </v-window>
                             <!-- ESTE WINDOW TERMINA AQUÍ Y HARÁ LA FUNCION DE LOS PASOS DE COMPRA -->
@@ -220,17 +226,37 @@
                   </v-row>
               </v-col>
           </v-row>
+          <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated" :propTotalPrice="localToPropTotalPrice" :propIsOrderOrQuotationString="'quotation'" :propItemQuotationOrderNumberID="localPropItemQuotationOrderNumberID"></DashboardOrdersAndQuotationsDialog>
       </v-container>
   </div>
 </template>
 
 <script>
 import OrdersCardsStepOne from '../../components/Dashboard/Marketcar/OrdersCardsStepOne.vue'
+import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/OrdersAndQuotations/DashboardOrdersAndQuotationsDialog.vue'
+import DashboardBlindsProductDetailCards from '../../components/Dashboard/BlindsProductDetailCards/DashboardBlindsProductDetailCards.vue';
+import { mapState } from 'vuex';
 export default {
+    mounted(){
+        this.$store.dispatch('getQuotedOrders').then(()=>{
+            this.loadingOrdersToOrdersCardsStepOne = true
+        })
+    },
     data() {
         return {
-            checkboxPrivacyTermsAndContinue: false,
+            localCurrentIDQuotingOrderStepThree: -1,
+            modelWindowItemSteps: [
+                {step: 1, name: 'ChooseOrder'},
+                {step: 2, name: 'QuotingOrder'},
+                {step: 3, name: 'CheckAndBuy'},
+                {step: 4, name: 'Confirm'}
+            ],
             localWindowStepModel: 1,
+            localToPropTotalPrice: 0,
+            localPropItemQuotationOrderNumberID: '',
+            isOrdersAndQuotationsDialogActivated: false,
+            loadingOrdersToOrdersCardsStepOne: false,
+            checkboxPrivacyTermsAndContinue: false,
             navigationDrawerItems: [
                 { title: 'Mi perfil', icon: 'mdi-view-dashboard' },
                 { title: 'Órdenes',
@@ -258,6 +284,35 @@ export default {
         }
     },
     methods:{
+        localMethodStepThreeCheckAndBuy(localItem){
+            this.$store.dispatch('getQuotingOrder', localItem.id).then(()=>{
+                this.localWindowStepModel = 3;
+                this.localCurrentIDQuotingOrderStepThree = localItem.id;
+                console.log(localItem)
+            });
+
+        },
+        localMethodIsOrdersAndQuotationsDialogActivatedOn(localItem){
+            this.$store.dispatch('getQuotingOrder', localItem.id).then(()=>{
+                this.localToPropTotalPrice = localItem.total;
+                this.localPropItemQuotationOrderNumberID = localItem.order;
+                this.isOrdersAndQuotationsDialogActivated = true;
+            });
+
+        },
+        localMethodEditBlindStepThreeMarketcar(){
+            if(this.localCurrentIDQuotingOrderStepThree > -1){
+                this.$store.dispatch('editQuotingOrder', this.localCurrentIDQuotingOrderStepThree).then(()=>{
+                    this.$router.push({name: 'Quoter', params:{order_id: this.localCurrentIDQuotingOrderStepThree}})
+                });
+            }
+        },
+        emitClickCloseFromOrdersAndQuotationsDialog(){
+            this.localToPropTotalPrice = 0;
+            this.localPropItemQuotationOrderNumberID = '';
+            this.isOrdersAndQuotationsDialogActivated = false;
+        },
+
         changeStepWindowFromAlerts(index){
             if(index <= 4 && index != this.localWindowStepModel){
                 this.localWindowStepModel = index;
@@ -265,15 +320,28 @@ export default {
         }
     },
     computed:{
+        ...mapState({
+            quotedOrders: state => state.ordersModule.quotedOrders,
+            orders: state => state.ordersModule.orders,
+            quotingOrders: state => state.ordersModule.quotingOrders,
+            quotingOrder : state => state.ordersModule.quotingOrder,
+            user: (state) => state.user,
+
+        }),
         computedNavigationDrawerItemsWithChild(){
             return [{...this.navigationDrawerItems[1]}, {...this.navigationDrawerItems[2]}]
         },
         btnContinuarTitle(){
             return this.localWindowStepModel == 4 ? 'Pagar' : 'Continuar';
+        },
+        computedNoPaidOrders(){
+            return this.quotedOrders.filter(itemOrder=> itemOrder.state == 'No Pagada');
         }
     },
     components:{
-        OrdersCardsStepOne
+        OrdersCardsStepOne,
+        DashboardOrdersAndQuotationsDialog,
+        DashboardBlindsProductDetailCards
     }
 }
 </script>

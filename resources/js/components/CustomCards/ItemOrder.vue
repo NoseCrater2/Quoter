@@ -54,7 +54,7 @@
                 </v-list-item-content>
             </v-list-item>
             <v-card-actions class="">
-                <v-btn x-small outlined rounded text @click="isOrdersAndQuotationsDialogActivated = true">Ver Detalles</v-btn>
+                <v-btn x-small outlined rounded text @click="localMethodIsOrdersAndQuotationsDialogActivatedOn(item)">Ver Detalles</v-btn>
                 <v-spacer></v-spacer>
                 <v-chip small :color="hover?'#3ba2a9':'white'" :text-color="hover?'white':'black'">
                     <v-avatar class="white" >
@@ -92,22 +92,43 @@
                     </v-col>
                 </v-list-item-content>
             </v-list-item> -->
-            <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated"></DashboardOrdersAndQuotationsDialog>
+            <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated" :propTotalPrice="localToPropTotalPrice" :propIsOrderOrQuotationString="'order'" :propItemQuotationOrderNumberID="item.order"></DashboardOrdersAndQuotationsDialog>
         </v-card>
     </v-hover>
 </template>
 
 <script>
 import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/OrdersAndQuotations/DashboardOrdersAndQuotationsDialog.vue'
+import { mapState } from 'vuex';
 export default {
     data(){
         return {
+            localToPropTotalPrice: 0,
             isOrdersAndQuotationsDialogActivated: false,
             mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
         }
     },
+    computed:{
+        ...mapState({
+            orders: state => state.ordersModule.orders,
+            quotedOrders: state => state.ordersModule.quotedOrders,
+            quotedOrder: state => state.ordersModule.quotedOrder,
+            quotingOrders: state => state.ordersModule.quotingOrders,
+            quotingOrder : state => state.ordersModule.quotingOrder,
+            user: (state) => state.user,
+        }),
+    },
     methods:{
+        localMethodIsOrdersAndQuotationsDialogActivatedOn(localItem){
+            this.$store.dispatch('getQuotedOrder', localItem.id).then(()=>{
+                this.localToPropTotalPrice = localItem.total;
+                this.isOrdersAndQuotationsDialogActivated = true;
+                console.log(this.quotedOrders, this.quotedOrder)
+            });
+
+        },
         emitClickCloseFromOrdersAndQuotationsDialog(){
+            this.localToPropTotalPrice = 0;
             this.isOrdersAndQuotationsDialogActivated = false;
         }
     },

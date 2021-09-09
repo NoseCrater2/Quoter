@@ -19,7 +19,7 @@
                     </v-btn>
                 </v-toolbar>
             </template>
-  
+
             <template v-slot:default="props">
               <v-row>
                 <v-col
@@ -147,7 +147,7 @@ export default {
             isEditing: false,
             dialogDelete: false,
             loadinDeleteButton : false,
-            loadingSaveButton: false, 
+            loadingSaveButton: false,
             dialog1 : false,
             search: null,
             value: 0,
@@ -188,12 +188,12 @@ export default {
                 this.getImageFromServer('https://rollux.com.mx/img/'+list.thumbnail,list.title)
                 this.getFileFromServer('https://rollux.com.mx/img/'+list.path,list.title)
             }
-           
+
             this.dialog1 = true
         },
 
         openDialogDelete(selected){
-             this.selectedList = selected 
+             this.selectedList = selected
             this.dialogDelete = true
         },
 
@@ -238,7 +238,7 @@ export default {
                     this.price = Object.assign({},this.defaultPrice)
                 })
             }
-           
+
         }
 
     }
