@@ -92,7 +92,7 @@
                     </v-col>
                 </v-list-item-content>
             </v-list-item> -->
-            <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated" :propTotalPrice="localToPropTotalPrice" :propIsOrderOrQuotationString="'order'"></DashboardOrdersAndQuotationsDialog>
+            <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated" :propTotalPrice="localToPropTotalPrice" :propIsOrderOrQuotationString="'order'" :propItemQuotationOrderNumberID="item.order"></DashboardOrdersAndQuotationsDialog>
         </v-card>
     </v-hover>
 </template>

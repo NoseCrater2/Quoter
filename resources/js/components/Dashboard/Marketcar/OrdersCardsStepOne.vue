@@ -1,11 +1,11 @@
 <template>
     <v-row dense>
-      <v-col cols="12" xl="4" lg="6" md="12" sm="6" v-for="(item, index) in 3" :key="index">
+      <v-col cols="12" xl="4" lg="6" md="12" sm="6" v-for="(item) in itemOrder" :key="item.id">
             <v-card min-width="338" max-width="343" class="pa-2 mx-auto" outlined color="grey lighten-2">
                 <v-list-item style="background-color: white">
                     <v-list-item-content>
                         <v-list-item-title class="text-uppercase text-start mt-n3">
-                            1 Persiana(s)
+                            {{ item.blinds }} Persiana(s)
                         </v-list-item-title>
                     </v-list-item-content>
                     <v-list-item-avatar class="mr-n2" tile size="67">
@@ -17,18 +17,18 @@
                 <v-list-item style="background-color: white" class="mt-n4">
                     <v-list-item-content class="mx-n4 mt-n7">
                         <v-col cols="12">
-                            <div>Orden no pagada</div>
-                            <div class="text-uppercase font-weight-bold" style="color: #3ba2a9; font-size: 1.2rem">P140821/99</div>
+                            <div>Orden {{ item.state }}</div>
+                            <div class="text-uppercase font-weight-bold" style="color: #3ba2a9; font-size: 1.2rem">{{item.order}}</div>
                         </v-col>
                             <v-col cols="3">
                                 <div>
                                     <v-badge
                                       class="mb-n2 font-weight-bold isHoverBadge"
-                                      :content="2"
-                                      :value="2"
+                                      :content="item.blinds"
+                                      :value="item.blinds"
                                       color="#3ba2a9"
                                       overlap
-                                      :offset-x="2 > 9 ? '39' : '37'"
+                                      :offset-x="item.blinds > 9 ? '39' : '37'"
                                       offset-y="28"
                                     >
                                       <v-icon color="#3ba2a9" size="55">
@@ -40,7 +40,7 @@
                             </v-col>
                             <v-col cols="9" class="text-right">
                                 <span style="font-size: 2rem" class="font-weight-bold">
-                                   $1,290.00
+                                   {{mxCurrencyFormat.format(item.total)}}
                                 </span>
                                 <span class="text-center" style="font-size: 0.85rem">MXN</span>
                             </v-col>
@@ -50,12 +50,12 @@
                     <v-list-item-content class="mx-n6">
                         <v-col cols="12">
                             <v-card-actions>
-                                <v-btn block color="orange darken-1" class="white--text font-weight-bold" style="font-size: 1.3rem" tile >REVISAR Y PAGAR</v-btn>
+                                <v-btn @click="localMethodCheckAndBuySendToMarketcarView(item)" block color="orange darken-1" class="white--text font-weight-bold" style="font-size: 1.3rem" tile >REVISAR Y PAGAR</v-btn>
                             </v-card-actions>
                         </v-col>
                         <v-col cols="12" class="mt-n7">
                             <v-card-actions>
-                                <v-btn text class="text-decoration-underline">Ver detalles</v-btn>
+                                <v-btn @click="localMethodDetailsItemSendToMarketcarView(item)" text class="text-decoration-underline">Ver detalles</v-btn>
                                 <v-spacer></v-spacer>
                                 <v-btn text >Cancelar orden</v-btn>
                             </v-card-actions>
@@ -68,11 +68,34 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
+    mounted(){
+        console.log(this.itemOrder)
+    },
     data() {
         return {
-
+            mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
         }
     },
+    methods:{
+        localMethodCheckAndBuySendToMarketcarView(item){
+            this.$emit('emitCheckAndBuyFromOrdersCardsStepOneView', item)
+        },
+        localMethodDetailsItemSendToMarketcarView(item){
+            this.$emit('emitDetailsItemFromOrdersCardsStepOneView', item)
+        }
+    },
+    computed:{
+
+    },
+    components:{
+
+    },
+    props:{
+        itemOrder:{
+            type: Array
+        }
+    }
 }
 </script>

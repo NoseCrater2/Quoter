@@ -6,11 +6,12 @@
                 <v-icon>mdi-close</v-icon>
             </v-btn>
             <div class="white--text text-uppercase" :style="$vuetify.breakpoint.mdAndUp ? 'font-size: 1.43rem': 'font-size: 1.0rem'">Detalles de la
-                <span>Cotización / </span>
-                <span>#R140821/001</span>
+                <span>{{computedQuotingOrdersRoute.name}} / </span>
+                <span>#{{propItemQuotationOrderNumberID}}</span>
             </div>
             <v-spacer></v-spacer>
-            <div class="mr-1">
+
+            <div v-if="computedQuotingOrdersRoute.path == 'order' && computedQuotingOrdersRoute.name == 'Cotización'" class="mr-1">
                 <v-btn :large="$vuetify.breakpoint.mdAndUp ? true : false" :icon="!$vuetify.breakpoint.mdAndUp ? true : false" elevation="0" color="orange darken-1" class="white--text font-weight-bold mr-2">
                     {{$vuetify.breakpoint.mdAndUp ? 'Agregar al carrito' : ''}}
                     <v-icon size="30" right>mdi-cart</v-icon>
@@ -25,7 +26,8 @@
                     <v-icon size="30">mdi-delete</v-icon>
                 </v-btn>
             </div>
-            <!-- <div class="mr-1">
+
+            <div v-else-if="computedQuotingOrdersRoute.path == 'marketcar' && computedQuotingOrdersRoute.name == 'Orden'" class="mr-1">
                 <v-btn large elevation="0" color="orange darken-1" class="white--text font-weight-bold mr-2">
                     Comprar
                     <v-icon size="30" right>mdi-arrow-right</v-icon>
@@ -39,8 +41,9 @@
                 <v-btn icon color="white">
                     <v-icon size="30">mdi-delete</v-icon>
                 </v-btn>
-            </div> -->
-            <!-- <div class="mr-1">
+            </div>
+
+            <div v-else-if="computedQuotingOrdersRoute.path == 'order' && computedQuotingOrdersRoute.name == 'Orden'" class="mr-1">
                 <v-row no-gutters align="center">
                     <div class="white--text mr-1">Estado de la orden: </div>
                     <div style="background-color: black" class="mx-2">
@@ -54,7 +57,8 @@
                         <v-icon size="30">mdi-printer</v-icon>
                     </v-btn>
                 </v-row>
-            </div> -->
+            </div>
+
         </v-toolbar>
         <v-row no-gutters align="center" class="mt-4">
             <v-col cols="3">
@@ -72,10 +76,10 @@
                     </v-col>
                     <v-row no-gutters justify="center" class="pa-5" align="start">
                         <v-col cols="12" xl="5" lg="5" md="5" sm="12" style="font-size: 1.15rem" class="mt-n4" :class="!$vuetify.breakpoint.mdAndUp ? 'text-center':''">
-                            <div class="font-weight-bold" style="font-size: 1.6rem">Cotización</div>
+                            <div class="font-weight-bold" style="font-size: 1.6rem">{{computedQuotingOrdersRoute.name}}</div>
                             <div>Folio <span class="font-weight-bold" style="color: #47a5ad">R120821/001</span></div>
                             <div>Fecha: {{computedCurrentDate}}</div>
-                            <div style="font-size: 1.0rem">Vigencia hasta: {{computedVigencyDate}}</div>
+                            <div v-if="computedQuotingOrdersRoute.name == 'Cotización'" style="font-size: 1.0rem">Vigencia hasta: {{computedVigencyDate}}</div>
                         </v-col>
                         <v-col cols="12" xl="7" lg="7" md="7" sm="12" style="font-size: 0.85rem" :class="$vuetify.breakpoint.mdAndUp ? 'mt-n2' : 'text-center'">
                             <div v-if="user.company != null || user.company != ''" class="font-weight-bold">Cliente: {{user.name+' '+user.last_name}}</div>
@@ -228,6 +232,19 @@ export default {
               month = '0'+month;
           }
           return day + '/' + month + '/' + year
+      },
+      computedQuotingOrdersRoute(){
+          if(this.$router.currentRoute.name == 'Orders'){
+              if(this.propIsOrderOrQuotationString == 'order'){
+                  return {path: 'order', name: 'Orden'};
+              }
+              else if(this.propIsOrderOrQuotationString == 'quotation'){
+                  return {path: 'order', name: 'Cotización'};
+              }
+          }
+          else if(this.$router.currentRoute.name == 'Marketcar'){
+              return {path: 'marketcar', name: 'Orden'};
+          }
       }
   },
   methods:{
@@ -246,6 +263,9 @@ export default {
           type: Number
       },
       propIsOrderOrQuotationString: {
+          type: String
+      },
+      propItemQuotationOrderNumberID:{
           type: String
       }
   }

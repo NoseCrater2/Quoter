@@ -31,7 +31,8 @@ class QuotatioIndexResource extends JsonResource
             })->sum(),
             'created_at' => Carbon::parse($this->created_at)->toFormattedDateString(),
             'updated_at' =>Carbon::parse($this->updated_at)->toFormattedDateString(),
-            'validity' =>Carbon::parse($this->updated_at)->addDays(20)->format('d/m/Y')
+            'validity' =>Carbon::parse($this->updated_at)->addDays(20)->format('d/m/Y'),
+            'validity2' =>Carbon::parse($this->updated_at)->addDays(20)->format('Y-m-d')
 
         ];
     }
