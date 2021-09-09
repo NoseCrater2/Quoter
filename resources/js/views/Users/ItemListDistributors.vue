@@ -38,7 +38,7 @@
             no-results-text="NO DISPONIBLE"
             :loading="loading"
             loading-text="CARGANDO..."
-            :items="items"
+            :items="items('vigent')"
             :items-per-page="8"
             :search="search"
             sort-by="created_date"
@@ -72,7 +72,7 @@
 
                 <template v-slot:footer>
                     <v-row align="center" class="mx-1">
-                        <span class="grey--text">Ordenes por página</span>
+                        <span class="grey--text">{{option}} por página</span>
                         <v-menu offset-y>
                             <template v-slot:activator="{ on, attrs}">
                                 <v-btn dark text color="#3ba2a9" class="ml-2" v-bind="attrs" v-on="on">
@@ -99,72 +99,127 @@
                     </v-row>
                 </template>
             </v-data-iterator>
-            <!-- <div class="d-flex">
-                <h1 class="font-weight-bolder" style="color: #3ba2a9">COTIZACIONES</h1>&nbsp;
+            <v-divider class="my-5"></v-divider>
+            <div class="d-flex">
+                <h1 class="font-weight-bolder text-uppercase" style="color: #3ba2a9">{{option}}</h1>&nbsp;
                 <h1 class="font-weight-light">ANTERIORES</h1>
             </div>
              <hr align="center" noshade="noshade" class="divider" style="height: 5px" size="3" width="35%" />
-             <v-simple-table class="my-4"  style="background: #f3f3f3">
-                  <template v-slot:default>
-                    <thead>
-                      <tr class="font-weight-bold">
-                        <th class="text-center">
-                          #Cotizacion
-                        </th>
-                        <th class="text-center">
-                          Fecha de creación
-                        </th>
-                        <th class="text-center">
-                          Total
-                        </th>
-                        <th class="text-center">
-                          Ver detalles
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        v-for="item in vencidas"
-                        :key="item.name"
-                      >
-                        <td class="text-center">{{ item.id }}</td>
-                        <td class="text-center">{{ item.created_at }}</td>
-                        <td class="text-center">{{ item.total }}</td>
-                        <td class="text-center">
-                            <v-btn icon @click="isOrdersAndQuotationsDialogActivated = true">
-                                <v-icon>mdi-magnify</v-icon>
-                            </v-btn>
-                            <v-btn icon>
-                                <v-icon>mdi-delete</v-icon>
-                            </v-btn>
-                            <span>/</span>
-                            <v-btn color="#3ba2a9" small rounded class="white--text">ACTUALIZAR</v-btn>
-                        </td>
-                      </tr>
-                    </tbody>
+
+            <v-data-iterator
+                    v-if="option === 'cotizaciones'"
+                    :items="items('noVigent')"
+                    :items-per-page.sync="itemsPerPageSimpleTable"
+                    :page.sync="pageSimpleTable"
+                    hide-default-footer
+            >
+                <template v-slot:default="props">
+
+                    <v-simple-table class="my-4" style="background: #f3f3f3">
+                          <template v-slot:default>
+                            <thead>
+                              <tr class="font-weight-bold">
+                                <th class="text-center">
+                                  #Cotizacion
+                                </th>
+                                <th class="text-center">
+                                  Fecha de creación
+                                </th>
+                                <th class="text-center">
+                                  Fecha de actualización
+                                </th>
+                                <th class="text-center">
+                                  Total
+                                </th>
+                                <th class="text-center">
+                                  Ver detalles
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr
+                                v-for="item in props.items"
+                                :key="item.name"
+                              >
+                                <td class="text-center">{{ item.order }}</td>
+                                <td class="text-center">{{ item.created_at }}</td>
+                                <td class="text-center">{{ item.updated_at }}</td>
+                                <td class="text-center">{{ mxCurrencyFormat.format(item.total) + ' MXN' }}</td>
+                                <td class="text-center">
+                                    <v-btn icon @click="localMethodIsOrdersAndQuotationsDialogActivatedOn(item)">
+                                        <v-icon>mdi-magnify</v-icon>
+                                    </v-btn>
+                                    <v-btn icon>
+                                        <v-icon>mdi-delete</v-icon>
+                                    </v-btn>
+                                    <span>/</span>
+                                    <v-btn color="#3ba2a9" small rounded class="white--text" @click="methodUpdatePriceAndVigencyQuoting(item)">ACTUALIZAR</v-btn>
+                                </td>
+                              </tr>
+                            </tbody>
+                        </template>
+                    </v-simple-table>
+
                 </template>
-            </v-simple-table> -->
+
+                <template v-slot:footer>
+                    <v-row
+                      class="mb-1"
+                      align="center"
+                      justify="center"
+                    >
+                        <v-spacer></v-spacer>
+
+                        <span
+                          class="mr-4"
+                        >
+                          Página {{ pageSimpleTable }} de {{ computedNumberPagesSimpleTable }}
+                        </span>
+                        <v-btn
+                          icon
+                          color="#3ba2a9"
+                          class="mr-1"
+                          @click="methodBeforePageSimpleTable"
+                        >
+                          <v-icon>mdi-chevron-left</v-icon>
+                        </v-btn>
+                        <v-btn
+                          icon
+                          color="#3ba2a9"
+                          class="mr-1"
+                          @click="methodNextPageSimpleTable"
+                        >
+                          <v-icon>mdi-chevron-right</v-icon>
+                        </v-btn>
+                    </v-row>
+                </template>
+
+            </v-data-iterator>
+
         </v-col>
-        <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated"></DashboardOrdersAndQuotationsDialog>
+        <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated" :propTotalPrice="localToPropTotalPrice" :propIsOrderOrQuotationString="'quotation'" :propItemQuotationOrderNumberID="localPropItemQuotationOrderNumberID"></DashboardOrdersAndQuotationsDialog>
     </v-row>
 </template>
 
 <script>
-import { mapState} from "vuex";
+import { mapState, mapGetters} from "vuex";
 import ItemOrder from '../../components/CustomCards/ItemOrder.vue'
 import ItemQuotation from '../../components/CustomCards/ItemQuotation.vue'
 import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/OrdersAndQuotations/DashboardOrdersAndQuotationsDialog.vue'
 
 export default {
-
     data(){
         return{
+            localToPropTotalPrice: 0,
+            localPropItemQuotationOrderNumberID: '',
             isOrdersAndQuotationsDialogActivated: false,
             loading: false,
             dialog: false,
             page: 1,
+            pageSimpleTable: 1,
             mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
             itemsPerPageArray: [4, 8, 12],
+            itemsPerPageSimpleTable: 4,
             itemsPerPage: 4,
             search: '',
             vencidas: [
@@ -189,24 +244,145 @@ export default {
     },
 
     computed: {
+        ...mapGetters(['currentVigentQuoutingItemListDistributors', 'noVigentQuoutingItemListDistributors']),
          numberOfPages () {
-            return Math.ceil(this.orders.length / this.itemsPerPage)
+            return Math.ceil(this.orders.filter(itemOrder=> itemOrder.state != 'No Pagada').length / this.itemsPerPage)
+        },
+        computedNumberPagesSimpleTable(){
+            return Math.ceil(this.noVigentQuoutingItemListDistributors.length / this.itemsPerPageSimpleTable)
         },
          ...mapState({
             orders: state => state.ordersModule.quotedOrders,
+            quotingOrder : state => state.ordersModule.quotingOrder,
             cotizaciones: state => state.ordersModule.quotingOrders,
         }),
-
-        items(){
-            if(this.option === 'ordenes'){
-                return this.orders
-            } else if(this.option === 'cotizaciones'){
-                return this.cotizaciones
-            }
-        }
     },
 
     methods:{
+        methodBeforePageSimpleTable(){
+            if ((this.pageSimpleTable - 1) >= 1){
+                this.pageSimpleTable -= 1
+            }
+        },
+        methodNextPageSimpleTable(){
+            if (this.pageSimpleTable + 1 <= this.computedNumberPagesSimpleTable) {
+                this.pageSimpleTable += 1
+            }
+        },
+        items(value){
+            if(this.option === 'ordenes'){
+                return this.orders.filter(itemOrder=> itemOrder.state != 'No Pagada');
+            } else if(this.option === 'cotizaciones'){
+                if(value == 'vigent'){
+                    return this.currentVigentQuoutingItemListDistributors
+                }
+                else if(value == 'noVigent'){
+                    return this.noVigentQuoutingItemListDistributors
+                }
+            }
+        },
+        localMethodIsOrdersAndQuotationsDialogActivatedOn(localItem){
+            this.$store.dispatch('getQuotingOrder', localItem.id).then(()=>{
+                this.localPropItemQuotationOrderNumberID = localItem.order;
+                this.localToPropTotalPrice = localItem.total;
+                this.isOrdersAndQuotationsDialogActivated = true;
+            });
+
+        },
+        emitClickCloseFromOrdersAndQuotationsDialog(){
+            this.localToPropTotalPrice = 0;
+            this.localPropItemQuotationOrderNumberID = '';
+            this.isOrdersAndQuotationsDialogActivated = false;
+        },
+        methodUpdatePriceAndVigencyQuoting(localItemQuotation){
+            if(this.option === 'cotizaciones'){
+
+                let localNewPrice = [];
+
+                    console.log(localItemQuotation)
+                    let localDate = new Date();
+                    let dateString = localDate.getFullYear() + "-" +
+                        ("0" + (localDate.getMonth()+1)).slice(-2) + "-" +
+                        ("0" + localDate.getDate()).slice(-2) + " " +
+                        ("0" + localDate.getHours()).slice(-2) + ":" +
+                        ("0" + localDate.getMinutes()).slice(-2) + ":" +
+                        ("0" + localDate.getSeconds()).slice(-2);
+                    console.log(dateString)
+                    this.$store.dispatch('getQuotingOrder', localItemQuotation.id).then(()=>{
+
+                    if (this.quotingOrder) {
+                            let localVariant;
+                            let localVariantTwo;
+
+
+
+                            for (let indexQuotingOrder = 0; indexQuotingOrder < this.quotingOrder.blinds.length; indexQuotingOrder++) {
+                                let idCurrentQuotingOrder = this.quotingOrder.blinds[indexQuotingOrder].id;
+                                if (this.quotingOrder.blinds[indexQuotingOrder].variant) {
+                                  localVariant = this.$store.state.productsModule.variants.find((variant) => variant.id === this.quotingOrder.blinds[indexQuotingOrder].variant)
+                                }
+                                if (this.quotingOrder.blinds[indexQuotingOrder].variant2) {
+                                  localVariantTwo = this.$store.state.productsModule.variants.find((variant) => variant.id === this.quotingOrder.blinds[indexQuotingOrder].variant2)
+                                }
+
+
+                                if(this.quotingOrder.blinds[indexQuotingOrder].variant2 != null){
+                                    let partialHeight = this.quotingOrder.blinds[indexQuotingOrder].canvas[0].height / 2
+                                    let price = 0
+                                    if (this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width > 1 && partialHeight > 1) {
+                                        localNewPrice.push({ id: idCurrentQuotingOrder , price : parseFloat((localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width * partialHeight) + (localVariantTwo.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width * partialHeight))});
+                                    }
+                                    else if (this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width > 1) {
+                                        price =  parseFloat((localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width) + (localVariantTwo.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width));
+                                        localNewPrice.push({id: idCurrentQuotingOrder, price: price});
+                                    }
+                                    else if (partialHeight > 1) {
+                                        price =  parseFloat((localVariant.price * partialHeight) + (localVariantTwo.price * partialHeight));
+                                    localNewPrice.push({id: idCurrentQuotingOrder, price: price});
+                                }
+                                else {
+                                    price = parseFloat(localVariant.price) + parseFloat(localVariantTwo.price)
+                                    localNewPrice.push({id: idCurrentQuotingOrder, price: price});
+                                }
+                            }
+                            else if (this.quotingOrder.blinds[indexQuotingOrder].canvas.length > 0 && localVariant) {
+                                let price = 0;
+                                for (let index = 0; index < this.quotingOrder.blinds[indexQuotingOrder].canvas.length; index++) {
+                                    if (this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width > 1 && this.quotingOrder.blinds[indexQuotingOrder].canvas[index].height > 1) {
+                                      price += parseFloat(localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width * this.quotingOrder.blinds[indexQuotingOrder].canvas[index].height);
+                                    }
+                                    else if (this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width > 1) {
+                                      price += parseFloat(localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width);
+                                    }
+                                    else if (this.quotingOrder.blinds[indexQuotingOrder].canvas[index].height > 1) {
+                                      price += parseFloat(localVariant.price * this.quotingOrder.blinds[0].canvas[index].height);
+                                    }
+                                    else {
+                                      price += parseFloat(localVariant.price);
+                                    }
+                                }
+                                localNewPrice.push({id: idCurrentQuotingOrder, price: price});
+                            }
+                            else if (localVariant) {
+                                localNewPrice.push({id: idCurrentQuotingOrder, price: localVariant.price});
+                            }
+                            else {
+                                localNewPrice.push({id: idCurrentQuotingOrder, price: 0});
+                            }
+                        }
+
+                        axios.post('/api/revalidate-item-quotation/'+localItemQuotation.id, localNewPrice).then((response)=>{
+                            if(response.status == 200){
+                                this.$store.dispatch('getQuotingOrders');
+                            }
+                        });
+
+                        // console.log("MODIFICADO", localNewPrice, this.quotingOrder.blinds)
+                    }
+                });
+            }
+        },
+
         updateItemsPerPage (number) {
             this.itemsPerPage = number
         },

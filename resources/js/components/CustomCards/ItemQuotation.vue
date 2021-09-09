@@ -81,13 +81,13 @@
             <v-card-actions >
                 <v-btn x-small outlined rounded text @click="localMethodIsOrdersAndQuotationsDialogActivatedOn(item)">Ver Detalles</v-btn>
                 <v-spacer></v-spacer>
-                <!-- <v-btn x-small rounded color="#f99404" class="white--text">
+                <v-btn x-small rounded color="#f99404" class="white--text" @click="openDialogAddToCartQuotation(item.id)">
                     <v-icon left>mdi-cart</v-icon>
                     Comprar
-                </v-btn> -->
-                <v-btn x-small rounded color="#3ba2a9" class="white--text" @click="methodUpdatePriceAndVigencyQuoting(item)">
-                    Actualizar
                 </v-btn>
+                <!-- <v-btn x-small rounded color="#3ba2a9" class="white--text" @click="methodUpdatePriceAndVigencyQuoting(item)">
+                    Actualizar
+                </v-btn> -->
             </v-card-actions>
             <v-card-text class="pa-2 text-center" >
                 <v-chip small label style="width: 100%" class="d-flex justify-center">
@@ -115,7 +115,7 @@
                 </v-list-item-content>
             </v-list-item>
             </v-card-text>
-            <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated" :propTotalPrice="localToPropTotalPrice" :propIsOrderOrQuotationString="'quotation'"></DashboardOrdersAndQuotationsDialog>
+            <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated" :propTotalPrice="localToPropTotalPrice" :propIsOrderOrQuotationString="'quotation'" :propItemQuotationOrderNumberID="item.order"></DashboardOrdersAndQuotationsDialog>
             <v-dialog v-model="localDialogAddToCartQuotation" persistent max-width="290">
               <v-card>
                 <v-card-title class="headline">¿Agregar al carrito?</v-card-title>
@@ -175,91 +175,91 @@ export default {
         }),
     },
     methods:{
-        methodUpdatePriceAndVigencyQuoting(localItemQuotation){
-            let localNewPrice = [];
+        // methodUpdatePriceAndVigencyQuoting(localItemQuotation){
+        //     let localNewPrice = [];
 
-            console.log(localItemQuotation)
-            let localDate = new Date();
-            let dateString = localDate.getFullYear() + "-" +
-                ("0" + (localDate.getMonth()+1)).slice(-2) + "-" +
-                ("0" + localDate.getDate()).slice(-2) + " " +
-                ("0" + localDate.getHours()).slice(-2) + ":" +
-                ("0" + localDate.getMinutes()).slice(-2) + ":" +
-                ("0" + localDate.getSeconds()).slice(-2);
-            console.log(dateString)
-            this.$store.dispatch('getQuotingOrder', localItemQuotation.id).then(()=>{
+        //     console.log(localItemQuotation)
+        //     let localDate = new Date();
+        //     let dateString = localDate.getFullYear() + "-" +
+        //         ("0" + (localDate.getMonth()+1)).slice(-2) + "-" +
+        //         ("0" + localDate.getDate()).slice(-2) + " " +
+        //         ("0" + localDate.getHours()).slice(-2) + ":" +
+        //         ("0" + localDate.getMinutes()).slice(-2) + ":" +
+        //         ("0" + localDate.getSeconds()).slice(-2);
+        //     console.log(dateString)
+        //     this.$store.dispatch('getQuotingOrder', localItemQuotation.id).then(()=>{
 
-                if (this.quotingOrder) {
-                    let localVariant;
-                    let localVariantTwo;
-
-
-
-                    for (let indexQuotingOrder = 0; indexQuotingOrder < this.quotingOrder.blinds.length; indexQuotingOrder++) {
-                        let idCurrentQuotingOrder = this.quotingOrder.blinds[indexQuotingOrder].id;
-                        if (this.quotingOrder.blinds[indexQuotingOrder].variant) {
-                          localVariant = this.$store.state.productsModule.variants.find((variant) => variant.id === this.quotingOrder.blinds[indexQuotingOrder].variant)
-                        }
-                        if (this.quotingOrder.blinds[indexQuotingOrder].variant2) {
-                          localVariantTwo = this.$store.state.productsModule.variants.find((variant) => variant.id === this.quotingOrder.blinds[indexQuotingOrder].variant2)
-                        }
+        //         if (this.quotingOrder) {
+        //             let localVariant;
+        //             let localVariantTwo;
 
 
-                        if(this.quotingOrder.blinds[indexQuotingOrder].variant2 != null){
-                            let partialHeight = this.quotingOrder.blinds[indexQuotingOrder].canvas[0].height / 2
-                            let price = 0
-                            if (this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width > 1 && partialHeight > 1) {
-                                localNewPrice.push({ id: idCurrentQuotingOrder , price : parseFloat((localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width * partialHeight) + (localVariantTwo.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width * partialHeight))});
-                            }
-                            else if (this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width > 1) {
-                                price =  parseFloat((localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width) + (localVariantTwo.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width));
-                                localNewPrice.push({id: idCurrentQuotingOrder, price: price});
-                            }
-                            else if (partialHeight > 1) {
-                                price =  parseFloat((localVariant.price * partialHeight) + (localVariantTwo.price * partialHeight));
-                                localNewPrice.push({id: idCurrentQuotingOrder, price: price});
-                            }
-                            else {
-                                price = parseFloat(localVariant.price) + parseFloat(localVariantTwo.price)
-                                localNewPrice.push({id: idCurrentQuotingOrder, price: price});
-                            }
-                        }
-                        else if (this.quotingOrder.blinds[indexQuotingOrder].canvas.length > 0 && localVariant) {
-                            let price = 0;
-                            for (let index = 0; index < this.quotingOrder.blinds[indexQuotingOrder].canvas.length; index++) {
-                                if (this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width > 1 && this.quotingOrder.blinds[indexQuotingOrder].canvas[index].height > 1) {
-                                  price += parseFloat(localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width * this.quotingOrder.blinds[indexQuotingOrder].canvas[index].height);
-                                }
-                                else if (this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width > 1) {
-                                  price += parseFloat(localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width);
-                                }
-                                else if (this.quotingOrder.blinds[indexQuotingOrder].canvas[index].height > 1) {
-                                  price += parseFloat(localVariant.price * this.quotingOrder.blinds[0].canvas[index].height);
-                                }
-                                else {
-                                  price += parseFloat(localVariant.price);
-                                }
-                            }
-                            localNewPrice.push({id: idCurrentQuotingOrder, price: price});
-                        }
-                        else if (localVariant) {
-                            localNewPrice.push({id: idCurrentQuotingOrder, price: localVariant.price});
-                        }
-                        else {
-                            localNewPrice.push({id: idCurrentQuotingOrder, price: 0});
-                        }
-                    }
 
-                    axios.post('/api/revalidate-item-quotation/'+localItemQuotation.id, localNewPrice).then((response)=>{
-                        if(response.status == 200){
-                            this.$store.dispatch('getQuotingOrders');
-                        }
-                    });
+        //             for (let indexQuotingOrder = 0; indexQuotingOrder < this.quotingOrder.blinds.length; indexQuotingOrder++) {
+        //                 let idCurrentQuotingOrder = this.quotingOrder.blinds[indexQuotingOrder].id;
+        //                 if (this.quotingOrder.blinds[indexQuotingOrder].variant) {
+        //                   localVariant = this.$store.state.productsModule.variants.find((variant) => variant.id === this.quotingOrder.blinds[indexQuotingOrder].variant)
+        //                 }
+        //                 if (this.quotingOrder.blinds[indexQuotingOrder].variant2) {
+        //                   localVariantTwo = this.$store.state.productsModule.variants.find((variant) => variant.id === this.quotingOrder.blinds[indexQuotingOrder].variant2)
+        //                 }
 
-                    // console.log("MODIFICADO", localNewPrice, this.quotingOrder.blinds)
-                }
-            });
-        },
+
+        //                 if(this.quotingOrder.blinds[indexQuotingOrder].variant2 != null){
+        //                     let partialHeight = this.quotingOrder.blinds[indexQuotingOrder].canvas[0].height / 2
+        //                     let price = 0
+        //                     if (this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width > 1 && partialHeight > 1) {
+        //                         localNewPrice.push({ id: idCurrentQuotingOrder , price : parseFloat((localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width * partialHeight) + (localVariantTwo.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width * partialHeight))});
+        //                     }
+        //                     else if (this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width > 1) {
+        //                         price =  parseFloat((localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width) + (localVariantTwo.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width));
+        //                         localNewPrice.push({id: idCurrentQuotingOrder, price: price});
+        //                     }
+        //                     else if (partialHeight > 1) {
+        //                         price =  parseFloat((localVariant.price * partialHeight) + (localVariantTwo.price * partialHeight));
+        //                         localNewPrice.push({id: idCurrentQuotingOrder, price: price});
+        //                     }
+        //                     else {
+        //                         price = parseFloat(localVariant.price) + parseFloat(localVariantTwo.price)
+        //                         localNewPrice.push({id: idCurrentQuotingOrder, price: price});
+        //                     }
+        //                 }
+        //                 else if (this.quotingOrder.blinds[indexQuotingOrder].canvas.length > 0 && localVariant) {
+        //                     let price = 0;
+        //                     for (let index = 0; index < this.quotingOrder.blinds[indexQuotingOrder].canvas.length; index++) {
+        //                         if (this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width > 1 && this.quotingOrder.blinds[indexQuotingOrder].canvas[index].height > 1) {
+        //                           price += parseFloat(localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width * this.quotingOrder.blinds[indexQuotingOrder].canvas[index].height);
+        //                         }
+        //                         else if (this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width > 1) {
+        //                           price += parseFloat(localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width);
+        //                         }
+        //                         else if (this.quotingOrder.blinds[indexQuotingOrder].canvas[index].height > 1) {
+        //                           price += parseFloat(localVariant.price * this.quotingOrder.blinds[0].canvas[index].height);
+        //                         }
+        //                         else {
+        //                           price += parseFloat(localVariant.price);
+        //                         }
+        //                     }
+        //                     localNewPrice.push({id: idCurrentQuotingOrder, price: price});
+        //                 }
+        //                 else if (localVariant) {
+        //                     localNewPrice.push({id: idCurrentQuotingOrder, price: localVariant.price});
+        //                 }
+        //                 else {
+        //                     localNewPrice.push({id: idCurrentQuotingOrder, price: 0});
+        //                 }
+        //             }
+
+        //             axios.post('/api/revalidate-item-quotation/'+localItemQuotation.id, localNewPrice).then((response)=>{
+        //                 if(response.status == 200){
+        //                     this.$store.dispatch('getQuotingOrders');
+        //                 }
+        //             });
+
+        //             // console.log("MODIFICADO", localNewPrice, this.quotingOrder.blinds)
+        //         }
+        //     });
+        // },
         localMethodIsOrdersAndQuotationsDialogActivatedOn(localItem){
             this.$store.dispatch('getQuotingOrder', localItem.id).then(()=>{
                 this.localToPropTotalPrice = localItem.total;

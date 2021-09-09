@@ -26,7 +26,7 @@ class OrderController extends Controller
     public function index()
     {
         $user = User::find(auth()->user()->id);
-        
+
         return OrderIndexResource::collection(
             $user->orders()->where('is_quotation',false)->get()
         );
@@ -225,7 +225,7 @@ class OrderController extends Controller
     {
 
         $user = User::find(auth()->user()->id);
-     
+
         return QuotatioIndexResource::collection(
             $user->orders()->where('is_quotation',true)->get()
         );
@@ -249,6 +249,7 @@ class OrderController extends Controller
     public function changeToOrder(Order $order)
     {
         $order->is_quotation = 0;
+        $order->state = 'No Pagada';
         $order->save();
         return new OrderIndexResource($order);
     }

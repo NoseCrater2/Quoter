@@ -15,6 +15,21 @@ const ordersModule = {
 
     getters:{
 
+        currentVigentQuoutingItemListDistributors(state){
+            return state.quotingOrders.filter(itemOrder=>{
+                if(itemOrder.state == true){
+                    return itemOrder;
+                }
+            });
+        },
+
+        noVigentQuoutingItemListDistributors(state){
+            return state.quotingOrders.filter(itemOrder=>{
+                if(itemOrder.state == false){
+                    return itemOrder;
+                }
+            });
+        },
 
         countBlinds(state){
             return state.orders.length
