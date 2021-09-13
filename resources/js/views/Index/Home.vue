@@ -497,7 +497,7 @@ async  beforeCreate(){
      ]),
 
     computedNumberNoPaidOrders(){
-        return this.quotedOrders.filter(itemOrder=> itemOrder.state == 'No Pagada').length;
+        return this.quotedOrders.filter(itemOrder=> itemOrder.state === 'No Pagada').length;
     },
     computedNumberVigentQuotings(){
         return this.currentVigentQuoutingItemListDistributors.length
