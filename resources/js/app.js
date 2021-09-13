@@ -1,5 +1,7 @@
+
 require('./bootstrap');
 
+// import VueEcho from 'vue-echo-laravel'
 import Vue from 'vue'
 import store from "./store/store";
 import router from "./router";
@@ -7,8 +9,15 @@ import router from "./router";
 import vuetify from './plugins/vuetify'
 import App from './App.vue';
 
+
 import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
 import "leaflet/dist/leaflet.css";
+
+
+const NOTIFICATION_TYPES = {
+  follow: 'App\\Notifications\\OrderState'
+}
+
 
 
 Vue.component('l-map', LMap);
@@ -20,6 +29,15 @@ L.Icon.Default.mergeOptions({
    shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
+// Vue.use(VueEcho, EchoInstance)
+
+// $(document).ready(function() {
+//       //...
+//       window.Echo.private(`App.User.4`)
+//           .notification((notification) => {
+//               console.log(notification)
+//           });
+// });
 // import Vuex from "vuex";
 
 // Vue.use(Vuex);

@@ -208,15 +208,30 @@
 
           <v-divider inset vertical></v-divider>
 
-          <v-btn icon large class="ma-2" rounded depressed dark>
 
-            <v-badge color="red"
-            :content="orders.length"
-            :value="orders.length"
-            overlap>
-              <v-icon>mdi-bell</v-icon>
-            </v-badge>
-          </v-btn>
+          <v-menu bottom offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon large class="ma-2" v-bind="attrs" v-on="on" rounded depressed dark>
+                <v-badge color="red"
+                :content="notifications.length"
+                :value="notifications.length"
+                overlap>
+                  <v-icon>mdi-bell</v-icon>
+                </v-badge>
+              </v-btn>
+            </template>
+            <v-list dense>
+              <v-list-item v-for="notification in notifications" :key="notification.id">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{'Una orden ahora está en ' +notification.data.state }}
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+
+          
 
           <v-divider inset vertical></v-divider>
 
@@ -402,8 +417,8 @@
 
 import {mapGetters,mapState } from 'vuex';
 import { logOut } from '../../utils/auth';
+import axios from 'axios'
 export default {
-
 
    data() {
     return {
@@ -428,6 +443,11 @@ async  beforeCreate(){
 },
 
   mounted() {
+     window.Echo.private(`App.User.4`)
+            .notification((notification) => {
+                console.log(notification)
+            });
+    this.$store.dispatch('getNotifications')
      this.$store.dispatch('getProducts')
      this.$store.dispatch('getAllVariants')
      this.$store.dispatch("getMotorizations")
@@ -462,7 +482,7 @@ async  beforeCreate(){
       loggedIn: state => state.loggedIn,
       orders: state => state.ordersModule.orders,
       quotingOrders: state => state.ordersModule.quotingOrders,
-      quotedOrders: state => state.ordersModule.quotedOrders,
+      notifications: state => state.notificationsModule.notifications,
     }),
 
       ...mapGetters([

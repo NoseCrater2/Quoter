@@ -86,7 +86,7 @@
                         mdi-checkbox-blank-circle
                     </v-icon>
                     <v-icon
-                    v-if="item.state === 'En Produccion'"
+                    v-if="item.state === 'En produccion'"
                     icon color="#ff8b00" class="mb-1 ml-2">
                         mdi-checkbox-blank-circle
                     </v-icon>
@@ -124,6 +124,7 @@
                         link
                         :class="item.state === option.text?'v-list-item--active':''"
                         :value="option.text"
+                        @click="changeState(item.id,option.text)"
                         dense
                         v-for="(option, index) in states"
                         :key="index"
@@ -153,6 +154,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { mapState, mapGetters } from "vuex";
 import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/OrdersAndQuotations/DashboardOrdersAndQuotationsDialog.vue'
 
@@ -197,6 +199,7 @@ export default {
         }
     },
     mounted(){
+        
         if(this.option === 'ordenes'){
             this.$store.dispatch('getQuotedOrders').then(()=>{
                 this.loading = false
@@ -241,6 +244,14 @@ export default {
     methods:{
         emitClickCloseFromOrdersAndQuotationsDialog(){
             this.isOrdersAndQuotationsDialogActivated = false;
+        },
+
+        changeState(order, state){
+            axios.get('/api/change-state/'+order+'/?state='+state).then( response => {
+                if(response.status === 200){
+                    this.$store.dispatch('getAdminQuotedOrders')
+                }
+            } )
         }
     },
     components:{
