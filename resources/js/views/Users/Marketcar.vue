@@ -90,7 +90,7 @@
                                 <span>#Orden <span class="font-weight-bold" style="color: #3ba2a9"> {{localPropItemQuotationOrderNumberID}}</span></span>
                             </v-row>
                         </div>
-                        <v-col cols="12" class="d-flex justify-center" :class="localWindowStepModel == 1 ? 'pa-4 align-center' : 'align-start'" style="border: 1px solid #BDBDBD; min-height: 400px;">
+                        <v-col cols="12"  style="border: 1px solid #BDBDBD; min-height: 400px;">
                             <!-- V-IF: SI EL CARRITO ESTÁ VACÍO -->
                             <!-- <div>
                                 <v-img
@@ -105,7 +105,7 @@
 
                             <!-- V-ELSE: ESTE WINDOW INICIA AQUÍ Y HARÁ LA FUNCION DE LOS PASOS DE COMPRA -->
                             <v-window class="mx-auto" v-if="loadingOrdersToOrdersCardsStepOne" v-model="localWindowStepModel">
-                                <v-window-item class="mx-auto" v-for="(item, windowIndex) in modelWindowItemSteps" :key="windowIndex" :value="(windowIndex+1)">
+                                <v-window-item  v-for="(item, windowIndex) in modelWindowItemSteps" :key="windowIndex" :value="(windowIndex+1)">
                                 <!-- DENTRO DE ESTE WINDOW ITEM SE CARGARÁ EL COMPONENTE DE PASO CORRESPONDIENTE -->
                                     <!-- INICIA CARGA EL COMPONENTE DEL STEP 1 -->
                                     <OrdersCardsStepOne @emitCheckAndBuyFromOrdersCardsStepOneView="localMethodStepThreeCheckAndBuy" @emitDetailsItemFromOrdersCardsStepOneView="localMethodIsOrdersAndQuotationsDialogActivatedOn" :itemOrder="computedNoPaidOrders" v-if="localWindowStepModel == 1"></OrdersCardsStepOne>
