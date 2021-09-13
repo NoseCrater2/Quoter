@@ -15,6 +15,7 @@ import sunblindModule from './sunblindModule';
 import motorizationModule from './motorizationModule';
 import { isLoggedIn, logOut } from '../utils/auth';
 import priceModule from './pricesModule';
+import notificationsModule from './notificationsModule';
 
 const store = new Vuex.Store({
 
@@ -31,7 +32,8 @@ const store = new Vuex.Store({
    sunblindModule,
    motorizationModule,
    loginModule,
-   priceModule
+   priceModule,
+   notificationsModule
   },
   state:{
     loginErrors : [],

@@ -37,7 +37,7 @@ class PriceController extends Controller
 
         }else{
            if($request->hasFile('file')){
-                $data['path'] = $request->file->store('pdfs/archivos');
+                $data['path'] = $request->file->store('pdfs/archivos',);
            }
            if($request->hasFile('thumbnail')){
                 $data['thumbnail'] = $request->thumbnail->store('pdfs/thumbnails');

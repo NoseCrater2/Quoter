@@ -12,9 +12,11 @@ use App\Http\Resources\AdministratorQuotationIndexResource;
 use App\Http\Resources\OrderIndexResource;
 use App\Http\Resources\QuotatioIndexResource;
 use App\Http\Resources\OrderShowResource;
+use App\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\OrderState;
 
 class OrderController extends Controller
 {
@@ -254,5 +256,46 @@ class OrderController extends Controller
         return new OrderIndexResource($order);
     }
 
+    public function buy(Request $request, Order $order)
+    {
+        $data = $request->all();
+        $rules =[
+            'bank_account' => 'required|string',
+            'clabe' => 'required|string',
+            'name_account' => 'required|string',
+        ];
+
+        $validator= Validator::make($data,$rules, ErrorMessages::getMessages());
+
+        if($validator->fails()){
+            return response($validator->errors(),422);
+
+        }else{
+            DB::transaction(function () use ($data, $order) {
+                $order->state = "Recibida";
+                $ticket = new Ticket();
+                $ticket->bank_account = $data['bank_account'];
+                $ticket->clabe = $data['clabe'];
+                $ticket->name_account = $data['name_account'];
+                $order->ticket()->save($ticket);
+               
+            });
+            return response(['message'=>'Payed!'],200);
+        }
+        
+    }
+
+    public function changeState(Request $request, Order $order)
+    {
+        $state = $request['state'];
+        $order->state = $state;
+        $order->save();
+
+        $distributor = User::find($order->user_id);
+
+        $distributor->notify( new OrderState($order));
+
+        return response(['message'=>'Changed!'],200);
+    }
 
 }
