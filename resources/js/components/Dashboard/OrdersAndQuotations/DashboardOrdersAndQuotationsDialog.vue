@@ -28,7 +28,7 @@
             </div>
 
             <div v-else-if="computedQuotingOrdersRoute.path == 'marketcar' && computedQuotingOrdersRoute.name == 'Orden'" class="mr-1">
-                <v-btn large elevation="0" color="orange darken-1" class="white--text font-weight-bold mr-2">
+                <v-btn @click="localMethodCheckAndBuyFromOrdersAndQuotationsDialogView()" large elevation="0" color="orange darken-1" class="white--text font-weight-bold mr-2">
                     Comprar
                     <v-icon size="30" right>mdi-arrow-right</v-icon>
                 </v-btn>
@@ -250,6 +250,9 @@ export default {
   methods:{
       emitClickCloseFromOrdersAndQuotationsDialog(){
           this.$emit('emitClickCloseFromOrdersAndQuotationsDialog', false);
+      },
+      localMethodCheckAndBuyFromOrdersAndQuotationsDialogView(){
+          this.$emit('emitCheckAndBuyFromOrdersAndQuotationsDialogView', this.idOrderQuotationOrdersAndQuotationsDialog);
       }
   },
   props:{
@@ -257,7 +260,7 @@ export default {
           type: Boolean
       },
       idOrderQuotationOrdersAndQuotationsDialog:{
-          type: Number
+          type: Object
       },
       propTotalPrice:{
           type: Number
