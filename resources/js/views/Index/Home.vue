@@ -483,6 +483,7 @@ async  beforeCreate(){
       orders: state => state.ordersModule.orders,
       quotingOrders: state => state.ordersModule.quotingOrders,
       notifications: state => state.notificationsModule.notifications,
+      quotedOrders: state => state.ordersModule.quotedOrders
     }),
 
       ...mapGetters([
@@ -494,7 +495,7 @@ async  beforeCreate(){
      ]),
 
     computedNumberNoPaidOrders(){
-        return this.quotedOrders.filter(itemOrder=> itemOrder.state == 'No Pagada').length;
+        return this.quotedOrders.filter(itemOrder=> itemOrder.state === 'No Pagada').length;
     },
     computedNumberVigentQuotings(){
         return this.currentVigentQuoutingItemListDistributors.length

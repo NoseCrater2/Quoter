@@ -1,6 +1,6 @@
 <template>
-    <v-row dense>
-      <v-col cols="12" xl="4" lg="6" md="12" sm="6" v-for="(item) in itemOrder" :key="item.id">
+    <v-row dense justify="space-around">
+      <v-col cols="12" xl="4" lg="6" md="12" sm="12" v-for="(item) in itemOrder" :key="item.id">
             <v-card min-width="338" max-width="343" class="pa-2 mx-auto" outlined color="grey lighten-2">
                 <v-list-item style="background-color: white">
                     <v-list-item-content>
@@ -46,22 +46,26 @@
                             </v-col>
                     </v-list-item-content>
                 </v-list-item>
-                <v-list-item class="mt-n5 mb-n7">
+                <!-- <v-list-item class="mt-n5 mb-n7">
                     <v-list-item-content class="mx-n6">
                         <v-col cols="12">
                             <v-card-actions>
-                                <v-btn @click="localMethodCheckAndBuySendToMarketcarView(item)" block color="orange darken-1" class="white--text font-weight-bold" style="font-size: 1.3rem" tile >REVISAR Y PAGAR</v-btn>
+                                
                             </v-card-actions>
                         </v-col>
                         <v-col cols="12" class="mt-n7">
-                            <v-card-actions>
-                                <v-btn @click="localMethodDetailsItemSendToMarketcarView(item)" text class="text-decoration-underline">Ver detalles</v-btn>
-                                <v-spacer></v-spacer>
-                                <v-btn text >Cancelar orden</v-btn>
-                            </v-card-actions>
+                            
                         </v-col>
                     </v-list-item-content>
-                </v-list-item>
+                </v-list-item> -->
+                <v-card-text>
+                    <v-btn @click="localMethodCheckAndBuySendToMarketcarView(item)" block color="orange darken-1" class="white--text font-weight-bold" style="font-size: 1.3rem" tile >REVISAR Y PAGAR</v-btn>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn @click="localMethodDetailsItemSendToMarketcarView(item)" text class="text-decoration-underline">Ver detalles</v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn text >Cancelar orden</v-btn>
+                </v-card-actions>
             </v-card>
       </v-col>
     </v-row>
