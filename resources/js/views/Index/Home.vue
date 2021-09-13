@@ -199,8 +199,8 @@
             <v-badge color="blue"
             offset-x="17"
             offset-y="12"
-            :content="quotingOrders.length"
-            :value="quotingOrders.length"
+            :content="computedNumberVigentQuotings"
+            :value="computedNumberVigentQuotings"
             overlap>
                 <v-img contain height="30px" width="35px" src="/img/dashboard/cotizacion_white.png" ></v-img>
             </v-badge>
@@ -223,8 +223,8 @@
           <v-btn icon large class="ma-2" rounded depressed dark >
 
             <v-badge color="red"
-            :content="orders.length"
-            :value="orders.length"
+            :content="computedNumberNoPaidOrders"
+            :value="computedNumberNoPaidOrders"
             overlap>
               <v-icon>mdi-cart-outline</v-icon>
             </v-badge>
@@ -431,6 +431,7 @@ async  beforeCreate(){
      this.$store.dispatch('getProducts')
      this.$store.dispatch('getAllVariants')
      this.$store.dispatch("getMotorizations")
+     this.$store.dispatch('getQuotedOrders')
 
    },
 
@@ -461,14 +462,23 @@ async  beforeCreate(){
       loggedIn: state => state.loggedIn,
       orders: state => state.ordersModule.orders,
       quotingOrders: state => state.ordersModule.quotingOrders,
+      quotedOrders: state => state.ordersModule.quotedOrders,
     }),
 
       ...mapGetters([
       'loggedIn',
       'getLoginErrors',
       'getLoginStatus',
-      'getUserStatus'
+      'getUserStatus',
+      'currentVigentQuoutingItemListDistributors'
      ]),
+
+    computedNumberNoPaidOrders(){
+        return this.quotedOrders.filter(itemOrder=> itemOrder.state == 'No Pagada').length;
+    },
+    computedNumberVigentQuotings(){
+        return this.currentVigentQuoutingItemListDistributors.length
+    },
 
 
         //Propiedad computada que controla si debe aparecer menu hamburguesa o la barra. Necesario para casos donde resize y menu burguer este activo
