@@ -13,6 +13,7 @@ use App\Http\Resources\UserIndexResource;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\UserSaved;
 use App\Http\Resources\UserShowResource;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -216,6 +217,12 @@ class UserController extends Controller
         $user->save();
 
         return new UserIndexResource($user);
+    }
+
+
+    public function notifications()
+    {
+        return auth()->user()->unreadNotifications()->limit(5)->get()->toArray();
     }
 
 }
