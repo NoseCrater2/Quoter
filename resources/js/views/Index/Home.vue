@@ -231,7 +231,7 @@
             </v-list>
           </v-menu>
 
-          
+
 
           <v-divider inset vertical></v-divider>
 
@@ -443,15 +443,17 @@ async  beforeCreate(){
 },
 
   mounted() {
-     window.Echo.private(`App.User.4`)
-            .notification((notification) => {
-                console.log(notification)
-            });
+    //  window.Echo.private(`App.User.4`)
+    //         .notification((notification) => {
+    //             console.log(notification)
+    //         });
     this.$store.dispatch('getNotifications')
      this.$store.dispatch('getProducts')
      this.$store.dispatch('getAllVariants')
      this.$store.dispatch("getMotorizations")
-     this.$store.dispatch('getQuotedOrders')
+     this.$store.dispatch('getQuotedOrders').then(()=>{
+         console.log(this.quotedOrders)
+     })
 
    },
 
@@ -483,6 +485,7 @@ async  beforeCreate(){
       orders: state => state.ordersModule.orders,
       quotingOrders: state => state.ordersModule.quotingOrders,
       notifications: state => state.notificationsModule.notifications,
+      quotedOrders: state => state.ordersModule.quotedOrders
     }),
 
       ...mapGetters([
