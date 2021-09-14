@@ -203,6 +203,8 @@
 
 <script>
 import { mapState, mapGetters} from "vuex";
+import woodMatrix from '../../utils/woodMatrixOne';
+import woodMotorized from '../../utils/woodMatrixTwo';
 import ItemOrder from '../../components/CustomCards/ItemOrder.vue'
 import ItemQuotation from '../../components/CustomCards/ItemQuotation.vue'
 import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/OrdersAndQuotations/DashboardOrdersAndQuotationsDialog.vue'
@@ -311,21 +313,37 @@ export default {
                     this.$store.dispatch('getQuotingOrder', localItemQuotation.id).then(()=>{
 
                     if (this.quotingOrder) {
-                            let localVariant;
-                            let localVariantTwo;
 
+                        let localVariant;
+                        let localVariantTwo;
 
+                        for (let indexQuotingOrder = 0; indexQuotingOrder < this.quotingOrder.blinds.length; indexQuotingOrder++) {
+                            let idCurrentQuotingOrder = this.quotingOrder.blinds[indexQuotingOrder].id;
 
-                            for (let indexQuotingOrder = 0; indexQuotingOrder < this.quotingOrder.blinds.length; indexQuotingOrder++) {
-                                let idCurrentQuotingOrder = this.quotingOrder.blinds[indexQuotingOrder].id;
+                            if(this.quotingOrder.blinds[indexQuotingOrder].type == 'horizontal-madera-2'){
+                                console.log("HORIZONTAL NEW JAJA")
+                                let result = 0;
+                                if(this.quotingOrder.blinds[indexQuotingOrder].motor_type == 'Manual'){
+                                   result  =  woodMatrix.filter((m) => m.width >= this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width && m.height >= this.quotingOrder.blinds[indexQuotingOrder].canvas[0].height)
+                                }else if(this.quotingOrder.blinds[indexQuotingOrder].motor_type == 'Motorizado'){
+                                   result  =  woodMotorized.filter((m) => m.width >= this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width && m.height >= this.quotingOrder.blinds[indexQuotingOrder].canvas[0].height)
+                                }
+                                if(result[0]){
+                                  if(this.quotingOrder.blinds[indexQuotingOrder].motor_type == 'Manual' && this.quotingOrder.blinds[indexQuotingOrder].motor.drive == 'cinta'){
+                                    return localNewPrice.push({id: idCurrentQuotingOrder, price: result[0].price + (result[0].price * 0.15)});
+                                  }else{
+                                    return localNewPrice.push({id: idCurrentQuotingOrder, price: result[0].price});
+                                  }
+                                }
+                            }
+
+                            else{
                                 if (this.quotingOrder.blinds[indexQuotingOrder].variant) {
                                   localVariant = this.$store.state.productsModule.variants.find((variant) => variant.id === this.quotingOrder.blinds[indexQuotingOrder].variant)
                                 }
                                 if (this.quotingOrder.blinds[indexQuotingOrder].variant2) {
                                   localVariantTwo = this.$store.state.productsModule.variants.find((variant) => variant.id === this.quotingOrder.blinds[indexQuotingOrder].variant2)
                                 }
-
-
                                 if(this.quotingOrder.blinds[indexQuotingOrder].variant2 != null){
                                     let partialHeight = this.quotingOrder.blinds[indexQuotingOrder].canvas[0].height / 2
                                     let price = 0
@@ -338,45 +356,47 @@ export default {
                                     }
                                     else if (partialHeight > 1) {
                                         price =  parseFloat((localVariant.price * partialHeight) + (localVariantTwo.price * partialHeight));
-                                    localNewPrice.push({id: idCurrentQuotingOrder, price: price});
-                                }
-                                else {
-                                    price = parseFloat(localVariant.price) + parseFloat(localVariantTwo.price)
-                                    localNewPrice.push({id: idCurrentQuotingOrder, price: price});
-                                }
-                            }
-                            else if (this.quotingOrder.blinds[indexQuotingOrder].canvas.length > 0 && localVariant) {
-                                let price = 0;
-                                for (let index = 0; index < this.quotingOrder.blinds[indexQuotingOrder].canvas.length; index++) {
-                                    if (this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width > 1 && this.quotingOrder.blinds[indexQuotingOrder].canvas[index].height > 1) {
-                                      price += parseFloat(localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width * this.quotingOrder.blinds[indexQuotingOrder].canvas[index].height);
-                                    }
-                                    else if (this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width > 1) {
-                                      price += parseFloat(localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width);
-                                    }
-                                    else if (this.quotingOrder.blinds[indexQuotingOrder].canvas[index].height > 1) {
-                                      price += parseFloat(localVariant.price * this.quotingOrder.blinds[0].canvas[index].height);
+                                        localNewPrice.push({id: idCurrentQuotingOrder, price: price});
                                     }
                                     else {
-                                      price += parseFloat(localVariant.price);
+                                        price = parseFloat(localVariant.price) + parseFloat(localVariantTwo.price)
+                                        localNewPrice.push({id: idCurrentQuotingOrder, price: price});
                                     }
                                 }
-                                localNewPrice.push({id: idCurrentQuotingOrder, price: price});
-                            }
-                            else if (localVariant) {
-                                localNewPrice.push({id: idCurrentQuotingOrder, price: localVariant.price});
-                            }
-                            else {
-                                localNewPrice.push({id: idCurrentQuotingOrder, price: 0});
+
+                                else if (this.quotingOrder.blinds[indexQuotingOrder].canvas.length > 0 && localVariant) {
+                                    let price = 0;
+                                    for (let index = 0; index < this.quotingOrder.blinds[indexQuotingOrder].canvas.length; index++) {
+                                        if (this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width > 1 && this.quotingOrder.blinds[indexQuotingOrder].canvas[index].height > 1) {
+                                          price += parseFloat(localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width * this.quotingOrder.blinds[indexQuotingOrder].canvas[index].height);
+                                        }
+                                        else if (this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width > 1) {
+                                          price += parseFloat(localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[index].width);
+                                        }
+                                        else if (this.quotingOrder.blinds[indexQuotingOrder].canvas[index].height > 1) {
+                                          price += parseFloat(localVariant.price * this.quotingOrder.blinds[0].canvas[index].height);
+                                        }
+                                        else {
+                                          price += parseFloat(localVariant.price);
+                                        }
+                                    }
+                                    localNewPrice.push({id: idCurrentQuotingOrder, price: price});
+                                }
+                                else if (localVariant) {
+                                    localNewPrice.push({id: idCurrentQuotingOrder, price: localVariant.price});
+                                }
+                                else {
+                                    localNewPrice.push({id: idCurrentQuotingOrder, price: 0});
+                                }
                             }
                         }
 
+                        console.log("NEWPRICE", localNewPrice)
                         axios.post('/api/revalidate-item-quotation/'+localItemQuotation.id, localNewPrice).then((response)=>{
                             if(response.status == 200){
                                 this.$store.dispatch('getQuotingOrders');
                             }
                         });
-
                         // console.log("MODIFICADO", localNewPrice, this.quotingOrder.blinds)
                     }
                 });
