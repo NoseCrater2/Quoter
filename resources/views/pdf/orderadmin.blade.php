@@ -258,7 +258,7 @@
                                             ?>
                                             <span>{{$concat3}}</span>
                                             <div style="text-transform: none;">
-                                                <span>Precio (m2): ${{$blindVariant1->price}} MXN // Descuento: {{$orders['user']['discount_percent']}}% // M2: {{$order['canvas'][0]['width'] * $order['canvas'][0]['height']}} //</span>
+                                                <span>Precio (m2): ${{$blindVariant1->price}} MXN // Descuento: {{$orders['user']['discount_percent']}}% // M2: @calculatemeters($order['canvas'][0]['width'],$order['canvas'][0]['height']) //</span>
                                                 <?php
                                                     $totaldiscount = $blindVariant1->price - (($orders['user']['discount_percent'] / 100) * $blindVariant1->price);
                                                 ?>
@@ -470,7 +470,7 @@
                                             ?>
                                             <span>{{$concat3}}</span>
                                             <div style="text-transform: none;">
-                                                <span>Precio (m2): ${{$blindVariant1->price}} MXN // Descuento: {{$orders['user']['discount_percent']}}% // M2: {{$order['canvas'][0]['width'] * $order['canvas'][0]['height']}} //</span>
+                                                <span>Precio (m2): ${{$blindVariant1->price}} MXN // Descuento: {{$orders['user']['discount_percent']}}% // M2: @calculatemeters($order['canvas'][0]['width'],$order['canvas'][0]['height']) //</span>
                                                 <?php
                                                     $totaldiscount = $blindVariant1->price - (($orders['user']['discount_percent'] / 100) * $blindVariant1->price);
                                                 ?>
