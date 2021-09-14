@@ -275,8 +275,10 @@ export default {
             this.localIDQuotation = idQuotation;
             if(this.localIDQuotation > -1){
                 this.$store.dispatch('changeToOrder', this.localIDQuotation).then(()=>{
+                    this.$store.dispatch('getQuotedOrders');
                     this.closeDialogAddToCartQuotation();
                 }).catch(()=>{
+                    this.$store.dispatch('getQuotedOrders');
                     this.closeDialogAddToCartQuotation();
                 })
             }

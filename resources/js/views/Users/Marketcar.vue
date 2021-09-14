@@ -426,13 +426,15 @@ export default {
                 this.localPropItemQuotationOrderNumberID = localItem.order;
                 this.isOrdersAndQuotationsDialogActivated = true;
             });
-
         },
         localMethodEditBlindStepThreeMarketcar(){
             if(this.localCurrentIDQuotingOrderStepThree > -1){
-                this.$store.dispatch('editQuotingOrder', this.localCurrentIDQuotingOrderStepThree).then(()=>{
-                    this.$router.push({name: 'Quoter', params:{order_id: this.localCurrentIDQuotingOrderStepThree}})
-                });
+                // this.$store.dispatch('editQuotingOrder', this.localCurrentIDQuotingOrderStepThree).then(()=>{
+                //     this.$router.push({name: 'Quoter', params:{order_id: this.localCurrentIDQuotingOrderStepThree}})
+                // });
+                this.localWindowStepModel = 1;
+                this.localMethodIsOrdersAndQuotationsDialogActivatedOn(this.quotedOrders.find(item=>item.id == this.localCurrentIDQuotingOrderStepThree));
+                // this.localMethodIsOrdersAndQuotationsDialogActivatedOn();
             }
         },
         localMethodBtnContinueStepThree(){
