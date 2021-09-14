@@ -33,14 +33,14 @@
               <v-list-item-title>Carrito de compra</v-list-item-title>
             </v-list-item-content>
         </v-list-item>
-        <v-list-item>
+        <!-- <v-list-item>
             <v-list-item-icon>
               <v-icon>mdi-bell</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Notificaciones</v-list-item-title>
             </v-list-item-content>
-        </v-list-item>
+        </v-list-item> -->
         <v-list-item>
             <v-list-item-icon class="ml-n1 pr-n2">
               <v-img contain height="30px" width="35px" src="/img/dashboard/cotizacion.svg" ></v-img>
@@ -209,7 +209,7 @@
           <v-divider inset vertical></v-divider>
 
 
-          <v-menu bottom offset-y>
+          <!-- <v-menu bottom offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon large class="ma-2" v-bind="attrs" v-on="on" rounded depressed dark>
                 <v-badge color="red"
@@ -229,9 +229,9 @@
                 </v-list-item-content>
               </v-list-item>
             </v-list>
-          </v-menu>
+          </v-menu> -->
 
-          
+
 
           <v-divider inset vertical></v-divider>
 
@@ -443,15 +443,17 @@ async  beforeCreate(){
 },
 
   mounted() {
-     window.Echo.private(`App.User.4`)
-            .notification((notification) => {
-                console.log(notification)
-            });
+    //  window.Echo.private(`App.User.4`)
+    //         .notification((notification) => {
+    //             console.log(notification)
+    //         });
     this.$store.dispatch('getNotifications')
      this.$store.dispatch('getProducts')
      this.$store.dispatch('getAllVariants')
      this.$store.dispatch("getMotorizations")
-     this.$store.dispatch('getQuotedOrders')
+     this.$store.dispatch('getQuotedOrders').then(()=>{
+         console.log(this.quotedOrders)
+     })
 
    },
 
