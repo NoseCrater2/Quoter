@@ -50,11 +50,11 @@
                     <v-list-item-content class="mx-n6">
                         <v-col cols="12">
                             <v-card-actions>
-                                
+
                             </v-card-actions>
                         </v-col>
                         <v-col cols="12" class="mt-n7">
-                            
+
                         </v-col>
                     </v-list-item-content>
                 </v-list-item> -->

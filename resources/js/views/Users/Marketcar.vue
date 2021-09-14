@@ -60,7 +60,7 @@
               </v-col>
               <v-col cols="12" xl="9" lg="9" md="9" sm="12">
                   <v-row align="center" no-gutters>
-                      <v-col cols="3" v-for="(item, index) in marketStepsItems" :key="index">
+                      <v-col cols="4" v-for="(item, index) in marketStepsItems" :key="index">
                           <!-- @click="changeStepWindowFromAlerts((index+1))" -->
                         <v-alert
 
@@ -76,14 +76,14 @@
                         <div v-if="localWindowStepModel == 1" class="text-start text-uppercase mb-2" style="font-size: 1.4rem;">
                             <span class="font-weight-bold" style="color: #3ba2a9">Órdenes </span><span>pendientes de pago</span>
                         </div>
-                        <div v-else-if="localWindowStepModel == 3" class="text-start text-uppercase mb-2" style="font-size: 1.4rem;">
+                        <div v-else-if="localWindowStepModel == 2" class="text-start text-uppercase mb-2" style="font-size: 1.4rem;">
                             <v-row no-gutters>
                                 <span class="font-weight-bold" style="color: #3ba2a9">Producto </span><span style="color: #3ba2a9">(s)</span>
                                 <v-spacer></v-spacer>
                                 <span>#Orden <span class="font-weight-bold" style="color: #3ba2a9"> {{localPropItemQuotationOrderNumberID}}</span></span>
                             </v-row>
                         </div>
-                        <div v-else-if="localWindowStepModel == 4" class="text-start text-uppercase mb-2" style="font-size: 1.4rem;">
+                        <div v-else-if="localWindowStepModel == 3" class="text-start text-uppercase mb-2" style="font-size: 1.4rem;">
                             <v-row no-gutters>
                                 <span class="font-weight-bold" style="color: #3ba2a9">Pagar orden</span>
                                 <v-spacer></v-spacer>
@@ -110,12 +110,12 @@
                                     <!-- INICIA CARGA EL COMPONENTE DEL STEP 1 -->
                                     <OrdersCardsStepOne @emitCheckAndBuyFromOrdersCardsStepOneView="localMethodStepThreeCheckAndBuy" @emitDetailsItemFromOrdersCardsStepOneView="localMethodIsOrdersAndQuotationsDialogActivatedOn" :itemOrder="computedNoPaidOrders" v-if="localWindowStepModel == 1"></OrdersCardsStepOne>
                                     <!-- TERMINA CARGA EL COMPONENTE DEL STEP 1 -->
-                                    <div v-else-if="localWindowStepModel == 3">
+                                    <div v-else-if="localWindowStepModel == 2">
                                         <v-col cols="12" v-for="(itemBlind, index) in quotingOrder.blinds" :key="itemBlind.id">
                                             <DashboardBlindsProductDetailCards @emitEditBlindFromBlindsProductDetailCardsView="localMethodEditBlindStepThreeMarketcar" :propIsInMarketAndStepThree="true" :propIsOrderOrQuotationString="'quotation'" :propItemArrayBlindsObject="itemBlind" :propBlindCount="(index + 1)" :propBreakpointFromDialog="$vuetify.breakpoint"></DashboardBlindsProductDetailCards>
                                         </v-col>
                                     </div>
-                                    <div v-else-if="localWindowStepModel == 4">
+                                    <div v-else-if="localWindowStepModel == 3">
                                         <v-col v-if="!localModelIsStepFourDataBankAccount" cols="12">
                                             <v-card elevation="0" :width="$vuetify.breakpoint.xl ? '880' : $vuetify.breakpoint.lg ? '640' : $vuetify.breakpoint.md ? '480' : $vuetify.breakpoint.sm ? '500' : '390'">
 
@@ -184,8 +184,28 @@
                                         </v-col>
                                         <v-col v-else-if="localModelIsStepFourDataBankAccount" cols="12">
                                             <v-card elevation="0" :width="$vuetify.breakpoint.xl ? '880' : $vuetify.breakpoint.lg ? '640' : $vuetify.breakpoint.md ? '480' : $vuetify.breakpoint.sm ? '500' : '390'">
-                                                <div class="font-weight-bold mb-4">Introduce la información de cuenta</div>
-                                                <v-text-field
+                                                <div class="font-weight-bold mb-4">Datos para la transferencia bancaria</div>
+                                                <div class="text-uppercase">
+                                                    <div class="font-weight-bold" style="color: #3ba2a9">Total a pagar: </div>
+                                                    <div class="font-weight-bold">{{mxCurrencyFormat.format(localModelSubtotalAndTotal)}} MXN</div>
+                                                </div>
+                                                <div class="text-uppercase">
+                                                    <div class="font-weight-bold">No. de orden por pagar: </div>
+                                                    <div>{{localPropItemQuotationOrderNumberID}}</div>
+                                                </div>
+                                                <div class="text-uppercase">
+                                                    <div class="font-weight-bold">No. de cuenta de banco:</div>
+                                                    <div>{{localPropItemQuotationOrderNumberID}}</div>
+                                                </div>
+                                                <div class="text-uppercase">
+                                                    <div class="font-weight-bold">CLABE Interbancaria: </div>
+                                                    <div>{{localPropItemQuotationOrderNumberID}}</div>
+                                                </div>
+                                                <div class="text-uppercase">
+                                                    <div class="font-weight-bold">Nombre de la cuenta: </div>
+                                                    <div>{{localPropItemQuotationOrderNumberID}}</div>
+                                                </div>
+                                                <!-- <v-text-field
                                                   v-model="modelObjectDataBankAccount.bankAccount"
                                                   prepend-inner-icon="mdi-bank"
                                                   label="No. de cuenta de banco"
@@ -202,7 +222,7 @@
                                                   prepend-inner-icon="mdi-pencil"
                                                   label="Nombre de la cuenta"
                                                   outlined
-                                                ></v-text-field>
+                                                ></v-text-field> -->
                                             </v-card>
                                         </v-col>
                                     </div>
@@ -213,6 +233,7 @@
                         </v-col>
                         <div class="text-end">
                             <v-btn
+                                v-if="localWindowStepModel == 1"
                                 large
                               color="#3ba2a9"
                               class="white--text rounded-lg mt-3"
@@ -266,7 +287,7 @@
                           </v-col>
                           <v-col cols="12" xl="12" lg="12" md="12" sm="4">
                             <v-checkbox
-                            v-if="localWindowStepModel == 4"
+                            v-if="localWindowStepModel == 3"
                             class="mx-3 mb-n5"
                             v-model="checkboxPrivacyTermsAndContinue"
                             label="He leído y estoy de acuerdo con el Aviso de Privacidad">
@@ -274,13 +295,13 @@
                             <v-card-actions>
                               <v-btn
                                 @click="localMethodBtnContinueStepThree"
-                                v-if="localWindowStepModel > 0 && localWindowStepModel < 4"
-                                :disabled="(localWindowStepModel >= 3) ? false : true"
+                                v-if="localWindowStepModel > 0 && localWindowStepModel < 3"
+                                :disabled="(localWindowStepModel >= 2) ? false : true"
                                 large
                                 block
                                 color="orange darken-1"
                                 class="white--text font-weight-bold rounded-lg mx-auto mt-3"
-                                :class="localWindowStepModel <= 3 ? '' : 'mb-7'"
+                                :class="localWindowStepModel <= 2 ? '' : 'mb-7'"
                               >
                                 {{btnContinuarTitle}}
                                   <v-icon
@@ -293,13 +314,13 @@
                               </v-btn>
                               <v-btn
                                 @click="localMethodBtnPayStepFour"
-                                v-else-if="(localWindowStepModel == 4)"
-                                :disabled="(((localWindowStepModel == 4) && checkboxPrivacyTermsAndContinue) && (modelRadioStepFourPaymentMethod != null && modelRadioStepFourPaymentMethod != '')) ? false : true"
+                                v-else-if="(localWindowStepModel == 3)"
+                                :disabled="(((localWindowStepModel == 3) && checkboxPrivacyTermsAndContinue) && (modelRadioStepFourPaymentMethod != null && modelRadioStepFourPaymentMethod != '')) ? false : true"
                                 large
                                 block
                                 color="orange darken-1"
                                 class="white--text font-weight-bold rounded-lg mx-auto mt-3"
-                                :class="localWindowStepModel <= 3 ? '' : 'mb-7'"
+                                :class="localWindowStepModel <= 2 ? '' : 'mb-7'"
                               >
                                 {{btnContinuarTitle}}
                                   <v-icon
@@ -311,7 +332,7 @@
                                   </v-icon>
                               </v-btn>
                             </v-card-actions>
-                            <div v-if="localWindowStepModel <= 3" class="text-decoration-underline text-center mt-n1 mb-4" style="font-size: 0.77rem">Agregar otra persiana</div>
+                            <div v-if="localWindowStepModel <= 2" class="text-decoration-underline text-center mt-n1 mb-4" style="font-size: 0.77rem">Agregar otra persiana</div>
                           </v-col>
                           </v-row>
                         </v-card>
@@ -351,9 +372,8 @@ export default {
             localModelSubtotalAndTotal: 0,
             modelWindowItemSteps: [
                 {step: 1, name: 'ChooseOrder'},
-                {step: 2, name: 'QuotingOrder'},
-                {step: 3, name: 'CheckAndBuy'},
-                {step: 4, name: 'Confirm'}
+                {step: 2, name: 'CheckAndBuy'},
+                {step: 3, name: 'Confirm'}
             ],
             localWindowStepModel: 1,
             localToPropTotalPrice: 0,
@@ -380,10 +400,9 @@ export default {
                 { title: 'Mis compras', icon: 'mdi-help-box' },
             ],
             marketStepsItems: [
-                { title: 'Elegir producto(s)', icon: 'mdi-numeric-1' },
-                { title: 'Cotizar producto(s)', icon: 'mdi-numeric-2' },
-                { title: 'Revisar y pagar', icon: 'mdi-numeric-3' },
-                { title: 'Confirmar compra', icon: 'mdi-numeric-4' },
+                { title: 'Elegir orden', icon: 'mdi-numeric-1' },
+                { title: 'Revisar y pagar', icon: 'mdi-numeric-2' },
+                { title: 'Confirmar compra', icon: 'mdi-numeric-3' },
             ],
         }
     },
@@ -391,7 +410,7 @@ export default {
         localMethodStepThreeCheckAndBuy(localItem){
             this.$store.dispatch('getQuotingOrder', localItem.id).then(()=>{
                 this.isOrdersAndQuotationsDialogActivated = false;
-                this.localWindowStepModel = 3;
+                this.localWindowStepModel = 2;
                 this.localCurrentIDQuotingOrderStepThree = localItem.id;
                 this.localPropItemQuotationOrderNumberID = localItem.order;
                 this.localModelSubtotalAndTotal = localItem.total;
@@ -417,22 +436,22 @@ export default {
             }
         },
         localMethodBtnContinueStepThree(){
-            this.localWindowStepModel = 4;
+            this.localWindowStepModel = 3;
         },
         localMethodBtnPayStepFour(){
             if(this.localModelIsStepFourDataBankAccount == false){
                 this.localModelIsStepFourDataBankAccount = true;
             }
             else if(this.localModelIsStepFourDataBankAccount == true){
-                let validObjectDataBankAccount = Object.values(this.modelObjectDataBankAccount).filter(item=>(item != null && item != '')).length;
-                if(validObjectDataBankAccount == 3){
-                    console.log(this.localCurrentIDQuotingOrderStepThree)
-                    // axios.post(`/api/buy/${this.localCurrentIDQuotingOrderStepThree}`, {bank_account: this.modelObjectDataBankAccount.bankAccount, clabe: this.modelObjectDataBankAccount.clabe, name_account: this.modelObjectDataBankAccount.nameAccount}).then((response)=>{
-                    //     if(response.status === 200){
-                    //         console.log("PASO 4")
-                    //     }
-                    // });
-                }
+                // let validObjectDataBankAccount = Object.values(this.modelObjectDataBankAccount).filter(item=>(item != null && item != '')).length;
+                // if(validObjectDataBankAccount == 3){
+                //     console.log(this.localCurrentIDQuotingOrderStepThree)
+                //     axios.post(`/api/buy/${this.localCurrentIDQuotingOrderStepThree}`, {bank_account: this.modelObjectDataBankAccount.bankAccount, clabe: this.modelObjectDataBankAccount.clabe, name_account: this.modelObjectDataBankAccount.nameAccount}).then((response)=>{
+                //         if(response.status === 200){
+                //             console.log("PASO 4")
+                //         }
+                //     });
+                // }
             }
         },
 
@@ -445,7 +464,7 @@ export default {
         },
 
         changeStepWindowFromAlerts(index){
-            if(index <= 4 && index != this.localWindowStepModel){
+            if(index <= 3 && index != this.localWindowStepModel){
                 this.localWindowStepModel = index;
             }
         }
@@ -463,7 +482,7 @@ export default {
             return [{...this.navigationDrawerItems[1]}, {...this.navigationDrawerItems[2]}]
         },
         btnContinuarTitle(){
-            return this.localWindowStepModel == 4 ? 'Pagar' : 'Continuar';
+            return this.localWindowStepModel == 3 ? 'Pagar' : 'Continuar';
         },
         computedNoPaidOrders(){
             return this.quotedOrders.filter(itemOrder=> itemOrder.state == 'No Pagada');
