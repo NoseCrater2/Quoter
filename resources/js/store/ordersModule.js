@@ -252,6 +252,46 @@ const ordersModule = {
             } catch (error) {}
         },
 
+        //ACCIÓN UTILIZADA EN LA VISTA MARKETCAR PARA VACIAR EL CARRITO
+        removeAllOrdersMarketcar: async function ({ commit }){
+            try {
+                const response = await axios
+                .get("/api/remove-allorders-marketcar/").then((response) => {
+                    if(response.status === 200){
+
+
+                    }
+                })
+            } catch (error) {}
+        },
+
+        //ACCIÓN UTILIZADA EN LA VISTA MARKETCAR PARA REGRESAR UNA ORDEN A COTIZACION
+        removeOrderMarketcar: async function ({ commit }, id){
+            try {
+                const response = await axios
+                .get("/api/remove-order-marketcar/" + id).then((response) => {
+                    if(response.status === 200){
+
+
+                    }
+                })
+            } catch (error) {}
+        },
+
+
+        //ACCIÓN UTILIZADA EN LA VISTA MARKETCAR PARA ELIMINAR UNA PERSIANA DE LA ORDEN
+        deleteBlindFromOrder: async function ({ commit }, id){
+            try {
+                const response = await axios
+                .delete("/api/blinds/" + id).then((response) => {
+                    if(response.status === 200){
+
+
+                    }
+                })
+            } catch (error) {}
+        },
+
         //ELIMINA ORDENES O COTIZACIONES (EXISTENTES EN BD)
         //MANDAR LOS CORREOS A DISTRIBUIRO Y VENTAS
         deleteQuotingOrder: async function ({ commit },id){

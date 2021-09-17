@@ -106,6 +106,8 @@ Route::middleware(['auth:sanctum'])->group(function()
     Route::get('quotations-admin','OrderController@quotationsAdmin');
     Route::get('orders-admin','OrderController@ordersAdmin');
     Route::post('revalidate-item-quotation/{order}','BlindController@revalidateItemQuotation');
+    Route::get('remove-order-marketcar/{order}', 'OrderController@removeOrderMarketcar');
+    Route::get('remove-allorders-marketcar', 'OrderController@removeAllOrdersMarketcar');
 
     Route::post('buy/{order}','OrderController@buy');
     Route::get('change-state/{order}', 'OrderController@changeState');
@@ -132,7 +134,7 @@ Route::middleware(['auth:sanctum'])->group(function()
     // Route::get('users/{user}','UserController@show')->name('users.show');
     // Route::delete('users/{user}','UserController@destroy')->name('users.destroy');
     // Route::get('users/{user}/edit','UserController@edit')->name('users.edit');
-
+    Route::delete('blinds/{blind}', 'BlindController@destroy');
 });
 
 Route::post('order-list-pdf' , 'Api\ProductController@exportPdf');

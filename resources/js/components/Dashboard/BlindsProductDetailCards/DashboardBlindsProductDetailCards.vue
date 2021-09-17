@@ -108,11 +108,11 @@
                   </v-col>
               </v-row>
             </v-card>
-            <v-row no-gutters justify="end" v-if="propIsInMarketAndStepThree">
+            <v-row no-gutters justify="end" v-if="propIsInMarketAndStepThree && propIsOrderOrQuotationString == 'quoted'">
                 <v-btn @click="emitEditBlindFromBlindsProductDetailCardsView()" small elevation="0" color="#47a5ad" class="white--text">
                     <v-icon left>mdi-square-edit-outline</v-icon>Editar
                 </v-btn>
-                <v-btn small elevation="0" color="#757575" class="white--text ml-1">
+                <v-btn :disabled="quotedOrder.blinds.length < 2" @click="methodDeleteBlind(localComputedOrderQuotation)" small elevation="0" color="#757575" class="white--text ml-1">
                     <v-icon left>mdi-delete</v-icon>Borrar
                 </v-btn>
             </v-row>
@@ -129,11 +129,7 @@ export default {
     },
     computed:{
         ...mapState({
-            orders: state => state.ordersModule.orders,
-            quotedOrders: state => state.ordersModule.quotedOrders,
             quotedOrder: state => state.ordersModule.quotedOrder,
-            quotingOrders: state => state.ordersModule.quotingOrders,
-            quotingOrder : state => state.ordersModule.quotingOrder,
             user: (state) => state.user,
         }),
         localComputedOrderQuotation(){
@@ -141,6 +137,9 @@ export default {
         },
     },
     methods:{
+        methodDeleteBlind(itemBlind){
+            this.$emit('emitDeleteBlindFromDetailCards', itemBlind);
+        },
         methodUnitaryPriceDiscount(localDiscount){
             return this.propItemArrayBlindsObject.price - ((localDiscount / 100) * this.propItemArrayBlindsObject.price)
         },
