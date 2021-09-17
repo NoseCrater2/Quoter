@@ -65,13 +65,16 @@ class OrderController extends Controller
                 foreach ($data['orders'] as $b) {
                     $blind = new Blind();
                     $blind->order_id = $order->id;
-                    $blind->variant_id = $b['variant'];
+                    $blind->variant = $b['variant'];
+                    $blind->type = $b['type'];
+                    $blind->manufacturer = $b['manufacturer'];
+                    $blind->line = $b['line'];
                     $blind->color_id = $b['color']['id'];
                     $blind->cloth_holder = $b['cloth_holder'];
                     $blind->control_side = $b['motor']['side_control'];
                     $blind->panels = $b['motor']['panels'];
                     $blind->grouping = $b['motor']['selected_panel'];
-                    $blind->manufacturer = $b['motor']['manufacturer'];
+                    $blind->motor_manufacturer = $b['motor']['manufacturer'];
                     $blind->string_type = $b['motor']['string_type'];
                     if(isset($b['motor']['gallery']['id'])){
                         $blind->gallery_id = $b['motor']['gallery']['id'];
@@ -80,7 +83,7 @@ class OrderController extends Controller
                     if(isset($b['motor']['control']['id'])){
                         $blind->control_id = $b['motor']['control']['id'];
                     }
-                    $blind->second_variant_id = $b['variant2'];
+                    $blind->second_variant = $b['variant2'];
                     if(isset($b['second_color']['id'])){
                         $blind->second_color_id = $b['second_color']['id'];
                     }
@@ -90,6 +93,7 @@ class OrderController extends Controller
                     $blind->instalation_side = $b['instalation_side'];
                     $blind->motor_type = $b['motor_type'];
                     $blind->price = $b['price'];
+                    $blind->discount_price = $b['discount_price'];
                     $blind->rotate = $b['rotate'];
                     $blind->canvas = $b['motor']['canvas'];
                     $blind->comment = $b['motor']['comment'];
@@ -160,7 +164,7 @@ class OrderController extends Controller
 
             foreach ($data['orders'] as $b) {
                 $blind = Blind::find($b['id']);
-                $blind->variant_id = $b['variant'];
+                $blind->variant = $b['variant'];//
                 $blind->color_id = $b['color']['id'];
                 $blind->cloth_holder = $b['cloth_holder'];
                 $blind->control_side = $b['motor']['side_control'];
@@ -171,7 +175,7 @@ class OrderController extends Controller
                 $blind->gallery_id = $b['motor']['gallery']['id'];
                 $blind->motorization_id = $b['motor']['motor'];
                 $blind->control_id = $b['motor']['control']['id'];
-                $blind->second_variant_id = $b['variant2'];
+                $blind->second_variant = $b['variant2'];//
                 $blind->second_color_id = $b['second_color']['id'];
                 $blind->celular_drive = $b['celular_drive'];
                 $blind->celular_type = $b['celular_type'];

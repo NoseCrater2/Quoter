@@ -15,8 +15,35 @@ class OrderShowResource extends JsonResource
      */
     public function toArray($request)
     {
+        //ORDER
+        $code = $this->ticket?'PT':'P';
+        //'order' => $code.Carbon::parse($this->created_at)->format('dmy').'/'.$this->id,
+        //'state' => $this->state,
+
+
+        //QUOTATION
+        // 'state' => Carbon::now()->diffInDays($this->updated_at, true) < 20,
+        // 'order' => 'PT'.Carbon::parse($this->created_at)->format('dmy').'/'.$this->id,
+        // 
         return [
-            // 'state' => $this->state,
+            
+            'id' => $this->id,
+            'payed' => $this->ticket,
+            'state' => $this->is_quotation? Carbon::now()->diffInDays($this->updated_at, true) < 20 : $this->state,
+            'order' => $this->is_quotation? 'PT'.Carbon::parse($this->created_at)->format('dmy').'/'.$this->id : $code.Carbon::parse($this->created_at)->format('dmy').'/'.$this->id,
+            'user' => $this->user,
+            'is_quotation' => $this->is_quotation,
+            'validity' =>Carbon::parse($this->updated_at)->addDays(20)->format('d/m/Y'),
+            'created_at' => Carbon::parse($this->created_at)->toFormattedDateString(),
+            'total' => $this->blinds->map( function( $blind ){
+                return $blind->discount_price +
+                        ( isset($blind->motorization) ? $blind->motorization->price: 0) +
+                        ( isset($blind->control) ? $blind->control->price: 0) +
+                        $blind->flexiballet_price +
+                        $blind->gallery_price +
+                        $blind->manufacturer_price +
+                        $blind->string_price;
+            })->sum(),
             'blinds' => $this->blinds->map(function($blind)
             {
                 return [
@@ -30,8 +57,8 @@ class OrderShowResource extends JsonResource
                     'cloth_holder' => $blind->cloth_holder,
                     'color' => $blind->color,
                     'instalation_side' => $blind->instalation_side,
-                    'line' => $blind->variant->weave? $blind->variant->weave->slug : null,
-                    'manufacturer' => $blind->variant->line->slug,
+                    'line' => $blind->line,
+                    'manufacturer' => $blind->manufacturer,
                     'motor' => [
                         'canvas' => $blind->canvas,
                         'comment' => $blind->comment,
@@ -45,7 +72,7 @@ class OrderShowResource extends JsonResource
                         'gallery_color' => isset($blind->gallery) ? $blind->gallery->color : null,
                         'height_control' => $blind->height_control,
                         'instalation_side' => $blind->instalation_side,
-                        'manufacturer' => $blind->manufacturer,
+                        'manufacturer' => $blind->motor_manufacturer,
                         'manufacturerPrice' => floatval($blind->manufacturer_price),
                         'motor' => isset($blind->motorization) ? $blind->motorization->id: 0,
                         'panels' => $blind->panels,
@@ -60,9 +87,9 @@ class OrderShowResource extends JsonResource
                     'price' => floatval($blind->price),
                     'rotate' => $blind->rotate,
                     'second_color' => $blind->second_color,//puede no tener
-                    'type' => $blind->variant->type->slug,
-                    'variant' => $blind->variant_id,
-                    'variant2' => $blind->second_variant_id,//puede no tener
+                    'type' => $blind->type,
+                    'variant' => $blind->variant,
+                    'variant2' => $blind->second_variant,//puede no tener
                     'extraVertical' => floatval($blind->extraVertical),
                     'extraEnrollable' => floatval($blind->extraEnrollable)
                 ];

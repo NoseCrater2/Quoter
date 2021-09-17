@@ -1,17 +1,19 @@
 <template>
-<v-dialog v-model="isOrdersAndQuotationsDialogActivated" fullscreen persistent transition="dialog-bottom-transition">
+<v-dialog v-model="dialog" fullscreen persistent transition="dialog-bottom-transition">
     <v-card tile flat>
         <v-toolbar flat color="#3ba2a9">
             <v-btn icon dark @click="emitClickCloseFromOrdersAndQuotationsDialog()">
                 <v-icon>mdi-close</v-icon>
             </v-btn>
             <div class="white--text text-uppercase" :style="$vuetify.breakpoint.mdAndUp ? 'font-size: 1.43rem': 'font-size: 1.0rem'">Detalles de la
-                <span>{{computedQuotingOrdersRoute.name}} / </span>
-                <span>#{{propItemQuotationOrderNumberID}}</span>
+                
+                <span  v-if="order.is_quotation">COTIZACIÓN</span>
+                <span  v-else>ORDEN</span>
+                <span>/#{{order.order}}</span>
             </div>
             <v-spacer></v-spacer>
 
-            <div v-if="computedQuotingOrdersRoute.path == 'order' && computedQuotingOrdersRoute.name == 'Cotización'" class="mr-1">
+            <div v-if="order.is_quotation" class="mr-1">
                 <v-btn :large="$vuetify.breakpoint.mdAndUp ? true : false" :icon="!$vuetify.breakpoint.mdAndUp ? true : false" elevation="0" color="orange darken-1" class="white--text font-weight-bold mr-2">
                     {{$vuetify.breakpoint.mdAndUp ? 'Agregar al carrito' : ''}}
                     <v-icon size="30" right>mdi-cart</v-icon>
@@ -22,12 +24,12 @@
                 <v-btn icon color="white">
                     <v-icon size="30">mdi-printer</v-icon>
                 </v-btn>
-                <v-btn icon color="white">
+                <v-btn icon color="white" @click="deleteOrder(order.id)">
                     <v-icon size="30">mdi-delete</v-icon>
                 </v-btn>
             </div>
 
-            <div v-else-if="computedQuotingOrdersRoute.path == 'marketcar' && computedQuotingOrdersRoute.name == 'Orden'" class="mr-1">
+            <div v-else-if="!order.is_quotation" class="mr-1">
                 <v-btn @click="localMethodCheckAndBuyFromOrdersAndQuotationsDialogView()" large elevation="0" color="orange darken-1" class="white--text font-weight-bold mr-2">
                     Comprar
                     <v-icon size="30" right>mdi-arrow-right</v-icon>
@@ -39,11 +41,11 @@
                     <v-icon size="30">mdi-printer</v-icon>
                 </v-btn>
                 <v-btn icon color="white">
-                    <v-icon size="30">mdi-delete</v-icon>
+                    <v-icon size="30" @click="deleteOrder(order.id)">mdi-delete</v-icon>
                 </v-btn>
             </div>
 
-            <div v-else-if="computedQuotingOrdersRoute.path == 'order' && computedQuotingOrdersRoute.name == 'Orden'" class="mr-1">
+            <div v-else-if="order.payed" class="mr-1">
                 <v-row no-gutters align="center">
                     <div class="white--text mr-1">Estado de la orden: </div>
                     <div style="background-color: black" class="mx-2">
@@ -51,7 +53,7 @@
                             <v-avatar size="22" class="green" >
                             </v-avatar>
                         </v-chip>
-                        <span class="white--text font-weight-bold mr-4">Entregada</span>
+                        <span class="white--text font-weight-bold mr-4">{{order.state}}</span>
                     </div>
                     <v-btn icon color="white">
                         <v-icon size="30">mdi-printer</v-icon>
@@ -67,41 +69,42 @@
             <v-col cols="6" style="border-left: 4px solid #47a5ad">
                 <v-card outlined class="ml-5">
                     <v-col cols="12" style="background-color: #E0E0E0">
-                        <div v-if="user.company != null || user.company != ''" class="text-center my-n3" style="font-size: 1.27rem">
-                            <span class="font-weight-bold">{{user.company}}</span> | <span>Distribuidor Autorizado</span>
+                        <div v-if="order.user.company != null || order.user.company != ''" class="text-center my-n3" style="font-size: 1.27rem">
+                            <span class="font-weight-bold">{{order.user.company}}</span> | <span>Distribuidor Autorizado</span>
                         </div>
                         <div v-else class="text-center my-n3" style="font-size: 1.27rem">
-                            <span class="font-weight-bold">{{user.name+' '+user.last_name}}</span> | <span>Distribuidor Autorizado</span>
+                            <span class="font-weight-bold">{{order.user.name+' '+order.user.last_name}}</span> | <span>Distribuidor Autorizado</span>
                         </div>
                     </v-col>
                     <v-row no-gutters justify="center" class="pa-5" align="start">
                         <v-col cols="12" xl="5" lg="5" md="5" sm="12" style="font-size: 1.15rem" class="mt-n4" :class="!$vuetify.breakpoint.mdAndUp ? 'text-center':''">
-                            <div class="font-weight-bold" style="font-size: 1.6rem">{{computedQuotingOrdersRoute.name}}</div>
-                            <div>Folio <span class="font-weight-bold" style="color: #47a5ad">R120821/001</span></div>
-                            <div>Fecha: {{computedCurrentDate}}</div>
-                            <div v-if="computedQuotingOrdersRoute.name == 'Cotización'" style="font-size: 1.0rem">Vigencia hasta: {{computedVigencyDate}}</div>
+                            <div class="font-weight-bold" style="font-size: 1.6rem" v-if="order.is_quotation">Cotización</div>
+                            <div class="font-weight-bold" style="font-size: 1.6rem" v-else>Orden</div>
+                            <div>Folio <span class="font-weight-bold" style="color: #47a5ad">{{order.order}}</span></div>
+                            <div>Fecha: {{order.created_at}}</div>
+                            <div v-if="order.is_quotation" style="font-size: 1.0rem">Vigencia hasta: {{order.validity}}</div>
                         </v-col>
                         <v-col cols="12" xl="7" lg="7" md="7" sm="12" style="font-size: 0.85rem" :class="$vuetify.breakpoint.mdAndUp ? 'mt-n2' : 'text-center'">
-                            <div v-if="user.company != null || user.company != ''" class="font-weight-bold">Cliente: {{user.name+' '+user.last_name}}</div>
-                            <div v-if="user.ship_address != null || user.ship_address != ''">
-                                <span>Dirección: {{user.ship_address}}</span>
+                            <div v-if="order.user.company != null || order.user.company != ''" class="font-weight-bold">Cliente: {{order.user.name+' '+order.user.last_name}}</div>
+                            <div v-if="order.user.ship_address != null || order.user.ship_address != ''">
+                                <span>Dirección: {{order.user.ship_address}}</span>
                             </div>
-                            <div v-if="user.rfc != null || user.rfc != ''">
-                                <span>RFC: {{user.rfc}}</span>
+                            <div v-if="order.user.rfc != null || order.user.rfc != ''">
+                                <span>RFC: {{order.user.rfc}}</span>
                             </div>
-                            <div v-if="user.phone != null || user.phone != ''">
-                                <span>Teléfono: {{user.phone}}</span>
+                            <div v-if="order.user.phone != null || order.user.phone != ''">
+                                <span>Teléfono: {{order.user.phone}}</span>
                             </div>
 
-                            <div v-if="user.email != null || user.email != ''">
-                                <span>Email: {{user.email}}</span>
+                            <div v-if="order.user.email != null || order.user.email != ''">
+                                <span>Email: {{order.user.email}}</span>
                             </div>
                         </v-col>
                     </v-row>
                 </v-card>
             </v-col>
             <v-col cols="3" >
-                <v-img class="mx-auto" width="300" :src="'/img/'+user.logo" ></v-img>
+                <v-img class="mx-auto" width="300" :src="'/img/'+order.user.logo" ></v-img>
             </v-col>
         </v-row>
         <v-col cols="12" style="font-size: 0.85rem;">
@@ -111,20 +114,20 @@
             </div>
         </v-col>
         <v-col cols="12">
-            <div v-if="propIsOrderOrQuotationString == 'order'" style="border: 1px dashed black;">
+            <div style="border: 1px dashed black;">
                 <v-row no-gutters>
-                    <v-col cols="12" xl="6" lg="6" md="12" sm="12" class="pa-2" v-for="(itemBlind, index) in quotedOrder.blinds" :key="itemBlind.id">
-                        <DashboardBlindsProductDetailCards :propIsOrderOrQuotationString="'order'" :propItemArrayBlindsObject="itemBlind" :propBlindCount="(index + 1)" :propBreakpointFromDialog="$vuetify.breakpoint"></DashboardBlindsProductDetailCards>
+                    <v-col cols="12" xl="6" lg="6" md="12" sm="12" class="pa-2" v-for="(itemBlind, index) in order.blinds" :key="itemBlind.id">
+                        <DashboardBlindsProductDetailCards  :propItemArrayBlindsObject="itemBlind" :propBlindCount="(index + 1)" :propBreakpointFromDialog="$vuetify.breakpoint"></DashboardBlindsProductDetailCards>
                     </v-col>
                 </v-row>
             </div>
-            <div v-else-if="propIsOrderOrQuotationString == 'quotation'" style="border: 1px dashed black;">
+            <!-- <div v-else-if="propIsOrderOrQuotationString == 'quotation'" style="border: 1px dashed black;">
                 <v-row no-gutters>
                     <v-col cols="12" xl="6" lg="6" md="12" sm="12" class="pa-2" v-for="(itemBlind, index) in quotingOrder.blinds" :key="itemBlind.id">
                         <DashboardBlindsProductDetailCards :propIsOrderOrQuotationString="'quotation'" :propItemArrayBlindsObject="itemBlind" :propBlindCount="(index + 1)" :propBreakpointFromDialog="$vuetify.breakpoint"></DashboardBlindsProductDetailCards>
                     </v-col>
                 </v-row>
-            </div>
+            </div> -->
         </v-col>
         <v-row no-gutters justify="center" justify-xl="end" justify-lg="end" justify-md="end" justify-sm="center" class="mr-3 mt-3">
             <v-col cols="12" xl="4" lg="4" md="4" sm="12">
@@ -136,7 +139,7 @@
                     </v-col>
                     <v-col cols="6" class="text-end" style="border: 1px solid black">
                         <div>
-                            {{mxCurrencyFormat.format(propTotalPrice)}} MXN
+                            {{mxCurrencyFormat.format(order.total)}} MXN
                         </div>
                     </v-col>
                     <v-col cols="6" class="text-center" style="border: 1px solid black">
@@ -156,7 +159,7 @@
                     </v-col>
                     <v-col cols="6" class="white--text text-end" style="background-color: #47a5ad; font-size: 1.3rem; border: 1px solid black">
                         <div>
-                            {{mxCurrencyFormat.format(propTotalPrice)}} MXN
+                            {{mxCurrencyFormat.format(order.total)}} MXN
                         </div>
                     </v-col>
                 </v-row>
@@ -187,52 +190,36 @@
 
 <script>
 import { mapState } from "vuex";
+import axios from 'axios'
 import DashboardBlindsProductDetailCards from '../../Dashboard/BlindsProductDetailCards/DashboardBlindsProductDetailCards.vue'
 export default {
   data() {
     return {
+        order: {},
+        dialog: true,
         localModeldate: new Date(),
         mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
     }
   },
+
+  mounted(){
+      axios.get('/api/orders/'+this.id).then((response)=>{
+          this.order = response.data.data
+      })
+  },
+
   components: {
       DashboardBlindsProductDetailCards
   },
   computed:{
       ...mapState({
-          orders: state => state.ordersModule.orders,
-          quotedOrders: state => state.ordersModule.quotedOrders,
-          quotedOrder: state => state.ordersModule.quotedOrder,
-          quotingOrders: state => state.ordersModule.quotingOrders,
-          quotingOrder : state => state.ordersModule.quotingOrder,
+        //   orders: state => state.ordersModule.orders,
+        //   quotedOrders: state => state.ordersModule.quotedOrders,
+        //   quotedOrder: state => state.ordersModule.quotedOrder,
+        //   quotingOrders: state => state.ordersModule.quotingOrders,
+        //   quotingOrder : state => state.ordersModule.quotingOrder,
           user: (state) => state.user,
       }),
-      computedCurrentDate(){
-          let year = this.localModeldate.getFullYear();
-          let month = this.localModeldate.getMonth() + 1;
-          let day = this.localModeldate.getDate();
-          if(day < 10){
-              day = '0'+day;
-          }
-          if(month < 10){
-              month = '0'+month;
-          }
-          return day + '/' + month + '/' + year
-      },
-      computedVigencyDate(){
-          let methodLocalCurrentDate = this.localModeldate;
-          methodLocalCurrentDate.setDate(this.localModeldate.getDate() + 7)
-          let year = methodLocalCurrentDate.getFullYear();
-          let month = methodLocalCurrentDate.getMonth() + 1;
-          let day = methodLocalCurrentDate.getDate();
-          if(day < 10){
-              day = '0'+day;
-          }
-          if(month < 10){
-              month = '0'+month;
-          }
-          return day + '/' + month + '/' + year
-      },
       computedQuotingOrdersRoute(){
           if(this.$router.currentRoute.name == 'Orders'){
               if(this.propIsOrderOrQuotationString == 'order'){
@@ -253,6 +240,9 @@ export default {
       },
       localMethodCheckAndBuyFromOrdersAndQuotationsDialogView(){
           this.$emit('emitCheckAndBuyFromOrdersAndQuotationsDialogView', this.idOrderQuotationOrdersAndQuotationsDialog);
+      },
+      deleteOrder(id){
+          console.log(id)
       }
   },
   props:{
@@ -262,15 +252,19 @@ export default {
       idOrderQuotationOrdersAndQuotationsDialog:{
           type: Object
       },
-      propTotalPrice:{
-          type: Number
-      },
-      propIsOrderOrQuotationString: {
-          type: String
-      },
-      propItemQuotationOrderNumberID:{
-          type: String
+
+      id: {
+          type: Number,
       }
+    //   propTotalPrice:{
+    //       type: Number
+    //   },
+    //   propIsOrderOrQuotationString: {
+    //       type: String
+    //   },
+    //   propItemQuotationOrderNumberID:{
+    //       type: String
+    //   }
   }
 }
 </script>

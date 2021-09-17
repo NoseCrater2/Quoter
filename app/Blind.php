@@ -8,10 +8,10 @@ class Blind extends Model
 {
     protected $fillable = [
         'order_id',
-        'variant_id',
+        'variant',
         'color_id',
 
-        'second_variant_id',//nueva (null)
+        'second_variant',//nueva (null)
         'second_color_id',//nueva (null)
         'celular_drive',//nueva (null)
         'celular_type',//nueva (null)
@@ -19,6 +19,7 @@ class Blind extends Model
         'instalation_side',//nueva (null)
         'motor_type',//nueva (null)
         'price',//nueva (0.0)
+        'discount_price',
         'rotate',//nueva (false)
         'canvas',//nueva (0)
         'comment',//nueva (null)
