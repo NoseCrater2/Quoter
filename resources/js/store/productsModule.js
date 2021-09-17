@@ -13,8 +13,8 @@ const productsModule = {
 
     getters: {
 
-    getVariant: (state)=> (id) => {
-            return state.variants.find((t) => t.id === id)
+    getVariant: (state)=> (slug, type) => {
+            return state.variants.find((t) => t.slug === slug && t.type.slug === type)
     },
 
     getTypes: (state)=> (slug) => {

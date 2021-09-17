@@ -88,7 +88,7 @@ Route::get('getRelated/{variant}' , 'VariantController@getRelated');
 Route::get('getRelatedBlinds/{sunblind}' , 'SunblindController@getRelatedBlinds');
 
 
-Route::get('getColors/{variant}' , 'VariantController@getColors');
+Route::get('getColors/{slug}/{type}' , 'VariantController@getColors');
 // Route::post('users' , 'UserController@store')->name('users.store');
 Route::get('distributors' , 'UserController@distributors');
 Route::middleware(['auth:sanctum'])->group(function()

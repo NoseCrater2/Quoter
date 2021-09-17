@@ -55,14 +55,14 @@
                     <v-col :cols="o.variant2 != null?'6':'12'">
                       <v-card flat>
                         <v-card-title  class="py-2 px-4 justify-center" style="line-height: normal; font-size: 0.7em; font-weight: bolder">
-                          {{$store.getters.getVariant(o.variant).name}}
+                          {{$store.getters.getVariant(o.variant, o.type).name}}
                         </v-card-title>
                         <v-divider ></v-divider>
                         <div class="d-flex flex-xs-column justify-space-around">
                           <div >
                             <v-card-subtitle class="overline" style="line-height: normal">
                               <div class="d-inline" style="font-weight: bolder; color:black">TIPO:</div>
-                              {{$store.getters.getVariant(o.variant).type.slug}} <br>
+                              {{o.type.slug}} <br>
                               <div
                               v-if="o.color"
                               class="d-inline" style="font-weight: bolder; color:black">CODIGO:
@@ -70,7 +70,7 @@
                               </div>
 
                               <div class="d-inline" style="font-weight: bolder; color:black">LINEA:</div>
-                              {{$store.getters.getVariant(o.variant).line.slug}} <br>
+                              {{$store.getters.getVariant(o.variant, o.type).line.slug}} <br>
                               <div
                                v-if="o.color"
                               class="d-inline" style="font-weight: bolder; color:black">COLOR:
@@ -87,7 +87,7 @@
                           >
                           <v-img
                           v-if="o.color === null"
-                          :src="`/img/modelos/medium/${o.type}/${o.manufacturer}/${$store.getters.getVariant(o.variant).image}.jpg`" >
+                          :src="`/img/modelos/medium/${o.type}/${o.manufacturer}/${$store.getters.getVariant(o.variant, o.type).image}.jpg`" >
                             <template v-slot:placeholder>
                               <v-img  src="/img/modelos/medium/unavailable.jpg"></v-img>
                             </template>
@@ -108,18 +108,18 @@
 
                        <v-card flat >
                         <v-card-title class="py-2 px-4 justify-center" style="line-height: normal;font-size: 0.7em; font-weight: bolder">
-                          {{$store.getters.getVariant(o.variant2).name}}
+                          {{$store.getters.getVariant(o.variant2, o.type).name}}
                         </v-card-title>
                         <v-divider></v-divider>
                         <div class="d-flex flex-xs-column justify-space-around">
                           <div >
                             <v-card-subtitle class="overline" style="line-height: normal">
                               <div class="d-inline" style="font-weight: bolder; color:black">TIPO:</div>
-                              {{$store.getters.getVariant(o.variant).type.slug}} <br>
+                              {{o.type.slug}} <br>
                               <div class="d-inline" style="font-weight: bolder; color:black">CODIGO:</div>
                               {{o.second_color.code}} <br>
                               <div class="d-inline" style="font-weight: bolder; color:black">LINEA:</div>
-                              {{$store.getters.getVariant(o.variant2).line.slug}} <br>
+                              {{$store.getters.getVariant(o.variant2, o.type).line.slug}} <br>
                               <div class="d-inline" style="font-weight: bolder; color:black">COLOR:</div>
                              {{o.second_color.color}}
 
@@ -384,9 +384,6 @@
 <script>
 import { mapState } from "vuex";
 export default {
-    mounted(){
-        console.log(this.orders)
-    },
   data() {
     return {
       blindId: 0,
@@ -394,14 +391,6 @@ export default {
       deletetConfirmDialog: false,
       tab: null,
       mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
-      headers: [
-        {title:"Direccion Principal", dataKey:"title"},
-        {title:"Direccion Entrega Altera", dataKey:"title2"}
-      ],
-      data: [
-        {title: 'Materiales DECORAIVOS, D. DE R.L.'},
-        {title2: 'hoihoi'}
-      ]
     }
   },
 

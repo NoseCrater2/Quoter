@@ -13,7 +13,7 @@
                           <div>
                               <span>{{localComputedOrderQuotation.type}} // {{localComputedOrderQuotation.manufacturer}}</span>
                               <span>{{localComputedOrderQuotation.line != null ? ' // '+localComputedOrderQuotation.line : ''}}</span>
-                              <span>{{localComputedOrderQuotation.variant2 != null ? ' // [1. '+$store.getters.getVariant(localComputedOrderQuotation.variant).name+'] y [2. '+$store.getters.getVariant(localComputedOrderQuotation.variant2).name+'] // ' : ' // '+$store.getters.getVariant(localComputedOrderQuotation.variant).name+' // '}}</span>
+                              <span>{{localComputedOrderQuotation.variant2 != null ? ' // [1. '+$store.getters.getVariant(localComputedOrderQuotation.variant, localComputedOrderQuotation.type).name+'] y [2. '+$store.getters.getVariant(localComputedOrderQuotation.variant2, localComputedOrderQuotation.type).name+'] // ' : ' // '+$store.getters.getVariant(localComputedOrderQuotation.variant, localComputedOrderQuotation.type).name+' // '}}</span>
                               <span>{{localComputedOrderQuotation.second_color != null ? localComputedOrderQuotation.color.color+' // '+localComputedOrderQuotation.second_color.color+' //' : localComputedOrderQuotation.color.color+' //'}}</span>
                               <span>{{localComputedOrderQuotation.cloth_holder != null ? 'CON '+localComputedOrderQuotation.cloth_holder+' //' : ''}}</span>
                               <span v-for="(canva, index) in localComputedOrderQuotation.canvas" :key="index">

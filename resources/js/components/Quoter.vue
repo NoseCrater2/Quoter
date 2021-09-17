@@ -138,7 +138,7 @@
                 v-model="order.variant"
                 :items="variants"
                 item-text="name"
-                item-value="id"
+                item-value="slug"
                 @change="chargeColors()"
                 outlined
                 color="#47a5ad"
@@ -458,30 +458,13 @@
               v-model="order.variant"
               :items="variants"
               item-text="name"
-              item-value="id"
+              item-value="slug"
               @change="chargeColors()"
               outlined
               color="#47a5ad"
               background-color="white"
               label="Modelo"
               ></v-autocomplete>
-              <!-- <v-autocomplete
-                class="ma-1"
-                hide-details
-                :rules="[(v) => !!v || 'Requerido']"
-                :loading="loadingColors"
-                :disabled="disabledSelectColor"
-                dense
-                return-object
-                v-model="order.color"
-                :items="colors"
-                item-text="color"
-                outlined
-                @change="selectColor(order.color)"
-                color="#47a5ad"
-                background-color="white"
-                label="Color"
-              ></v-autocomplete> -->
               </div>
             </v-col>
 
@@ -492,14 +475,14 @@
                 max-height="328"
                 max-width="328"
                 v-if="(order.type === 'horizontal-aluminio-1' || order.type === 'horizontal-aluminio-2' || order.type === 'horizontal-madera-2') && order.variant != null"
-                :src=" `/img/modelos/medium/${order.type}/${order.manufacturer}/${$store.getters.getVariant(order.variant).image}.jpg`"
+                :src=" `/img/modelos/medium/${order.type}/${order.manufacturer}/${$store.getters.getVariant(order.variant, order.type).image}.jpg`"
                 >
                 </v-img>
                 <v-img
                 v-else-if="order.color"
                 max-height="328"
                 max-width="328"
-                :src=" `/img/modelos/medium/${order.type}/${$store.getters.getVariant(order.variant).line.slug}/${order.color.code}.jpg`"
+                :src=" `/img/modelos/medium/${order.type}/${$store.getters.getVariant(order.variant, order.type).line.slug}/${order.color.code}.jpg`"
                 >
                   <template v-slot:placeholder>
                     <v-img src="/img/modelos/medium-unavailable.jpg"></v-img>
@@ -694,7 +677,7 @@
                   <span>Enviar por Email</span>
                 </v-tooltip>
             </v-col>
-            <v-col v-if="(orders.length > 0) && !verifyUserSuperadminRole" cols="12" md="4" sm="12">
+            <v-col v-if="orders.length > 0" cols="12" md="4" sm="12">
                <v-btn class="mb-2"  block @click="saveOrders" dark depressed  color="#3ca927">
                  Realizar pedido
               </v-btn>
@@ -896,7 +879,7 @@
                 v-model="order.variant"
                 :items="variants"
                 item-text="name"
-                item-value="id"
+                item-value="slug"
                 @change="chargeColors()"
                 outlined
                 color="#47a5ad"
@@ -1584,7 +1567,24 @@
     </v-row>
     <!-- <PreviewPDF :distributor="selectedUser"></PreviewPDF>
     <PreviewPdfRollux></PreviewPdfRollux> -->
-
+      <v-snackbar
+      v-model="savedBlindMessage"
+      :timeout="2000"
+      >
+      <span class="ml-4">Cotización guardada</span>
+       <template v-slot:action>
+        <v-icon>mdi-check</v-icon>
+        </template>
+      </v-snackbar>
+      <v-snackbar
+      v-model="savedorderMessage"
+      :timeout="2000"
+      >
+      <span class="ml-4">Orden guardada</span>
+       <template v-slot:action>
+        <v-icon>mdi-check</v-icon>
+        </template>
+      </v-snackbar>
   </v-container>
 </template>
 
@@ -1607,6 +1607,8 @@ export default {
   name: "Quoter",
   data() {
     return {
+        savedBlindMessage: false,
+        savedorderMessage:false,
         isSendindEmailToAnotherAccount: false,
         isSendindEmailToLoginMyAccount: false,
         isPrintingSpecificClientFromDistributorDialog: false,
@@ -1686,6 +1688,7 @@ export default {
         instalation_side: null,
         cloth_holder: null,
         price: 0,
+        discount_price: 0,
         rotate: false,
         motor_type: null,
         extraVertical: 0,
@@ -1738,6 +1741,7 @@ export default {
         instalation_side: null,
         cloth_holder: null,
         price: 0,
+        discount_price: 0,
         rotate: false,
         motor_type: null,
         extraVertical: 0,
@@ -1996,7 +2000,6 @@ export default {
     dialogAcceptPrintPdfDistribuitor(){
         this.isPrintinDistributorPDF = true;
         this.isPrintRolluxQuotingPDF = true;
-        console.log(this.distributorImagePrint)
         // this.$children[5].$refs.html2Pdf2.generatePdf()
         axios.post("/api/auth-order-list-pdf-distributor", {orders: this.orders, user: this.user}, {responseType: 'blob',}).then((response)=>{
         this.isPrintinDistributorPDF = false;
@@ -2071,13 +2074,17 @@ export default {
         this.$route.query.redirect = 'quoter'
          this.$router.push({name: "login"})
       }else{
-          if(!this.verifyUserSuperadminRole){
             if(this.$route.params.order_id){
-              this.$store.dispatch('updateOrders', {'orders': this.orders, 'id': this.$route.params.order_id,'is_quotation': false})
+              this.$store.dispatch('updateOrders', {'orders': this.orders, 'id': this.$route.params.order_id,'is_quotation': false}).then( () =>{
+                this.savedorderMessage = true
+                this.$store.dispatch('actionDeleteAllBlinds')
+              } )
             }else{
-              this.$store.dispatch('saveOrders', this.orders)
+              this.$store.dispatch('saveOrders', this.orders).then( () => {
+                this.savedorderMessage = true
+                this.$store.dispatch('actionDeleteAllBlinds')
+              })
             }
-          }
       }
     },
 
@@ -2086,13 +2093,19 @@ export default {
         this.$route.query.redirect = 'quoter'
          this.$router.push({name: "login"})
       }else{
-          if(!this.verifyUserSuperadminRole){
-            if(this.$route.params.order_id){
-              this.$store.dispatch('updateQuotations', {'orders': this.orders, 'id': this.$route.params.order_id})
-            }else{
-              this.$store.dispatch('saveQuotations', this.orders)
-            }
+          
+          if(this.$route.params.order_id){
+            this.$store.dispatch('updateQuotations', {'orders': this.orders, 'id': this.$route.params.order_id}).then( () => {
+              this.savedBlindMessage = true
+              this.$store.dispatch('actionDeleteAllBlinds')
+            })
+          }else{
+            this.$store.dispatch('saveQuotations', this.orders).then( ()=>{
+              this.savedBlindMessage = true
+              this.$store.dispatch('actionDeleteAllBlinds')
+            })
           }
+
       }
     },
 
@@ -2123,11 +2136,11 @@ export default {
         const variant1 = this.$store.state.productsModule.variants.find(v => v.name.includes(this.order.celular_variant.day))
         const variant2 = this.$store.state.productsModule.variants.find(v => v.name.includes(this.order.celular_variant.night))
 
-        this.$store.dispatch("getRelatedColors", variant1.id).then(()=>{
-            this.order.variant = variant1.id
+        this.$store.dispatch("getRelatedColors", {'slug': variant1.slug, 'type':this.order.type}).then(()=>{
+            this.order.variant = variant1.slug
         })
-        this.$store.dispatch("getRelatedColors2", variant2.id).then(() => {
-            this.order.variant2 = variant2.id
+        this.$store.dispatch("getRelatedColors2", {'slug': variant2.slug, 'type':this.order.type}).then(() => {
+            this.order.variant2 = variant2.slug
             this.loadingColors = false;
             this.disabledSelectColor = false
         });
@@ -2302,8 +2315,13 @@ export default {
             this.order.price = this.roundToOneDecimal(this.unitaryPrice)
           }
 
-
-         //this.order.motor.price = this.motorizationPrice;
+          if(this.user != null){
+            this.order.discount_price = this.order.price - ((this.user.discount_percent/100)*this.order.price)
+          }
+          if(this.selectedUser.discount_percent > 0){
+            this.order.discount_price = this.order.price - ( (this.order.discount_pricet/100)*this.order.price)
+          }
+         
         if (this.editable) {
           this.$store.dispatch("editOrder", this.order).then(() => {
             this.order = Object.assign({}, this.defaultOrder);
@@ -2317,8 +2335,6 @@ export default {
             this.order.canvas = [{width: null, height: null}],
             this.order.motor =  Object.assign({}, this.defaultMotor);
            this.$refs.form.resetValidation()
-           console.log(this.order)
-           console.log(this.orders)
           });
         }
       }
@@ -2331,7 +2347,7 @@ export default {
       let result = this.orders.find((item) => item.id === value);
       this.order = Object.assign({}, result);
       this.editable = true;
-      this.$store.dispatch("getRelatedColors", this.order.variant).then(() => {
+      this.$store.dispatch("getRelatedColors", {'slug': this.order.variant, 'type':this.order.type}).then(() => {
         this.loadingColors = false;
         this.disabledSelectColor = false;
         this.disabledSelectSize = false;
@@ -2441,10 +2457,11 @@ export default {
     },
 
     chargeModels() {
-      this.selectedColor = null;
       this.heightMargins = null;
       this.widthMargins = null;
-
+      // if(order.type === 'horizontal-aluminio-1' || order.type === 'horizontal-aluminio-2' || order.type === 'horizontal-madera-2'){
+      //   console.log('asigna color por default')
+      // }
     },
 
     chargeTypeModels(type) {
@@ -2469,11 +2486,16 @@ export default {
       this.selectedColor = null;
       this.loadingColors = true;
 
-      this.$store.dispatch("getRelatedColors", this.order.variant).then(() => {
+      this.$store.dispatch("getRelatedColors", {'slug': this.order.variant, 'type':this.order.type}).then(() => {
         this.loadingColors = false;
         this.disabledSelectColor = false;
         this.disabledSelectSize = false;
+        if(this.order.type === 'horizontal-aluminio-1' || this.order.type === 'horizontal-aluminio-2' || this.order.type === 'horizontal-madera-2'){
+          this.order.color = this.colors[0];
+        }
       });
+     
+      
     },
 
     selectColor(color) {
@@ -2682,17 +2704,17 @@ export default {
     },
 
     variant() {
-      if (this.order.variant) {
+      if (this.order.variant &&  this.order.type) {
         return this.$store.state.productsModule.variants.find(
-          (variant) => variant.id === this.order.variant
+          (variant) => variant.slug === this.order.variant && variant.type.slug === this.order.type 
         );
       }
     },
 
     variantTwo() {
-      if (this.order.variant2) {
+      if (this.order.variant2 && this.order.type) {
         return this.$store.state.productsModule.variants.find(
-          (variant) => variant.id === this.order.variant2
+          (variant) => variant.slug === this.order.variant && variant.type.slug === this.order.type 
         );
       }
     },
