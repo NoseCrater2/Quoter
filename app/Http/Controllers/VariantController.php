@@ -152,8 +152,10 @@ class VariantController extends Controller
 
     }
 
-    public function getColors(Variant $variant)
+    public function getColors($slug, $type)
     {
+        $type = Type::where('slug', $type)->first();
+        $variant = Variant::where('slug',$slug)->where('type_id', $type->id)->first();
         return ColorIndexResource::collection(
             $variant->colors
         );

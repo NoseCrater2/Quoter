@@ -68,9 +68,9 @@
                             <tr>
                                 <td style="width: 45%; padding-left: 13px;">
                                     <div class="d-block" style="font-weight: bolder; margin-top: 3px;" >Cotización</div>
-                                    <div class="d-block" style="font-size: 12px;">Folio <span style="font-weight: bolder; color: #47a5ad">R200421/001</span></div>
+                                    <div class="d-block" style="font-size: 12px;">Folio <span style="font-weight: bolder; color: #47a5ad">R{!! $date->now()->format('dmY') !!}/001</span></div>
                                     <div class="d-block" style="font-size: 12px;">Fecha: {!! $date->now()->format('d/m/Y'); !!}</div>
-                                    <div class="d-block" style="font-size: 12px;">Valida hasta: {!! $date->addDays(8)->format('d/m/Y'); !!}</div>
+                                    <div class="d-block" style="font-size: 12px;">Valida hasta: {!! $date->addDays(20)->format('d/m/Y'); !!}</div>
                                 </td>
                                 <td style="width: 55%;">
                                     <div style="font-size: 9px; margin-top: 1px;">
@@ -279,12 +279,12 @@
                                 <tr>
                                     <td class="vertical" style="width: 7%; border-right: 1px solid #d1d3d4; background-color: #f1f1f2;">
                                     <?php
-                                        $blindVariant1 = App\Variant::find($order['variant']);
-                                        $blindVariant2 = null;
-                                        $motorization = null;
-                                            if ($order['variant2'] != null){
-                                                $blindVariant2 = App\Variant::find($order['variant2']);
-                                            }
+                                        // $blindVariant1 = App\Variant::find($order['variant']);
+                                        // $blindVariant2 = null;
+                                        // $motorization = null;
+                                        //     if ($order['variant2'] != null){
+                                        //         $blindVariant2 = App\Variant::find($order['variant2']);
+                                        //     }
                                     ?>
                                         <div>
                                             <span>
@@ -295,16 +295,16 @@
                                     <td style="width: 60%; background-color: white;">
                                         <div style="text-transform: uppercase; margin-top: -34px;">
                                             <?php
-                                                $concat = $blindVariant1->type->name.' // '.$blindVariant1->line->name;
+                                                $concat = $order['type'].' // '.$order['manufacturer'];
                                                 $concat2 = '';
-                                                if($blindVariant1->weave != null){
-                                                    $concat .= ' // '.$blindVariant1->weave->name;
+                                                if(isset($order['line'])){
+                                                    $concat .= ' // '.$order['line'];
                                                 }
-                                                if($blindVariant2 != null){
-                                                    $concat .= ' // [1. '.$blindVariant1->name.'] y [2. '.$blindVariant2->name.'] // ';
+                                                if(isset($order['variant2'])){
+                                                    $concat .= ' // [1. '.$order['variant'].'] y [2. '.$order['variant2'].'] // ';
                                                 }
                                                 else{
-                                                    $concat .= ' // '.$blindVariant1->name.' // ';
+                                                    $concat .= ' // '.$order['variant'].' // ';
                                                 }
                                                 if($order['second_color']['color'] != null){
                                                     $concat .= $order['color']['color'].' // '.$order['second_color']['color'].' //';
@@ -418,11 +418,8 @@
                                             ?>
                                             <span>{{$concat3}}</span>
                                             <div style="text-transform: none;">
-                                                <span>Precio (m2): ${{$blindVariant1->price}} MXN // Descuento: {{$orders['user']['discount_percent']}}% // M2: @calculatemeters($order['canvas'][0]['width'],$order['canvas'][0]['height']) //</span>
-                                                <?php
-                                                    $totaldiscount = $blindVariant1->price - (($orders['user']['discount_percent'] / 100) * $blindVariant1->price);
-                                                ?>
-                                                <span>Precio con Descto: ${{$totaldiscount}} MXN</span>
+                                                <span>Precio (m2): ${{$order['price']}} MXN // Descuento: {{$orders['user']['discount_percent']}}% // M2: @calculatemeters($order['canvas'][0]['width'],$order['canvas'][0]['height'])//</span>
+                                                <span>Precio con Descto: ${{$order['discount_price']}} MXN</span>
                                             </div>
                                         </div>
                                     </td>
@@ -459,11 +456,7 @@
                                             <span>TOTAL: </span>
                                             <span style="color: #47a5ad">
                                                 <?php
-                                                    $totalCanvasPrice = 0;
-                                                    foreach ($order['canvas'] as $key => $canva){
-                                                        $totalCanvasPrice += (($canva['width'] * $canva['height']) * $totaldiscount);
-                                                    }
-                                                    $unitaryPrice = $totalCanvasPrice +
+                                                    $unitaryPrice = $order['discount_price'] +
                                                     $order['motor']['price'] +
                                                     $order['motor']['flexiballetPrice'] +
                                                     $order['motor']['galleryPrice'] +
@@ -490,12 +483,12 @@
                                 <tr>
                                     <td class="vertical" style="width: 7%; border-right: 1px solid #d1d3d4; background-color: #f1f1f2;">
                                     <?php
-                                        $blindVariant1 = App\Variant::find($order['variant']);
-                                        $blindVariant2 = null;
-                                        $motorization = null;
-                                            if ($order['variant2'] != null){
-                                                $blindVariant2 = App\Variant::find($order['variant2']);
-                                            }
+                                        // $blindVariant1 = App\Variant::find($order['variant']);
+                                        // $blindVariant2 = null;
+                                        // $motorization = null;
+                                        //     if ($order['variant2'] != null){
+                                        //         $blindVariant2 = App\Variant::find($order['variant2']);
+                                        //     }
                                         //PONER LAS IMAGENES EN CASO DE ERROR
                                     ?>
                                         <div>
@@ -507,18 +500,18 @@
                                     <td style="width: 60%; background-color: white;">
                                         <div style="text-transform: uppercase; margin-top: -29px;">
                                             <?php
-                                                $concat = $blindVariant1->type->name.' // '.$blindVariant1->line->name;
+                                                $concat = $order['type'].' // '.$order['manufacturer'];
                                                 $concat2 = '';
-                                                if($blindVariant1->weave != null){
-                                                    $concat .= ' // '.$blindVariant1->line->name;
+                                                if(isset($order['line'])){
+                                                    $concat .= ' // '.$order['line'];
                                                 }
-                                                if($blindVariant2 != null){
-                                                    $concat .= ' // [1. '.$blindVariant1->name.'] y [2. '.$blindVariant2->name.'] // ';
+                                                if(isset($order['variant2'])){
+                                                    $concat .= ' // [1. '.$order['variant'].'] y [2. '.$order['variant2'].'] // ';
                                                 }
                                                 else{
-                                                    $concat .= ' // '.$blindVariant1->name.' // ';
+                                                    $concat .= ' // '.$order['variant'].' // ';
                                                 }
-                                                if($order['second_color']['color'] != null){
+                                                if(isset($order['second_color']['color'])){
                                                     $concat .= $order['color']['color'].' // '.$order['second_color']['color'].' //';
                                                 }
                                                 else{
@@ -630,11 +623,8 @@
                                             ?>
                                             <span>{{$concat3}}</span>
                                             <div style="text-transform: none;">
-                                                <span>Precio (m2): ${{$blindVariant1->price}} MXN // Descuento: {{$orders['user']['discount_percent']}}% // M2: @calculatemeters($order['canvas'][0]['width'],$order['canvas'][0]['height']) //</span>
-                                                <?php
-                                                    $totaldiscount = $blindVariant1->price - (($orders['user']['discount_percent'] / 100) * $blindVariant1->price);
-                                                ?>
-                                                <span>Precio con Descto: ${{$totaldiscount}} MXN</span>
+                                                <span>Precio (m2): ${{$order['price']}} MXN // Descuento: {{$orders['user']['discount_percent']}}% // M2: @calculatemeters($order['canvas'][0]['width'],$order['canvas'][0]['height'])//</span>
+                                                <span>Precio con Descto: ${{$order['discount_price']}} MXN</span>
                                             </div>
                                         </div>
                                     </td>
@@ -671,11 +661,7 @@
                                             <span>TOTAL: </span>
                                             <span style="color: #47a5ad">
                                                 <?php
-                                                    $totalCanvasPrice = 0;
-                                                    foreach ($order['canvas'] as $key => $canva){
-                                                        $totalCanvasPrice += (($canva['width'] * $canva['height']) * $totaldiscount);
-                                                    }
-                                                    $unitaryPrice = $totalCanvasPrice +
+                                                    $unitaryPrice = $order['discount_price'] +
                                                     $order['motor']['price'] +
                                                     $order['motor']['flexiballetPrice'] +
                                                     $order['motor']['galleryPrice'] +

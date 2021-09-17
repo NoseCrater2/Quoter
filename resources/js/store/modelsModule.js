@@ -82,20 +82,20 @@ const modelsModule = {
             }
           },
 
-        getRelatedColors: async function ({ commit, state }, idVariant){
+        getRelatedColors: async function ({ commit}, data){
             try {
                 const response = await axios
-                .get("/api/getColors/"+idVariant)
+                .get("/api/getColors/"+data.slug+"/"+data.type)
                 commit('setRelatedColors',response.data.data);   
               } catch (error) {
                  
               }
         },
 
-        getRelatedColors2: async function ({ commit, state }, idVariant){
+        getRelatedColors2: async function ({ commit}, data){
             try {
                 const response = await axios
-                .get("/api/getColors/"+idVariant)
+                .get("/api/getColors/"+data.slug+"/"+data.type)
                 commit('setRelatedColors2',response.data.data);   
               } catch (error) {
                  

@@ -143,13 +143,13 @@
                 </div>
             </template>
             <template v-slot:item.actions="{ item }">
-              	<v-icon small class="mr-2" @click="isOrdersAndQuotationsDialogActivated = true">
+              	<v-icon small class="mr-2" @click="openDetailsdialog(item.id)">
                 	mdi-magnify
               	</v-icon>
             </template>
         </v-data-table>
         </v-col>
-        <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated"></DashboardOrdersAndQuotationsDialog>
+        <DashboardOrdersAndQuotationsDialog :id="orderId" v-if="isOrdersAndQuotationsDialogActivated" @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" ></DashboardOrdersAndQuotationsDialog>
     </v-row>
 </template>
 
@@ -194,8 +194,8 @@ export default {
             cruds: [
                 {title: 'Mis Cotizaciones', route: {name: 'Orders', params: {option: 'cotizaciones'}} },
                 {title: 'Cotizaciones Distribuidores', route: {name: 'Orders', params: {option: 'cotizaciones-admin'}}}
-            ]
-
+            ],
+            orderId: 0,
         }
     },
     mounted(){
@@ -245,7 +245,10 @@ export default {
         emitClickCloseFromOrdersAndQuotationsDialog(){
             this.isOrdersAndQuotationsDialogActivated = false;
         },
-
+        openDetailsdialog(id){
+            this.orderId = id
+            this.isOrdersAndQuotationsDialogActivated = true
+        },
         changeState(order, state){
             axios.get('/api/change-state/'+order+'/?state='+state).then( response => {
                 if(response.status === 200){

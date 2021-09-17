@@ -23,7 +23,7 @@ class AdministratorOrderIndexResource extends JsonResource
             'blinds' => $this->blinds->count(),
             'user' => $this->user->name.' '.$this->user->last_name,
             'total' => $this->blinds->map( function( $blind ){
-                return $blind->price +
+                return $blind->discount_price +
                         ( isset($blind->motorization) ? $blind->motorization->price: 0) +
                         ( isset($blind->control) ? $blind->control->price: 0) +
                         $blind->flexiballet_price +
