@@ -60,12 +60,12 @@
                 <template v-slot:default="props">
                     <v-row justify="center" justify-xl="start" justify-lg="start" justify-md="start" v-if="option === 'ordenes'">
                         <v-col v-for="item in props.items" :key="item.id" cols="12" xl="2" lg="3" md="4" sm="5">
-                            <ItemOrder :item="item"  />
+                            <ItemOrder @emitFromItemOrder="localMethodIsOrdersAndQuotationsDialogActivatedOn" :item="item"  />
                         </v-col>
                     </v-row>
                     <v-row justify="center" justify-xl="start" justify-lg="start" justify-md="start" v-if="option === 'cotizaciones'">
                         <v-col v-for="item in props.items" :key="item.id" cols="12" xl="2" lg="3" md="4" sm="5">
-                            <ItemQuotation :item="item" />
+                            <ItemQuotation @emitFromItemQuotation="localMethodIsOrdersAndQuotationsDialogActivatedOn" :item="item" />
                         </v-col>
                     </v-row>
                 </template>
@@ -197,7 +197,7 @@
             </v-data-iterator>
 
         </v-col>
-        <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated" :propTotalPrice="localToPropTotalPrice" :propIsOrderOrQuotationString="'quotation'" :propItemQuotationOrderNumberID="localPropItemQuotationOrderNumberID"></DashboardOrdersAndQuotationsDialog>
+        <DashboardOrdersAndQuotationsDialog :id="orderId" v-if="isOrdersAndQuotationsDialogActivated" @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" ></DashboardOrdersAndQuotationsDialog>
     </v-row>
 </template>
 
@@ -228,7 +228,8 @@ export default {
                 {id: 'R140721/100', created_at: 'Aug 14, 2021', total: '$1,290.00 MXN'},
                 {id: 'R140721/99', created_at: 'Aug 14, 2021', total: '$1,290.00 MXN'},
                 {id: 'R140721/98', created_at: 'Aug 14, 2021', total: '$1,290.00 MXN'}
-            ]
+            ],
+            orderId: 0,
         }
     },
 
@@ -285,6 +286,7 @@ export default {
         },
         localMethodIsOrdersAndQuotationsDialogActivatedOn(localItem){
             this.$store.dispatch('getQuotingOrder', localItem.id).then(()=>{
+                this.orderId = localItem.id;
                 this.localPropItemQuotationOrderNumberID = localItem.order;
                 this.localToPropTotalPrice = localItem.total;
                 this.isOrdersAndQuotationsDialogActivated = true;

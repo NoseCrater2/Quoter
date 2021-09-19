@@ -83,7 +83,8 @@ class BlindController extends Controller
      */
     public function destroy(Blind $blind)
     {
-        //
+        $blind->delete();
+        return response(['messagge'=> 'La persiana se eliminó'],200);
     }
 
     public function revalidateItemQuotation(Request $request, Order $order){

@@ -17,6 +17,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\OrderState;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\BuyedOrderAdmin;
+use App\Mail\BuyedOrderClient;
 
 class OrderController extends Controller
 {
@@ -282,11 +285,11 @@ class OrderController extends Controller
                 $ticket->clabe = $data['clabe'];
                 $ticket->name_account = $data['name_account'];
                 $order->ticket()->save($ticket);
-               
+
             });
             return response(['message'=>'Payed!'],200);
         }
-        
+
     }
 
     public function changeState(Request $request, Order $order)
@@ -300,6 +303,33 @@ class OrderController extends Controller
         $distributor->notify( new OrderState($order));
 
         return response(['message'=>'Changed!'],200);
+    }
+
+    public function removeOrderMarketcar(Order $order)
+    {
+        $order->is_quotation = 1;
+        $order->save();
+        return response(['message'=>'Changed!'],200);
+    }
+
+    public function removeAllOrdersMarketcar()
+    {
+       $orders = auth()->user()->orders;
+
+       $orders->where('state', 'No Pagada')->each(function ($order)
+       {
+           $order->is_quotation = 1;
+           $order->save();
+       });
+
+    }
+
+    public function speiPayment(Order $order)
+    {
+       $order->state = 'En Verificacion';
+       $order->save();
+       Mail::to(['sac1@rollux.com.mx', 'distribuidores@rollux.com.mx'])->send(new BuyedOrderAdmin($order));
+       Mail::to($order->user->email)->send(new BuyedOrderClient($order));
     }
 
 }
