@@ -17,6 +17,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\OrderState;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\BuyedOrderAdmin;
+use App\Mail\BuyedOrderClient;
 
 class OrderController extends Controller
 {
@@ -321,5 +324,12 @@ class OrderController extends Controller
 
     }
 
+    public function speiPayment(Order $order)
+    {
+       $order->state = 'En Verificacion';
+       $order->save();
+       Mail::to(['sac1@rollux.com.mx', 'distribuidores@rollux.com.mx'])->send(new BuyedOrderAdmin($order));
+       Mail::to($order->user->email)->send(new BuyedOrderClient($order));
+    }
 
 }

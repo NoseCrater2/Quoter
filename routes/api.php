@@ -110,6 +110,7 @@ Route::middleware(['auth:sanctum'])->group(function()
     Route::get('remove-allorders-marketcar', 'OrderController@removeAllOrdersMarketcar');
 
     Route::post('buy/{order}','OrderController@buy');
+    Route::get('spei-payment/{order}', 'OrderController@speiPayment');
     Route::get('change-state/{order}', 'OrderController@changeState');
 
     Route::get('notifications', 'UserController@notifications');

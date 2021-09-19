@@ -92,13 +92,11 @@
                     </v-col>
                 </v-list-item-content>
             </v-list-item> -->
-            <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated" :propTotalPrice="localToPropTotalPrice" :propIsOrderOrQuotationString="'order'" :propItemQuotationOrderNumberID="item.order"></DashboardOrdersAndQuotationsDialog>
         </v-card>
     </v-hover>
 </template>
 
 <script>
-import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/OrdersAndQuotations/DashboardOrdersAndQuotationsDialog.vue'
 import { mapState } from 'vuex';
 export default {
     data(){
@@ -121,9 +119,10 @@ export default {
     methods:{
         localMethodIsOrdersAndQuotationsDialogActivatedOn(localItem){
             this.$store.dispatch('getQuotedOrder', localItem.id).then(()=>{
-                this.localToPropTotalPrice = localItem.total;
-                this.isOrdersAndQuotationsDialogActivated = true;
-                console.log(this.quotedOrders, this.quotedOrder)
+                // this.localToPropTotalPrice = localItem.total;
+                // this.isOrdersAndQuotationsDialogActivated = true;
+                // console.log(this.quotedOrders, this.quotedOrder)
+                this.$emit('emitFromItemOrder', localItem)
             });
 
         },
@@ -131,9 +130,6 @@ export default {
             this.localToPropTotalPrice = 0;
             this.isOrdersAndQuotationsDialogActivated = false;
         }
-    },
-    components:{
-        DashboardOrdersAndQuotationsDialog
     },
     props: {
         item: {

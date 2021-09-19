@@ -319,7 +319,7 @@
                                   </v-icon>
                               </v-btn>
                             </v-card-actions>
-                            <div v-if="localWindowStepModel == 2" class="text-decoration-underline text-center mt-n1 mb-4" style="font-size: 0.77rem">Agregar otra persiana</div>
+                            <!-- <div v-if="localWindowStepModel == 2" class="text-decoration-underline text-center mt-n1 mb-4" style="font-size: 0.77rem">Agregar otra persiana</div> -->
                           </v-col>
                           </v-row>
                         </v-card>
@@ -327,7 +327,7 @@
                   </v-row>
               </v-col>
           </v-row>
-          <DashboardOrdersAndQuotationsDialog @emitCheckAndBuyFromOrdersAndQuotationsDialogView="localMethodStepThreeCheckAndBuy" @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated" :propTotalPrice="localToPropTotalPrice" :propIsOrderOrQuotationString="'order'" :propItemQuotationOrderNumberID="localPropItemQuotationOrderNumberID" :idOrderQuotationOrdersAndQuotationsDialog="localCurrentItemOfOrdersAndQuotationsDialogView"></DashboardOrdersAndQuotationsDialog>
+          <DashboardOrdersAndQuotationsDialog :id="orderId" v-if="isOrdersAndQuotationsDialogActivated" @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" ></DashboardOrdersAndQuotationsDialog>
 
 
             <v-dialog v-model="modelDialogCancelAllOrders" persistent max-width="290">
@@ -354,6 +354,7 @@ import OrdersCardsStepOne from '../../components/Dashboard/Marketcar/OrdersCards
 import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/OrdersAndQuotations/DashboardOrdersAndQuotationsDialog.vue'
 import DashboardBlindsProductDetailCards from '../../components/Dashboard/BlindsProductDetailCards/DashboardBlindsProductDetailCards.vue';
 import { mapState } from 'vuex';
+import axios from 'axios';
 export default {
     mounted(){
         this.$store.dispatch('getQuotedOrders').then(()=>{
@@ -386,6 +387,7 @@ export default {
                 { title: 'Revisar y pagar', icon: 'mdi-numeric-2' },
                 { title: 'Confirmar compra', icon: 'mdi-numeric-3' },
             ],
+            orderId: 0,
         }
     },
     methods:{
@@ -425,6 +427,7 @@ export default {
 
         localMethodStepThreeCheckAndBuy(localItem){
             this.$store.dispatch('getQuotedOrder', localItem.id).then(()=>{
+                this.orderId = localItem.id;
                 this.isOrdersAndQuotationsDialogActivated = false;
                 this.localWindowStepModel = 2;
                 this.localCurrentIDQuotingOrderStepThree = localItem.id;
@@ -437,6 +440,7 @@ export default {
 
         localMethodIsOrdersAndQuotationsDialogActivatedOn(localItem){
             this.$store.dispatch('getQuotedOrder', localItem.id).then(()=>{
+                this.orderId = localItem.id;
                 this.isOrdersAndQuotationsDialogActivated = true;
                 this.localCurrentIDQuotingOrderStepThree = localItem.id;
                 this.localPropItemQuotationOrderNumberID = localItem.order;
@@ -457,12 +461,18 @@ export default {
         },
 
         localMethodBtnPayStepFour(){
-            if(this.localModelIsStepFourDataBankAccount == false){
-                this.localModelIsStepFourDataBankAccount = true;
-            }
-            else if(this.localModelIsStepFourDataBankAccount == true){
+            // if(this.localModelIsStepFourDataBankAccount == false){
+            //     this.localModelIsStepFourDataBankAccount = true;
+            // }
+            // else if(this.localModelIsStepFourDataBankAccount == true){
 
-            }
+            // }
+            axios.get(`/api/spei-payment/${this.orderId}`).then((response)=>{
+                console.log(response)
+                if(response.status == 200){
+                    this.localModelIsStepFourDataBankAccount = true;
+                }
+            });
         },
 
         emitClickCloseFromOrdersAndQuotationsDialog(){

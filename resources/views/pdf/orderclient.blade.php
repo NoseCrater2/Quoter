@@ -88,14 +88,6 @@
                             <tbody>
                                 <tr>
                                     <td class="vertical" style="width: 7%; border-right: 1px solid #d1d3d4; background-color: #f1f1f2;">
-                                    <?php
-                                        $blindVariant1 = App\Variant::find($order['variant']);
-                                        $blindVariant2 = null;
-                                        $motorization = null;
-                                            if ($order['variant2'] != null){
-                                                $blindVariant2 = App\Variant::find($order['variant2']);
-                                            }
-                                    ?>
                                         <div>
                                             <span>
                                                 PERSIANA {{$order['id']}}
@@ -105,18 +97,18 @@
                                     <td style="width: 60%; background-color: white;">
                                         <div style="text-transform: uppercase; margin-top: -34px;">
                                             <?php
-                                                $concat = $blindVariant1->type->name.' // '.$blindVariant1->line->name;
+                                                $concat = $order['type'].' // '.$order['manufacturer'];
                                                 $concat2 = '';
-                                                if($blindVariant1->weave != null){
-                                                    $concat .= ' // '.$blindVariant1->weave->name;
+                                                if(isset($order['line'])){
+                                                    $concat .= ' // '.$order['line'];
                                                 }
-                                                if($blindVariant2 != null){
-                                                    $concat .= ' // [1. '.$blindVariant1->name.'] y [2. '.$blindVariant2->name.'] // ';
+                                                if(isset($order['variant2'])){
+                                                    $concat .= ' // [1. '.$order['variant'].'] y [2. '.$order['variant2'].'] // ';
                                                 }
                                                 else{
-                                                    $concat .= ' // '.$blindVariant1->name.' // ';
+                                                    $concat .= ' // '.$order['variant'].' // ';
                                                 }
-                                                if($order['second_color']['color'] != null){
+                                                if(isset($order['second_color'])){
                                                     $concat .= $order['color']['color'].' // '.$order['second_color']['color'].' //';
                                                 }
                                                 else{
@@ -289,15 +281,6 @@
                             <tbody>
                                 <tr>
                                     <td class="vertical" style="width: 7%; border-right: 1px solid #d1d3d4; background-color: #f1f1f2;">
-                                    <?php
-                                        $blindVariant1 = App\Variant::find($order['variant']);
-                                        $blindVariant2 = null;
-                                        $motorization = null;
-                                            if ($order['variant2'] != null){
-                                                $blindVariant2 = App\Variant::find($order['variant2']);
-                                            }
-                                        //PONER LAS IMAGENES EN CASO DE ERROR
-                                    ?>
                                         <div>
                                             <span>
                                                 PERSIANA {{$order['id']}}
@@ -307,18 +290,18 @@
                                     <td style="width: 60%; background-color: white;">
                                         <div style="text-transform: uppercase; margin-top: -29px;">
                                             <?php
-                                                $concat = $blindVariant1->type->name.' // '.$blindVariant1->line->name;
+                                                $concat = $order['type'].' // '.$order['manufacturer'];
                                                 $concat2 = '';
-                                                if($blindVariant1->weave != null){
-                                                    $concat .= ' // '.$blindVariant1->weave->name;
+                                                if(isset($order['line'])){
+                                                    $concat .= ' // '.$order['line'];
                                                 }
-                                                if($blindVariant2 != null){
-                                                    $concat .= ' // [1. '.$blindVariant1->name.'] y [2. '.$blindVariant2->name.'] // ';
+                                                if(isset($order['variant2'])){
+                                                    $concat .= ' // [1. '.$order['variant'].'] y [2. '.$order['variant2'].'] // ';
                                                 }
                                                 else{
-                                                    $concat .= ' // '.$blindVariant1->name.' // ';
+                                                    $concat .= ' // '.$order['variant'].' // ';
                                                 }
-                                                if($order['second_color']['color'] != null){
+                                                if(isset($order['second_color'])){
                                                     $concat .= $order['color']['color'].' // '.$order['second_color']['color'].' //';
                                                 }
                                                 else{
