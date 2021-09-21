@@ -115,7 +115,6 @@
                 </v-list-item-content>
             </v-list-item>
             </v-card-text>
-            <DashboardOrdersAndQuotationsDialog @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" :isOrdersAndQuotationsDialogActivated="isOrdersAndQuotationsDialogActivated" :propTotalPrice="localToPropTotalPrice" :propIsOrderOrQuotationString="'quotation'" :propItemQuotationOrderNumberID="item.order"></DashboardOrdersAndQuotationsDialog>
             <v-dialog v-model="localDialogAddToCartQuotation" persistent max-width="290">
               <v-card>
                 <v-card-title class="headline">¿Agregar al carrito?</v-card-title>
@@ -154,7 +153,6 @@ import { mapState } from 'vuex';
 import axios from 'axios';
 import woodMatrix from '../../utils/woodMatrixOne';
 import woodMotorized from '../../utils/woodMatrixTwo';
-import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/OrdersAndQuotations/DashboardOrdersAndQuotationsDialog.vue'
 export default {
     data(){
         return {
@@ -262,8 +260,9 @@ export default {
         // },
         localMethodIsOrdersAndQuotationsDialogActivatedOn(localItem){
             this.$store.dispatch('getQuotingOrder', localItem.id).then(()=>{
-                this.localToPropTotalPrice = localItem.total;
-                this.isOrdersAndQuotationsDialogActivated = true;
+                // this.localToPropTotalPrice = localItem.total;
+                // this.isOrdersAndQuotationsDialogActivated = true;
+                this.$emit('emitFromItemQuotation', localItem);
             });
 
         },
@@ -314,9 +313,6 @@ export default {
                 })
             }
         }
-    },
-    components:{
-        DashboardOrdersAndQuotationsDialog
     },
     props: {
         item: {
