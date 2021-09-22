@@ -51,7 +51,22 @@
                  
                  <v-row v-if="images.length > 0" no-gutters justify="center">
                     <v-col cols="12" md="4" sm="12" v-for="(image, index) in images" :key="index">
-                        <v-img aspect-ratio="1" contain @click="openDialog(index)" width="100%" height="100%" :src="`/img/${image}`"></v-img>
+                        <v-hover v-slot="{ hover }">
+                            <v-img 
+                            aspect-ratio="1" 
+                            contain 
+                            @click="openDialog(index)" 
+                            width="100%" 
+                            height="100%" 
+                            :src="`/img/${image}`" 
+                            class="align-center"
+                            :gradient="hover?'rgba(0, 0, 0, 0.4) 100%, transparent 72px':''" >
+                                <v-row justify="center" align="center">
+                                     <v-icon dark v-if="hover" size="75">mdi-magnify</v-icon>
+                                </v-row>
+                            </v-img>
+                        </v-hover>
+                        
                             <!-- <img  :alt="index"> -->
                     </v-col>
                  </v-row>
@@ -65,14 +80,19 @@
          </v-row>
           <v-dialog v-model="dialog" max-width="700px" >
               <v-carousel height="700px" hide-delimiter-background v-model="position" >
-                <v-carousel-item
-                eager
-                v-for="(image,i) in images"
-                :key="i"
-                :src="`/img/${image}`"
-                reverse-transition="fade-transition"
-                transition="fade-transition"
-                ></v-carousel-item>
+                    <v-carousel-item
+                    eager
+                    v-for="(image,i) in images"
+                    :key="i"
+                    :src="`/img/${image}`"
+                    reverse-transition="fade-transition"
+                    transition="fade-transition"
+                    class="align-end"
+                    >
+                    <v-btn small class="ma-2" dark style="background: rgba(0, 0, 0, 0.4); left: 92%;" icon fab rounded @click="dialog = false">
+                        <v-icon >mdi-close</v-icon>
+                    </v-btn>
+                    </v-carousel-item>
               </v-carousel>
           </v-dialog>
     </v-container>
