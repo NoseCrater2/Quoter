@@ -64,6 +64,7 @@
                         <v-icon v-if="item.state === 'Entregada'" size="22" color="green darken-1">mdi-checkbox-blank-circle</v-icon>
                         <v-icon v-if="item.state === 'Cancelada'" size="22" color="red darken-2">mdi-checkbox-blank-circle</v-icon>
                         <v-icon v-if="item.state === 'No Pagada'" size="22" color="black">mdi-diameter-variant</v-icon>
+                        <v-icon v-if="item.state === 'En Verificacion'" size="22" color="#FFEB3B">mdi-checkbox-blank-circle</v-icon>
                     </v-avatar>
                    {{ item.state}}
                 </v-chip>
