@@ -93,6 +93,7 @@ class BlindController extends Controller
         foreach ($data as $value) {
             $blind = Blind::find($value['id']);
             $blind->price = $value['price'];
+            $blind->discount_price = $value['discountPrice'];
             $order->blinds()->save($blind);
         }
         $order->updated_at = Carbon::now()->format('Y-m-d H:i:s');

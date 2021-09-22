@@ -122,9 +122,6 @@
 <script>
 import {mapState} from 'vuex';
 export default {
-    mounted(){
-        console.log("M", this.propItemArrayBlindsObject)
-    },
     data() {
         return {
             mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),

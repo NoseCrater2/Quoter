@@ -4,6 +4,9 @@
           <div class="text-center text-uppercase my-2" style="font-size: 1.5rem">
               <span>Carrito </span><span class="font-weight-bold" style="color: #3ba2a9">de compra</span>
           </div>
+            <div class="text-center text-uppercase my-2 red--text" style="font-size: 1.5rem">
+              <span>(EN CONSTRUCCION)</span>
+          </div>
           <v-row class="mt-3">
               <v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" xl="3" lg="3" md="3" sm="3">
                 <v-card
@@ -395,7 +398,7 @@
                   </v-row>
               </v-col>
           </v-row>
-          <DashboardOrdersAndQuotationsDialog :id="orderId" v-if="isOrdersAndQuotationsDialogActivated" @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" ></DashboardOrdersAndQuotationsDialog>
+          <DashboardOrdersAndQuotationsDialog :id="orderId" v-if="isOrdersAndQuotationsDialogActivated" @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" @emitCheckAndBuyFromOrdersAndQuotationsDialogView="localMethodStepThreeCheckAndBuy" ></DashboardOrdersAndQuotationsDialog>
 
 
             <v-dialog v-model="modelDialogCancelAllOrders" persistent max-width="290">

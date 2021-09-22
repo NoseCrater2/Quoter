@@ -41,8 +41,8 @@
                     >
                       <v-img aspect-ratio="1" height="170px" class="white--text text-uppercase align-end" :src="itemClientArea.icon">
                           <div class="text-end ma-4">
-                              <div class="font-weight-bold mb-n5" style="font-size: 3.8rem" :value="quotedOrders.length">
-                                  {{itemClientArea.title == 'Cotizaciones' ? quotingOrders.length : itemClientArea.title == 'Órdenes' ? quotedOrders.length : 0}}
+                              <div class="font-weight-bold mb-n5" style="font-size: 3.8rem">
+                                  {{itemClientArea.title == 'Cotizaciones' ? quotingOrders.length : itemClientArea.title == 'Órdenes' ? countActiveQuotedOrders : itemClientArea.title == 'Carrito' ? computedCardMarketCount : 0}}
                               </div>
                               <div style="font-size: 1.4rem">
                                 {{itemClientArea.title}}
@@ -90,9 +90,8 @@
 import { mapState } from 'vuex';
 export default {
     mounted(){
-        if(this.user.role != 'Superadministrador' || this.user.role != 'Administrador'){
-            this.$store.dispatch('getQuotedOrders');
-        }
+        this.$store.dispatch('getQuotedOrders');
+        this.$store.dispatch('getQuotingOrders');
     },
     data () {
         return {
@@ -142,7 +141,7 @@ export default {
                 {
                     title: 'Carrito',
                     icon:'/img/dashboard/carrito_de_compra.png',
-                    route: '#'
+                    route: {name: 'Marketcar'}
                 },
             ]
         }
@@ -159,6 +158,12 @@ export default {
             quotedOrders: state => state.ordersModule.quotedOrders,
             quotingOrders: state => state.ordersModule.quotingOrders,
         }),
+        countActiveQuotedOrders(){
+            return this.quotedOrders.filter(itemOrder=>itemOrder.state != 'No Pagada').length;
+        },
+        computedCardMarketCount(){
+            return this.quotedOrders.filter(itemOrder=>(itemOrder.state == 'No Pagada')).length;
+        }
     }
 }
 </script>

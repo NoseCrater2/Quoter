@@ -32,7 +32,7 @@
                     @change="addCanvasCriteria"
                     v-model="motor.canvas"
                     ></v-select>
-                   
+
                 </v-col>
                 <v-col cols="6">
                       <v-select
@@ -49,7 +49,7 @@
                     ></v-select>
                 </v-col>
                 </v-row>
-                
+
                 <v-col cols="12">
                     <v-select
                     outlined
@@ -132,7 +132,6 @@
 <script>
 
 function filterArray(array, filters) {
-    console.log(filters)
   const filterKeys = Object.keys(filters);
   return array.filter(item => {
     // validates all filter criteria
@@ -184,17 +183,16 @@ export default {
     methods:{
         saveMotorization(){
              if(this.$refs.formMotor.validate()){
-                console.log(this.filteredControls[this.selected])
-                this.$refs.formMotor.reset() 
+                this.$refs.formMotor.reset()
              }
         },
         intentCloseDialog(){
-            this.$refs.formMotor.reset() 
+            this.$refs.formMotor.reset()
             this.$emit('closeDialog')
         },
         addCanvasCriteria(){
              this.criteria.canvas = [this.motor.canvas]
-            
+
         },
 
         addManufacturerCriteria(){
@@ -217,7 +215,7 @@ export default {
                  this.$store.dispatch('getFilteredMotorizations', this.getType.id)
             this.$store.dispatch('getControls')
             }
-          
+
         },
 
         filteredControls(){
@@ -232,8 +230,8 @@ export default {
     },
 
     mounted(){
-    
-        
+
+
     },
 
     props:{

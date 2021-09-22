@@ -460,7 +460,7 @@ export default {
             this.localIDQuotation = -1;
         },
         causeError(event){
-            console.log(event)
+
         },
         updateItemsPerPage (number) {
             this.itemsPerPage = number
@@ -508,9 +508,7 @@ export default {
 
     mounted(){
         if(this.user.role != 'Superadministrador'){
-            this.$store.dispatch('getQuotingOrders').then(()=>{
-                console.log(this.orders)
-            });
+            this.$store.dispatch('getQuotingOrders')
         }
     }
 }

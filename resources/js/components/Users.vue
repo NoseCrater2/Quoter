@@ -440,7 +440,6 @@ export default {
     },
 
 	filtered(){
-        console.log(this.users)
 		if(this.swToInactive){
 			return this.users.filter(user => !user.active)
 		}else{
@@ -500,7 +499,6 @@ export default {
     closeDialogDeleteUser(){
         this.deleteUserDialog = false;
         this.localDeletinItem = {}
-        console.log(this.localDeletinItem)
     },
 
     deleteItem (item) {

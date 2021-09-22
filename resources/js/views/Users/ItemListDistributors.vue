@@ -258,6 +258,7 @@ export default {
             orders: state => state.ordersModule.quotedOrders,
             quotingOrder : state => state.ordersModule.quotingOrder,
             cotizaciones: state => state.ordersModule.quotingOrders,
+            user: (state) => state.user,
         }),
     },
 
@@ -302,8 +303,6 @@ export default {
             if(this.option === 'cotizaciones'){
 
                 let localNewPrice = [];
-
-                    console.log(localItemQuotation)
                     let localDate = new Date();
                     let dateString = localDate.getFullYear() + "-" +
                         ("0" + (localDate.getMonth()+1)).slice(-2) + "-" +
@@ -311,7 +310,6 @@ export default {
                         ("0" + localDate.getHours()).slice(-2) + ":" +
                         ("0" + localDate.getMinutes()).slice(-2) + ":" +
                         ("0" + localDate.getSeconds()).slice(-2);
-                    console.log(dateString)
                     this.$store.dispatch('getQuotingOrder', localItemQuotation.id).then(()=>{
 
                     if (this.quotingOrder) {
@@ -323,7 +321,6 @@ export default {
                             let idCurrentQuotingOrder = this.quotingOrder.blinds[indexQuotingOrder].id;
 
                             if(this.quotingOrder.blinds[indexQuotingOrder].type == 'horizontal-madera-2'){
-                                console.log("HORIZONTAL NEW JAJA")
                                 let result = 0;
                                 if(this.quotingOrder.blinds[indexQuotingOrder].motor_type == 'Manual'){
                                    result  =  woodMatrix.filter((m) => m.width >= this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width && m.height >= this.quotingOrder.blinds[indexQuotingOrder].canvas[0].height)
@@ -332,37 +329,39 @@ export default {
                                 }
                                 if(result[0]){
                                   if(this.quotingOrder.blinds[indexQuotingOrder].motor_type == 'Manual' && this.quotingOrder.blinds[indexQuotingOrder].motor.drive == 'cinta'){
-                                    return localNewPrice.push({id: idCurrentQuotingOrder, price: result[0].price + (result[0].price * 0.15)});
+                                    return localNewPrice.push({id: idCurrentQuotingOrder, price: result[0].price + (result[0].price * 0.15), discountPrice: 0});
                                   }else{
-                                    return localNewPrice.push({id: idCurrentQuotingOrder, price: result[0].price});
+                                    return localNewPrice.push({id: idCurrentQuotingOrder, price: result[0].price, discountPrice: 0});
                                   }
                                 }
                             }
 
                             else{
                                 if (this.quotingOrder.blinds[indexQuotingOrder].variant) {
-                                  localVariant = this.$store.state.productsModule.variants.find((variant) => variant.id === this.quotingOrder.blinds[indexQuotingOrder].variant)
+                                //   localVariant = this.$store.state.productsModule.variants.find((variant) => variant.id === this.quotingOrder.blinds[indexQuotingOrder].variant)
+                                    localVariant = this.$store.state.productsModule.variants.find((variant) => (variant.slug === this.quotingOrder.blinds[indexQuotingOrder].variant) && (variant.type.slug === this.quotingOrder.blinds[indexQuotingOrder].type))
                                 }
                                 if (this.quotingOrder.blinds[indexQuotingOrder].variant2) {
-                                  localVariantTwo = this.$store.state.productsModule.variants.find((variant) => variant.id === this.quotingOrder.blinds[indexQuotingOrder].variant2)
+                                //   localVariantTwo = this.$store.state.productsModule.variants.find((variant) => variant.id === this.quotingOrder.blinds[indexQuotingOrder].variant2)
+                                    localVariant = this.$store.state.productsModule.variants.find((variant) => (variant.slug === this.quotingOrder.blinds[indexQuotingOrder].variant2) && (variant.type.slug === this.quotingOrder.blinds[indexQuotingOrder].type))
                                 }
                                 if(this.quotingOrder.blinds[indexQuotingOrder].variant2 != null){
                                     let partialHeight = this.quotingOrder.blinds[indexQuotingOrder].canvas[0].height / 2
                                     let price = 0
                                     if (this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width > 1 && partialHeight > 1) {
-                                        localNewPrice.push({ id: idCurrentQuotingOrder , price : parseFloat((localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width * partialHeight) + (localVariantTwo.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width * partialHeight))});
+                                        localNewPrice.push({ id: idCurrentQuotingOrder , price : parseFloat((localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width * partialHeight) + (localVariantTwo.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width * partialHeight)), discountPrice: 0});
                                     }
                                     else if (this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width > 1) {
                                         price =  parseFloat((localVariant.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width) + (localVariantTwo.price * this.quotingOrder.blinds[indexQuotingOrder].canvas[0].width));
-                                        localNewPrice.push({id: idCurrentQuotingOrder, price: price});
+                                        localNewPrice.push({id: idCurrentQuotingOrder, price: price, discountPrice: 0});
                                     }
                                     else if (partialHeight > 1) {
                                         price =  parseFloat((localVariant.price * partialHeight) + (localVariantTwo.price * partialHeight));
-                                        localNewPrice.push({id: idCurrentQuotingOrder, price: price});
+                                        localNewPrice.push({id: idCurrentQuotingOrder, price: price, discountPrice: 0});
                                     }
                                     else {
                                         price = parseFloat(localVariant.price) + parseFloat(localVariantTwo.price)
-                                        localNewPrice.push({id: idCurrentQuotingOrder, price: price});
+                                        localNewPrice.push({id: idCurrentQuotingOrder, price: price, discountPrice: 0});
                                     }
                                 }
 
@@ -382,18 +381,22 @@ export default {
                                           price += parseFloat(localVariant.price);
                                         }
                                     }
-                                    localNewPrice.push({id: idCurrentQuotingOrder, price: price});
+                                    localNewPrice.push({id: idCurrentQuotingOrder, price: price, discountPrice: 0});
                                 }
                                 else if (localVariant) {
-                                    localNewPrice.push({id: idCurrentQuotingOrder, price: localVariant.price});
+                                    localNewPrice.push({id: idCurrentQuotingOrder, price: localVariant.price, discountPrice: 0});
                                 }
                                 else {
-                                    localNewPrice.push({id: idCurrentQuotingOrder, price: 0});
+                                    localNewPrice.push({id: idCurrentQuotingOrder, price: 0, discountPrice: 0});
                                 }
                             }
                         }
 
-                        console.log("NEWPRICE", localNewPrice)
+                        if(this.user.discount_percent > 0){
+                            localNewPrice.forEach(itemNewPrice=>{
+                                itemNewPrice.discountPrice = itemNewPrice.price - ((this.user.discount_percent/100)*itemNewPrice.price);
+                            });
+                        }
                         axios.post('/api/revalidate-item-quotation/'+localItemQuotation.id, localNewPrice).then((response)=>{
                             if(response.status == 200){
                                 this.$store.dispatch('getQuotingOrders');

@@ -6,21 +6,22 @@
                 <v-icon>mdi-close</v-icon>
             </v-btn>
             <div class="white--text text-uppercase" :style="$vuetify.breakpoint.mdAndUp ? 'font-size: 1.43rem': 'font-size: 1.0rem'">Detalles de la
-                
+
                 <span  v-if="order.is_quotation">COTIZACIÓN</span>
                 <span  v-else>ORDEN</span>
                 <span>/#{{order.order}}</span>
             </div>
             <v-spacer></v-spacer>
 
-            <div v-if="order.is_quotation" class="mr-1">
-                <v-btn 
-                :large="$vuetify.breakpoint.mdAndUp ? true : false" :icon="!$vuetify.breakpoint.mdAndUp ? true : false" 
-                elevation="0" 
-                color="orange darken-1" 
+            <div v-if="order.is_quotation == 1" class="mr-1">
+                <v-btn
+                :large="$vuetify.breakpoint.mdAndUp ? true : false" :icon="!$vuetify.breakpoint.mdAndUp ? true : false"
+                elevation="0"
+                color="orange darken-1"
                 class="white--text font-weight-bold mr-2"
                 @click="makeOrder()"
                 :loading="loadingChange"
+                :disabled="loadingChange"
                 >
                     {{$vuetify.breakpoint.mdAndUp ? 'Agregar al carrito' : ''}}
                     <v-icon size="30" right>mdi-cart</v-icon>
@@ -53,7 +54,7 @@
                 </v-tooltip>
             </div>
 
-            <div v-else-if="!order.is_quotation" class="mr-1">
+            <div v-else-if="(order.is_quotation == 0 && order.state == 'No Pagada')" class="mr-1">
                 <v-btn @click="localMethodCheckAndBuyFromOrdersAndQuotationsDialogView()" large elevation="0" color="orange darken-1" class="white--text font-weight-bold mr-2">
                     Comprar
                     <v-icon size="30" right>mdi-arrow-right</v-icon>
@@ -84,13 +85,18 @@
                 </v-tooltip>
             </div>
 
-            <div v-else-if="order.payed" class="mr-1">
+            <div v-else-if="(order.is_quotation == 0 && order.state != 'No Pagada')" class="mr-1">
                 <v-row no-gutters align="center">
                     <div class="white--text mr-1">Estado de la orden: </div>
                     <div style="background-color: black" class="mx-2">
                         <v-chip color="black" text-color="black">
-                            <v-avatar size="22" class="green" >
-                            </v-avatar>
+                            <v-avatar v-if="order.state === 'Recibida'" size="22" class="grey lighten-1"></v-avatar>
+                            <v-avatar v-if="order.state === 'En produccion'" size="22" class="orange darken-1"></v-avatar>
+                            <v-avatar v-if="order.state === 'Paqueteria'" size="22" class="blue darken-1"></v-avatar>
+                            <v-avatar v-if="order.state === 'Entregada'" size="22" class="green darken-1"></v-avatar>
+                            <v-avatar v-if="order.state === 'Cancelada'" size="22" class="red darken-2"></v-avatar>
+                            <v-avatar v-if="order.state === 'No Pagada'" size="22" class="black"></v-avatar>
+                            <v-avatar v-if="order.state === 'En Verificacion'" size="22" class="yellow"></v-avatar>
                         </v-chip>
                         <span class="white--text font-weight-bold mr-4">{{order.state}}</span>
                     </div>
@@ -318,7 +324,7 @@ export default {
     },
 
     localMethodCheckAndBuyFromOrdersAndQuotationsDialogView(){
-        this.$emit('emitCheckAndBuyFromOrdersAndQuotationsDialogView', this.idOrderQuotationOrdersAndQuotationsDialog);
+        this.$emit('emitCheckAndBuyFromOrdersAndQuotationsDialogView', this.order);
     },
 
     deleteOrder(){
@@ -337,7 +343,8 @@ export default {
 
     makeOrder(){
         this.loadingChange = true
-        this.$store.dispatch('changeToOrder', this.id).then( () => {
+        this.$store.dispatch('changeToOrder', this.id).then(async() => {
+            await this.$store.dispatch('getQuotedOrders');
             this.loadingChange = false
             this.$emit('emitClickCloseFromOrdersAndQuotationsDialog', false);
         })
@@ -377,5 +384,5 @@ export default {
         text-align: center;
         word-break: normal;
     }
-       
+
 </style>
