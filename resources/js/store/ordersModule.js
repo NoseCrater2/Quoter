@@ -180,7 +180,6 @@ const ordersModule = {
             try {
                 const response = await axios
                 .put("/api/orders/" + orders.id, orders).then((response) => {
-                    console.log(response)
                     if(response.status === 200){
 
                         state.orders = []

@@ -110,6 +110,11 @@
                     icon color="black" class="mb-1 ml-2">
                         mdi-diameter-variant
                     </v-icon>
+                    <v-icon
+                    v-if="item.state === 'En Verificacion'"
+                    icon color="#FFEB3B" class="mb-1 ml-2">
+                        mdi-checkbox-blank-circle
+                    </v-icon>
                 </div>
 
                 <div class="d-inline" v-if="option.includes('ordenes')" >
@@ -179,12 +184,14 @@ export default {
                 { text: 'Ver detalles', value: 'actions', align: 'center', sortable: false },
             ],
             states: [
+                { text: 'No Pagada', color: 'black' },
+                { text: 'En Verificacion', color: '#FFEB3B' },
                 { text: 'Recibida', color: '#acacac' },
                 { text: 'En produccion', color: '#ff8b00' },
                 { text: 'Paqueteria', color: '#01afec' },
                 { text: 'Entregada', color: '#0eae02' },
                 { text: 'Cancelada', color: '#fd220c' },
-                { text: 'No Pagada', color: 'black' },
+                
             ],
             admins: [
                 {title: 'Mis Órdenes', route: {name: 'Orders', params: {option: 'ordenes'}}},

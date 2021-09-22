@@ -81,10 +81,11 @@ class OrderShowResource extends JsonResource
                         'selected_panel' => intval($blind->grouping),
                         'side_control' => $blind->control_side,
                         'stringPrice' => floatval($blind->string_price),
-                        'string_type' => $blind->string_type,
+                        'string_type' => $blind->string_type,                            
                     ],
                     'motor_type' => $blind->motor_type,
                     'price' => floatval($blind->price),
+                    'discount_price' => floatval($blind->discount_price),
                     'rotate' => $blind->rotate,
                     'second_color' => $blind->second_color,//puede no tener
                     'type' => $blind->type,

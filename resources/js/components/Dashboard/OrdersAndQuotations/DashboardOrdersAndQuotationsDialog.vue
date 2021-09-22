@@ -14,19 +14,43 @@
             <v-spacer></v-spacer>
 
             <div v-if="order.is_quotation" class="mr-1">
-                <v-btn :large="$vuetify.breakpoint.mdAndUp ? true : false" :icon="!$vuetify.breakpoint.mdAndUp ? true : false" elevation="0" color="orange darken-1" class="white--text font-weight-bold mr-2">
+                <v-btn 
+                :large="$vuetify.breakpoint.mdAndUp ? true : false" :icon="!$vuetify.breakpoint.mdAndUp ? true : false" 
+                elevation="0" 
+                color="orange darken-1" 
+                class="white--text font-weight-bold mr-2"
+                @click="makeOrder()"
+                :loading="loadingChange"
+                >
                     {{$vuetify.breakpoint.mdAndUp ? 'Agregar al carrito' : ''}}
                     <v-icon size="30" right>mdi-cart</v-icon>
                 </v-btn>
-                <v-btn icon color="white">
-                    <v-icon size="30">mdi-square-edit-outline</v-icon>
-                </v-btn>
-                <v-btn icon color="white">
-                    <v-icon size="30">mdi-printer</v-icon>
-                </v-btn>
-                <v-btn icon color="white" @click="deleteOrder(order.id)">
-                    <v-icon size="30">mdi-delete</v-icon>
-                </v-btn>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon color="white" v-bind="attrs" v-on="on" @click="dialog3 = true">
+                            <v-icon size="30">mdi-square-edit-outline</v-icon>
+                        </v-btn>
+                 </template>
+                  <span>Editar</span>
+                </v-tooltip>
+
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon color="white" @click="downloadPdf()" v-bind="attrs" v-on="on">
+                            <v-icon size="30">mdi-printer</v-icon>
+                        </v-btn>
+                  </template>
+                  <span>Descargar en PDF</span>
+                </v-tooltip>
+
+                 <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon color="white" @click="dialog2 = true" v-bind="attrs" v-on="on">
+                            <v-icon size="30">mdi-delete</v-icon>
+                        </v-btn>
+                    </template>
+                  <span>Eliminar</span>
+                </v-tooltip>
             </div>
 
             <div v-else-if="!order.is_quotation" class="mr-1">
@@ -34,15 +58,30 @@
                     Comprar
                     <v-icon size="30" right>mdi-arrow-right</v-icon>
                 </v-btn>
-                <v-btn icon color="white">
-                    <v-icon size="30">mdi-square-edit-outline</v-icon>
-                </v-btn>
-                <v-btn icon color="white">
-                    <v-icon size="30">mdi-printer</v-icon>
-                </v-btn>
-                <v-btn icon color="white">
-                    <v-icon size="30" @click="deleteOrder(order.id)">mdi-delete</v-icon>
-                </v-btn>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon color="white" v-bind="attrs" v-on="on" @click="dialog3 = true">
+                            <v-icon size="30">mdi-square-edit-outline</v-icon>
+                        </v-btn>
+                 </template>
+                  <span>Editar</span>
+                </v-tooltip>
+               <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon color="white" @click="downloadPdf()" v-bind="attrs" v-on="on">
+                            <v-icon size="30">mdi-printer</v-icon>
+                        </v-btn>
+                  </template>
+                  <span>Descargar en PDF</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon color="white" @click="dialog2 = true" v-bind="attrs" v-on="on">
+                            <v-icon size="30">mdi-delete</v-icon>
+                        </v-btn>
+                    </template>
+                  <span>Eliminar</span>
+                </v-tooltip>
             </div>
 
             <div v-else-if="order.payed" class="mr-1">
@@ -55,14 +94,14 @@
                         </v-chip>
                         <span class="white--text font-weight-bold mr-4">{{order.state}}</span>
                     </div>
-                    <v-btn icon color="white">
+                    <v-btn icon color="white" @click="downloadPdf()">
                         <v-icon size="30">mdi-printer</v-icon>
                     </v-btn>
                 </v-row>
             </div>
 
         </v-toolbar>
-        <v-row no-gutters align="center" class="mt-4">
+        <v-row no-gutters align="center" class="mt-4" v-if="order.user != null">
             <v-col cols="3">
                 <v-img class="mx-auto" width="300" src="/img/logos/rollux.png" ></v-img>
             </v-col>
@@ -185,18 +224,57 @@
             </div>
         </v-col>
     </v-card>
+    <v-dialog  v-model="dialog2" max-width="300px">
+        <v-card>
+            <v-card-title v-if="order.is_quotation">
+              ¿Eliminar esta cotización?
+            </v-card-title>
+            <v-card-title v-else>
+              ¿Eliminar esta órden?
+            </v-card-title>
+            <v-card-actions>
+              <v-btn text @click="dialog2 = false">
+                CANCELAR
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn color="red" text @click="deleteOrder()">
+                ELIMINAR
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+    </v-dialog>
+     <v-dialog  v-model="dialog3" max-width="300px">
+        <v-card>
+            <v-card-title class="titledialog">
+                Esta acción le redigirá al cotizador
+            </v-card-title>
+            <v-card-actions>
+              <v-btn color="red" text @click="dialog3 = false">
+                CANCELAR
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn color="#47a5ad" text @click="setToQuoter()">
+                CONTINUAR
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+    </v-dialog>
 </v-dialog>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import axios from 'axios'
+const FileDownload = require('js-file-download');
 import DashboardBlindsProductDetailCards from '../../Dashboard/BlindsProductDetailCards/DashboardBlindsProductDetailCards.vue'
 export default {
   data() {
     return {
         order: {},
         dialog: true,
+        dialog2: false,
+        dialog3: false,
+        loadingChange: false,
         localModeldate: new Date(),
         mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
     }
@@ -235,15 +313,41 @@ export default {
       }
   },
   methods:{
-      emitClickCloseFromOrdersAndQuotationsDialog(){
+    emitClickCloseFromOrdersAndQuotationsDialog(){
+        this.$emit('emitClickCloseFromOrdersAndQuotationsDialog', false);
+    },
+
+    localMethodCheckAndBuyFromOrdersAndQuotationsDialogView(){
+        this.$emit('emitCheckAndBuyFromOrdersAndQuotationsDialogView', this.idOrderQuotationOrdersAndQuotationsDialog);
+    },
+
+    deleteOrder(){
+      this.$store.dispatch('deleteQuotingOrder', this.id).then(()=>{
           this.$emit('emitClickCloseFromOrdersAndQuotationsDialog', false);
-      },
-      localMethodCheckAndBuyFromOrdersAndQuotationsDialogView(){
-          this.$emit('emitCheckAndBuyFromOrdersAndQuotationsDialogView', this.idOrderQuotationOrdersAndQuotationsDialog);
-      },
-      deleteOrder(id){
-          console.log(id)
-      }
+      })
+    },
+
+    downloadPdf(){
+        axios.post("/api/auth-order-list-pdf-distributor", {orders: this.order.blinds, user: this.order.user, distributorImagePrint: false}, {responseType: 'blob',}).then((response)=>{
+          FileDownload(response.data, this.order.order+'.pdf')
+      }).catch(()=>{
+        //  this.isPrintingSuperAdminUserPDF = false;
+      })
+    },
+
+    makeOrder(){
+        this.loadingChange = true
+        this.$store.dispatch('changeToOrder', this.id).then( () => {
+            this.loadingChange = false
+            this.$emit('emitClickCloseFromOrdersAndQuotationsDialog', false);
+        })
+    },
+
+    setToQuoter(){
+        this.$store.commit('assignOrder', this.order)
+        this.$router.push({name: 'Quoter'})
+    }
+
   },
   props:{
       isOrdersAndQuotationsDialogActivated: {
@@ -268,3 +372,10 @@ export default {
   }
 }
 </script>
+<style scoped>
+    .titledialog{
+        text-align: center;
+        word-break: normal;
+    }
+       
+</style>
