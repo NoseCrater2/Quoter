@@ -20,6 +20,7 @@ use App\Notifications\OrderState;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\BuyedOrderAdmin;
 use App\Mail\BuyedOrderClient;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -326,10 +327,22 @@ class OrderController extends Controller
 
     public function speiPayment(Order $order)
     {
-       $order->state = 'En Verificacion';
-       $order->save();
-       Mail::to(['sac1@rollux.com.mx', 'distribuidores@rollux.com.mx'])->send(new BuyedOrderAdmin($order));
-       Mail::to($order->user->email)->send(new BuyedOrderClient($order));
+       $newOrder = Order::find($order->id);
+       $newOrder->state = 'En Verificacion';
+       $newOrder->save();
+       Mail::to(['sac1@rollux.com.mx', 'distribuidores@rollux.com.mx'])->send(new BuyedOrderAdmin($newOrder));
+       Mail::to($newOrder->user->email)->send(new BuyedOrderClient($newOrder));
+    }
+
+    public function cronMarketcarValidOrder()
+    {
+        $orders = Order::all();
+        foreach ($orders as $order) {
+            if(!$order->is_quotation && Carbon::now()->diffInDays($order->updated_at, true) > 20){
+                $order->is_quotation = 1;
+                $order->save();
+            }
+        }
     }
 
 }

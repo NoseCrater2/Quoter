@@ -263,7 +263,7 @@ export default {
           //$(obj).popover("show");
         } else {
           this.appearToolTipInvalidMeasures = false;
-          console.log(""); //$(obj).popover("hide");
+          //$(obj).popover("hide");
         }
       } else if (
         localPersWidthString.length == 2 &&
@@ -282,7 +282,6 @@ export default {
         this.appearToolTipInvalidMeasures = true;
         //$(obj).popover("show");
       } else {
-        console.log("");
         this.appearToolTipInvalidMeasures = false;
       } //$(obj).popover("hide");
     },

@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Carbon\Carbon;
 
 class BuyedOrderAdmin extends Mailable
 {
@@ -19,7 +20,7 @@ class BuyedOrderAdmin extends Mailable
      */
     public function __construct(Order $order)
     {
-        $this->$order = $order;
+        $this->order = $order;
     }
 
     /**
@@ -29,6 +30,6 @@ class BuyedOrderAdmin extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.buyedorderadmin')->from('contacto@rollux.com.mx')->subject('Nueva orden por verificar');
+        return $this->markdown('emails.buyedorderadmin')->from('contacto@rollux.com.mx')->subject('VERIFICAR - #ORDEN: '.'PT'.Carbon::parse($this->order->created_at)->format('dmy').'/'.$this->order->id);
     }
 }

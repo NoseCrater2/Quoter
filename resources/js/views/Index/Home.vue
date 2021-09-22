@@ -11,6 +11,7 @@
       <v-list-item>
           <v-list-item-content>
             <v-list-item-title class="title">{{user.name}}</v-list-item-title>
+            <v-list-item-subtitle>-{{user.role}}-</v-list-item-subtitle>
             <v-list-item-subtitle>{{user.email}}</v-list-item-subtitle>
           </v-list-item-content>
       </v-list-item>
@@ -25,7 +26,7 @@
               <v-list-item-title>Perfil</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-        <v-list-item >
+        <v-list-item :to="{name: 'Marketcar'}">
             <v-list-item-icon>
               <v-icon>mdi-cart</v-icon>
             </v-list-item-icon>
@@ -41,14 +42,14 @@
               <v-list-item-title>Notificaciones</v-list-item-title>
             </v-list-item-content>
         </v-list-item> -->
-        <v-list-item>
+        <!-- <v-list-item :to="{name: 'Orders', params: {option: 'cotizaciones'}}">
             <v-list-item-icon class="ml-n1 pr-n2">
               <v-img contain height="30px" width="35px" src="/img/dashboard/cotizacion.svg" ></v-img>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Cotizaciones</v-list-item-title>
             </v-list-item-content>
-        </v-list-item>
+        </v-list-item> -->
         <v-list-item :to="'/'">
             <v-list-item-icon>
               <v-icon>mdi-home</v-icon>
@@ -195,7 +196,7 @@
 
           <!-- <v-btn icon class="ma-1" rounded depressed dark> -->
 
-          <v-btn icon x-small fab class="mx-2">
+          <v-btn :to="{name: 'Orders', params: {option: 'cotizaciones'}}" icon x-small fab class="mx-2">
             <v-badge color="blue"
             offset-x="17"
             offset-y="12"
@@ -235,7 +236,7 @@
 
           <v-divider inset vertical></v-divider>
 
-          <v-btn icon large class="ma-2" rounded depressed dark >
+          <v-btn :to="{name: 'Marketcar'}" icon large class="ma-2" rounded depressed dark >
 
             <v-badge color="red"
             :content="computedNumberNoPaidOrders"
@@ -266,7 +267,7 @@
                     <v-list-item-content class="justify-center">
                         <div class="mx-auto text-center">
                             <div class="px-3">
-                                <h3>{{user.name}}</h3>
+                                <h3>{{user.name}} | {{user.role}}</h3>
                                 <p class="text-caption mt-1">
                                     {{user.email}}
                                 </p>
@@ -451,9 +452,7 @@ async  beforeCreate(){
      this.$store.dispatch('getProducts')
      this.$store.dispatch('getAllVariants')
      this.$store.dispatch("getMotorizations")
-     this.$store.dispatch('getQuotedOrders').then(()=>{
-         console.log(this.quotedOrders)
-     })
+     this.$store.dispatch('getQuotedOrders')
 
    },
 

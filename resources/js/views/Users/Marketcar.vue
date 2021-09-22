@@ -4,6 +4,9 @@
           <div class="text-center text-uppercase my-2" style="font-size: 1.5rem">
               <span>Carrito </span><span class="font-weight-bold" style="color: #3ba2a9">de compra</span>
           </div>
+            <div class="text-center text-uppercase my-2 red--text" style="font-size: 1.5rem">
+              <span>(EN CONSTRUCCION)</span>
+          </div>
           <v-row class="mt-3">
               <v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" xl="3" lg="3" md="3" sm="3">
                 <v-card
@@ -61,7 +64,7 @@
                       </v-col>
                   </v-row>
                   <v-row class="mt-n5">
-                      <v-col cols="12" xl="9" lg="9" md="9" sm="12" order="2" order-xl="1" order-lg="1" order-md="1" order-sm="2">
+                      <v-col cols="12" :xl="!localModelIsStepFourDataBankAccount ? '9' : '12'" :lg="!localModelIsStepFourDataBankAccount ? '9' : '12'" :md="!localModelIsStepFourDataBankAccount ? '9' : '12'" sm="12" order="2" order-xl="1" order-lg="1" order-md="1" order-sm="2">
                         <div v-if="localWindowStepModel == 1" class="text-start text-uppercase mb-2" style="font-size: 1.4rem;">
                             <span class="font-weight-bold" style="color: #3ba2a9">Órdenes </span><span>pendientes de pago</span>
                         </div>
@@ -97,11 +100,11 @@
                                 <v-window-item  v-for="(item, windowIndex) in modelWindowItemSteps" :key="windowIndex" :value="(windowIndex+1)">
                                 <!-- DENTRO DE ESTE WINDOW ITEM SE CARGARÁ EL COMPONENTE DE PASO CORRESPONDIENTE -->
                                     <!-- INICIA CARGA EL COMPONENTE DEL STEP 1 -->
-                                    <OrdersCardsStepOne @emitCancelOrder="methodCancelOrder" @emitCheckAndBuyFromOrdersCardsStepOneView="localMethodStepThreeCheckAndBuy" @emitDetailsItemFromOrdersCardsStepOneView="localMethodIsOrdersAndQuotationsDialogActivatedOn" :itemOrder="computedNoPaidOrders" v-if="localWindowStepModel == 1"></OrdersCardsStepOne>
+                                    <OrdersCardsStepOne @emitCancelOrder="methodOpenDialogCancelOneOrder" @emitCheckAndBuyFromOrdersCardsStepOneView="localMethodStepThreeCheckAndBuy" @emitDetailsItemFromOrdersCardsStepOneView="localMethodIsOrdersAndQuotationsDialogActivatedOn" :itemOrder="computedNoPaidOrders" v-if="localWindowStepModel == 1"></OrdersCardsStepOne>
                                     <!-- TERMINA CARGA EL COMPONENTE DEL STEP 1 -->
                                     <div v-else-if="localWindowStepModel == 2">
                                         <v-col cols="12" v-for="(itemBlind, index) in quotedOrder.blinds" :key="itemBlind.id">
-                                            <DashboardBlindsProductDetailCards @emitDeleteBlindFromDetailCards="methodDeleteBlind" @emitEditBlindFromBlindsProductDetailCardsView="localMethodEditBlindStepThreeMarketcar" :propIsInMarketAndStepThree="true" :propIsOrderOrQuotationString="'quoted'" :propItemArrayBlindsObject="itemBlind" :propBlindCount="(index + 1)" :propBreakpointFromDialog="$vuetify.breakpoint"></DashboardBlindsProductDetailCards>
+                                            <DashboardBlindsProductDetailCards @emitDeleteBlindFromDetailCards="methodOpenDialogDeleteBlind" @emitEditBlindFromBlindsProductDetailCardsView="localMethodEditBlindStepThreeMarketcar" :propIsInMarketAndStepThree="true" :propIsOrderOrQuotationString="'quoted'" :propItemArrayBlindsObject="itemBlind" :propBlindCount="(index + 1)" :propBreakpointFromDialog="$vuetify.breakpoint"></DashboardBlindsProductDetailCards>
                                         </v-col>
                                     </div>
                                     <div v-else-if="localWindowStepModel == 3">
@@ -110,6 +113,7 @@
 
                                                 <div class="font-weight-bold mb-2">Elije el metodo de pago que mas prefieras</div>
                                                 <v-alert
+                                                  color="#3ba2a9"
                                                   dense
                                                   text
                                                   type="info"
@@ -179,29 +183,94 @@
 
                                             </v-card>
                                         </v-col>
-                                        <v-col v-else-if="localModelIsStepFourDataBankAccount" cols="12">
-                                            <v-card elevation="0">
-                                                <div class="font-weight-bold mb-4">Datos para la transferencia bancaria</div>
-                                                <div class="text-uppercase">
-                                                    <div class="font-weight-bold">Total a pagar: </div>
-                                                    <div class="font-weight-bold" style="color: #3ba2a9">{{mxCurrencyFormat.format(localModelSubtotalAndTotal)}} MXN</div>
-                                                </div>
-                                                <div class="text-uppercase">
-                                                    <div class="font-weight-bold">No. de orden por pagar: </div>
-                                                    <div>{{localPropItemQuotationOrderNumberID}}</div>
-                                                </div>
-                                                <div class="text-uppercase">
-                                                    <div class="font-weight-bold">No. de cuenta de banco:</div>
-                                                    <div>{{localPropItemQuotationOrderNumberID}}</div>
-                                                </div>
-                                                <div class="text-uppercase">
-                                                    <div class="font-weight-bold">CLABE Interbancaria: </div>
-                                                    <div>{{localPropItemQuotationOrderNumberID}}</div>
-                                                </div>
-                                                <div class="text-uppercase">
-                                                    <div class="font-weight-bold">Nombre de la cuenta: </div>
-                                                    <div>{{localPropItemQuotationOrderNumberID}}</div>
-                                                </div>
+                                        <v-col v-else-if="localModelIsStepFourDataBankAccount" cols="12" style="background-color: #E0E0E0">
+                                            <v-card color="white" style="font-size: 1.3rem" elevation="0" class="px-0">
+                                                <v-card-text class="text--primary">
+                                                    <v-row align="center" justify="space-between">
+                                                        <v-col cols="9">
+                                                            <span class="font-weight-bold mb-4" style="font-size: 1.4rem">Datos para la transferencia bancaria</span>
+                                                        </v-col>
+                                                        <v-col cols="3" class="d-flex justify-end">
+                                                            <v-img max-width="100" contain src="https://cdn2.downdetector.com/static/uploads/logo/spei.png"></v-img>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-card-text>
+                                                <v-card-text style="background-color: #E0E0E0" class="text--primary">
+                                                    <v-row no-gutters justify="center">
+
+                                                        <v-col cols="12" xl="6" lg="6" md="6" sm="12" :class="!$vuetify.breakpoint.mdAndUp ? 'd-flex flex-column align-center text-center' : ''">
+                                                            <div class="mb-7">
+                                                                <v-img max-width="430" min-width="300" contain src="http://www.visaalmundo.com/blog/wp-content/uploads/2016/10/Banorte-Logo-EPS-vector-image.png"></v-img>
+                                                            </div>
+                                                            <div class="text-uppercase">
+                                                                <div class="font-weight-bold">Total a pagar: </div>
+                                                                <div class="font-weight-bold" style="color: #3ba2a9; font-size: 1.8rem">{{mxCurrencyFormat.format(localModelSubtotalAndTotal)}} MXN</div>
+                                                            </div>
+                                                            <div class="text-uppercase my-2">
+                                                                <div class="font-weight-bold">No. de orden por pagar: </div>
+                                                                <div>{{localPropItemQuotationOrderNumberID}}</div>
+                                                            </div>
+                                                            <div class="text-uppercase my-2">
+                                                                <div class="font-weight-bold">No. de cuenta de banco:</div>
+                                                                <div>0892 6082 67</div>
+                                                            </div>
+                                                            <div class="text-uppercase my-2">
+                                                                <div class="font-weight-bold">CLABE Interbancaria: </div>
+                                                                <div>072 470 0089 2608 2678</div>
+                                                            </div>
+                                                            <div>
+                                                                <div class="font-weight-bold text-uppercase">Nombre de la cuenta: </div>
+                                                                <div>Materiales Decorativos S. de R.L. MI.</div>
+                                                            </div>
+                                                        </v-col>
+
+                                                        <v-col cols="12" xl="6" lg="6" md="6" sm="12" :class="$vuetify.breakpoint.mdAndUp ? 'd-flex flex-column align-center' : 'd-flex flex-column align-center mt-3 text-center'">
+
+                                                            <v-card color="white" outlined min-height="330">
+                                                                <v-card-text class="text--primary font-weight-bold" style="font-size: 1.1rem">
+                                                                    Como hacer una transferencia bancaria desde tu banca móvil
+                                                                </v-card-text>
+                                                                <v-card-text class="text--primary">
+                                                                    <span>
+                                                                        1. Accede a la Banca Móvil desde la plataforma de tu cuenta
+                                                                        de banco favorita.
+                                                                    </span><br>
+                                                                    <span>
+                                                                        2. Encuentra y selecciona "Transferencias y Pagos".
+                                                                    </span><br>
+                                                                    <span>
+                                                                        3. Si tu plataforma es Banorte selecciona "Terceros Banorte y otros bancos".
+                                                                        Si tu plataforma es de otro banco, busca la opción que diga "Otros bancos".
+                                                                    </span><br>
+                                                                    <span>
+                                                                        4. Escribe la cuenta destinatario.
+                                                                    </span><br>
+                                                                    <span>
+                                                                        5. Ingresa el importe, el concepto, y el día en que quieres aplicar la transferencia.
+                                                                    </span><br>
+                                                                    <span>
+                                                                        6. Revisa los datos y finaliza la operación.
+                                                                    </span><br>
+                                                                </v-card-text>
+                                                            </v-card>
+
+                                                            <v-spacer></v-spacer>
+                                                            <v-btn large elevation="0" color="#3ba2a9" class="mt-3 white--text">
+                                                                <v-icon left>mdi-printer</v-icon>IMPRIMIR
+                                                            </v-btn>
+                                                        </v-col>
+
+                                                    </v-row>
+                                                    <v-divider class="mt-3"></v-divider>
+                                                </v-card-text>
+                                                <v-card-text style="background-color: #E0E0E0" class="text--primary mt-n4">
+                                                    <div style="font-size: 0.95rem" class="text-center">
+                                                        Estimado usuario, usted debe imprimir este documento y abonar el importe dentro de
+                                                        las próximas 48 horas hábiles en la entidad bancaria correspondiente. La confirmación de pago
+                                                        puede tardar entre 24 y 48 horas. Una vez que haya realizado su pago no olvide enviarnos una copia
+                                                        de su ficha de pago a <span class="text-decoration-underline">contacto@rollux.com.mx</span> junto con el número de su orden.
+                                                    </div>
+                                                </v-card-text>
                                             </v-card>
                                         </v-col>
                                     </div>
@@ -220,6 +289,7 @@
                         <div class="text-end">
                             <v-btn
                                 @click="methodOpenDialogCancelAllOrders()"
+                                :disabled="computedNoPaidOrders.length > 0 ? false : true"
                                 v-if="localWindowStepModel == 1"
                                 large
                               color="#3ba2a9"
@@ -235,7 +305,7 @@
                             </v-btn>
                         </div>
                       </v-col>
-                      <v-col cols="12" xl="3" lg="3" md="3" sm="12" order="1" order-xl="2" order-lg="2" order-md="2" order-sm="1" :style="!$vuetify.breakpoint.mdAndUp ? 'position: sticky; top: 15px; z-index: 2;' : ''" >
+                      <v-col v-if="!localModelIsStepFourDataBankAccount" cols="12" xl="3" lg="3" md="3" sm="12" order="1" order-xl="2" order-lg="2" order-md="2" order-sm="1" :style="!$vuetify.breakpoint.mdAndUp ? 'position: sticky; top: 15px; z-index: 2;' : ''" >
                         <v-card
                         :style="$vuetify.breakpoint.mdAndUp ? 'position: sticky; top: 60px; z-index: 2;' : ''"
                         class="rounded-lg"
@@ -283,7 +353,7 @@
                               <v-btn
                                 @click="localMethodBtnContinueStepThree"
                                 v-if="(localWindowStepModel > 0 && localWindowStepModel < 3)"
-                                :disabled="(localWindowStepModel >= 2) ? false : true"
+                                :disabled="(localWindowStepModel >= 2 && computedNoPaidOrders.length > 0 ) ? false : true"
                                 large
                                 block
                                 color="orange darken-1"
@@ -302,7 +372,8 @@
                               <v-btn
                                 @click="localMethodBtnPayStepFour"
                                 v-else-if="(localWindowStepModel == 3)"
-                                :disabled="(((localWindowStepModel == 3) && checkboxPrivacyTermsAndContinue) && (modelRadioStepFourPaymentMethod != null && modelRadioStepFourPaymentMethod != '')) ? false : true"
+                                :disabled="(((localWindowStepModel == 3 && computedNoPaidOrders.length > 0 && !(isChargingPetitionSPEIPayment)) && checkboxPrivacyTermsAndContinue) && (modelRadioStepFourPaymentMethod != null && modelRadioStepFourPaymentMethod != '')) ? false : true"
+                                :loading="(isChargingPetitionSPEIPayment) ? true : false"
                                 large
                                 block
                                 color="orange darken-1"
@@ -327,7 +398,7 @@
                   </v-row>
               </v-col>
           </v-row>
-          <DashboardOrdersAndQuotationsDialog :id="orderId" v-if="isOrdersAndQuotationsDialogActivated" @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" ></DashboardOrdersAndQuotationsDialog>
+          <DashboardOrdersAndQuotationsDialog :id="orderId" v-if="isOrdersAndQuotationsDialogActivated" @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" @emitCheckAndBuyFromOrdersAndQuotationsDialogView="localMethodStepThreeCheckAndBuy" ></DashboardOrdersAndQuotationsDialog>
 
 
             <v-dialog v-model="modelDialogCancelAllOrders" persistent max-width="290">
@@ -341,6 +412,36 @@
                   <v-spacer></v-spacer>
                   <v-btn color="gray darken-1" text @click="methodCloseDialogCancelAllOrders()">CANCELAR</v-btn>
                   <v-btn color="primary" :loading="isCancellingAllOrders" :disabled="isCancellingAllOrders" text @click="methodCancelAllOrders()">ACEPTAR</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
+            <v-dialog v-model="modelDialogCancelOneOrder" persistent max-width="290">
+              <v-card>
+                <v-card-title class="headline">¿Cancelar orden?</v-card-title>
+                <v-card-text>
+                  Si CANCELA, esta ORDEN pasará de nuevo a la ventana de COTIZACIONES.
+                  ¿Está seguro?
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="gray darken-1" text @click="methodCloseDialogCancelOneOrder()">CANCELAR</v-btn>
+                  <v-btn color="primary" :loading="isCancellingOneOrder" :disabled="isCancellingOneOrder" text @click="methodCancelOneOrder()">ACEPTAR</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
+            <v-dialog v-model="modelDialogDeleteBlind" persistent max-width="290">
+              <v-card>
+                <v-card-title class="headline">¿Eliminar persiana?</v-card-title>
+                <v-card-text>
+                  Si continua, está persiana se eliminará de la orden y no se podrá recuperar.
+                  ¿Está seguro?
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="gray darken-1" text @click="methodCloseDialogDeleteBlind()">CANCELAR</v-btn>
+                  <v-btn color="red" :loading="isDeletingBlind" :disabled="isDeletingBlind" text @click="methodDeleteBlind()">ELIMINAR</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -364,7 +465,14 @@ export default {
     data() {
         return {
             modelDialogCancelAllOrders: false,
+            modelDialogCancelOneOrder: false,
+            modelCancelOneOrderItemId: -1,
+            modelDeleteBlindItemId: -1,
+            modelDialogDeleteBlind: false,
             isCancellingAllOrders: false,
+            isCancellingOneOrder: false,
+            isDeletingBlind: false,
+            isChargingPetitionSPEIPayment: false,
             localModelIsStepFourDataBankAccount: false,
             modelRadioStepFourPaymentMethod: '',
             mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
@@ -396,8 +504,28 @@ export default {
             this.modelDialogCancelAllOrders = true;
         },
 
+        methodOpenDialogCancelOneOrder(itemOrder){
+            this.modelCancelOneOrderItemId = itemOrder.id;
+            this.modelDialogCancelOneOrder = true;
+        },
+
+        methodOpenDialogDeleteBlind(itemOrder){
+            this.modelDeleteBlindItemId = itemOrder.id;
+            this.modelDialogDeleteBlind = true;
+        },
+
         methodCloseDialogCancelAllOrders(){
             this.modelDialogCancelAllOrders = false;
+        },
+
+        methodCloseDialogCancelOneOrder(){
+            this.modelCancelOneOrderItemId = -1;
+            this.modelDialogCancelOneOrder = false;
+        },
+
+        methodCloseDialogDeleteBlind(){
+            this.modelDeleteBlindItemId = -1;
+            this.modelDialogDeleteBlind = false;
         },
 
         methodCancelAllOrders(){
@@ -410,19 +538,28 @@ export default {
             });
         },
 
-        methodCancelOrder(itemOrder){
-            this.$store.dispatch('removeOrderMarketcar', itemOrder.id).then(()=>{
-                this.$store.dispatch('getQuotedOrders');
-                this.$store.dispatch('getQuotingOrders');
-            });
+        methodCancelOneOrder(){
+            this.isCancellingOneOrder = true;
+            if(this.modelCancelOneOrderItemId > -1){
+                this.$store.dispatch('removeOrderMarketcar', this.modelCancelOneOrderItemId).then(async()=>{
+                    await this.$store.dispatch('getQuotedOrders');
+                    await this.$store.dispatch('getQuotingOrders');
+                    this.isCancellingOneOrder = false;
+                    this.methodCloseDialogCancelOneOrder();
+                });
+            }
         },
 
-        methodDeleteBlind(itemBlind){
-            this.$store.dispatch('deleteBlindFromOrder', itemBlind.id).then(()=>{
-                this.$store.dispatch('getQuotedOrder', this.localCurrentIDQuotingOrderStepThree).then(()=>{
-                    this.$store.dispatch('getQuotedOrders')
-                });
-            })
+        methodDeleteBlind(){
+            this.isDeletingBlind = true;
+            if(this.modelDeleteBlindItemId > -1){
+                this.$store.dispatch('deleteBlindFromOrder', this.modelDeleteBlindItemId).then(async()=>{
+                    await this.$store.dispatch('getQuotedOrder', this.localCurrentIDQuotingOrderStepThree);
+                    await this.$store.dispatch('getQuotedOrders');
+                    this.isDeletingBlind = false;
+                    this.methodCloseDialogDeleteBlind();
+                })
+            }
         },
 
         localMethodStepThreeCheckAndBuy(localItem){
@@ -461,18 +598,16 @@ export default {
         },
 
         localMethodBtnPayStepFour(){
-            // if(this.localModelIsStepFourDataBankAccount == false){
-            //     this.localModelIsStepFourDataBankAccount = true;
-            // }
-            // else if(this.localModelIsStepFourDataBankAccount == true){
-
-            // }
-            axios.get(`/api/spei-payment/${this.orderId}`).then((response)=>{
-                console.log(response)
-                if(response.status == 200){
-                    this.localModelIsStepFourDataBankAccount = true;
-                }
-            });
+            if(this.localModelIsStepFourDataBankAccount == false){
+                this.localModelIsStepFourDataBankAccount = true;
+                // this.isChargingPetitionSPEIPayment = true;
+                // axios.get(`/api/spei-payment/${this.orderId}`).then((response)=>{
+                //     if(response.status == 200){
+                //         this.localModelIsStepFourDataBankAccount = true;
+                //         this.isChargingPetitionSPEIPayment = false;
+                //     }
+                // });
+            }
         },
 
         emitClickCloseFromOrdersAndQuotationsDialog(){

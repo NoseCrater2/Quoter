@@ -251,7 +251,6 @@ export default {
             this.resetLocalSnackbar();
     	 	this.$store.dispatch('editUser',this.user).then(()=>{
                  this.isEditingButton = false;
-				 console.log('intento de edición')
     	      	if(this.status=== 200){
                       this.ableToChangePassword = false;
                       this.user.password = '';

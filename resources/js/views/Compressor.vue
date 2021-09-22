@@ -2,7 +2,7 @@
   <v-row align="center" justify="center" >
     <v-container style="max-width: 1200px">
   <v-card min-width="350" width="600" min-height="200" flat>
- 
+
     <v-col cols="12">
       COMPRESOR DE IMAGENES
     </v-col>
@@ -29,7 +29,7 @@
         >
           {{ text }}
         </v-chip>
-  
+
         <span
           v-else-if="index === 2"
           class="overline grey--text text--darken-3 mx-2"
@@ -48,21 +48,21 @@
         cols="12"
         md="3"
         sm="12"
-        
+
       >
       <v-card width="300">
             <v-img
               width="300"
               height="300"
               :src="img"
-            
+
               class="grey lighten-2 white--text align-end"
             >
             <div style="background-color: rgba(0, 0, 0, 0.6)">
               <v-card-title class="mb-n3">{{ files[index].name }}</v-card-title>
               <span class="ml-4">({{ humanFileSize(files[index].size) }})</span>
             </div>
-            
+
             </v-img>
             <v-card-actions style="background-color: white">
               <v-select dense label="nivel de compresión" outlined :items="compressorLevels">
@@ -79,7 +79,7 @@
     </v-row>
     </v-container>
      </v-row>
-     
+
 </template>
 
 <script>
@@ -96,7 +96,7 @@ export default {
 
     methods: {
       print(){
-        console.log(this.files[0])
+
       },
         selectImage(event){
             this.currentImage = event.target.files[0];

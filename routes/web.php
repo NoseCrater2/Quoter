@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -24,10 +25,13 @@ Route::get('/clear-all-cache', function() {
     Artisan::call('config:clear');
     echo "Cleared all caches successfully.";
   });
+
+Route::get('/cron-marketcar-validorder', [OrderController::class, 'cronMarketcarValidOrder']);
+
 Auth::routes();
 
 Route::middleware('auth:sanctum')->get('/user',function (Request $request){
-    
+
     return new UserShowResource($request->user());
 });
 
