@@ -162,7 +162,7 @@
             <div style="border: 1px dashed black;">
                 <v-row no-gutters>
                     <v-col cols="12" xl="6" lg="6" md="12" sm="12" class="pa-2" v-for="(itemBlind, index) in order.blinds" :key="itemBlind.id">
-                        <DashboardBlindsProductDetailCards  :propItemArrayBlindsObject="itemBlind" :propBlindCount="(index + 1)" :propBreakpointFromDialog="$vuetify.breakpoint"></DashboardBlindsProductDetailCards>
+                        <DashboardBlindsProductDetailCards :propItemArrayBlindsObject="itemBlind" :propBlindCount="(index + 1)" :propOrderUser="order.user" :propBreakpointFromDialog="$vuetify.breakpoint"></DashboardBlindsProductDetailCards>
                     </v-col>
                 </v-row>
             </div>
@@ -302,7 +302,7 @@ export default {
         //   quotedOrder: state => state.ordersModule.quotedOrder,
         //   quotingOrders: state => state.ordersModule.quotingOrders,
         //   quotingOrder : state => state.ordersModule.quotingOrder,
-          user: (state) => state.user,
+        //   user: (state) => state.user,
       }),
       computedQuotingOrdersRoute(){
           if(this.$router.currentRoute.name == 'Orders'){
