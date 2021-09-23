@@ -104,7 +104,7 @@
                                     <!-- TERMINA CARGA EL COMPONENTE DEL STEP 1 -->
                                     <div v-else-if="localWindowStepModel == 2">
                                         <v-col cols="12" v-for="(itemBlind, index) in quotedOrder.blinds" :key="itemBlind.id">
-                                            <DashboardBlindsProductDetailCards @emitDeleteBlindFromDetailCards="methodOpenDialogDeleteBlind" @emitEditBlindFromBlindsProductDetailCardsView="localMethodEditBlindStepThreeMarketcar" :propIsInMarketAndStepThree="true" :propIsOrderOrQuotationString="'quoted'" :propItemArrayBlindsObject="itemBlind" :propBlindCount="(index + 1)" :propBreakpointFromDialog="$vuetify.breakpoint"></DashboardBlindsProductDetailCards>
+                                            <DashboardBlindsProductDetailCards :propOrderUser="quotedOrder.user"  @emitDeleteBlindFromDetailCards="methodOpenDialogDeleteBlind" @emitEditBlindFromBlindsProductDetailCardsView="localMethodEditBlindStepThreeMarketcar" :propIsInMarketAndStepThree="true" :propIsOrderOrQuotationString="'quoted'" :propItemArrayBlindsObject="itemBlind" :propBlindCount="(index + 1)" :propBreakpointFromDialog="$vuetify.breakpoint"></DashboardBlindsProductDetailCards>
                                         </v-col>
                                     </div>
                                     <div v-else-if="localWindowStepModel == 3">
@@ -599,14 +599,14 @@ export default {
 
         localMethodBtnPayStepFour(){
             if(this.localModelIsStepFourDataBankAccount == false){
-                this.localModelIsStepFourDataBankAccount = true;
-                // this.isChargingPetitionSPEIPayment = true;
-                // axios.get(`/api/spei-payment/${this.orderId}`).then((response)=>{
-                //     if(response.status == 200){
-                //         this.localModelIsStepFourDataBankAccount = true;
-                //         this.isChargingPetitionSPEIPayment = false;
-                //     }
-                // });
+                // this.localModelIsStepFourDataBankAccount = true;
+                this.isChargingPetitionSPEIPayment = true;
+                axios.get(`/api/spei-payment/${this.orderId}`).then((response)=>{
+                    if(response.status == 200){
+                        this.localModelIsStepFourDataBankAccount = true;
+                        this.isChargingPetitionSPEIPayment = false;
+                    }
+                });
             }
         },
 
