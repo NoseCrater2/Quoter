@@ -64,9 +64,9 @@
                               <span>{{localComputedOrderQuotation.motor.flexiballetPrice > 0 ? '(+$'+localComputedOrderQuotation.motor.flexiballetPrice+')' : ''}}</span>
                           </div>
                           <div>
-                              <span>Precio (m2): {{localComputedOrderQuotation.price}} MXN // Descuento: {{user.discount_percent}} % // M2: {{parseFloat(localComputedOrderQuotation.canvas[0].width * localComputedOrderQuotation.canvas[0].height)}} //</span>
+                              <span>Precio (m2): {{localComputedOrderQuotation.price}} MXN // Descuento: {{propOrderUser.discount_percent}} % // M2: {{parseFloat(localComputedOrderQuotation.canvas[0].width * localComputedOrderQuotation.canvas[0].height)}} //</span>
                               <span>
-                                  Precio con Descto: $ {{methodUnitaryPriceDiscount(user.discount_percent)}} MXN
+                                  Precio con Descto: $ {{methodUnitaryPriceDiscount(propOrderUser.discount_percent)}} MXN
                               </span>
                           </div>
 
@@ -93,7 +93,7 @@
                               <span>Total: </span>
                               <span style="color: #47a5ad;">
                                   {{mxCurrencyFormat.format(
-                                      methodTotalCanvasPrice(user.discount_percent) +
+                                      methodTotalCanvasPrice(propOrderUser.discount_percent) +
                                       parseFloat(localComputedOrderQuotation.motor.price) +
                                       parseFloat(localComputedOrderQuotation.motor.flexiballetPrice) +
                                       parseFloat(localComputedOrderQuotation.motor.galleryPrice) +
@@ -122,9 +122,6 @@
 <script>
 import {mapState} from 'vuex';
 export default {
-    mounted(){
-        console.log("M", this.propItemArrayBlindsObject)
-    },
     data() {
         return {
             mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
@@ -133,7 +130,6 @@ export default {
     computed:{
         ...mapState({
             quotedOrder: state => state.ordersModule.quotedOrder,
-            user: (state) => state.user,
         }),
         localComputedOrderQuotation(){
             return this.propItemArrayBlindsObject;
@@ -172,6 +168,9 @@ export default {
         },
         propIsInMarketAndStepThree:{
             type: Boolean
+        },
+        propOrderUser:{
+            type:Object
         }
     }
 }

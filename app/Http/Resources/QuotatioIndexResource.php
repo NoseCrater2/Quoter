@@ -21,7 +21,7 @@ class QuotatioIndexResource extends JsonResource
             'order' => 'PT'.Carbon::parse($this->created_at)->format('dmy').'/'.$this->id,
             'blinds' => $this->blinds->count(),
             'total' => $this->blinds->map( function( $blind ){
-                return $blind->discount_price +
+                return $blind->discount_price == 0 ? $blind->price : $blind->discount_price +
                         ( isset($blind->motorization) ? $blind->motorization->price: 0) +
                         ( isset($blind->control) ? $blind->control->price: 0) +
                         $blind->flexiballet_price +

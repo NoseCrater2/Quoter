@@ -20,7 +20,7 @@ class BuyedOrderClient extends Mailable
      */
     public function __construct(Order $order)
     {
-        $this->$order = $order;
+        $this->order = $order;
     }
 
     /**
@@ -30,6 +30,6 @@ class BuyedOrderClient extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.buyedorderadmin')->from('contacto@rollux.com.mx')->subject('Orden Pre-adquirida');
+        return $this->markdown('emails.buyedorderclient')->from('contacto@rollux.com.mx')->subject('ORDEN PRE-ADQUIRIDA');
     }
 }

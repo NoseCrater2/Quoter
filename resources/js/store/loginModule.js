@@ -133,7 +133,6 @@ const loginModule = {
 
             const request = await axios
             .post("/api/checkPassword",{'intent': intent })
-            console.log(request)
             commit('setCheckStatus',request.status);
             //commit('retrieveToken',request.data.token);
           } catch (error) {
