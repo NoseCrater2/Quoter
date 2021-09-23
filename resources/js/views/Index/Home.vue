@@ -172,7 +172,21 @@
               <template v-slot:activator="{attrs, on}">
                 <v-btn v-bind="attrs" v-on="on" class="white--text" text >Pedidos</v-btn>
               </template>
-               <v-list>
+                <v-list v-if="user.role === 'Superadministrador' || user.role === 'Administrador'">
+                  <v-list-item :to="{name: 'Orders', params: {option: 'ordenes'}}">
+                    <v-list-item-title >MIS ÓRDENES</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item :to="{name: 'Orders', params: {option: 'ordenes-admin'}}">
+                    <v-list-item-title >ORDENES DISTRIBUIDORES</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item  :to="{name: 'Orders', params: {option: 'cotizaciones'}}">
+                    <v-list-item-title >MIS COTIZACIONES</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item  :to="{name: 'Orders', params: {option: 'cotizaciones-admin'}}">
+                    <v-list-item-title >COTIZACIONES DISTRIBUIDORES</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+               <v-list v-else-if="user.role !== 'Superadministrador' || user.role !== 'Administrador'">
                   <v-list-item :to="{name: 'Orders', params: {option: 'ordenes'}}">
                     <v-list-item-title >ORDENES</v-list-item-title>
                   </v-list-item>
@@ -431,6 +445,24 @@ export default {
 
       image: "/storage/img/Madera.jpeg",
 
+      arrayItemsAdminOptions: [
+        {
+            active: false,
+            childItems: [
+                { title: 'Mis Órdenes', route: {name: 'Orders', params: {option: 'ordenes'}} },
+                { title: 'Ordenes Distribuidores', route: {name: 'Orders', params: {option: 'ordenes-admin'}} }
+            ],
+            title: 'ORDENES',
+        },
+        {
+            active: false,
+            childItems: [
+                { title: 'Mis Cotizaciones', route: {name: 'Orders', params: {option: 'cotizaciones'}} },
+                { title: 'Cotizaciones Distribuidores', route: {name: 'Orders', params: {option: 'cotizaciones-admin'}} }
+            ],
+            title: 'COTIZACIONES',
+        }
+      ]
 
     }
   },

@@ -115,6 +115,8 @@ class OrderController extends Controller
                     $blind->extraVertical = $b['extraVertical'];
                     $blind->save();
 
+                    $blind->canvases()->delete();
+
                     foreach ($b['canvas'] as $c) {
                         $canvas = new Canvas();
                         $canvas->blind_id = $blind->id;
@@ -205,6 +207,8 @@ class OrderController extends Controller
                 $blind->save();
                 $blind->canvases()->delete();
 
+                $blind->canvases()->delete();
+
                 foreach ($b['canvas'] as $c) {
                     $canvas = new Canvas();
                     $canvas->blind_id = $blind->id;
@@ -247,6 +251,7 @@ class OrderController extends Controller
         return AdministratorQuotationIndexResource::collection(
             Order::where('is_quotation',true)->get()
          );
+         //Order::where('is_quotation',true)->whereHas('user', function($query){$query->;})->get();
     }
 
     public function ordersAdmin()
