@@ -419,7 +419,10 @@
                                             <span>{{$concat3}}</span>
                                             <div style="text-transform: none;">
                                                 <span>Precio (m2): ${{$order['price']}} MXN // Descuento: {{$orders['user']['discount_percent']}}% // M2: @calculatemeters($order['canvas'][0]['width'],$order['canvas'][0]['height'])//</span>
-                                                <span>Precio con Descto: ${{$order['discount_price']}} MXN</span>
+                                                <?php
+                                                    $totaldiscount = $order['price'] - (($orders['user']['discount_percent'] / 100) * $order['price']);
+                                                ?>
+                                                <span>Precio con Descto: ${{$totaldiscount}} MXN</span>
                                             </div>
                                         </div>
                                     </td>
@@ -456,7 +459,7 @@
                                             <span>TOTAL: </span>
                                             <span style="color: #47a5ad">
                                                 <?php
-                                                    $unitaryPrice = $order['discount_price'] +
+                                                    $unitaryPrice = $totaldiscount +
                                                     $order['motor']['price'] +
                                                     $order['motor']['flexiballetPrice'] +
                                                     $order['motor']['galleryPrice'] +
@@ -624,7 +627,10 @@
                                             <span>{{$concat3}}</span>
                                             <div style="text-transform: none;">
                                                 <span>Precio (m2): ${{$order['price']}} MXN // Descuento: {{$orders['user']['discount_percent']}}% // M2: @calculatemeters($order['canvas'][0]['width'],$order['canvas'][0]['height'])//</span>
-                                                <span>Precio con Descto: ${{$order['discount_price']}} MXN</span>
+                                                <?php
+                                                    $totaldiscount = $order['price'] - (($orders['user']['discount_percent'] / 100) * $order['price']);
+                                                ?>
+                                                <span>Precio con Descto: ${{$totaldiscount}} MXN</span>
                                             </div>
                                         </div>
                                     </td>
@@ -661,7 +667,7 @@
                                             <span>TOTAL: </span>
                                             <span style="color: #47a5ad">
                                                 <?php
-                                                    $unitaryPrice = $order['discount_price'] +
+                                                    $unitaryPrice = $totaldiscount +
                                                     $order['motor']['price'] +
                                                     $order['motor']['flexiballetPrice'] +
                                                     $order['motor']['galleryPrice'] +
