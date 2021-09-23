@@ -148,6 +148,9 @@
                 </div>
             </template>
             <template v-slot:item.actions="{ item }">
+                <v-icon small class="mr-2" @click="methodOpenDialogDeleteOrder(item.id)">
+                	mdi-delete
+              	</v-icon>
               	<v-icon small class="mr-2" @click="openDetailsdialog(item.id)">
                 	mdi-magnify
               	</v-icon>
@@ -155,6 +158,22 @@
         </v-data-table>
         </v-col>
         <DashboardOrdersAndQuotationsDialog :id="orderId" v-if="isOrdersAndQuotationsDialogActivated" @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" ></DashboardOrdersAndQuotationsDialog>
+
+        <v-dialog v-model="modelDialogDeleteOrder" persistent max-width="290">
+          <v-card>
+            <v-card-title class="headline">¿Eliminar?</v-card-title>
+            <v-card-text>
+              Si continua, este registro se eliminará y no se podrá recuperar.
+              ¿Está seguro?
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="gray darken-1" text @click="methodCloseDialogDeleteOrder()">CANCELAR</v-btn>
+              <v-btn color="red" :loading="isDeletingOrder" :disabled="isDeletingOrder" text @click="methodDeleteOrder()">ELIMINAR</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
     </v-row>
 </template>
 
@@ -166,6 +185,8 @@ import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/Order
 export default {
     data() {
         return {
+            modelDialogDeleteOrder: false,
+            isDeletingOrder: false,
             isOrdersAndQuotationsDialogActivated: false,
             search: null,
             mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
@@ -181,7 +202,7 @@ export default {
                 { text: this.option === 'ordenes'?'Estado de la orden':'Vigente', value: 'state', align: 'center' },
                 { text: 'Fecha de creación', value: 'created_at', align: 'center' },
                 { text: 'Última actualización', value: 'updated_at', align: 'center' },
-                { text: 'Ver detalles', value: 'actions', align: 'center', sortable: false },
+                { text: 'Acciones', value: 'actions', align: 'center', sortable: false },
             ],
             states: [
                 { text: 'No Pagada', color: 'black' },
@@ -191,7 +212,7 @@ export default {
                 { text: 'Paqueteria', color: '#01afec' },
                 { text: 'Entregada', color: '#0eae02' },
                 { text: 'Cancelada', color: '#fd220c' },
-                
+
             ],
             admins: [
                 {title: 'Mis Órdenes', route: {name: 'Orders', params: {option: 'ordenes'}}},
@@ -203,10 +224,11 @@ export default {
                 {title: 'Cotizaciones Distribuidores', route: {name: 'Orders', params: {option: 'cotizaciones-admin'}}}
             ],
             orderId: 0,
+            orderIDDelete: -1
         }
     },
     mounted(){
-        
+
         if(this.option === 'ordenes'){
             this.$store.dispatch('getQuotedOrders').then(()=>{
                 this.loading = false
@@ -249,6 +271,29 @@ export default {
         }
     },
     methods:{
+        methodOpenDialogDeleteOrder(id){
+            this.orderIDDelete = id;
+            this.modelDialogDeleteOrder = true;
+        },
+        methodCloseDialogDeleteOrder(){
+            this.orderIDDelete = -1;
+            this.modelDialogDeleteOrder = false;
+        },
+        methodDeleteOrder(){
+            this.isDeletingOrder = true;
+            if(this.orderIDDelete > -1){
+                this.$store.dispatch('deleteQuotingOrder', this.orderIDDelete).then(async()=>{
+                    await this.$store.dispatch('getQuotedOrders');
+                    await this.$store.dispatch('getQuotingOrders');
+                    this.isDeletingOrder = false;
+                    this.methodCloseDialogDeleteOrder();
+                }).catch(async()=>{
+                    await this.$store.dispatch('getQuotedOrders');
+                    await this.$store.dispatch('getQuotingOrders');
+                    this.methodCloseDialogDeleteOrder();
+                })
+            }
+        },
         emitClickCloseFromOrdersAndQuotationsDialog(){
             this.isOrdersAndQuotationsDialogActivated = false;
         },
