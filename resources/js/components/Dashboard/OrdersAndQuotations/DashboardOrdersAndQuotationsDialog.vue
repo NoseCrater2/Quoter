@@ -7,7 +7,7 @@
             </v-btn>
             <div class="white--text text-uppercase" :style="$vuetify.breakpoint.mdAndUp ? 'font-size: 1.43rem': 'font-size: 1.0rem'">Detalles de la
 
-                <span  v-if="order.is_quotation">COTIZACIÓN</span>
+                <span  v-if="order.is_quotation == 1">COTIZACIÓN</span>
                 <span  v-else>ORDEN</span>
                 <span>/#{{order.order}}</span>
             </div>

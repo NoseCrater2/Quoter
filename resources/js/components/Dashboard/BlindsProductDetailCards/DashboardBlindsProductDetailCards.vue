@@ -64,9 +64,9 @@
                               <span>{{localComputedOrderQuotation.motor.flexiballetPrice > 0 ? '(+$'+localComputedOrderQuotation.motor.flexiballetPrice+')' : ''}}</span>
                           </div>
                           <div>
-                              <span>Precio (m2): {{localComputedOrderQuotation.price}} MXN // Descuento: {{propOrderUser.discount_percent}} % // M2: {{parseFloat(localComputedOrderQuotation.canvas[0].width * localComputedOrderQuotation.canvas[0].height)}} //</span>
+                              <span>Precio (m2): {{localComputedOrderQuotation.price}} MXN // Descuento: {{propOrderUser.discount_percent}} % // M2: {{squareMeters(localComputedOrderQuotation.canvas[0].width, localComputedOrderQuotation.canvas[0].height)}} //</span>
                               <span>
-                                  Precio con Descto: $ {{methodUnitaryPriceDiscount(propOrderUser.discount_percent)}} MXN
+                                  Precio con Descto: $ {{localComputedOrderQuotation.discount_price}} MXN
                               </span>
                           </div>
 
@@ -93,7 +93,7 @@
                               <span>Total: </span>
                               <span style="color: #47a5ad;">
                                   {{mxCurrencyFormat.format(
-                                      methodTotalCanvasPrice(propOrderUser.discount_percent) +
+                                      parseFloat(localComputedOrderQuotation.discount_price) +
                                       parseFloat(localComputedOrderQuotation.motor.price) +
                                       parseFloat(localComputedOrderQuotation.motor.flexiballetPrice) +
                                       parseFloat(localComputedOrderQuotation.motor.galleryPrice) +
@@ -142,12 +142,17 @@ export default {
         methodUnitaryPriceDiscount(localDiscount){
             return this.propItemArrayBlindsObject.price - ((localDiscount / 100) * this.propItemArrayBlindsObject.price)
         },
-        methodTotalCanvasPrice(localDiscount){
-            let localPrice = 0;
-            this.propItemArrayBlindsObject.canvas.forEach(canva=>{
-                localPrice += ((parseFloat(canva.width) * parseFloat(canva.height)) * this.methodUnitaryPriceDiscount(localDiscount));
-            })
-            return parseFloat(localPrice);
+        squareMeters(width, height){
+            if(width < 1 && height < 1){
+                return 1
+            }else if(width < 1){
+                return Math.round(height) * 10 / 10
+            }else if(height < 1){
+                return Math.round(width) * 10 / 10
+            }else{
+               return Math.round((width * height) * 10) / 10
+                
+            }
         },
         emitEditBlindFromBlindsProductDetailCardsView(){
             this.$emit('emitEditBlindFromBlindsProductDetailCardsView');
