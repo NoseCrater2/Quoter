@@ -11,6 +11,8 @@
           <v-card-text>
             <v-form @submit.prevent="login()">
               <v-text-field
+                class="mt-7"
+                outlined
                 color="#3ba2a9"
                 label="Email"
                 name="Email"
@@ -21,6 +23,7 @@
               ></v-text-field>
 
               <v-text-field
+                outlined
                 color="#3ba2a9"
                 id="password"
                 v-model="credentials.password"
@@ -28,7 +31,9 @@
                 label="Contraseña"
                 name="password"
                 prepend-icon="mdi-lock"
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
+                append-icon="mdi-eye"
+                @click:append="showPassword = !showPassword"
 
               ></v-text-field>
 
@@ -62,6 +67,7 @@ import {logIn, logOut} from "../../utils/auth"
 export default {
   data() {
     return {
+        showPassword: false,
       getLoginErrors: {
         email: null,
         password: null,

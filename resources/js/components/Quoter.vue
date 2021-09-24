@@ -2093,7 +2093,7 @@ export default {
         this.$route.query.redirect = 'quoter'
          this.$router.push({name: "login"})
       }else{
-          
+
           if(this.$route.params.order_id){
             this.$store.dispatch('updateQuotations', {'orders': this.orders, 'id': this.$route.params.order_id}).then( () => {
               this.savedBlindMessage = true
@@ -2321,7 +2321,7 @@ export default {
           if(this.selectedUser.discount_percent > 0){
             this.order.discount_price = this.order.price - ( (this.order.discount_pricet/100)*this.order.price)
           }
-         
+
         if (this.editable) {
           this.$store.dispatch("editOrder", this.order).then(() => {
             this.order = Object.assign({}, this.defaultOrder);
@@ -2494,8 +2494,8 @@ export default {
           this.order.color = this.colors[0];
         }
       });
-     
-      
+
+
     },
 
     selectColor(color) {
@@ -2706,7 +2706,7 @@ export default {
     variant() {
       if (this.order.variant &&  this.order.type) {
         return this.$store.state.productsModule.variants.find(
-          (variant) => variant.slug === this.order.variant && variant.type.slug === this.order.type 
+          (variant) => variant.slug === this.order.variant && variant.type.slug === this.order.type
         );
       }
     },
@@ -2714,7 +2714,7 @@ export default {
     variantTwo() {
       if (this.order.variant2 && this.order.type) {
         return this.$store.state.productsModule.variants.find(
-          (variant) => variant.slug === this.order.variant && variant.type.slug === this.order.type 
+          (variant) => variant.slug === this.order.variant && variant.type.slug === this.order.type
         );
       }
     },
