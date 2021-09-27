@@ -3,14 +3,14 @@
          <v-row justify="space-between">
              <v-col cols="12" md="3" sm="12">
                     <v-list-group :value="isMobile?false:true" v-if="persianas" class="mb-5">
-                       <template v-slot:activator>    
+                       <template v-slot:activator>
                             <strong style="color: black">GALERÍA DE PERSIANAS</strong>
                         </template>
                         <v-list-item-group  color="#47a5ad">
-                            <v-list-item 
+                            <v-list-item
                             v-model="selectedType"
-                            v-for="type in persianas.types" 
-                            :key="type.id" 
+                            v-for="type in persianas.types"
+                            :key="type.id"
                             :to="{name: 'Gallery', params: {slugProduct: 'PERSIANAS',slugType: type.slug}} ">
                                 <v-list-item-content>
                                     <v-list-item-title v-text="type.name"></v-list-item-title>
@@ -20,14 +20,14 @@
                     </v-list-group>
 
                     <v-list-group :value="isMobile?false:true" v-if="toldos" class="mt-5">
-                       <template v-slot:activator>    
+                       <template v-slot:activator>
                             <strong style="color: black">GALERÍA DE TOLDOS</strong>
                         </template>
                         <v-list-item-group  color="#47a5ad">
-                            <v-list-item 
+                            <v-list-item
                             v-model="selectedType"
-                            v-for="type in toldos.types" 
-                            :key="type.id" 
+                            v-for="type in toldos.types"
+                            :key="type.id"
                             :to="{name: 'Gallery', params: {slugProduct: 'TOLDOS',slugType: type.slug}} ">
                                 <v-list-item-content>
                                     <v-list-item-title v-text="type.name"></v-list-item-title>
@@ -48,25 +48,22 @@
                          </h2>
                      </v-col>
                  </v-row>
-                 
-                 <v-row v-if="images.length > 0" no-gutters justify="center">
-                    <v-col cols="12" md="4" sm="12" v-for="(image, index) in images" :key="index">
+
+                 <v-row v-if="images.length > 0"  justify="center">
+                    <v-col cols="12" md="4" sm="6" v-for="(image, index) in images" :key="index">
                         <v-hover v-slot="{ hover }">
-                            <v-img 
-                            aspect-ratio="1" 
-                            contain 
-                            @click="openDialog(index)" 
-                            width="100%" 
-                            height="100%" 
-                            :src="`/img/${image}`" 
-                            class="align-center"
-                            :gradient="hover?'rgba(0, 0, 0, 0.4) 100%, transparent 72px':''" >
+                            <v-img
+                            @click="openDialog(index)"
+                            :src="`/img/${image}`"
+                            :class="hover?'expanded':''"
+                            class="align-center grey darken-4"
+                            :gradient="hover?'rgba(0, 0, 0, 0.7) 100%, transparent 72px':''" >
                                 <v-row justify="center" align="center">
-                                     <v-icon dark v-if="hover" size="75">mdi-magnify</v-icon>
+                                     <v-icon class="zooom" dark v-if="hover" size="75">mdi-magnify</v-icon>
                                 </v-row>
                             </v-img>
                         </v-hover>
-                        
+
                             <!-- <img  :alt="index"> -->
                     </v-col>
                  </v-row>
@@ -75,23 +72,25 @@
                          <span >NO HAY IMAGENES</span>
                      </v-col>
                  </v-row>
-                
+
              </v-col>
          </v-row>
-          <v-dialog v-model="dialog" max-width="700px" >
-              <v-carousel height="700px" hide-delimiter-background v-model="position" >
+          <v-dialog persistent v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+              <v-carousel height="100%" hide-delimiter-background hide-delimiters v-model="position" >
                     <v-carousel-item
                     eager
                     v-for="(image,i) in images"
                     :key="i"
-                    :src="`/img/${image}`"
-                    reverse-transition="fade-transition"
-                    transition="fade-transition"
-                    class="align-end"
+                    class="grey darken-4"
                     >
-                    <v-btn small class="ma-2" dark style="background: rgba(0, 0, 0, 0.4); left: 92%;" icon fab rounded @click="dialog = false">
-                        <v-icon >mdi-close</v-icon>
-                    </v-btn>
+                    <template v-slot:default>
+                        <div style="height: 60px; background-color: rgba(0, 0, 0, 0.5); position: fixed; z-index: 2; width: 100%; text-align: end;">
+                            <v-btn small class="ma-2" dark style="background: rgba(0, 0, 0, 0.3);" icon fab rounded @click="dialog = false">
+                                <v-icon>mdi-close</v-icon>
+                            </v-btn>
+                        </div>
+                            <v-img :src="`/img/${image}`" aspect-ratio="1" contain height="100%"></v-img>
+                    </template>
                     </v-carousel-item>
               </v-carousel>
           </v-dialog>
@@ -168,4 +167,15 @@ export default {
   .overlay:hover {
     background: rgba(0, 0, 0, 0);
   }
+
+.expanded div:not(.zooom){
+    transition: all .7s;
+ transform: scale(1.1);
+  }
+
+
+.expanded:last-child div i{
+ transform: none;
+  }
+
 </style>
