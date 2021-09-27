@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -53,11 +54,48 @@ class LoginController extends Controller
         }
     }
 
-    protected function attemptLogin(Request $request)
+    public function login(Request $request)
     {
-       
-        return $this->guard()->attempt(
-            $this->credentials($request), $request->filled('remember')
-        );
+        $this->validateLogin($request);
+
+        // If the class is using the ThrottlesLogins trait, we can automatically throttle
+        // the login attempts for this application. We'll key this by the username and
+        // the IP address of the client making these requests into this application.
+        if (method_exists($this, 'hasTooManyLoginAttempts') &&
+            $this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+
+            return $this->sendLockoutResponse($request);
+        }
+
+        if($this->userIsActive($request)){
+            if ($this->attemptLogin($request)) {
+                return $this->sendLoginResponse($request);
+            }
+            
+        }else{
+            return response(['errors' => ['email'=> 'Usuario inactivo o inexistente, contacte al administrador']],422);
+        }
+
+        
+
+        // If the login attempt was unsuccessful we will increment the number of attempts
+        // to login and redirect the user back to the login form. Of course, when this
+        // user surpasses their maximum number of attempts they will get locked out.
+        $this->incrementLoginAttempts($request);
+
+        return $this->sendFailedLoginResponse($request);
+    }
+
+    public function userIsActive(Request $request)
+    {
+
+        $email = $request['email'];
+        $user = User::where('email',$email)->first();
+        if($user){
+            return $user->active?true:false;
+        }else{
+            return false;
+        }
     }
 }

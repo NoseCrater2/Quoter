@@ -31,7 +31,7 @@ class UserIndexResource extends JsonResource
             'logo' => $this->logo,
             'discount_percent' => $this->discount_percent,
             'role' => $this->roles->isNotEmpty()? $this->getRoleNames()[0]: null,
-            'active' => $this->active
+            'active' => intval($this->active)
 
         ];
     }

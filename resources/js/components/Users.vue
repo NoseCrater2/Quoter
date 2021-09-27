@@ -271,9 +271,19 @@
                 		  	<v-icon class="mr-2" :disabled="user.id == item.id ? true : false" small @click="deleteItem(item)">
                 		  	  	mdi-delete
                 		  	</v-icon>
-							<v-icon  v-if="!item.active" small @click="openActitveUserDialog(item)">
+							<v-switch
+							:hint="item.active?'Desactivar':'Activar'"
+							flat
+							@click="openActitveUserDialog(item)"
+							v-model="item.active"
+							dense
+							style="display: inline-flex;"
+							color="#47a5ad"
+							readonly>
+							</v-switch>
+							<!-- <v-icon  v-if="!item.active" small @click="openActitveUserDialog(item)">
                 		  	  	mdi-shield-check
-                		  	</v-icon>
+                		  	</v-icon> -->
                               <!-- editUserActiveState(item) -->
                 		</template>
                 	</v-data-table>
@@ -302,12 +312,29 @@
         	    	</v-card-title>
         	    	<v-card-text>
         	      		Asegurese de revisar la información de este usuario ya que al activarlo se le enviará un email
-						con la contraseña de acceso a Rollux
+						con la contraseña de acceso a Rollux. 
+
+						Si ya se le asignó contraseña el correo de notificación no será enviado.
         	    	</v-card-text>
         	    	<v-card-actions class="mt-n6">
         	    	  	<v-spacer></v-spacer>
         	    	  	<v-btn color="red" text @click="activeUserDialog = false">CANCELAR</v-btn>
         	    	  	<v-btn color="#47a5ad" text @click="active" :loading="loadingActive">Activar</v-btn>
+        	    	</v-card-actions>
+        		</v-card>
+        	</v-dialog>
+			<v-dialog v-model="inactiveUserDialog" max-width="500px" persistent>
+        		<v-card tile>
+        	    	<v-card-title>
+        	    	  	¿DESACTIVAR USUARIO?
+        	    	</v-card-title>
+        	    	<v-card-text>
+        	      		El usuario no podrá iniciar sesión pero su información seguirá almacenada en la base de datos.
+        	    	</v-card-text>
+        	    	<v-card-actions class="mt-n6">
+        	    	  	<v-spacer></v-spacer>
+        	    	  	<v-btn color="red" text @click="inactiveUserDialog = false">CANCELAR</v-btn>
+        	    	  	<v-btn color="#47a5ad" text @click="active" :loading="loadingActive">Desactivar</v-btn>
         	    	</v-card-actions>
         		</v-card>
         	</v-dialog>
@@ -320,6 +347,7 @@ import { mapState, mapGetters, mapActions } from 'vuex';
 export default {
     data(){
         return {
+			inactiveUserDialog: false,
 			loadingActive: false,
 			activeUserDialog: false,
 			swToInactive: false,
@@ -507,7 +535,11 @@ export default {
     },
 	openActitveUserDialog(item){
 		Object.assign(this.localDeletinItem, item);
-		this.activeUserDialog = true
+		if(item.active){
+			this.inactiveUserDialog = true
+		}else{
+			this.activeUserDialog = true
+		}
 	},
 
 	active(){
@@ -515,6 +547,7 @@ export default {
 		this.$store.dispatch('activeUser',this.localDeletinItem.id).then(()=>{
 			this.loadingActive = false
 			this.activeUserDialog = false
+			this.inactiveUserDialog = false
 		})
 	},
 
