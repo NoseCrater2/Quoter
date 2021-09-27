@@ -55,7 +55,7 @@
         :items="items"
         :headers="modelsHeaders"
         :search="search"
-        :items-per-page="8"
+        :items-per-page="20"
         class="elevation-1"
         >
             <template v-slot:top>

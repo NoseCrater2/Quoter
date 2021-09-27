@@ -225,13 +225,14 @@
 
                                                 if($order['motor']['motor'] != 0 && $order['motor']['motor'] != null){
                                                     $motorization = App\Motorization::find($order['motor']['motor']);
-                                                    $concat3 .= $motorization['system'].' // '.$motorization['motorizationType']['name'].' // '.$motorization['manufacturer']['name'].' ';
-                                                    if($motorization['price'] > 0){
-                                                        $concat3 .= '(+$'.$motorization['price'].') // ';
-                                                    }
-                                                    else{
-                                                        $concat3 .= '// ';
-                                                    }
+
+                                                    $concat3 .= $motorization->system.' // '.$motorization->motorizationType->name.' // '.$order['motor']['manufacturer'].' ';
+                                                   if($motorization->price > 0){
+                                                       $concat3 .= '(+$'.$motorization->price.') // ';
+                                                   }
+                                                   else{
+                                                       $concat3 .= '// ';
+                                                   }
                                                 }
 
                                                 if($order['motor']['control'] != null){
@@ -424,13 +425,14 @@
 
                                                 if($order['motor']['motor'] != 0 && $order['motor']['motor'] != null){
                                                     $motorization = App\Motorization::find($order['motor']['motor']);
-                                                    $concat3 .= $motorization['system'].' // '.$motorization['motorizationType']['name'].' // '.$motorization['manufacturer']['name'].' ';
-                                                    if($motorization['price'] > 0){
-                                                        $concat3 .= '(+$'.$motorization['price'].') // ';
-                                                    }
-                                                    else{
-                                                        $concat3 .= '// ';
-                                                    }
+
+                                                    $concat3 .= $motorization->system.' // '.$motorization->motorizationType->name.' // '.$order['motor']['manufacturer'].' ';
+                                                   if($motorization->price > 0){
+                                                       $concat3 .= '(+$'.$motorization->price.') // ';
+                                                   }
+                                                   else{
+                                                       $concat3 .= '// ';
+                                                   }
                                                 }
 
                                                 if($order['motor']['control'] != null){
