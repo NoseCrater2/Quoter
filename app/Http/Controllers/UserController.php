@@ -15,6 +15,7 @@ use App\Mail\UserSaved;
 use App\Http\Resources\UserShowResource;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Storage;
+use App\Mail\ResetPassword;
 
 
 class UserController extends Controller
@@ -223,6 +224,21 @@ class UserController extends Controller
     public function notifications()
     {
         return auth()->user()->unreadNotifications()->limit(5)->get()->toArray();
+    }
+
+    public function resetPassword($email)
+    {
+        $user = User::where('email', $email)->first();
+        if($user){
+            $pass = User::make_password();
+            $user->password = $pass;
+            Mail::to($user->email)->send(new ResetPassword($user));
+            $user->password = bcrypt($user->password);
+            $user->save();
+            return response(['Message' => "Email enviado"],200);
+        }else{
+            return response(['Message' => "Email no encontrado"],404);
+        }
     }
 
 }

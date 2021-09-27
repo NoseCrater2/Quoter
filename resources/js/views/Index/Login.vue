@@ -2,7 +2,7 @@
 
     <v-app style="background-color:#3ba2a9 " >
       <v-dialog v-model="dialog" persistent max-width="500px">
-        <v-card class="elevation-4">
+        <v-card class="elevation-4" v-if="!showResetPasswordForm">
           <v-toolbar color="#3ba2a9" dark flat>
             <v-spacer></v-spacer>
             <p class="display-1 mt-4">INICIAR SESIÓN</p>
@@ -39,7 +39,11 @@
 
               <p class="text-center">
                 ¿Quieres cotizar y no eres distribuidor?
-                <router-link :to="{name:'Register', hash: '#formulary'}"> Regístrate aquí</router-link>
+                <router-link :to="{name:'Register', hash: '#formulary'}">Regístrate aquí</router-link>
+              </p>
+              <p class="text-center">
+                ¿Olvídaste tu contraseña?
+                <a @click="showResetPasswordForm = true"  >Recupérala aquí</a>
               </p>
             <v-card-actions>
             <v-btn color="red" dark @click="cancel()">
@@ -57,6 +61,55 @@
             </v-form>
           </v-card-text>
         </v-card>
+
+
+        <v-card v-else>
+          <v-toolbar color="#3ba2a9" dark flat>
+            <v-spacer></v-spacer>
+            <p class="font-weight-bold text-center mt-4">Ingresa tu correo electrónico donde se te enviará una nueva contraseña</p>
+            <v-spacer></v-spacer>
+          </v-toolbar>
+          <v-card-text>
+            <v-form>
+              <v-text-field
+                class="mt-7"
+                outlined
+                color="#3ba2a9"
+                label="Email"
+                name="Email"
+                v-model="resetEmail"
+                :error-messages="errorResetPassword"
+                prepend-icon="mdi-account"
+                type="text"
+              ></v-text-field>
+            <v-card-actions>
+            <v-btn color="red" dark @click="cancelReset()">
+              <v-icon left>mdi-arrow-left-bold</v-icon>
+              Cancelar
+            </v-btn>
+
+            <v-spacer></v-spacer>
+
+            <v-btn :loading="loadingReset"
+            class="white--text" 
+            color="#3ba2a9"
+            @click="resetPassword()">
+              ENVIAR
+              <v-icon right>mdi-login</v-icon>
+            </v-btn>
+          </v-card-actions>
+            </v-form>
+          </v-card-text>
+        </v-card>
+          <v-snackbar
+           v-model="emailSendeded"
+            :timeout="2000"
+          >
+      <span class="ml-4">Nueva contraseña ha sido enviada a su correo</span>
+       <template v-slot:action>
+        <v-icon>mdi-check</v-icon>
+        </template>
+      </v-snackbar>
       </v-dialog>
     </v-app>
 
@@ -67,11 +120,16 @@ import {logIn, logOut} from "../../utils/auth"
 export default {
   data() {
     return {
-        showPassword: false,
+      loadingReset: false,
+      emailSendeded: false,
+      errorResetPassword: null,
+      resetEmail: null,
+      showResetPasswordForm: false,
+      showPassword: false,
       getLoginErrors: {
         email: null,
         password: null,
-      },
+        },
       dialog: true,
       loading: false,
       credentials: {
@@ -117,22 +175,28 @@ export default {
       }
       this.loading = false
     },
-    // login() {
-    //   this.loading = true;
-    //   this.$store.dispatch("retrieveToken", this.credentials).then(() => {
-    //     if (this.getLoginStatus === 200) {
-    //       this.$router.push({ name: "Dashboard" });
-    //       //
-
-    //       this.loading = false;
-    //     }
-    //     this.loading = false;
-    //   });
-    // },
 
     cancel() {
       this.$router.back()
     },
+    cancelReset(){
+      this.showResetPasswordForm = false
+      this.resetEmail = null
+    },
+
+    resetPassword(){
+      this.loadingReset = true
+      axios.get("/api/reset-password/"+this.resetEmail).then((response) => {
+        if(response.status === 200){
+          this.loadingReset = false
+          this.showResetPasswordForm = false
+          this.emailSendeded = true
+          
+        }
+      }).catch((error)=>{
+        this.errorResetPassword = 'El email proporcionado no es válido o no existe en el sistema'
+      })
+    }
   },
   components: {},
 };

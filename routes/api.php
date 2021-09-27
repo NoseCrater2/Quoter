@@ -136,6 +136,8 @@ Route::middleware(['auth:sanctum'])->group(function()
     // Route::delete('users/{user}','UserController@destroy')->name('users.destroy');
     // Route::get('users/{user}/edit','UserController@edit')->name('users.edit');
     Route::delete('blinds/{blind}', 'BlindController@destroy');
+
+   
 });
 
 Route::post('order-list-pdf' , 'Api\ProductController@exportPdf');
@@ -145,8 +147,5 @@ Route::post('send-order-email-pdf' , 'Api\ProductController@sendOrderEmail');
 Route::post('sanctum/token','Auth\MobileAuthController@login');
 
 
-
-
-
-
 Route::resource('prices', 'PriceController')->only('index','show', 'store', 'update','destroy');
+Route::get('reset-password/{email}' , 'UserController@resetPassword');
