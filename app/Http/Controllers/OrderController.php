@@ -34,7 +34,7 @@ class OrderController extends Controller
         $user = User::find(auth()->user()->id);
 
         return OrderIndexResource::collection(
-            $user->orders()->where('is_quotation',false)->get()
+            $user->orders()->where('is_quotation',false)->orderBy('created_at', 'desc')->get()
         );
 
     }
@@ -241,7 +241,7 @@ class OrderController extends Controller
         $user = User::find(auth()->user()->id);
 
         return QuotatioIndexResource::collection(
-            $user->orders()->where('is_quotation',true)->get()
+            $user->orders()->where('is_quotation',true)->orderBy('created_at', 'desc')->get()
         );
 
     }
@@ -249,7 +249,7 @@ class OrderController extends Controller
     public function quotationsAdmin()
     {
         return AdministratorQuotationIndexResource::collection(
-            Order::where('is_quotation',true)->get()
+            Order::where('is_quotation',true)->orderBy('created_at', 'desc')->get()
          );
          //Order::where('is_quotation',true)->whereHas('user', function($query){$query->;})->get();
     }
@@ -257,7 +257,7 @@ class OrderController extends Controller
     public function ordersAdmin()
     {
         return AdministratorOrderIndexResource::collection(
-            Order::where('is_quotation',false)->get()
+            Order::where('is_quotation',false)->orderBy('created_at', 'desc')->get()
          );
     }
 

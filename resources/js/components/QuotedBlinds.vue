@@ -2,12 +2,12 @@
     <div>
         <v-card tile flat>
             <v-tabs v-model="tab" background-color="white" show-arrows color="#47a5ad" >
-                <v-tab   v-for="o in orders" :key="o.id"> PERSIANA {{ o.id }} </v-tab>
+                <v-tab v-for="(o, index) in orders" :key="o.id"> PERSIANA {{ index + 1 }} </v-tab>
             </v-tabs>
         </v-card>
         <v-tabs-items  v-model="tab" >
 
-            <v-tab-item v-for="(o, index) in orders" :key="o.id">
+            <v-tab-item v-for="o in orders" :key="o.id">
                <v-progress-linear
                v-if="$store.state.productsModule.variants.length == 0"
               color="#47a5ad"
