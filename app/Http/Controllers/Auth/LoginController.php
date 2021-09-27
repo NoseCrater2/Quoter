@@ -40,6 +40,7 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
+        //$data = $request->all();
         if ($request->isXmlHttpRequest()) {
             return response(null, 204);
         }
@@ -50,5 +51,13 @@ class LoginController extends Controller
         if ($request->isXmlHttpRequest()) {
             return response(null, 204);
         }
+    }
+
+    protected function attemptLogin(Request $request)
+    {
+       
+        return $this->guard()->attempt(
+            $this->credentials($request), $request->filled('remember')
+        );
     }
 }
