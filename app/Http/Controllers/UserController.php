@@ -210,12 +210,22 @@ class UserController extends Controller
 
     public function activeUser(User $user)
     {
-        $password = User::make_password();
-        $user->password = $password;
-        $user->active = 1;
-        Mail::to($user->email)->send(new UserSaved($user));
-        $user->password =  bcrypt($user->password);
+        if($user->active === 1){
+            $user->active = 0;
+            
+        }else if($user->active === 0){
+            $user->active = 1;
+        }
+
         $user->save();
+        if($user->password === null){
+            $password = User::make_password();
+            $user->password = $password;
+            $user->active = 1;
+            Mail::to($user->email)->send(new UserSaved($user));
+            $user->password =  bcrypt($user->password);
+            $user->save();
+        }
 
         return new UserIndexResource($user);
     }
