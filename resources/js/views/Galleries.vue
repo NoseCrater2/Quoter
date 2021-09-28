@@ -49,25 +49,45 @@
                      </v-col>
                  </v-row>
 
-                 <v-row v-if="images.length > 0"  justify="center">
-                    <v-col cols="12" md="4" sm="6" v-for="(image, index) in images" :key="index">
+                 <!-- Mansory es el componente que permite el acomodo de las imagenes en forma de grid -->
+                <masonry v-if="images.length > 0" :cols="{default: 1, 2712: 4, 1905: 3, 961: 2, 601: 1}" :gutter="15">
+                    <div class="my-3" v-for="(image, index) in images" :key="index">
                         <v-hover v-slot="{ hover }">
                             <v-img
                             @click="openDialog(index)"
                             :src="`/img/${image}`"
                             :class="hover?'expanded':''"
-                            class="align-center grey darken-4"
+                            class="grey darken-4 align-center"
                             :gradient="hover?'rgba(0, 0, 0, 0.7) 100%, transparent 72px':''" >
                                 <v-row justify="center" align="center">
-                                     <v-icon class="zooom" dark v-if="hover" size="75">mdi-magnify</v-icon>
+                                    <v-icon class="zooom" dark v-if="hover" size="75">mdi-magnify</v-icon>
                                 </v-row>
                             </v-img>
                         </v-hover>
+                    </div>
+                </masonry>
 
-                            <!-- <img  :alt="index"> -->
+                 <!-- <v-row v-if="images.length > 0"  justify="center">
+                    <v-col :style="generalCounter ? `height: ${methodBox(index)}; !important` : ``" class="my-0" cols="12" xl="3" lg="3" md="4" sm="6" v-for="(image, index) in images" :key="index">
+                        <v-hover v-slot="{ hover }">
+                            <div ref="myBox" class="myBox">
+                                <v-img
+                                @load="loadedImage(index)"
+                                @click="openDialog(index)"
+                                :src="`/img/${image}`"
+                                :class="hover?'expanded':''"
+                                class="align-center grey darken-4"
+                                :gradient="hover?'rgba(0, 0, 0, 0.7) 100%, transparent 72px':''" >
+                                    <v-row justify="center" align="center">
+                                         <v-icon class="zooom" dark v-if="hover" size="75">mdi-magnify</v-icon>
+                                    </v-row>
+                                </v-img>
+                            </div>
+                        </v-hover>
                     </v-col>
-                 </v-row>
-                 <v-row  v-else justify="center" align="center">
+                 </v-row> -->
+
+                 <v-row v-else justify="center" align="center">
                      <v-col style="text-align:center; height: 500px">
                          <span >NO HAY IMAGENES</span>
                      </v-col>
@@ -101,6 +121,7 @@
 export default {
     data(){
         return{
+            imgLoaded: false,
             overlay:  false,
             position: 0,
             dialog: false,
@@ -108,9 +129,10 @@ export default {
             selectedType: null,
             isMobile: false,
             error: null,
+            arrayBoxHeight: [],
+            generalCounter: false
         }
     },
-
     mounted(){
         this.overlay = true
         this.onResize()
@@ -118,6 +140,7 @@ export default {
         axios.get('/api/directory?product='+this.slugProduct+'&type='+this.slugType).then(response => {
             this.images = response.data
             this.overlay = false
+            this.imgLoaded = true;
         }).catch(error =>{
            this.error = error.data
         })
@@ -141,9 +164,6 @@ export default {
         toldos(){
             return  this.$store.getters.getTypes('TOLDOS')
         },
-
-
-
     },
 
     methods:{
@@ -154,6 +174,19 @@ export default {
         openDialog(index){
             this.position = index
             this.dialog = true
+        },
+        loadedImage(index){
+            if(this.imgLoaded){
+                this.arrayBoxHeight.push({objIndex: index, height: this.$refs.myBox[index].clientHeight});
+                if((this.arrayBoxHeight.length == this.images.length)){
+                    console.log(this.arrayBoxHeight)
+                    this.generalCounter = true;
+                }
+            }
+        },
+        methodBox(index){
+            let returned = this.arrayBoxHeight.find(element => element.objIndex == index).height + 5;
+            return ""+returned+"px";
         }
     }
 }
@@ -170,7 +203,7 @@ export default {
 
 .expanded div:not(.zooom){
     transition: all .7s;
- transform: scale(1.1);
+    transform: scale(1.1);
   }
 
 

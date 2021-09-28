@@ -5,6 +5,9 @@ require('./bootstrap');
 import Vue from 'vue'
 import store from "./store/store";
 import router from "./router";
+import VueMasonry from 'vue-masonry-css'; //Libreria usada para acomodo de imagenes en la galeria
+
+
 
 import vuetify from './plugins/vuetify'
 import App from './App.vue';
@@ -91,6 +94,7 @@ const app = new Vue({
 
 });
 
+Vue.use(VueMasonry); //Libreria usada para acomodo de imagenes en la galeria
 
 
 
