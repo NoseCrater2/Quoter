@@ -18,7 +18,7 @@ class QuotatioIndexResource extends JsonResource
         return [
             'id' => $this->id,
             'state' => Carbon::now()->diffInDays($this->updated_at, true) < 20,
-            'order' => 'PT'.Carbon::parse($this->created_at)->format('dmy').'/'.$this->id,
+            'order' => $this->user->id.'PT'.Carbon::parse($this->created_at)->format('dmy').$this->id,
             'blinds' => $this->blinds->count(),
             'total' => $this->blinds->map( function( $blind ){
                 return $blind->discount_price == 0 ? $blind->price : $blind->discount_price +
