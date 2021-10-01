@@ -24,9 +24,9 @@ class OrderShowResource extends JsonResource
         //QUOTATION
         // 'state' => Carbon::now()->diffInDays($this->updated_at, true) < 20,
         // 'order' => 'PT'.Carbon::parse($this->created_at)->format('dmy').'/'.$this->id,
-        // 
+        //
         return [
-            
+
             'id' => $this->id,
             'payed' => $this->ticket,
             'state' => $this->is_quotation? Carbon::now()->diffInDays($this->updated_at, true) < 20 : $this->state,
@@ -71,8 +71,8 @@ class OrderShowResource extends JsonResource
                         'galleryPrice' => floatval($blind->gallery_price),
                         'gallery_color' => isset($blind->gallery) ? $blind->gallery->color : null,
                         'height_control' => $blind->height_control,
-                        'instalation_side' => $blind->instalation_side,
-                        'manufacturer' => $blind->motor_manufacturer,
+                        'instalation_side' => $blind->motor_instalation_side,
+                        'manufacturer' => isset($blind->motorization) ? $blind->motorization->manufacturer : null,
                         'manufacturerPrice' => floatval($blind->manufacturer_price),
                         'motor' => isset($blind->motorization) ? $blind->motorization->id: 0,
                         'panels' => $blind->panels,
@@ -81,7 +81,7 @@ class OrderShowResource extends JsonResource
                         'selected_panel' => intval($blind->grouping),
                         'side_control' => $blind->control_side,
                         'stringPrice' => floatval($blind->string_price),
-                        'string_type' => $blind->string_type,                            
+                        'string_type' => $blind->string_type,
                     ],
                     'motor_type' => $blind->motor_type,
                     'price' => floatval($blind->price),

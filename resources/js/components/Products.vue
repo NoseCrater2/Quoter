@@ -69,7 +69,7 @@
               </v-menu>
               <v-divider></v-divider>
 
-               <v-list dense flat subheader v-if="getType && !isMobile">
+               <v-list dense flat subheader v-if="getType && !isMobile && selectedType != 'vertical'">
                 <v-subheader>LÍNEA</v-subheader>
                 <v-list-item-group
                 mandatory
@@ -95,7 +95,8 @@
                   </v-list-item>
                 </v-list-item-group>
               </v-list>
-              <v-menu offset-y v-if="getType && isMobile">
+
+              <v-menu offset-y v-if="getType && isMobile && selectedType != 'vertical'">
                 <template v-slot:activator="{attrs, on}">
                   <v-btn v-bind="attrs" v-on="on" text color="#47a5ad" block>
                     LÍNEA: {{ selectedLine }}
@@ -203,7 +204,11 @@
         <v-col cols="12" md="9" sm="12" >
           <v-row v-if="selectedLine && selectedType">
             <v-col cols="12">
-              <h1 >{{ selectedLine.toUpperCase()+' - '+ selectedType.toUpperCase()}}</h1>
+              <h1 v-if="selectedWeave != 'pvc-vertical'">
+                  <span v-if="selectedType != 'vertical'">{{ selectedLine.toUpperCase()+' - '+ selectedType.toUpperCase()}}</span>
+                  <span v-else-if="selectedType == 'vertical'">{{selectedWeave.toUpperCase().split('-').join(" ")}}</span>
+              </h1>
+              <h1 v-else-if="selectedWeave == 'pvc-vertical'">{{selectedWeave.toUpperCase().split('-').join(" ")}}</h1>
               <div >
                   <Descriptions :nameLine="selectedLine"/>
               </div>
@@ -454,6 +459,7 @@ import Descriptions from './Descriptions.vue';
 export default {
   data(){
     return{
+      modelMenuVerticalBlind: '',
       selectedWeave: this.slugWeave,
       selectedLine: this.slugLine,
       selectedType: this.slugType,
@@ -537,6 +543,9 @@ export default {
 
     products(){
         if(this.getType.weaves.length > 0){
+            if(this.selectedType == 'vertical'){
+                return this.$store.state.productsModule.variants.filter((variant) => variant.type.slug === this.selectedType && variant.weave.slug === this.selectedWeave)
+            }
             return this.$store.state.productsModule.variants.filter((variant) => variant.type.slug === this.selectedType && variant.line.slug === this.selectedLine && variant.weave.slug === this.selectedWeave)
         }
         else{
@@ -573,11 +582,31 @@ export default {
     },
 
     getType(){
-      return this.$store.getters.getTypes(this.slugProduct).types.find(type => type.slug === this.selectedType)
+      let returned = this.$store.getters.getTypes(this.slugProduct).types.find(type => type.slug === this.selectedType)
+    //   let findedVertical = false;
+    //   returned.weaves.forEach(element => {
+    //       if(element.name == 'PVC VERTICAL'){
+    //           findedVertical = true;
+    //       }
+    //   });
+    //   if(findedVertical){
+    //     let returnedShifted = returned.weaves.shift();
+    //     return returned;
+    //   }
+      return returned
     },
 },
 
   methods: {
+    changeRouteVertical(){
+        if(this.modelMenuVerticalBlind == 'TELA VERTICAL'){
+
+        }
+        else if(this.modelMenuVerticalBlind == 'PVC VERTICAL'){
+            console.log("SHI")
+            this.$router.push({query: {...this.$route.query, page: this.page}, params: {slugWeave: 'pvc-vertical'}})
+        }
+    },
     nextPage(){
       this.page = parseInt(this.page)
         if(this.page + 1 <= this.numberOfPages){

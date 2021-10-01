@@ -38,6 +38,7 @@
         $date = new Carbon\Carbon;
         $total = 0;
         setlocale(LC_MONETARY, 'es_MX');
+        $countBlinds = 1;
         // $blindVariant1 = App\Variant::find(4137);
     ?>
     <table style="border-collapse:collapse; width: 100%; margin-top: -12px">
@@ -90,7 +91,7 @@
                                     <td class="vertical" style="width: 7%; border-right: 1px solid #d1d3d4; background-color: #f1f1f2;">
                                         <div>
                                             <span>
-                                                PERSIANA {{$order['id']}}
+                                                PERSIANA {{($countBlinds++)}}
                                             </span>
                                         </div>
                                     </td>
@@ -284,7 +285,7 @@
                                     <td class="vertical" style="width: 7%; border-right: 1px solid #d1d3d4; background-color: #f1f1f2;">
                                         <div>
                                             <span>
-                                                PERSIANA {{$order['id']}}
+                                                PERSIANA {{($countBlinds++)}}
                                             </span>
                                         </div>
                                     </td>

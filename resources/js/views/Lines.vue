@@ -28,8 +28,8 @@
                 </v-row>
                 <v-col cols="12" align-self="center" class="text-center my-7">
                    <v-row v-if="getType"  justify="center" align="center">
-                       <v-col cols="12" md="4" sm="6"  v-for="line in getType.lines" :key="line.id">
-                          <LineProductDetail :type="getType" :line="line"/>
+                       <v-col cols="12" md="4" sm="6"  v-for="(line, index) in getType.lines" :key="line.id">
+                          <LineProductDetail :type="getType" :line="line" :index="index"/>
                        </v-col>
                    </v-row>
 
