@@ -15,7 +15,7 @@
                               <span>{{localComputedOrderQuotation.line != null ? ' // '+localComputedOrderQuotation.line : ''}}</span>
                               <span>{{localComputedOrderQuotation.variant2 != null ? ' // [1. '+$store.getters.getVariant(localComputedOrderQuotation.variant, localComputedOrderQuotation.type).name+'] y [2. '+$store.getters.getVariant(localComputedOrderQuotation.variant2, localComputedOrderQuotation.type).name+'] // ' : ' // '+$store.getters.getVariant(localComputedOrderQuotation.variant, localComputedOrderQuotation.type).name+' // '}}</span>
                               <span>{{localComputedOrderQuotation.second_color != null ? localComputedOrderQuotation.color.color+' // '+localComputedOrderQuotation.second_color.color+' //' : localComputedOrderQuotation.color.color+' //'}}</span>
-                              <span>{{localComputedOrderQuotation.cloth_holder != null ? 'CON '+localComputedOrderQuotation.cloth_holder+' //' : ''}}</span>
+                              <span>{{localComputedOrderQuotation.cloth_holder ? 'CON '+localComputedOrderQuotation.cloth_holder+' //' : ''}}</span>
                               <span v-for="(canva, index) in localComputedOrderQuotation.canvas" :key="index">
                                   <span>{{localComputedOrderQuotation.canvas.length > 1 ? '(L'+(index + 1)+') Ancho: '+canva.width+'m - Alto: '+canva.height+'m // ' : 'Ancho: '+canva.width+'m - Alto: '+canva.height+'m // '}}</span>
                               </span>
@@ -26,12 +26,12 @@
                               <span>{{localComputedOrderQuotation.celular_type != null ? localComputedOrderQuotation.celular_type+' // '+localComputedOrderQuotation.celular_drive+' // ' : ''}}</span>
 
                               <!-- ESTE PANEL IMPRIME 0 EN EL SHOWRESOURCE (CENTRAL a 0) -->
-                              <span>{{localComputedOrderQuotation.motor.selected_panel != null ? localComputedOrderQuotation.motor.selected_panel+' // PANELES: '+localComputedOrderQuotation.motor.panels+' // ' : ''}}</span>
+                              <span>{{localComputedOrderQuotation.motor.selected_panel ? localComputedOrderQuotation.motor.selected_panel+' // PANELES: '+localComputedOrderQuotation.motor.panels+' // ' : ''}}</span>
 
 
                               <span v-if="localComputedOrderQuotation.motor_type != null">
-                                  {{localComputedOrderQuotation.motor_type+' // '+localComputedOrderQuotation.motor.side_control+' // '+localComputedOrderQuotation.motor.manufacturer+' // '}}
-                                  <span>{{localComputedOrderQuotation.motor.instalation_side != null ? localComputedOrderQuotation.motor.instalation_side+' // '+localComputedOrderQuotation.motor.rail_color+' // ' : ''}}</span>
+                                  {{localComputedOrderQuotation.motor_type+' // '+localComputedOrderQuotation.motor.side_control+' // '+(localComputedOrderQuotation.motor.manufacturer != null ? localComputedOrderQuotation.motor.manufacturer+' //' : '')+''}}
+                                  <span>{{localComputedOrderQuotation.motor.instalation_side != null ? localComputedOrderQuotation.motor.instalation_side+' ss// '+localComputedOrderQuotation.motor.rail_color+' // ' : ''}}</span>
                               </span>
                               <span>{{localComputedOrderQuotation.motor.frame != null ? localComputedOrderQuotation.motor.frame+' // ' : ''}}</span>
                               <span>{{localComputedOrderQuotation.instalation_side != null ? localComputedOrderQuotation.instalation_side+' // ' : ''}}</span>
@@ -64,9 +64,9 @@
                               <span>{{localComputedOrderQuotation.motor.flexiballetPrice > 0 ? '(+$'+localComputedOrderQuotation.motor.flexiballetPrice+')' : ''}}</span>
                           </div>
                           <div>
-                              <span>Precio (m2): {{localComputedOrderQuotation.price}} MXN // Descuento: {{propOrderUser.discount_percent}} % // M2: {{squareMeters(localComputedOrderQuotation.canvas[0].width, localComputedOrderQuotation.canvas[0].height)}} //</span>
+                              <span>Precio (m2): {{mxCurrencyFormat.format(localComputedOrderQuotation.price)}} MXN // Descuento: {{propOrderUser.discount_percent}} % // M2: {{squareMeters(localComputedOrderQuotation.canvas[0].width, localComputedOrderQuotation.canvas[0].height)}} //</span>
                               <span>
-                                  Precio con Descto: $ {{localComputedOrderQuotation.discount_price}} MXN
+                                  Precio con Descto: {{mxCurrencyFormat.format(localComputedOrderQuotation.discount_price)}} MXN
                               </span>
                           </div>
 
@@ -151,7 +151,7 @@ export default {
                 return Math.round(width) * 10 / 10
             }else{
                return Math.round((width * height) * 10) / 10
-                
+
             }
         },
         emitEditBlindFromBlindsProductDetailCardsView(){

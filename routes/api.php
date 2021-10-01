@@ -91,8 +91,11 @@ Route::get('getRelatedBlinds/{sunblind}' , 'SunblindController@getRelatedBlinds'
 Route::get('getColors/{slug}/{type}' , 'VariantController@getColors');
 // Route::post('users' , 'UserController@store')->name('users.store');
 Route::get('distributors' , 'UserController@distributors');
+Route::post('netpay-intent-pay/{user}' , 'NetPayController@netpayIntentPay');
 Route::middleware(['auth:sanctum'])->group(function()
 {
+
+
 
     Route::post('checkPassword' , 'UserController@checkPassword')->name('password.check');
 
@@ -137,7 +140,7 @@ Route::middleware(['auth:sanctum'])->group(function()
     // Route::get('users/{user}/edit','UserController@edit')->name('users.edit');
     Route::delete('blinds/{blind}', 'BlindController@destroy');
 
-   
+
 });
 
 Route::post('order-list-pdf' , 'Api\ProductController@exportPdf');

@@ -47,7 +47,7 @@ class UserController extends Controller
         $rules =[
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'rfc' => 'nullable|string|size:13',
+            'rfc' => 'nullable|string',
             'last_name' => 'required|string|max:255',
             'phone' => 'required|string|max:15',
             'address' => 'required|max:255',
@@ -112,7 +112,7 @@ class UserController extends Controller
         $rules = [
             'name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'rfc' => 'nullable|string|size:13',
+            'rfc' => 'nullable|string',
             'phone' => 'required|string|max:15',
             'address' => 'required|max:255',
             'zip_code' => 'required|max:10',
@@ -212,7 +212,7 @@ class UserController extends Controller
     {
         if($user->active === 1){
             $user->active = 0;
-            
+
         }else if($user->active === 0){
             $user->active = 1;
         }
