@@ -123,7 +123,7 @@ export default {
                 // this.localToPropTotalPrice = localItem.total;
                 // this.isOrdersAndQuotationsDialogActivated = true;
                 // console.log(this.quotedOrders, this.quotedOrder)
-                this.$emit('emitFromItemOrder', localItem)
+                this.$emit('emitFromItemOrder', localItem.id)
             });
 
         },

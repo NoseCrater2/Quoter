@@ -30,7 +30,7 @@ class OrderShowResource extends JsonResource
             'id' => $this->id,
             'payed' => $this->ticket,
             'state' => $this->is_quotation? Carbon::now()->diffInDays($this->updated_at, true) < 20 : $this->state,
-            'order' => $this->is_quotation? 'PT'.Carbon::parse($this->created_at)->format('dmy').'/'.$this->id : $code.Carbon::parse($this->created_at)->format('dmy').'/'.$this->id,
+            'order' => $this->is_quotation? $this->user->id.'PT'.Carbon::parse($this->created_at)->format('dmy').$this->id : $this->user->id.$code.Carbon::parse($this->created_at)->format('dmy').$this->id,
             'user' => $this->user,
             'is_quotation' => intval($this->is_quotation),
             'validity' =>Carbon::parse($this->updated_at)->addDays(20)->format('d/m/Y'),

@@ -123,7 +123,7 @@
                                                         left
                                                       >
                                                         <template v-slot:activator="{ on, attrs }">
-                                                            <v-radio v-bind="attrs" v-on="on" color="#3ba2a9" class="py-2 px-5 localBorderNoActiveClass" value="debitcreditcard">
+                                                            <v-radio disabled v-bind="attrs" v-on="on" color="#3ba2a9" class="py-2 px-5 localBorderNoActiveClass" value="debitcreditcard">
                                                               <template v-slot:label>
                                                                 <div>Tarjeta de débito o crédito</div>
                                                                 <v-spacer></v-spacer>
@@ -598,23 +598,23 @@ export default {
 
         localMethodBtnPayStepFour(){
             if(this.flagIsStepFour == false){
-                // this.flagIsStepFour = true;
-                if(this.modelRadioStepFourPaymentMethod != '' && this.modelRadioStepFourPaymentMethod == 'debitcreditcard'){
-                    axios.post(`/api/netpay-intent-pay/${this.quotedOrder.user.id}`).then((response)=>{
+                //HABILITAR RADIO Y BORRAR ESTE COMENTARIO
+                // if(this.modelRadioStepFourPaymentMethod != '' && this.modelRadioStepFourPaymentMethod == 'debitcreditcard'){
+                //     axios.post(`/api/netpay-intent-pay/${this.quotedOrder.user.id}`).then((response)=>{
+                //         if(response.status == 200){
+                //             this.flagIsStepFour = true;
+                //             this.urlNetPayPayment = response.data;
+                //         }
+                //     });
+                // }
+                if(this.modelRadioStepFourPaymentMethod != '' && this.modelRadioStepFourPaymentMethod == 'electronicspei'){
+                    this.isChargingPetitionSPEIPayment = true;
+                    axios.get(`/api/spei-payment/${this.orderId}`).then((response)=>{
                         if(response.status == 200){
                             this.flagIsStepFour = true;
-                            this.urlNetPayPayment = response.data;
+                            this.isChargingPetitionSPEIPayment = false;
                         }
                     });
-                }
-                else if(this.modelRadioStepFourPaymentMethod != '' && this.modelRadioStepFourPaymentMethod == 'electronicspei'){
-                    this.isChargingPetitionSPEIPayment = true;
-                    // axios.get(`/api/spei-payment/${this.orderId}`).then((response)=>{
-                    //     if(response.status == 200){
-                    //         this.flagIsStepFour = true;
-                    //         this.isChargingPetitionSPEIPayment = false;
-                    //     }
-                    // });
                 }
             }
         },

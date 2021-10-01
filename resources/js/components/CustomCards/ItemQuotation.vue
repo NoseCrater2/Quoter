@@ -262,7 +262,7 @@ export default {
             this.$store.dispatch('getQuotingOrder', localItem.id).then(()=>{
                 // this.localToPropTotalPrice = localItem.total;
                 // this.isOrdersAndQuotationsDialogActivated = true;
-                this.$emit('emitFromItemQuotation', localItem);
+                this.$emit('emitFromItemQuotation', localItem.id);
             });
 
         },
