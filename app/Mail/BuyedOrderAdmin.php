@@ -30,6 +30,6 @@ class BuyedOrderAdmin extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.buyedorderadmin')->from('contacto@rollux.com.mx')->subject('VERIFICAR - #ORDEN: '.'PT'.Carbon::parse($this->order->created_at)->format('dmy').'/'.$this->order->id);
+        return $this->markdown('emails.buyedorderadmin')->from('contacto@rollux.com.mx')->subject('VERIFICAR - #ORDEN: '.$this->order->user->id.'PT'.Carbon::parse($this->order->created_at)->format('dmy').$this->order->id);
     }
 }

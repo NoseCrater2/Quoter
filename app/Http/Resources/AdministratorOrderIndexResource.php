@@ -19,7 +19,7 @@ class AdministratorOrderIndexResource extends JsonResource
         return [
             'id' => $this->id,
             'state' => $this->state,
-            'order' => $code.Carbon::parse($this->created_at)->format('dmy').'/'.$this->id,
+            'order' => $this->user->id.$code.Carbon::parse($this->created_at)->format('dmy').$this->id,
             'blinds' => $this->blinds->count(),
             'user' => $this->user->name.' '.$this->user->last_name,
             'total' => $this->blinds->map( function( $blind ){

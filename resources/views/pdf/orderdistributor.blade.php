@@ -38,6 +38,7 @@
         $date = new Carbon\Carbon;
         $total = 0;
         setlocale(LC_MONETARY, 'es_MX');
+        $countBlinds = 1;
         // $blindVariant1 = App\Variant::find(4137);
     ?>
     <table style="border-collapse:collapse; width: 100%; margin-top: -13px">
@@ -288,7 +289,7 @@
                                     ?>
                                         <div>
                                             <span>
-                                                PERSIANA {{$order['id']}}
+                                                PERSIANA {{($countBlinds++)}}
                                             </span>
                                         </div>
                                     </td>
@@ -306,7 +307,7 @@
                                                 else{
                                                     $concat .= ' // '.$order['variant'].' // ';
                                                 }
-                                                if($order['second_color']['color'] != null){
+                                                if(isset($order['second_color'])){
                                                     $concat .= $order['color']['color'].' // '.$order['second_color']['color'].' //';
                                                 }
                                                 else{
@@ -346,7 +347,7 @@
                                                     $concat3 .= $order['motor']['selected_panel'].' // PANELES: '.$order['motor']['panels'].' // ';
                                                 }
                                                 if($order['motor_type'] != null){
-                                                    $concat3 .= $order['motor_type'].' // '.$order['motor']['side_control'].' // '.$order['motor']['manufacturer'].' // ';
+                                                    $concat3 .= $order['motor_type'].' // '.$order['motor']['side_control'].' // '.($order['motor']['manufacturer'] != null ? $order['motor']['manufacturer'].' // ' : '');
                                                     if($order['motor']['instalation_side'] != null){
                                                         $concat3 .= $order['motor']['instalation_side'].' // '.$order['motor']['rail_color'].' // ';
                                                     }
@@ -497,7 +498,7 @@
                                     ?>
                                         <div>
                                             <span>
-                                                PERSIANA {{$order['id']}}
+                                                PERSIANA {{($countBlinds++)}}
                                             </span>
                                         </div>
                                     </td>
@@ -515,7 +516,7 @@
                                                 else{
                                                     $concat .= ' // '.$order['variant'].' // ';
                                                 }
-                                                if(isset($order['second_color']['color'])){
+                                                if(isset($order['second_color'])){
                                                     $concat .= $order['color']['color'].' // '.$order['second_color']['color'].' //';
                                                 }
                                                 else{
@@ -555,7 +556,7 @@
                                                     $concat3 .= $order['motor']['selected_panel'].' // PANELES: '.$order['motor']['panels'].' // ';
                                                 }
                                                 if($order['motor_type'] != null){
-                                                    $concat3 .= $order['motor_type'].' // '.$order['motor']['side_control'].' // '.$order['motor']['manufacturer'].' // ';
+                                                    $concat3 .= $order['motor_type'].' // '.$order['motor']['side_control'].' // '.($order['motor']['manufacturer'] != null ? $order['motor']['manufacturer'].' // ' : '');
                                                     if($order['motor']['instalation_side'] != null){
                                                         $concat3 .= $order['motor']['instalation_side'].' // '.$order['motor']['rail_color'].' // ';
                                                     }

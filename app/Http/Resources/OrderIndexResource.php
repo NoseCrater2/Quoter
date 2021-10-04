@@ -18,7 +18,7 @@ class OrderIndexResource extends JsonResource
         $code = $this->ticket?'PT':'P';
         return [
             'id' => $this->id,
-            'order' => $code.Carbon::parse($this->created_at)->format('dmy').'/'.$this->id,
+            'order' => $this->user->id.$code.Carbon::parse($this->created_at)->format('dmy').$this->id,
             'blinds' => $this->blinds->count(),
             'state' => $this->state,
             'total' => $this->blinds->map( function( $blind ){

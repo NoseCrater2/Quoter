@@ -607,6 +607,30 @@
                     </div>
                   </v-col>
                 </v-row>
+                <div>
+                    <div class="d-flex  justify-center">
+                        PERSIANA
+                    </div>
+                    <div class="d-flex  justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
+                        {{mxCurrencyFormat.format(roundToOneDecimal(unitaryPrice) + parseFloat(extraEnrollablePrice) + parseFloat(extraVerticalPrice))}} MXN
+                    </div>
+
+                    <v-divider></v-divider>
+
+                    <div class="d-flex  justify-center ">
+                         MOTOR y CONTROL/GALERÍA:
+                    </div>
+                    <div v-if="order.motor.motor > 0 && order.motor.control == null" class="d-flex justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
+                         {{mxCurrencyFormat.format($store.getters.getMotor(order.motor.motor).price)}} MXN
+                    </div>
+                    <div v-else-if="order.motor.motor == 0 && order.motor.control != null" class="d-flex justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
+                         {{mxCurrencyFormat.format(order.motor.control.price)}} MXN
+                    </div>
+                    <div v-else-if="order.motor.control != null && order.motor.motor > 0" class="d-flex justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
+                         {{mxCurrencyFormat.format(parseFloat($store.getters.getMotor(order.motor.motor).price) + parseFloat(order.motor.control.price))}} MXN
+                    </div>
+                </div>
+
            </div>
             </v-col>
 
@@ -2125,6 +2149,8 @@ export default {
       }
       this.order.variant = null
       this.order.variant2 = null
+      this.order.motor.control = null
+      this.order.motor.motor = 0
       this.celularDialog = false
       this.disabledSelectColor = true
       this.disabledFrameRadio = true
@@ -2714,7 +2740,7 @@ export default {
     variantTwo() {
       if (this.order.variant2 && this.order.type) {
         return this.$store.state.productsModule.variants.find(
-          (variant) => variant.slug === this.order.variant && variant.type.slug === this.order.type
+          (variant) => variant.slug === this.order.variant2 && variant.type.slug === this.order.type
         );
       }
     },

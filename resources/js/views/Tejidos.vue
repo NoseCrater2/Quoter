@@ -2,7 +2,7 @@
     <div>
         <v-container fluid style="max-width: 1200px" class="my-4">
            <v-row justify="space-between" class="mx-4" no-gutters>
-               <v-col class="text-center">
+               <v-col v-if="slugType != 'vertical'" class="text-center">
                     <div class="d-inline-flex">
                          <h2>{{slugProduct}}</h2>
                     </div>
@@ -10,7 +10,7 @@
                          <h2> {{slugType.toUpperCase().split('-').join(" ")}} </h2>
                     </div>
                </v-col>
-                <v-col cols="12" align-self="center" class="text-center">
+                <v-col v-if="slugType != 'vertical'" cols="12" align-self="center" class="text-center">
                     <div class="d-inline-flex">
                          <h1>TEJIDOS</h1>
                     </div>
@@ -20,11 +20,24 @@
                      <div class="d-flex justify-center">
                   <hr align="center" noshade="noshade" class="divider" style="height: 5px" size="3" width="35%" />
               </div>
-                   
+
+                </v-col>
+
+                <v-col v-if="slugType == 'vertical'" cols="12" align-self="center" class="text-center">
+                    <div class="d-inline-flex">
+                         <h1>{{slugProduct}}</h1>
+                    </div>
+                    <div class="d-inline-flex"  style="color: #47a5ad;">
+                         <h1> {{slugType.toUpperCase().split('-').join(" ")}} </h1>
+                    </div>
+                     <div class="d-flex justify-center">
+                  <hr align="center" noshade="noshade" class="divider" style="height: 5px" size="3" width="35%" />
+              </div>
+
                 </v-col>
                 <!-- <v-col cols="12" align-self="center" class="text-center" v-if="getProduct.name == 'TERRACE'">
                     <p style="font-size: 1.5em" >
-                        Es un toldo de caída vertical ideal para restaurantes, terrazas, areas de fumar y/o 
+                        Es un toldo de caída vertical ideal para restaurantes, terrazas, areas de fumar y/o
                         lugar de esparcimiento donde quieres un espacio cubierto, pero al mismo tiempo que
                         permita la circulación de aire.
                     </p>
@@ -44,7 +57,7 @@
                 <v-col cols="12" align-self="center" class="text-center" v-if="getProduct.name == 'BALCONY'">
                     <p style="font-size: 1.5em" >
                         Este toldo te ofrece una caída vertical libre con capacidad de incuir un ángulo
-                        gracias a la extensión de sus brazos, o que hace que sea una excelente opción 
+                        gracias a la extensión de sus brazos, o que hace que sea una excelente opción
                         para terrazas ubicadas en edificios.
                     </p>
                     <p style="font-size: 1.5em" >
@@ -53,29 +66,29 @@
                 </v-col> -->
                 <v-col cols="12" align-self="center" class="text-center" v-if="getProduct">
                    <v-row v-if="getType" justify="center" align="center" >
-                       <v-col cols="12" md="4" sm="6"  v-for="weave in getType.weaves" :key="weave.id">
-                            <WeaveProductDetail :line="slugLine" :type="slugType" :weave="weave"/>
+                       <v-col cols="12" md="4" sm="6"  v-for="(weave, index) in getType.weaves" :key="weave.id">
+                            <WeaveProductDetail :line="slugLine" :type="slugType" :weave="weave" :index="index"/>
                            <!-- <v-card
-                           height="340" 
-                           width="380" 
-                           tile flat 
+                           height="340"
+                           width="380"
+                           tile flat
                            :to="{name: 'Products', params: {slugLine: getProduct.slug, slugWeave: weave.slug}}">
                            <v-hover v-slot="{ hover }">
                                 <v-img :src="`/img/weaves/${weave.slug}.png`" class="align-end"  height="340" width="380" :class="{'opacado':hover}">
-                                    <div class="weave d-flex justify-center"  > 
-                                        <h3 class="text-center">{{ weave.name}}</h3> 
-                                    </div> 
+                                    <div class="weave d-flex justify-center"  >
+                                        <h3 class="text-center">{{ weave.name}}</h3>
+                                    </div>
                                 </v-img>
                              </v-hover>
                            </v-card> -->
-                          
+
                        </v-col>
                    </v-row>
                 </v-col>
                 <v-col cols="12"   class="text-center mt-5">
                     <v-btn rounded color="#47a5ad" x-large dark>Ver Galería</v-btn>
                 </v-col>
-               
+
             </v-row>
         </v-container>
     </div>
@@ -87,7 +100,7 @@ import WeaveProductDetail from '../components/CustomCards/WeaveProductCard';
 export default {
     data(){
         return{
-        
+
         }
     },
 
@@ -105,9 +118,21 @@ export default {
 
         getType(){
             if(this.getProduct){
-                 return this.$store.getters.getTypes(this.slugProduct).types.find(type => type.slug === this.slugType)
+                let returned = this.$store.getters.getTypes(this.slugProduct).types.find(type => type.slug === this.slugType);
+                let findedVertical = -1;
+                returned.weaves.forEach((element, index) => {
+                    if(element.name == 'PVC VERTICAL'){
+                        findedVertical = index;
+                    }
+                });
+                if(findedVertical > -1){
+                    let newArr = JSON.parse(JSON.stringify(returned));
+                    let returnedNewArray = newArr.weaves.splice(findedVertical, 1);
+                    return newArr;
+                }
+                return returned;
             }
-           
+
         },
     },
 
@@ -127,7 +152,7 @@ export default {
         },
     },
 
-    
+
     components:{
         WeaveProductDetail
     },

@@ -54,25 +54,25 @@
                         <v-alert
 
                             class="mx-1"
-                            :color="(index+1) == localWindowStepModel ? 'orange darken-1' : 'grey lighten-2'"
+                            :color="(index+1) == modelWindowSteper ? 'orange darken-1' : 'grey lighten-2'"
                         >
-                            <div :class="(index+1) == localWindowStepModel ? 'font-weight-bold white--text' : 'font-weight-bold black--text'" style="font-size: 2rem">{{index + 1}}  </div><div :class="(index+1) == localWindowStepModel ? 'white--text' : 'black--text'" style="font-size: 1.2rem">{{item.title}}</div>
+                            <div :class="(index+1) == modelWindowSteper ? 'font-weight-bold white--text' : 'font-weight-bold black--text'" style="font-size: 2rem">{{index + 1}}  </div><div :class="(index+1) == modelWindowSteper ? 'white--text' : 'black--text'" style="font-size: 1.2rem">{{item.title}}</div>
                         </v-alert>
                       </v-col>
                   </v-row>
                   <v-row class="mt-n5">
-                      <v-col cols="12" :xl="!localModelIsStepFourDataBankAccount ? '9' : '12'" :lg="!localModelIsStepFourDataBankAccount ? '9' : '12'" :md="!localModelIsStepFourDataBankAccount ? '9' : '12'" sm="12" order="2" order-xl="1" order-lg="1" order-md="1" order-sm="2">
-                        <div v-if="localWindowStepModel == 1" class="text-start text-uppercase mb-2" style="font-size: 1.4rem;">
+                      <v-col cols="12" :xl="!flagIsStepFour ? '9' : '12'" :lg="!flagIsStepFour ? '9' : '12'" :md="!flagIsStepFour ? '9' : '12'" sm="12" order="2" order-xl="1" order-lg="1" order-md="1" order-sm="2">
+                        <div v-if="modelWindowSteper == 1" class="text-start text-uppercase mb-2" style="font-size: 1.4rem;">
                             <span class="font-weight-bold" style="color: #3ba2a9">Órdenes </span><span>pendientes de pago</span>
                         </div>
-                        <div v-else-if="localWindowStepModel == 2" class="text-start text-uppercase mb-2" style="font-size: 1.4rem;">
+                        <div v-else-if="modelWindowSteper == 2" class="text-start text-uppercase mb-2" style="font-size: 1.4rem;">
                             <v-row no-gutters>
                                 <span class="font-weight-bold" style="color: #3ba2a9">Producto </span><span style="color: #3ba2a9">(s)</span>
                                 <v-spacer></v-spacer>
                                 <span>#Orden <span class="font-weight-bold" style="color: #3ba2a9"> {{localPropItemQuotationOrderNumberID}}</span></span>
                             </v-row>
                         </div>
-                        <div v-else-if="localWindowStepModel == 3" class="text-start text-uppercase mb-2" style="font-size: 1.4rem;">
+                        <div v-else-if="modelWindowSteper == 3" class="text-start text-uppercase mb-2" style="font-size: 1.4rem;">
                             <v-row no-gutters>
                                 <span class="font-weight-bold" style="color: #3ba2a9">Pagar orden</span>
                                 <v-spacer></v-spacer>
@@ -93,21 +93,20 @@
                             </div>
 
                             <!-- V-ELSE: ESTE WINDOW INICIA AQUÍ Y HARÁ LA FUNCION DE LOS PASOS DE COMPRA -->
-                            <v-window class="mx-auto" v-else-if="loadingOrdersToOrdersCardsStepOne && computedNoPaidOrders.length > 0" v-model="localWindowStepModel">
+                            <v-window class="mx-auto" v-else-if="loadingOrdersToOrdersCardsStepOne && computedNoPaidOrders.length > 0" v-model="modelWindowSteper">
                                 <v-window-item  v-for="(item, windowIndex) in modelWindowItemSteps" :key="windowIndex" :value="(windowIndex+1)">
                                 <!-- DENTRO DE ESTE WINDOW ITEM SE CARGARÁ EL COMPONENTE DE PASO CORRESPONDIENTE -->
                                     <!-- INICIA CARGA EL COMPONENTE DEL STEP 1 -->
-                                    <OrdersCardsStepOne @emitCancelOrder="methodOpenDialogCancelOneOrder" @emitCheckAndBuyFromOrdersCardsStepOneView="localMethodStepThreeCheckAndBuy" @emitDetailsItemFromOrdersCardsStepOneView="localMethodIsOrdersAndQuotationsDialogActivatedOn" :itemOrder="computedNoPaidOrders" v-if="localWindowStepModel == 1"></OrdersCardsStepOne>
+                                    <OrdersCardsStepOne @emitCancelOrder="methodOpenDialogCancelOneOrder" @emitCheckAndBuyFromOrdersCardsStepOneView="localMethodStepThreeCheckAndBuy" @emitDetailsItemFromOrdersCardsStepOneView="localMethodIsOrdersAndQuotationsDialogActivatedOn" :itemOrder="computedNoPaidOrders" v-if="modelWindowSteper == 1"></OrdersCardsStepOne>
                                     <!-- TERMINA CARGA EL COMPONENTE DEL STEP 1 -->
-                                    <div v-else-if="localWindowStepModel == 2">
+                                    <div v-else-if="modelWindowSteper == 2">
                                         <v-col cols="12" v-for="(itemBlind, index) in quotedOrder.blinds" :key="itemBlind.id">
                                             <DashboardBlindsProductDetailCards :propOrderUser="quotedOrder.user"  @emitDeleteBlindFromDetailCards="methodOpenDialogDeleteBlind" @emitEditBlindFromBlindsProductDetailCardsView="localMethodEditBlindStepThreeMarketcar" :propIsInMarketAndStepThree="true" :propIsOrderOrQuotationString="'quoted'" :propItemArrayBlindsObject="itemBlind" :propBlindCount="(index + 1)" :propBreakpointFromDialog="$vuetify.breakpoint"></DashboardBlindsProductDetailCards>
                                         </v-col>
                                     </div>
-                                    <div v-else-if="localWindowStepModel == 3">
-                                        <v-col v-if="!localModelIsStepFourDataBankAccount" cols="12">
+                                    <div v-else-if="modelWindowSteper == 3">
+                                        <v-col v-if="!flagIsStepFour" cols="12">
                                             <v-card elevation="0">
-
                                                 <div class="font-weight-bold mb-2">Elije el metodo de pago que mas prefieras</div>
                                                 <v-alert
                                                   color="#3ba2a9"
@@ -132,11 +131,11 @@
                                                               </template>
                                                             </v-radio>
                                                         </template>
-                                                        <v-col cols="3">
+                                                        <!-- <v-col cols="3">
                                                             <v-card outlined class="pa-5 text-justify" style="border: 3px solid #E53935; box-shadow: 1px 0px 9px 3px rgba(0,0,0,0.75);">
                                                               Estamos trabajando para habilitar esta opción de pago, sentimos el inconveniente que te pueda ocasionar.
                                                             </v-card>
-                                                        </v-col>
+                                                        </v-col> -->
                                                     </v-tooltip>
                                                     <v-tooltip
                                                        color="transparent"
@@ -180,8 +179,9 @@
 
                                             </v-card>
                                         </v-col>
-                                        <v-col v-else-if="localModelIsStepFourDataBankAccount" cols="12" style="background-color: #E0E0E0">
-                                            <v-card color="white" style="font-size: 1.3rem" elevation="0" class="px-0">
+                                        <v-col v-else-if="flagIsStepFour" cols="12" :style="modelRadioStepFourPaymentMethod == 'electronicspei' ? 'background-color: #E0E0E0' : ''">
+                                            <MarketCompoNetPayPayment :urlPayment="urlNetPayPayment" v-if="modelRadioStepFourPaymentMethod == 'debitcreditcard'"></MarketCompoNetPayPayment>
+                                            <v-card v-else-if="modelRadioStepFourPaymentMethod == 'electronicspei'" color="white" style="font-size: 1.3rem" elevation="0" class="px-0">
                                                 <v-card-text class="text--primary">
                                                     <v-row align="center" justify="space-between">
                                                         <v-col cols="9">
@@ -287,7 +287,7 @@
                             <v-btn
                                 @click="methodOpenDialogCancelAllOrders()"
                                 :disabled="computedNoPaidOrders.length > 0 ? false : true"
-                                v-if="localWindowStepModel == 1"
+                                v-if="modelWindowSteper == 1"
                                 large
                               color="#3ba2a9"
                               class="white--text rounded-lg mt-3"
@@ -302,7 +302,7 @@
                             </v-btn>
                         </div>
                       </v-col>
-                      <v-col v-if="!localModelIsStepFourDataBankAccount" cols="12" xl="3" lg="3" md="3" sm="12" order="1" order-xl="2" order-lg="2" order-md="2" order-sm="1" :style="!$vuetify.breakpoint.mdAndUp ? 'position: sticky; top: 15px; z-index: 2;' : ''" >
+                      <v-col v-if="!flagIsStepFour" cols="12" xl="3" lg="3" md="3" sm="12" order="1" order-xl="2" order-lg="2" order-md="2" order-sm="1" :style="!$vuetify.breakpoint.mdAndUp ? 'position: sticky; top: 15px; z-index: 2;' : ''" >
                         <v-card
                         :style="$vuetify.breakpoint.mdAndUp ? 'position: sticky; top: 60px; z-index: 2;' : ''"
                         class="rounded-lg"
@@ -341,7 +341,7 @@
                           </v-col>
                           <v-col cols="12" xl="12" lg="12" md="12" sm="4">
                             <v-checkbox
-                            v-if="localWindowStepModel == 3"
+                            v-if="modelWindowSteper == 3"
                             class="mx-3 mb-n5"
                             v-model="checkboxPrivacyTermsAndContinue"
                             label="He leído y estoy de acuerdo con el Aviso de Privacidad">
@@ -349,13 +349,13 @@
                             <v-card-actions>
                               <v-btn
                                 @click="localMethodBtnContinueStepThree"
-                                v-if="(localWindowStepModel > 0 && localWindowStepModel < 3)"
-                                :disabled="(localWindowStepModel >= 2 && computedNoPaidOrders.length > 0 ) ? false : true"
+                                v-if="(modelWindowSteper > 0 && modelWindowSteper < 3)"
+                                :disabled="(modelWindowSteper >= 2 && computedNoPaidOrders.length > 0 ) ? false : true"
                                 large
                                 block
                                 color="orange darken-1"
                                 class="white--text font-weight-bold rounded-lg mx-auto mt-3"
-                                :class="localWindowStepModel <= 2 ? '' : 'mb-7'"
+                                :class="modelWindowSteper <= 2 ? '' : 'mb-7'"
                               >
                                 {{btnContinuarTitle}}
                                   <v-icon
@@ -368,14 +368,14 @@
                               </v-btn>
                               <v-btn
                                 @click="localMethodBtnPayStepFour"
-                                v-else-if="(localWindowStepModel == 3)"
-                                :disabled="(((localWindowStepModel == 3 && computedNoPaidOrders.length > 0 && !(isChargingPetitionSPEIPayment)) && checkboxPrivacyTermsAndContinue) && (modelRadioStepFourPaymentMethod != null && modelRadioStepFourPaymentMethod != '')) ? false : true"
+                                v-else-if="(modelWindowSteper == 3)"
+                                :disabled="(((modelWindowSteper == 3 && computedNoPaidOrders.length > 0 && !(isChargingPetitionSPEIPayment)) && checkboxPrivacyTermsAndContinue) && (modelRadioStepFourPaymentMethod != null && modelRadioStepFourPaymentMethod != '')) ? false : true"
                                 :loading="(isChargingPetitionSPEIPayment) ? true : false"
                                 large
                                 block
                                 color="orange darken-1"
                                 class="white--text font-weight-bold rounded-lg mx-auto mt-3"
-                                :class="localWindowStepModel <= 2 ? '' : 'mb-7'"
+                                :class="modelWindowSteper <= 2 ? '' : 'mb-7'"
                               >
                                 {{btnContinuarTitle}}
                                   <v-icon
@@ -387,7 +387,7 @@
                                   </v-icon>
                               </v-btn>
                             </v-card-actions>
-                            <!-- <div v-if="localWindowStepModel == 2" class="text-decoration-underline text-center mt-n1 mb-4" style="font-size: 0.77rem">Agregar otra persiana</div> -->
+                            <!-- <div v-if="modelWindowSteper == 2" class="text-decoration-underline text-center mt-n1 mb-4" style="font-size: 0.77rem">Agregar otra persiana</div> -->
                           </v-col>
                           </v-row>
                         </v-card>
@@ -451,6 +451,7 @@
 import OrdersCardsStepOne from '../../components/Dashboard/Marketcar/OrdersCardsStepOne.vue'
 import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/OrdersAndQuotations/DashboardOrdersAndQuotationsDialog.vue'
 import DashboardBlindsProductDetailCards from '../../components/Dashboard/BlindsProductDetailCards/DashboardBlindsProductDetailCards.vue';
+import MarketCompoNetPayPayment from '../../components/Dashboard/Marketcar/MarketCompoNetPayPayment.vue'
 import { mapState } from 'vuex';
 import axios from 'axios';
 export default {
@@ -470,7 +471,8 @@ export default {
             isCancellingOneOrder: false,
             isDeletingBlind: false,
             isChargingPetitionSPEIPayment: false,
-            localModelIsStepFourDataBankAccount: false,
+            flagIsStepFour: false,
+            urlNetPayPayment: null,
             modelRadioStepFourPaymentMethod: '',
             mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
             localCurrentIDQuotingOrderStepThree: -1,
@@ -481,7 +483,7 @@ export default {
                 {step: 2, name: 'CheckAndBuy'},
                 {step: 3, name: 'Confirm'}
             ],
-            localWindowStepModel: 1,
+            modelWindowSteper: 1,
             localToPropTotalPrice: 0,
             localPropItemQuotationOrderNumberID: '',
             isOrdersAndQuotationsDialogActivated: false,
@@ -563,7 +565,7 @@ export default {
             this.$store.dispatch('getQuotedOrder', localItem.id).then(()=>{
                 this.orderId = localItem.id;
                 this.isOrdersAndQuotationsDialogActivated = false;
-                this.localWindowStepModel = 2;
+                this.modelWindowSteper = 2;
                 this.localCurrentIDQuotingOrderStepThree = localItem.id;
                 this.localPropItemQuotationOrderNumberID = localItem.order;
                 this.localModelSubtotalAndTotal = localItem.total;
@@ -585,25 +587,35 @@ export default {
 
         localMethodEditBlindStepThreeMarketcar(){
             if(this.localCurrentIDQuotingOrderStepThree > -1){
-                this.localWindowStepModel = 1;
+                this.modelWindowSteper = 1;
                 this.localMethodIsOrdersAndQuotationsDialogActivatedOn(this.quotedOrders.find(item=>item.id == this.localCurrentIDQuotingOrderStepThree));
             }
         },
 
         localMethodBtnContinueStepThree(){
-            this.localWindowStepModel = 3;
+            this.modelWindowSteper = 3;
         },
 
         localMethodBtnPayStepFour(){
-            if(this.localModelIsStepFourDataBankAccount == false){
-                // this.localModelIsStepFourDataBankAccount = true;
-                this.isChargingPetitionSPEIPayment = true;
-                axios.get(`/api/spei-payment/${this.orderId}`).then((response)=>{
-                    if(response.status == 200){
-                        this.localModelIsStepFourDataBankAccount = true;
-                        this.isChargingPetitionSPEIPayment = false;
-                    }
-                });
+            if(this.flagIsStepFour == false){
+                //HABILITAR RADIO Y BORRAR ESTE COMENTARIO
+                // if(this.modelRadioStepFourPaymentMethod != '' && this.modelRadioStepFourPaymentMethod == 'debitcreditcard'){
+                //     axios.post(`/api/netpay-intent-pay/${this.quotedOrder.user.id}`).then((response)=>{
+                //         if(response.status == 200){
+                //             this.flagIsStepFour = true;
+                //             this.urlNetPayPayment = response.data;
+                //         }
+                //     });
+                // }
+                if(this.modelRadioStepFourPaymentMethod != '' && this.modelRadioStepFourPaymentMethod == 'electronicspei'){
+                    this.isChargingPetitionSPEIPayment = true;
+                    axios.get(`/api/spei-payment/${this.orderId}`).then((response)=>{
+                        if(response.status == 200){
+                            this.flagIsStepFour = true;
+                            this.isChargingPetitionSPEIPayment = false;
+                        }
+                    });
+                }
             }
         },
 
@@ -615,8 +627,8 @@ export default {
         },
 
         changeStepWindowFromAlerts(index){
-            if(index <= 3 && index != this.localWindowStepModel){
-                this.localWindowStepModel = index;
+            if(index <= 3 && index != this.modelWindowSteper){
+                this.modelWindowSteper = index;
             }
         }
 
@@ -628,7 +640,7 @@ export default {
 
         }),
         btnContinuarTitle(){
-            return this.localWindowStepModel == 3 ? 'Pagar' : 'Continuar';
+            return this.modelWindowSteper == 3 ? 'Pagar' : 'Continuar';
         },
         computedNoPaidOrders(){
             return this.quotedOrders.filter(itemOrder=> itemOrder.state == 'No Pagada');
@@ -637,7 +649,8 @@ export default {
     components:{
         OrdersCardsStepOne,
         DashboardOrdersAndQuotationsDialog,
-        DashboardBlindsProductDetailCards
+        DashboardBlindsProductDetailCards,
+        MarketCompoNetPayPayment
     }
 }
 </script>

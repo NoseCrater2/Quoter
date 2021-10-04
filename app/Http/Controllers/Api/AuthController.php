@@ -64,8 +64,8 @@ class AuthController extends Controller
             $data['active'] = 0;
             $user = User::make($data);
             $user->assignRole('Distribuidor');
-            // Mail::to('contacto@rollux.com.mx')->send(new UserCreated($user));
-            // Mail::to($user)->send(new UserCreatedClient($user));
+            Mail::to('contacto@rollux.com.mx')->send(new UserCreated($user));
+            Mail::to($user)->send(new UserCreatedClient($user));
             $user->save();
             return response('Email enviado',200);
         }

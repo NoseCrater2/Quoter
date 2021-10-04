@@ -13,6 +13,9 @@ const motorizationsModule = {
         getFilteredMotorizations: (state)=> (name) => {
             return state.motorizations.filter((m) => m.type === name)
         },
+        getControl: (state)=> (id) => {
+            return state.controls.find((c) => c.id === id)
+        },
     },
 
     mutations: {
@@ -45,13 +48,13 @@ const motorizationsModule = {
         },
 
         getFilteredMotorizations: async function ({ commit, state }, typeId){
-           
+
             try {
                 const response = await axios
                 .get("/api/getFilteredMotorizations/"+typeId)
                 commit('setFilteredMotorizations',response.data.data);
             } catch (error) {}
-        
+
         },
 
         getControls: async function ({ commit, state }){
@@ -62,7 +65,7 @@ const motorizationsModule = {
                 commit('setControls',response.data.data);
             } catch (error) {}
         }
-        
+
         },
 
         getGalleries: async function ({ commit, state }){

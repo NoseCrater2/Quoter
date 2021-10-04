@@ -146,7 +146,7 @@
                                 <td class="text-center">{{ item.updated_at }}</td>
                                 <td class="text-center">{{ mxCurrencyFormat.format(item.total) + ' MXN' }}</td>
                                 <td class="text-center">
-                                    <v-btn icon @click="localMethodIsOrdersAndQuotationsDialogActivatedOn(item)">
+                                    <v-btn icon @click="localMethodIsOrdersAndQuotationsDialogActivatedOn(item.id)">
                                         <v-icon>mdi-magnify</v-icon>
                                     </v-btn>
                                     <v-btn icon>
@@ -212,6 +212,7 @@ import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/Order
 export default {
     data(){
         return{
+            activeorder: this.$route.query.activeorder || 0,
             localToPropTotalPrice: 0,
             localPropItemQuotationOrderNumberID: '',
             isOrdersAndQuotationsDialogActivated: false,
@@ -243,6 +244,9 @@ export default {
             this.$store.dispatch('getQuotingOrders').then(()=>{
                 this.loading = false
             })
+        }
+        if(this.activeorder > 0){
+            this.localMethodIsOrdersAndQuotationsDialogActivatedOn(parseInt(this.activeorder));
         }
     },
 
@@ -286,10 +290,10 @@ export default {
             }
         },
         localMethodIsOrdersAndQuotationsDialogActivatedOn(localItem){
-            this.$store.dispatch('getQuotingOrder', localItem.id).then(()=>{
-                this.orderId = localItem.id;
-                this.localPropItemQuotationOrderNumberID = localItem.order;
-                this.localToPropTotalPrice = localItem.total;
+            this.$store.dispatch('getQuotingOrder', localItem).then(()=>{
+                this.orderId = localItem;
+                // this.localPropItemQuotationOrderNumberID = localItem.order;
+                // this.localToPropTotalPrice = localItem.total;
                 this.isOrdersAndQuotationsDialogActivated = true;
             });
 
