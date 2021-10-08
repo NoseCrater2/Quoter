@@ -97,7 +97,7 @@ class OrderController extends Controller
                     $blind->instalation_side = $b['instalation_side'];
                     $blind->motor_type = $b['motor_type'];
                     $blind->price = $b['price'];
-                    $blind->discount_price = $b['discount_price'];
+                    // $blind->discount_price = $b['discount_price'];
                     $blind->rotate = $b['rotate'];
                     $blind->canvas = $b['motor']['canvas'];
                     $blind->comment = $b['motor']['comment'];
@@ -113,6 +113,10 @@ class OrderController extends Controller
                     $blind->string_price = $b['motor']['stringPrice'];
                     $blind->extraEnrollable = $b['extraEnrollable'];
                     $blind->extraVertical = $b['extraVertical'];
+
+                    // this.order.discount_price = this.order.price - ((this.user.discount_percent/100)*this.order.price)
+                    $blind->discount_price = $b['price'] - ((auth()->user()->discount_percent/100)*$b['price']);
+
                     $blind->save();
 
                     $blind->canvases()->delete();
@@ -122,6 +126,7 @@ class OrderController extends Controller
                         $canvas->blind_id = $blind->id;
                         $canvas->width = $c['width'];
                         $canvas->height = $c['height'];
+
                         $canvas->save();
                     }
                 }
@@ -204,6 +209,9 @@ class OrderController extends Controller
                 $blind->string_price = $b['motor']['stringPrice'];
                 $blind->extraEnrollable = $b['extraEnrollable'];
                 $blind->extraVertical = $b['extraVertical'];
+
+                $blind->discount_price = $b['price'] - ((auth()->user()->discount_percent/100)*$b['price']);
+
                 $blind->save();
                 $blind->canvases()->delete();
 
@@ -348,6 +356,21 @@ class OrderController extends Controller
                 $order->save();
             }
         }
+    }
+
+    public function executeActionsAllorders(Request $request, String $action){
+        $idOrders = $request->orders;
+
+        if($action == 'delete'){
+            Order::destroy($idOrders);
+        }
+        else if($action != 'delete'){
+            foreach ($idOrders as $id) {
+                Order::where('id', $id)
+                ->update(['state' => $action]);
+            }
+        }
+
     }
 
 }
