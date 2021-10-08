@@ -115,6 +115,7 @@ Route::middleware(['auth:sanctum'])->group(function()
     Route::post('buy/{order}','OrderController@buy');
     Route::get('spei-payment/{order}', 'OrderController@speiPayment');
     Route::get('change-state/{order}', 'OrderController@changeState');
+    Route::post('executeactions-allorders/{action}', 'OrderController@executeActionsAllorders');
 
     Route::get('notifications', 'UserController@notifications');
 
