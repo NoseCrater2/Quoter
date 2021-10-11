@@ -301,7 +301,7 @@
                         sm="12"
                         v-for="celular in celulares"
                         :key="celular.title">
-                        <v-item  v-slot="{ active, toggle }" :value="celular.title">
+                        <v-item v-slot="{ active, toggle }" :value="celular.title">
                             <v-card
                               width="120"
                               flat
@@ -330,17 +330,7 @@
                       </v-col>
                     </v-row>
                   </v-item-group>
-                  <span>4. Seleccione modo de accionamiento</span>
-                  <v-radio-group
-                  :disabled="order.celular_type != null?false:true"
-                  row
-                  :mandatory="false"
-                  :rules="[(v) => !!v || 'Requerido']"
-                  v-model="order.celular_drive">
-                    <v-radio @click="openCelularDialog"  color="#47a5ad" label="Muelle" value="Muelle"></v-radio>
-                    <v-radio @click="openCelularDialog"  color="#47a5ad" label="Cordón" value="Cordón"></v-radio>
-                    <v-radio @click="openCelularDialog"  color="#47a5ad" label="Motor" value="Motor"></v-radio>
-                </v-radio-group>
+                 
               </div>
 
               <div v-else-if="order.type === 'horizontal-madera-2' || order.type === 'horizontal-aluminio-2'">
@@ -557,7 +547,7 @@
                   label="Ancho"
                   class="ma-1"
                   hide-details
-                  :disabled="disabledCelularText"
+                  :disabled="!order.celular_type"
                   :placeholder="widthMargins"
                   outlined
                   color="#47a5ad"
@@ -571,7 +561,7 @@
                 <v-text-field
                   class="ma-1"
                   hide-details
-                  :disabled="disabledCelularText"
+                  :disabled="!order.celular_type"
                   :rules="[
                     ...heightCelularRules(order.celular_type),
                   ]"
@@ -584,6 +574,17 @@
                   color="#47a5ad"
                   v-model.number="order.canvas[0].height"
                 ></v-text-field>
+                 <span>4. Seleccione modo de accionamiento</span>
+                  <v-radio-group
+                  :disabled="!order.canvas[0].width && !order.canvas[0].height"
+                  row
+                  :mandatory="false"
+                  :rules="[(v) => !!v || 'Requerido']"
+                  v-model="order.celular_drive">
+                    <v-radio @click="openCelularDialog"  color="#47a5ad" label="Muelle" value="Muelle"></v-radio>
+                    <v-radio @click="openCelularDialog"  color="#47a5ad" label="Cordón" value="Cordón"></v-radio>
+                    <v-radio @click="openCelularDialog"  color="#47a5ad" label="Motor" value="Motor"></v-radio>
+                </v-radio-group>
                 <v-row v-if="order.celular_drive == 'Muelle' && order.motor.frame != null" no-gutters justify="center" align="center">
                   <v-col cols="12" md="6" sm="12">
                     <v-img

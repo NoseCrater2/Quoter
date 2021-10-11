@@ -31,6 +31,7 @@ class UserShowResource extends JsonResource
             'logo' => $this->logo,
             'discount_percent' => $this->discount_percent,
             'role' => $this->roles->isNotEmpty() ? $this->roles[0]->name : null,
+            'netpayClientId' => $this->netpayClientId,
         ];
     }
 }
