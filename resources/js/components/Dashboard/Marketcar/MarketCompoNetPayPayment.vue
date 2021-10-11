@@ -44,7 +44,7 @@
                     <v-col cols="12">
                         <v-item >
                             <div class="d-flex justify-space-between align-center rounded-xl text-center" style="background: #F5F5F5; height: 50px" @click="showNewCardForm = true">
-                                <span class="mx-2">Agregar nueva tarjeta</span>
+                                <span class="mx-2">Agregar nueva tarjeta Willy</span>
                                 <v-icon class="mx-5">mdi-plus</v-icon>
                             </div>
                         </v-item>
