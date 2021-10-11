@@ -10,52 +10,44 @@ class NetPayController extends Controller
 {
     public function netpayIntentPay(Request $request, User $user)
     {
-        $client = new Client([
-
-
-        ]);
+        $client = new Client([]);
 
         $method = 'POST';
-        $requestUrl = 'https://gateway-154.netpaydev.com/gateway-ecommerce/v3.2/checkout/session/';
-        $isJsonRequest = true;
+        $requestUrl = 'https://gateway-154.netpaydev.com/gateway-ecommerce/v3/charges';
 
         $formParams = [
-            'successUrl' => 'http://example.com/success',
-            'cancelUrl' => 'http://example.com/success',
-            'customerEmail' => 'accept@netpay.com.mx',
-            'customerName' => 'Jon Doe',
-            'paymentMethodTypes' => ['card'],
-            'merchantRefCode' => 'test-11124',
-            'lineItems' => [
-                [
-                    'name' => 'P280921/92',
-                    'amount' => 5030,
-                    'quantity' => 1,
-                    'currency' => 'MXN'
-                ]
-            ],
+            'amount' => $request->amount,
+            'description' => $request->order,
+            'paymentMethod' => 'card',
+            'currency' => 'MXN',
             'billing' => [
-                'firstName' => 'Jon',
-                'lastName' => 'Doe',
-                'email' => 'accept@netpay.com.mx',
-                'phone' => '6141870165',
+                'firstName' => $user->name,
+                'lastName' => $user->last_name,
+                'email' => $user->email,
+                'phone' => $user->phone,
                 'address' => [
-                    'city' => 'Monterrey',
+                    'city' => $user->city,
                     'country' => 'MX',
-                    'postalCode' => '67186',
-                    'state' => 'Nuevo Leon',
-                    'street1' => 'Filosofos 100',
-                    'street2' => 'Tecnologico'
+                    'postalCode' => $user->zip_code,
+                    'state' => $user->state,
+                    'street1' => $user->ship_address,
+                    'street2' => $user->second_ship_address
                 ]
             ],
-            'linkType' => 'NETPAY_CHECKOUT'
+            'redirect3dsUri' => 'http://127.0.0.1:8000/dashboard/lists/ordenes',
+            'client' => [
+                'id' => $user->netpayClientId
+            ],
+            'cvv' => $request->cvv,
+            'saveCard' => 'true',
+            'source' => $request->token,
+            
         ];
         $headers = [
             'Accept'=> 'application/json',
-            'Authorization' => 'sk_netpay_MVdIgYbEdsTJngVCvuNyTwsQZknisxJjJZWBesUndPhBv'
+            'Authorization' => 'sk_netpay_MVdIgYbEdsTJngVCvuNyTwsQZknisxJjJZWBesUndPhBv',
+            'Content-Type' => 'application/json'
         ];
-
-        $queryParams = "";
 
         $response = $client->request($method, $requestUrl,  [
             'json' => $formParams,
@@ -66,5 +58,116 @@ class NetPayController extends Controller
         $response = $response->getBody()->getContents();
 
         return json_decode($response)->{'hostedCheckoutUrl'};
+    }
+
+    public function saveClient(Request $request, User $user)
+    {
+        $client = new Client([]);
+
+        $method = 'POST';
+        $requestUrl = 'https://gateway-154.netpaydev.com/gateway-ecommerce/v3/clients';
+
+        $formParams = [
+            'firstName' => $user->name,
+            'lastName' => $user->last_name,
+            'phone' => $user->phone,
+            'email' => $user->email,
+            'paymentSource' => [
+                'source' => $request->token,
+                'type' => 'card'
+            ],
+            'identifier' => 'client-'.$user->id
+        ];
+        $headers = [
+            'Accept' => 'application/json',
+            'secretkey'=> 'sk_netpay_MVdIgYbEdsTJngVCvuNyTwsQZknisxJjJZWBesUndPhBv',
+            'Content-Type' => 'application/json',
+            'Authorization' => 'sk_netpay_MVdIgYbEdsTJngVCvuNyTwsQZknisxJjJZWBesUndPhBv',
+            'User-Agent' => 'ReadMe-API-Explorer'
+
+        ];
+
+        $response = $client->request($method, $requestUrl,  [
+            'json' => $formParams,
+            'headers' => $headers,
+            'verify' => base_path('cacert.pem'),
+        ]);
+
+        $response = $response->getBody()->getContents();
+
+        $user->netpayClientId =  json_decode($response)->{'id'};
+        $user->save();
+    }
+
+    public function getClient(User $user)
+    {
+        $client = new Client([]);
+
+        $method = 'GET';
+        $requestUrl = 'https://gateway-154.netpaydev.com/gateway-ecommerce/v3/clients/'.$user->netpayClientId;
+        $headers = [
+            'Accept' => 'application/json',
+            'Authorization' => 'sk_netpay_MVdIgYbEdsTJngVCvuNyTwsQZknisxJjJZWBesUndPhBv',
+            'Content-Type' => 'application/json',
+        ];
+
+        $response = $client->request($method, $requestUrl,  [
+            'headers' => $headers,
+            'verify' => base_path('cacert.pem'),
+        ]);
+
+        $response = $response->getBody()->getContents();
+        return $response;
+    }
+
+    public function addCard(Request $request, User $user)
+    {
+        $client = new Client([]);
+
+        $method = 'PUT';
+        $requestUrl = 'https://gateway-154.netpaydev.com/gateway-ecommerce/v3/clients/'.$user->netpayClientId.'/token';
+
+        $formParams = [
+            'token' => $request->token,
+            'preAuth' => true,
+            'cvv2' => $request->cvv2
+        ];
+        $headers = [
+            'Accept' => 'application/json',
+            'secretkey'=> 'sk_netpay_MVdIgYbEdsTJngVCvuNyTwsQZknisxJjJZWBesUndPhBv',
+            'Content-Type' => 'application/json',
+            'Authorization' => 'sk_netpay_MVdIgYbEdsTJngVCvuNyTwsQZknisxJjJZWBesUndPhBv',
+            'User-Agent' => 'ReadMe-API-Explorer'
+
+        ];
+
+        $response = $client->request($method, $requestUrl,  [
+            'json' => $formParams,
+            'headers' => $headers,
+            'verify' => base_path('cacert.pem'),
+        ]);
+
+        $response = $response->getBody()->getContents();
+    }
+
+    public function deleteCard(Request $request, User $user)
+    {
+        $client = new Client([]);
+
+        $method = "DELETE";
+        $requestUrl = 'https://gateway-154.netpaydev.com/gateway-ecommerce/v3/clients/'.$user->netpayClientId.'/token/'.$request->token;
+
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => 'sk_netpay_MVdIgYbEdsTJngVCvuNyTwsQZknisxJjJZWBesUndPhBv',
+        ];
+
+        $response = $client->request($method, $requestUrl,  [
+            'headers' => $headers,
+            'verify' => base_path('cacert.pem'),
+        ]);
+
+        $response = $response->getBody()->getContents();
     }
 }

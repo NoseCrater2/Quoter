@@ -37,6 +37,7 @@ class User extends Authenticatable
         'logo',
         'comments',
         'discount_percent',
+        'netpayClientId',
         'active'
     ];
 
