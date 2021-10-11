@@ -603,7 +603,6 @@ export default {
 
         }
         else if(this.modelMenuVerticalBlind == 'PVC VERTICAL'){
-            console.log("SHI")
             this.$router.push({query: {...this.$route.query, page: this.page}, params: {slugWeave: 'pvc-vertical'}})
         }
     },
