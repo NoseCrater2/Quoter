@@ -56,6 +56,8 @@
         :headers="modelsHeaders"
         :search="search"
         :items-per-page="20"
+        show-select
+        v-model="modelTableSelectedOrders"
         class="elevation-1"
         >
             <template v-slot:top>
@@ -147,7 +149,7 @@
                     </v-menu>
                 </div>
             </template>
-            <template v-slot:item.actions="{ item }">
+            <template v-if="modelTableSelectedOrders.length == 0" v-slot:item.actions="{ item }">
                 <v-icon small class="mr-2" @click="methodOpenDialogDeleteOrder(item.id)">
                 	mdi-delete
               	</v-icon>
@@ -156,6 +158,32 @@
               	</v-icon>
             </template>
         </v-data-table>
+        <v-col v-if="modelTableSelectedOrders.length > 0" cols="12">
+            <v-row align="center" justify="center">
+                <v-col cols="12" xl="9" lg="9" md="9" sm="12">
+                    <v-select
+                      v-model="modelSelectActions"
+                      :items="arrayItemsActions"
+                      item-text="text"
+                      item-value="value"
+                      label="Selecciona acción a realizar"
+                      outlined
+                      dense
+                      single-line
+                    ></v-select>
+                </v-col>
+                <v-col cols="12" xl="3" lg="3" md="3" sm="12">
+        			<v-btn
+                    :disabled="modelSelectActions != '' ? false : true"
+        			color="black"
+                    elevation="0"
+                    class="white--text"
+                    small
+                    @click="methodOpenDialogExecuteActions()"
+        			>Continuar</v-btn>
+                </v-col>
+            </v-row>
+        </v-col>
         </v-col>
         <DashboardOrdersAndQuotationsDialog :id="orderId" v-if="isOrdersAndQuotationsDialogActivated" @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" ></DashboardOrdersAndQuotationsDialog>
 
@@ -174,6 +202,26 @@
           </v-card>
         </v-dialog>
 
+        <v-dialog v-model="modelDialogExecuteActions" persistent max-width="290">
+          <v-card>
+            <v-card-title v-if="modelSelectActions != 'delete'" class="headline">Actualización masiva de registros</v-card-title>
+            <v-card-title v-else-if="modelSelectActions == 'delete'" class="headline">Eliminación masiva de registros</v-card-title>
+            <v-card-text v-if="modelSelectActions != 'delete'">
+              Si continua, se modificarán los estados de orden de los registros.
+              ¿Está seguro?
+            </v-card-text>
+            <v-card-text v-else-if="modelSelectActions == 'delete'">
+              Si continua, los registros serán eliminados y está acción no podra deshacerse.
+              ¿Está seguro?
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="gray darken-1" text @click="methodCloseDialogExecuteActions()">CANCELAR</v-btn>
+              <v-btn :color="modelSelectActions == 'delete' ? 'red': 'primary'" :loading="isExecutingActions" :disabled="isExecutingActions" text @click="methodExecuteActions()">{{modelSelectActions == 'delete' ? 'ELIMINAR': 'ACEPTAR'}}</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
     </v-row>
 </template>
 
@@ -185,8 +233,22 @@ import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/Order
 export default {
     data() {
         return {
+            modelSelectActions: '',
+            modelTableSelectedOrders: [],
+            arrayItemsActions: [
+                { text: 'Eliminar', value: 'delete' },
+                { text: 'Cambar estado a No Pagada', value: 'No Pagada' },
+                { text: 'Cambar estado a En Verificación', value: 'En Verificacion' },
+                { text: 'Cambar estado a Recibida', value: 'Recibida' },
+                { text: 'Cambar estado a En produccion', value: 'En produccion' },
+                { text: 'Cambar estado a Paqueteria', value: 'Paqueteria' },
+                { text: 'Cambar estado a Entregada', value: 'Entregada' },
+                { text: 'Cambar estado a Cancelada', value: 'Cancelada' },
+            ],
             modelDialogDeleteOrder: false,
+            modelDialogExecuteActions: false,
             isDeletingOrder: false,
+            isExecutingActions: false,
             isOrdersAndQuotationsDialogActivated: false,
             search: null,
             mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
@@ -279,20 +341,66 @@ export default {
             this.orderIDDelete = -1;
             this.modelDialogDeleteOrder = false;
         },
+        methodOpenDialogExecuteActions(){
+            this.modelDialogExecuteActions = true;
+        },
+        methodCloseDialogExecuteActions(){
+            this.modelDialogExecuteActions = false;
+        },
         methodDeleteOrder(){
             this.isDeletingOrder = true;
             if(this.orderIDDelete > -1){
                 this.$store.dispatch('deleteQuotingOrder', this.orderIDDelete).then(async()=>{
-                    await this.$store.dispatch('getQuotedOrders');
-                    await this.$store.dispatch('getQuotingOrders');
+                    if(this.option === 'ordenes'){
+                        await this.$store.dispatch('getQuotedOrders')
+                    }else if(this.option === 'cotizaciones'){
+                        await this.$store.dispatch('getQuotingOrders')
+                    }else if(this.option === 'ordenes-admin'){
+                        await this.$store.dispatch('getAdminQuotedOrders')
+                    }else if(this.option === 'cotizaciones-admin'){
+                        await this.$store.dispatch('getAdminQuotingOrders')
+                    }
                     this.isDeletingOrder = false;
                     this.methodCloseDialogDeleteOrder();
                 }).catch(async()=>{
-                    await this.$store.dispatch('getQuotedOrders');
-                    await this.$store.dispatch('getQuotingOrders');
+                    if(this.option === 'ordenes'){
+                        await this.$store.dispatch('getQuotedOrders')
+                    }else if(this.option === 'cotizaciones'){
+                        await this.$store.dispatch('getQuotingOrders')
+                    }else if(this.option === 'ordenes-admin'){
+                        await this.$store.dispatch('getAdminQuotedOrders')
+                    }else if(this.option === 'cotizaciones-admin'){
+                        await this.$store.dispatch('getAdminQuotingOrders')
+                    }
                     this.methodCloseDialogDeleteOrder();
                 })
             }
+        },
+        methodExecuteActions(){
+            this.isExecutingActions = true;
+            axios.post('/api/executeactions-allorders/'+this.modelSelectActions, {orders : this.modelTableSelectedOrders.map(item=>item.id)}).then( async(response) => {
+                if(response.status === 200){
+                    this.modelSelectActions = '';
+                    this.modelTableSelectedOrders = [];
+                    if(this.option === 'ordenes'){
+                        await this.$store.dispatch('getQuotedOrders')
+                        this.isExecutingActions = false;
+                        this.methodCloseDialogExecuteActions();
+                    }else if(this.option === 'cotizaciones'){
+                        await this.$store.dispatch('getQuotingOrders')
+                        this.isExecutingActions = false;
+                        this.methodCloseDialogExecuteActions();
+                    }else if(this.option === 'ordenes-admin'){
+                        await this.$store.dispatch('getAdminQuotedOrders')
+                        this.isExecutingActions = false;
+                        this.methodCloseDialogExecuteActions();
+                    }else if(this.option === 'cotizaciones-admin'){
+                        await this.$store.dispatch('getAdminQuotingOrders')
+                        this.isExecutingActions = false;
+                        this.methodCloseDialogExecuteActions();
+                    }
+                }
+            })
         },
         emitClickCloseFromOrdersAndQuotationsDialog(){
             this.isOrdersAndQuotationsDialogActivated = false;

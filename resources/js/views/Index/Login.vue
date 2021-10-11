@@ -91,7 +91,7 @@
             <v-spacer></v-spacer>
 
             <v-btn :loading="loadingReset"
-            class="white--text" 
+            class="white--text"
             color="#3ba2a9"
             @click="resetPassword()">
               ENVIAR
@@ -117,6 +117,7 @@
 
 <script>
 import {logIn, logOut} from "../../utils/auth"
+import { mapState } from 'vuex';
 export default {
   data() {
     return {
@@ -141,6 +142,10 @@ export default {
   props: {},
 
   computed: {
+      ...mapState({
+        orders: (state) => state.ordersModule.orders,
+        user: (state) => state.user,
+      }),
       disableBtnEntrar(){
           if(((this.credentials.email == null || this.credentials.email == '') || (this.credentials.password == null || this.credentials.password == '')) || this.loading == true){
               return true;
@@ -167,7 +172,12 @@ export default {
         this.$store.dispatch("loadUser").then(()=>{
           const redirectPath = this.$route.query.redirect || '/dashboard';
 
-          this.$router.push(redirectPath)
+          if(this.$route.query.is_quotation == 0 || this.$route.query.is_quotation == 1){
+              this.$router.push({path: redirectPath, query: {is_quotation: this.$route.query.is_quotation}});
+          }
+          else{
+              this.$router.push(redirectPath)
+          }
         })
 
       } catch (error) {
@@ -191,7 +201,7 @@ export default {
           this.loadingReset = false
           this.showResetPasswordForm = false
           this.emailSendeded = true
-          
+
         }
       }).catch((error)=>{
         this.errorResetPassword = 'El email proporcionado no es válido o no existe en el sistema'

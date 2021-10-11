@@ -118,6 +118,7 @@ Route::middleware(['auth:sanctum'])->group(function()
     Route::post('netpay-delete-card/{user}', 'NetPayController@deleteCard');
 
     Route::get('change-state/{order}', 'OrderController@changeState');
+    Route::post('executeactions-allorders/{action}', 'OrderController@executeActionsAllorders');
 
     Route::get('notifications', 'UserController@notifications');
 
