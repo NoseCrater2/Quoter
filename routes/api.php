@@ -95,7 +95,10 @@ Route::post('netpay-intent-pay/{user}' , 'NetPayController@netpayIntentPay');
 Route::middleware(['auth:sanctum'])->group(function()
 {
 
+
+
     Route::post('checkPassword' , 'UserController@checkPassword')->name('password.check');
+
     Route::get('getMyInfo', 'UserController@getMyInfo');
 
     //Roles
@@ -111,12 +114,6 @@ Route::middleware(['auth:sanctum'])->group(function()
 
     Route::post('buy/{order}','OrderController@buy');
     Route::get('spei-payment/{order}', 'OrderController@speiPayment');
-
-    Route::post('netpay-save/{user}', 'NetPayController@saveClient');
-    Route::post('netpay-add-card/{user}', 'NetPayController@addCard');
-    Route::get('netpay-get-client/{user}', 'NetPayController@getClient');
-    Route::post('netpay-delete-card/{user}', 'NetPayController@deleteCard');
-
     Route::get('change-state/{order}', 'OrderController@changeState');
     Route::post('executeactions-allorders/{action}', 'OrderController@executeActionsAllorders');
 

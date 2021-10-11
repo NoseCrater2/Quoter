@@ -123,7 +123,7 @@
                                                         left
                                                       >
                                                         <template v-slot:activator="{ on, attrs }">
-                                                            <v-radio  v-bind="attrs" v-on="on" color="#3ba2a9" class="py-2 px-5 localBorderNoActiveClass" value="debitcreditcard">
+                                                            <v-radio disabled v-bind="attrs" v-on="on" color="#3ba2a9" class="py-2 px-5 localBorderNoActiveClass" value="debitcreditcard">
                                                               <template v-slot:label>
                                                                 <div>Tarjeta de débito o crédito</div>
                                                                 <v-spacer></v-spacer>
@@ -180,7 +180,7 @@
                                             </v-card>
                                         </v-col>
                                         <v-col v-else-if="flagIsStepFour" cols="12" :style="modelRadioStepFourPaymentMethod == 'electronicspei' ? 'background-color: #E0E0E0' : ''">
-                                            <MarketCompoNetPayPayment  v-if="modelRadioStepFourPaymentMethod == 'debitcreditcard'"></MarketCompoNetPayPayment>
+                                            <MarketCompoNetPayPayment :urlPayment="urlNetPayPayment" v-if="modelRadioStepFourPaymentMethod == 'debitcreditcard'"></MarketCompoNetPayPayment>
                                             <v-card v-else-if="modelRadioStepFourPaymentMethod == 'electronicspei'" color="white" style="font-size: 1.3rem" elevation="0" class="px-0">
                                                 <v-card-text class="text--primary">
                                                     <v-row align="center" justify="space-between">
@@ -599,14 +599,14 @@ export default {
         localMethodBtnPayStepFour(){
             if(this.flagIsStepFour == false){
                 //HABILITAR RADIO Y BORRAR ESTE COMENTARIO
-                if(this.modelRadioStepFourPaymentMethod != '' && this.modelRadioStepFourPaymentMethod == 'debitcreditcard'){
-                    // axios.post(`/api/netpay-intent-pay/${this.quotedOrder.user.id}`).then((response)=>{
-                    //     if(response.status == 200){
-                            this.flagIsStepFour = true;
-                    //         this.urlNetPayPayment = response.data;
-                    //     }
-                    // });
-                }
+                // if(this.modelRadioStepFourPaymentMethod != '' && this.modelRadioStepFourPaymentMethod == 'debitcreditcard'){
+                //     axios.post(`/api/netpay-intent-pay/${this.quotedOrder.user.id}`).then((response)=>{
+                //         if(response.status == 200){
+                //             this.flagIsStepFour = true;
+                //             this.urlNetPayPayment = response.data;
+                //         }
+                //     });
+                // }
                 if(this.modelRadioStepFourPaymentMethod != '' && this.modelRadioStepFourPaymentMethod == 'electronicspei'){
                     this.isChargingPetitionSPEIPayment = true;
                     axios.get(`/api/spei-payment/${this.orderId}`).then((response)=>{
