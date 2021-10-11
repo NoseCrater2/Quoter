@@ -154,5 +154,9 @@ Route::post('send-order-email-pdf' , 'Api\ProductController@sendOrderEmail');
 Route::post('sanctum/token','Auth\MobileAuthController@login');
 
 
+
+
+
+
 Route::resource('prices', 'PriceController')->only('index','show', 'store', 'update','destroy');
 Route::get('reset-password/{email}' , 'UserController@resetPassword');

@@ -57,6 +57,9 @@ const routes = [
                     requiresAuth: true,
                 },
             },
+
+
+            
             {
                 path: "netpay-payment",
                 component: () => import("./components/Dashboard/Marketcar/MarketCompoNetPayPayment.vue"),

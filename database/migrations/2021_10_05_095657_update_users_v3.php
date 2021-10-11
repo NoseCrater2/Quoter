@@ -15,6 +15,7 @@ class UpdateUsersV3 extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('netpayClientId')->default(null);
+            //comentario
         });
     }
 

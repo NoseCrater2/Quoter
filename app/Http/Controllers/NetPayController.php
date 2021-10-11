@@ -10,7 +10,7 @@ class NetPayController extends Controller
 {
     public function netpayIntentPay(Request $request, User $user)
     {
-        $client = new Client([]);
+        $client = new Client([]);//COMENTARIO
 
         $method = 'POST';
         $requestUrl = 'https://gateway-154.netpaydev.com/gateway-ecommerce/v3/charges';

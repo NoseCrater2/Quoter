@@ -308,6 +308,10 @@
                               height="120"
                               :style="active?'border: 2px solid #47a5ad':''"
                             >
+
+
+
+                            
                             <div class="d-flex  justify-space-around">
                               <div>
                                 <v-img

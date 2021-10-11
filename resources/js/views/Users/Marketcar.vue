@@ -534,6 +534,7 @@ export default {
                 await this.$store.dispatch('getQuotingOrders');
                 this.isCancellingAllOrders = false;
                 this.methodCloseDialogCancelAllOrders();
+                console.log('mod')
             });
         },
 
