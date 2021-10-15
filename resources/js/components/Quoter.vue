@@ -330,7 +330,7 @@
                       </v-col>
                     </v-row>
                   </v-item-group>
-                 
+
               </div>
 
               <div v-else-if="order.type === 'horizontal-madera-2' || order.type === 'horizontal-aluminio-2'">
@@ -1929,8 +1929,13 @@ export default {
       }
     },
 
-    redirectToLogin(){
-      this.$router.push({name: 'login', query: {redirect: '/quoter'}})
+    redirectToLogin(is_quotation = ''){
+        if(is_quotation == 0 || is_quotation == 1){
+            this.$router.push({name: 'login', query: {redirect: '/quoter', is_quotation: is_quotation}});
+        }
+        else{
+            this.$router.push({name: 'login', query: {redirect: '/quoter'}});
+        }
     },
 
     closeAndResetSendEmailDialog(option='reset'){
@@ -2096,8 +2101,7 @@ export default {
     },
     saveOrders(){
       if(this.user == null ){
-        this.$route.query.redirect = 'quoter'
-         this.$router.push({name: "login"})
+          this.redirectToLogin(0);
       }else{
             if(this.$route.params.order_id){
               this.$store.dispatch('updateOrders', {'orders': this.orders, 'id': this.$route.params.order_id,'is_quotation': false}).then( () =>{
@@ -2115,8 +2119,7 @@ export default {
 
     saveQuotations(){
       if(this.user == null){
-        this.$route.query.redirect = 'quoter'
-         this.$router.push({name: "login"})
+          this.redirectToLogin(1);
       }else{
 
           if(this.$route.params.order_id){
@@ -2342,12 +2345,12 @@ export default {
             this.order.price = this.roundToOneDecimal(this.unitaryPrice)
           }
 
-          if(this.user != null){
-            this.order.discount_price = this.order.price - ((this.user.discount_percent/100)*this.order.price)
-          }
-          if(this.selectedUser.discount_percent > 0){
-            this.order.discount_price = this.order.price - ( (this.order.discount_pricet/100)*this.order.price)
-          }
+        //   if(this.user != null){
+        //     this.order.discount_price = this.order.price - ((this.user.discount_percent/100)*this.order.price)
+        //   }
+        //   if(this.selectedUser.discount_percent > 0){
+        //     this.order.discount_price = this.order.price - ( (this.order.discount_pricet/100)*this.order.price)
+        //   }
 
         if (this.editable) {
           this.$store.dispatch("editOrder", this.order).then(() => {
@@ -2547,6 +2550,14 @@ export default {
       this.chargeColors();
     }
 
+    if(typeof(this.$route.query.is_quotation) != 'undefined'){
+        if(this.$route.query.is_quotation == 0){
+            this.saveOrders();
+        }
+        else if(this.$route.query.is_quotation == 1){
+            this.saveQuotations();
+        }
+    }
   },
 
 

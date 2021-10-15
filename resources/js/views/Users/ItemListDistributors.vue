@@ -1,30 +1,37 @@
 <template>
     <v-row>
-        <v-col cols="12" md="3" sm="12" >
-            <v-card>
+        <v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" xl="3" lg="3" md="3" sm="3">
+            <v-card outlined class="rounded-lg">
                 <v-card-title style="background: #3ba2a9" class="font-weight-bold white--text">
                     Mi cuenta
                 </v-card-title>
                 <v-list dense color="#f0f0f0">
                     <v-list-item link :to="{name: 'Profile'}">
+                        <v-list-item-icon>
+                        </v-list-item-icon>
                         <v-list-item-content>
                             <v-list-item-title>Mi Perfil</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                     <v-divider></v-divider>
-                     <v-list-item link :to="{name: 'Orders', params: {option: 'ordenes'}}">
+                    <v-list-item link :to="{name: 'Orders', params: {option: 'ordenes'}}">
+                        <v-list-item-icon>
+                        </v-list-item-icon>
                         <v-list-item-content>
-                            <v-list-item-title>Órdenes</v-list-item-title>
+                            <v-list-item-title>Ordenes</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                     <v-list-item link :to="{name: 'Orders', params: {option: 'cotizaciones'}}">
+                    <v-list-item link :to="{name: 'Orders', params: {option: 'cotizaciones'}}">
+                        <v-list-item-icon>
+                        </v-list-item-icon>
                         <v-list-item-content>
                             <v-list-item-title>Cotizaciones</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                     <v-divider></v-divider>
-                     <v-list-item link >
-                         <!-- :to="{name: 'Marketcar'}" -->
+                    <v-list-item>
+                        <v-list-item-icon>
+                        </v-list-item-icon>
                         <v-list-item-content>
                             <v-list-item-title>Mis compras</v-list-item-title>
                         </v-list-item-content>
@@ -32,7 +39,7 @@
                 </v-list>
             </v-card>
         </v-col>
-        <v-col cols="12" md="9" sm="12">
+        <v-col cols="12" xl="9" lg="9" md="9" sm="12">
             <v-data-iterator
             no-data-text="NO DISPONIBLE"
             no-results-text="NO DISPONIBLE"

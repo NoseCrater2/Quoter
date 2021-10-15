@@ -52,10 +52,36 @@ const routes = [
             {
                 path: "marketcar",
                 component: () => import("./views/Users/Marketcar.vue"),
-                name: "Marketcar",
                 meta: {
                     requiresAuth: true,
                 },
+                children:[
+                    {
+                        path: "",
+                        component: () => import("./components/Dashboard/Marketcar/OrdersCardsStepOne.vue"),
+                        name: "Marketcar",
+                    },
+                    {
+                        path: "steptwodetails",
+                        component: () => import("./components/Dashboard/BlindsProductDetailCards/DashboardBlindsProductDetailCards.vue"),
+                        name: "StepTwoDetails",
+                    },
+                    {
+                        path: "stepthreechoose",
+                        component: () => import("./components/Dashboard/Marketcar/MarketCompoPaymentType.vue"),
+                        name: "StepThreeChoose",
+                    },
+                    {
+                        path: "stepfournetpay",
+                        component: () => import("./components/Dashboard/Marketcar/MarketCompoNetPayPayment.vue"),
+                        name: "StepFourNetpay",
+                    },
+                    {
+                        path: "stepfourspei",
+                        component: () => import("./components/Dashboard/Marketcar/MarketCompoSpeiPayment.vue"),
+                        name: "StepFourSpei",
+                    },
+                ]
             },
             {
                 path: "netpay-payment",
@@ -66,7 +92,7 @@ const routes = [
                 },
             },
 
-            
+
 
             {
                 path: "priceList",
