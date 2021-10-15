@@ -1,3 +1,4 @@
+import { mapState } from 'vuex';
 <template>
     <v-card color="white" style="font-size: 1.3rem" elevation="0" class="px-0">
         <v-card-text class="text--primary">
@@ -18,11 +19,11 @@
                     </div>
                     <div class="text-uppercase">
                         <div class="font-weight-bold">Total a pagar: </div>
-                        <div class="font-weight-bold" style="color: #3ba2a9; font-size: 1.8rem">{{mxCurrencyFormat.format(propSubtotalTotal)}} MXN</div>
+                        <div class="font-weight-bold" style="color: #3ba2a9; font-size: 1.8rem">{{mxCurrencyFormat.format(quotedOrder.total)}} MXN</div>
                     </div>
                     <div class="text-uppercase my-2">
                         <div class="font-weight-bold">No. de orden por pagar: </div>
-                        <div>{{propItemQuotationOrderNumberID}}</div>
+                        <div>{{quotedOrder.order}}</div>
                     </div>
                     <div class="text-uppercase my-2">
                         <div class="font-weight-bold">No. de cuenta de banco:</div>
@@ -88,25 +89,33 @@
 </template>
 
 <script>
+import {mapState} from 'vuex';
 export default {
+    created(){
+        if(this.$route.name == 'StepFourSpei'){
+            if(localStorage.getItem('quotedOrder') !== null){
+                localStorage.removeItem('quotedOrder');
+            }
+            else if(localStorage.getItem('quotedOrder') === null){
+                this.$router.push({name: 'Marketcar'});
+            }
+        }
+    },
     data() {
         return {
             mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
         }
     },
+    computed:{
+        ...mapState({
+            quotedOrder: state => state.ordersModule.quotedOrder,
+        }),
+    },
     methods:{
         stayInMarketcar(){
-            this.$router.go();
+            this.$router.push({name: 'Marketcar'});
         }
 
-    },
-    props:{
-        propSubtotalTotal:{
-            type: Number
-        },
-        propItemQuotationOrderNumberID:{
-            type: String
-        }
     }
 }
 </script>

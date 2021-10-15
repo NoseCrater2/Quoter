@@ -79,7 +79,7 @@ export default {
         pushToStepTwo(item){
             this.$store.dispatch('getQuotedOrder', item.id).then(()=>{
                 localStorage.removeItem('quotedOrder');
-                localStorage.setItem('quotedOrder', JSON.stringify({order:this.quotedOrder, step: 2, paymentType: '', isCheckTerms: false}));
+                localStorage.setItem('quotedOrder', JSON.stringify({order:this.quotedOrder, step: 2, paymentType: '', isCheckTerms: false, flagIsStepFour: false}));
                 this.idSelectedOrder = this.quotedOrder.id;
                 this.$router.push({name: 'StepTwoDetails'});
             })

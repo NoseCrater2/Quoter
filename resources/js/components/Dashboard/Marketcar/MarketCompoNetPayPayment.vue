@@ -100,7 +100,7 @@
                                         fab
                                         small
                                         dark
-                                        elevation="7"
+                                        elevation="0"
                                         @click="openDeleteCardDialog(card.card.token)"
                                       >
                                         <v-icon>mdi-delete</v-icon>
@@ -112,10 +112,10 @@
                                         fab
                                         small
                                         dark
-                                        elevation="7"
+                                        elevation="0"
                                         @click="intentOpenPayDialog(card.card)"
                                       >
-                                        <v-icon>mdi-cash</v-icon>
+                                        <v-icon>mdi-check</v-icon>
                                     </v-btn>
                                </v-card-actions>
 
@@ -132,7 +132,7 @@
                                 <v-btn
                                   color="teal"
                                   dark
-                                  @click="showNewCardForm = true"
+                                  @click="openShowNewCardFormDialog()"
                                 >
                                   Agregar una nueva tarjeta
                                     <v-icon
@@ -204,6 +204,7 @@
                         <v-col cols ="4" class="mx-auto">
                             <div class="mx-auto">
                             <v-text-field
+                            :type="showCVV == false ? 'password': 'text'"
                             dense
                             :disabled="loadingPayButton"
                             outlined
@@ -211,10 +212,13 @@
                             placeholder="CVV"
                             maxlength="4"
                             v-model="modelCVVOnPay"
+                            append-icon="mdi-eye"
+                            @click:append="showCVV = !showCVV"
                             ></v-text-field>
                             </div>
                         </v-col>
                         <v-col cols="12" class="mt-n5 d-flex justify-center">
+                            <v-btn color="red" :disabled="loadingPayButton" depressed class="white--text mr-2" @click="cancelPay()">REGRESAR</v-btn>
                             <v-btn color="teal" :disabled="loadingPayButton" :loading="loadingPayButton" depressed class="white--text" @click="confirmPayWithCVV">PAGAR</v-btn>
                         </v-col>
                     </v-col>
@@ -328,7 +332,7 @@
             </v-row>
             <v-row justify="center">
                 <v-col cols="7" class="text-center">
-                    <v-btn class="rounded-l-xl white--text" color="red" @click="closeShowNewCardFormDialog" >
+                    <v-btn class="rounded-l-xl white--text" color="red" :disabled="isSavingCard" @click="closeShowNewCardFormDialog" >
                         CANCELAR
                         <v-icon right>mdi-close</v-icon>
                     </v-btn>
@@ -406,15 +410,16 @@ import { mapState } from 'vuex'
 export default {
     data(){
         return {
+            showCVV: false,
             payOrderDialog: false,
             loadingPayButton: false,
             deleteCardDialog: false,
             isDeletingCard: false,
             isSavingCard: false,
             loadingCards: false,
-            showNewCardForm: false,
-            selectedCard: null,
-            preSelectedCard: null,
+            showNewCardForm: localStorage.getItem('quotedOrder') !== null ? JSON.parse(localStorage.getItem('quotedOrder')).card.isNewCard : false,
+            selectedCard: localStorage.getItem('quotedOrder') !== null ? JSON.parse(localStorage.getItem('quotedOrder')).card.currentCard : null,
+            preSelectedCard: localStorage.getItem('quotedOrder') !== null ? JSON.parse(localStorage.getItem('quotedOrder')).card.currentCard : null,
             errors: null,
             displayErrors: false,
             cardInformation: {
@@ -430,7 +435,18 @@ export default {
         }
     },
 
-    mounted(){
+    created(){
+        if(this.$route.name == 'StepFourNetpay'){
+            if(Object.keys(this.quotedOrder).length == 0){
+                if(localStorage.getItem('quotedOrder') !== null){
+                    Object.assign(this.quotedOrder, this.$store.getters.getQuotedOrder.order)
+                }
+                else if(localStorage.getItem('quotedOrder') === null){
+                    this.$router.push({name: 'Marketcar'});
+                }
+            }
+        }
+
         if(this.user.netpayClientId){
             this.chargeCards()
         }
@@ -443,6 +459,10 @@ export default {
         //     expYear: "25",
         //     cvv2: "999",
         // };
+    },
+
+    mounted(){
+
     },
 
     methods: {
@@ -458,6 +478,13 @@ export default {
             this.payOrderDialog = false;
         },
 
+        openShowNewCardFormDialog(){
+            this.showNewCardForm = true;
+            let localStorageObject = JSON.parse(localStorage.getItem('quotedOrder'))
+            localStorageObject.card.isNewCard = true;
+            localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject))
+        },
+
         closeShowNewCardFormDialog(){
             let resetCard = {
                 cardNumber: null,
@@ -467,6 +494,9 @@ export default {
             }
             Object.assign(this.cardInformation, resetCard);
             this.showNewCardForm = false;
+            let localStorageObject = JSON.parse(localStorage.getItem('quotedOrder'))
+            localStorageObject.card.isNewCard = false;
+            localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject))
         },
 
         chargeCards(){
@@ -505,12 +535,18 @@ export default {
 
                 })
             }
+            let localStorageObject = JSON.parse(localStorage.getItem('quotedOrder'));
+            localStorageObject.card.isNewCard = false;
+            localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
         },
 
         error(e) {
             this.isSavingCard = false;
             this.errors = e
             this.displayErrors = true
+            let localStorageObject = JSON.parse(localStorage.getItem('quotedOrder'));
+            localStorageObject.card.isNewCard = false;
+            localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
         },
 
         generalValidate(){
@@ -539,7 +575,20 @@ export default {
 
         pay(){
             this.selectedCard = this.preSelectedCard;
+            let localStorageObject = JSON.parse(localStorage.getItem('quotedOrder'))
+            localStorageObject.card.currentCard = this.selectedCard;
+            localStorageObject.card.isCurrentCard = true;
+            localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject))
             this.intentClosePayDialog();
+        },
+
+        cancelPay(){
+            this.selectedCard = null;
+            this.preSelectedCard = null;
+            let localStorageObject = JSON.parse(localStorage.getItem('quotedOrder'))
+            localStorageObject.card.currentCard = this.selectedCard;
+            localStorageObject.card.isCurrentCard = false;
+            localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject))
         },
 
         confirmPayWithCVV(){
@@ -577,7 +626,7 @@ export default {
             }
         },
         stayInMarketcar(){
-            this.$router.go();
+            this.$router.push({name:'Marketcar'});
         }
     },
 
