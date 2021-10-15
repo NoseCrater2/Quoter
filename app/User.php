@@ -39,6 +39,8 @@ class User extends Authenticatable
         'discount_percent',
         'netpayClientId',
         'active'
+
+        //comentario
     ];
 
     /**

@@ -82,6 +82,7 @@
                     ></v-text-field>
                 </v-toolbar>
             </template>
+
             <template v-slot:item.total="{ item }">
                  {{mxCurrencyFormat.format(item.total)}} MXN
             </template>

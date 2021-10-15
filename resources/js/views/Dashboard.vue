@@ -60,7 +60,7 @@
 
         <v-row class="justify-center align-center my-16" no-gutters>
 
-            <v-col class="pa-0" cols="12" md="4" sm="12" v-for="(b, index) in benefits" :key="index">
+            <v-col class="pa-0" cols="12" md="3" sm="12" v-for="(b, index) in benefits" :key="index">
                 <v-card flat max-height="330">
                     <div class="d-flex justify-center">
                         <v-avatar  size="75">
@@ -119,6 +119,12 @@ export default {
                     text: 'Descarga las listas de precios Rollux y mantente siempre actualizado',
                     icon:'/img/dashboard/icon_pdf.png',
                     route: {name: 'PriceList'}
+                },
+                {
+                    title: 'Catálogos Digitales',
+                    text: 'Descarga los muestrarios digitales de las líneas que Rollux México tiene para ti.',
+                    icon:'/img/dashboard/icon_catalogo.svg',
+                    route: {name: 'CatalogList'}
                 },
                 {
                     title: 'Tus Pedidos',

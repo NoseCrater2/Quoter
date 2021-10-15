@@ -418,6 +418,7 @@ export default {
                 localStorage.removeItem('quotedOrder');
                 this.isCancellingAllOrders = false;
                 this.methodCloseDialogCancelAllOrders();
+                console.log('mod')
             });
         },
 
