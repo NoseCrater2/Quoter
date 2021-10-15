@@ -334,7 +334,7 @@
                       </v-col>
                     </v-row>
                   </v-item-group>
-                 
+
               </div>
 
               <div v-else-if="order.type === 'horizontal-madera-2' || order.type === 'horizontal-aluminio-2'">
@@ -2105,7 +2105,7 @@ export default {
     },
     saveOrders(){
       if(this.user == null ){
-        this.redirectToLogin(0);
+          this.redirectToLogin(0);
       }else{
             if(this.$route.params.order_id){
               this.$store.dispatch('updateOrders', {'orders': this.orders, 'id': this.$route.params.order_id,'is_quotation': false}).then( () =>{
@@ -2123,7 +2123,7 @@ export default {
 
     saveQuotations(){
       if(this.user == null){
-        this.redirectToLogin(1);
+          this.redirectToLogin(1);
       }else{
           if(this.$route.params.order_id){
             this.$store.dispatch('updateQuotations', {'orders': this.orders, 'id': this.$route.params.order_id}).then( () => {

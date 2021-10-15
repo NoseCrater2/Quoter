@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const netpayPKSBox = process.env.MIX_NETPAY_PUBLIC_KEY_SBOX;
 
 /*
  |--------------------------------------------------------------------------

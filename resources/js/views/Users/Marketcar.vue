@@ -6,50 +6,104 @@
           </div>
           <v-row class="mt-3">
               <v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" xl="3" lg="3" md="3" sm="3">
-                <v-card
-                style="position: sticky; top: 60px; z-index: 2;"
-                  height="auto"
-                  width="auto"
-                  outlined
-                  class="rounded-lg"
-                >
-
-
-                <v-card-title style="background: #3ba2a9" class="font-weight-bold white--text">
-                    Mi cuenta
-                </v-card-title>
-                <v-list dense color="#f0f0f0">
-                    <v-list-item link :to="{name: 'Profile'}">
-                        <v-list-item-content>
-                            <v-list-item-title>Mi Perfil</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
-                    <v-divider></v-divider>
-                     <v-list-item link :to="{name: 'Orders', params: {option: 'ordenes'}}">
-                        <v-list-item-content>
-                            <v-list-item-title>Órdenes</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
-                     <v-list-item link :to="{name: 'Orders', params: {option: 'cotizaciones'}}">
-                        <v-list-item-content>
-                            <v-list-item-title>Cotizaciones</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
-                    <v-divider></v-divider>
-                     <v-list-item link >
-                         <!-- :to="{name: 'Marketcar'}" -->
-                        <v-list-item-content>
-                            <v-list-item-title>Mis compras</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
-                </v-list>
-
-
+                <v-card v-if="user.role == 'Superadministrador' || user.role == 'Administrador'" outlined class="rounded-lg" style="position: sticky; top: 60px; z-index: 2;">
+                    <v-card-title style="background: #3ba2a9" class="font-weight-bold white--text">
+                        Mi cuenta
+                    </v-card-title>
+                    <v-list dense color="#f0f0f0">
+                        <v-list-item link :to="{name: 'Profile'}">
+                            <v-list-item-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title>Mi Perfil</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-group color="#3ba2a9" :value="true" no-action sub-group>
+                            <template v-slot:activator>
+                              <v-list-item-content>
+                                <v-list-item-title>Órdenes</v-list-item-title>
+                              </v-list-item-content>
+                            </template>
+                            <v-list-item
+                            :to="option.route"
+                            dense
+                            v-for="(option, i) in admins"
+                            :key="i"
+                            link
+                            >
+                              <v-card-subtitle class="pa-0" style="font-size: 0.8125rem" v-text="option.title"></v-card-subtitle>
+                            </v-list-item>
+                        </v-list-group>
+                        <v-list-group  color="#3ba2a9" :value="true" no-action sub-group>
+                          <template v-slot:activator>
+                            <v-list-item-content>
+                              <v-list-item-title>Cotizaciones</v-list-item-title>
+                            </v-list-item-content>
+                          </template>
+                          <v-list-item
+                            :to="option.route"
+                            dense
+                            v-for="(option, i) in cruds"
+                            :key="i"
+                            link
+                          >
+                            <v-card-subtitle class="pa-0" style="font-size: 0.8125rem" v-text="option.title"></v-card-subtitle>
+                          </v-list-item>
+                        </v-list-group>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                            <v-list-item-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title>Mis compras</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </v-list>
                 </v-card>
+
+                <v-card v-else outlined class="rounded-lg" style="position: sticky; top: 60px; z-index: 2;">
+                    <v-card-title style="background: #3ba2a9" class="font-weight-bold white--text">
+                        Mi cuenta
+                    </v-card-title>
+                    <v-list dense color="#f0f0f0">
+                        <v-list-item link :to="{name: 'Profile'}">
+                            <v-list-item-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title>Mi Perfil</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item link :to="{name: 'Orders', params: {option: 'ordenes'}}">
+                            <v-list-item-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title>Ordenes</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item link :to="{name: 'Orders', params: {option: 'cotizaciones'}}">
+                            <v-list-item-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title>Cotizaciones</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                            <v-list-item-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title>Mis compras</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </v-list>
+                </v-card>
+
               </v-col>
               <v-col cols="12" xl="9" lg="9" md="9" sm="12">
                   <v-row align="center" no-gutters>
-                      <v-col cols="4" v-for="(item, index) in marketStepsItems" :key="index">
+                      <v-col cols="4" v-for="(item, index) in marketStepsItems" @click="methodChangeStepWindowFromAlerts((index+1))" :key="index">
                           <!-- @click="changeStepWindowFromAlerts((index+1))" -->
                         <v-alert
 
@@ -92,188 +146,20 @@
                                 </h3>
                             </div>
 
-                            <!-- V-ELSE: ESTE WINDOW INICIA AQUÍ Y HARÁ LA FUNCION DE LOS PASOS DE COMPRA -->
-                            <v-window class="mx-auto" v-else-if="loadingOrdersToOrdersCardsStepOne && computedNoPaidOrders.length > 0" v-model="modelWindowSteper">
-                                <v-window-item  v-for="(item, windowIndex) in modelWindowItemSteps" :key="windowIndex" :value="(windowIndex+1)">
-                                <!-- DENTRO DE ESTE WINDOW ITEM SE CARGARÁ EL COMPONENTE DE PASO CORRESPONDIENTE -->
-                                    <!-- INICIA CARGA EL COMPONENTE DEL STEP 1 -->
-                                    <OrdersCardsStepOne @emitCancelOrder="methodOpenDialogCancelOneOrder" @emitCheckAndBuyFromOrdersCardsStepOneView="localMethodStepThreeCheckAndBuy" @emitDetailsItemFromOrdersCardsStepOneView="localMethodIsOrdersAndQuotationsDialogActivatedOn" :itemOrder="computedNoPaidOrders" v-if="modelWindowSteper == 1"></OrdersCardsStepOne>
-                                    <!-- TERMINA CARGA EL COMPONENTE DEL STEP 1 -->
-                                    <div v-else-if="modelWindowSteper == 2">
-                                        <v-col cols="12" v-for="(itemBlind, index) in quotedOrder.blinds" :key="itemBlind.id">
-                                            <DashboardBlindsProductDetailCards :propOrderUser="quotedOrder.user"  @emitDeleteBlindFromDetailCards="methodOpenDialogDeleteBlind" @emitEditBlindFromBlindsProductDetailCardsView="localMethodEditBlindStepThreeMarketcar" :propIsInMarketAndStepThree="true" :propIsOrderOrQuotationString="'quoted'" :propItemArrayBlindsObject="itemBlind" :propBlindCount="(index + 1)" :propBreakpointFromDialog="$vuetify.breakpoint"></DashboardBlindsProductDetailCards>
-                                        </v-col>
-                                    </div>
-                                    <div v-else-if="modelWindowSteper == 3">
-                                        <v-col v-if="!flagIsStepFour" cols="12">
-                                            <v-card elevation="0">
-                                                <div class="font-weight-bold mb-2">Elije el metodo de pago que mas prefieras</div>
-                                                <v-alert
-                                                  color="#3ba2a9"
-                                                  dense
-                                                  text
-                                                  type="info"
-                                                >
-                                                  Por el momento únicamente está habilitado el pago mediante el Sistema de Pagos Electrónicos Interbancarios (SPEI).
-                                                  Estamos trabajando para habilitar más formas de pago. Lamentamos las molestias que este inconveniente pudiera ocasionar.
-                                                </v-alert>
-                                                <v-radio-group v-model="modelRadioStepFourPaymentMethod" >
-                                                    <v-tooltip
-                                                       color="transparent"
-                                                        left
-                                                      >
-                                                        <template v-slot:activator="{ on, attrs }">
-                                                            <v-radio  v-bind="attrs" v-on="on" color="#3ba2a9" class="py-2 px-5 localBorderNoActiveClass" value="debitcreditcard">
-                                                              <template v-slot:label>
-                                                                <div>Tarjeta de débito o crédito</div>
-                                                                <v-spacer></v-spacer>
-                                                                <v-img max-width="80" contain src="https://fantactica.mx/wp-content/uploads/2021/04/visa-and-mastercard-logos-logo-visa-png-logo-visa-mastercard-png-visa-logo-white-png-awesome-logos.png"></v-img>
-                                                              </template>
-                                                            </v-radio>
-                                                        </template>
-                                                        <!-- <v-col cols="3">
-                                                            <v-card outlined class="pa-5 text-justify" style="border: 3px solid #E53935; box-shadow: 1px 0px 9px 3px rgba(0,0,0,0.75);">
-                                                              Estamos trabajando para habilitar esta opción de pago, sentimos el inconveniente que te pueda ocasionar.
-                                                            </v-card>
-                                                        </v-col> -->
-                                                    </v-tooltip>
-                                                    <v-tooltip
-                                                       color="transparent"
-                                                        left
-                                                      >
-                                                        <template v-slot:activator="{ on, attrs }">
-                                                            <v-radio v-bind="attrs" v-on="on" color="#3ba2a9" class="py-2 px-5 localBorderNoActiveClass" value="electronicspei">
-                                                              <template v-slot:label>
-                                                                <div>Transferencia electrónica</div>
-                                                                <v-spacer></v-spacer>
-                                                                <v-img max-width="60" contain src="https://cdn2.downdetector.com/static/uploads/logo/spei.png"></v-img>
-                                                              </template>
-                                                            </v-radio>
-                                                        </template>
-                                                        <v-col cols="3">
-                                                            <v-card outlined class="pa-5 text-justify" style="border: 3px solid #3ba2a9; box-shadow: 1px 0px 9px 3px rgba(0,0,0,0.75);">
-                                                              Una vez realizado el pago, deberá enviar su comprobante de pago a Rollux México para que el estatus de su orden esté aprobada; este puede tardar de 15 a 20 minutos en reflejarse. Si presentas algún inconveniente con el estatus de tu pago, por favor, comunicate a Atención a Clientes, o envianos un correo a contacto@rollux.com.mx indicando número de orden y adjuntando tu comprobante de pago.
-                                                            </v-card>
-                                                        </v-col>
-                                                    </v-tooltip>
-                                                    <v-tooltip
-                                                       color="transparent"
-                                                        left
-                                                      >
-                                                        <template v-slot:activator="{ on, attrs }">
-                                                            <v-radio disabled v-bind="attrs" v-on="on" color="#3ba2a9" class="py-2 px-5 localBorderNoActiveClass" value="oxxopay">
-                                                              <template v-slot:label>
-                                                                <div>OXXO Pay</div>
-                                                                <v-spacer></v-spacer>
-                                                                <v-img max-width="80" contain src="https://www.pikpng.com/pngl/m/342-3427288_oxxo-pay-conoce-5-caracter-237sticas-de-este.png"></v-img>
-                                                              </template>
-                                                            </v-radio>
-                                                        </template>
-                                                        <v-col cols="3">
-                                                            <v-card outlined class="pa-5 text-justify" style="border: 3px solid #E53935; box-shadow: 1px 0px 9px 3px rgba(0,0,0,0.75);">
-                                                              Estamos trabajando para habilitar esta opción de pago, sentimos el inconveniente que te pueda ocasionar.
-                                                            </v-card>
-                                                        </v-col>
-                                                    </v-tooltip>
-                                                </v-radio-group>
+                            <div v-else-if="loadingOrdersToOrdersCardsStepOne && computedNoPaidOrders.length > 0">
+                                <router-view
+                                    :key="$route.path"
+                                    @emitCancelOrder="methodOpenDialogCancelOneOrder"
+                                    @emitDetailsItemFromOrdersCardsStepOneView="methodIsOrdersAndQuotationsDialogActivated"
 
-                                            </v-card>
-                                        </v-col>
-                                        <v-col v-else-if="flagIsStepFour" cols="12" :style="modelRadioStepFourPaymentMethod == 'electronicspei' ? 'background-color: #E0E0E0' : ''">
-                                            <MarketCompoNetPayPayment  v-if="modelRadioStepFourPaymentMethod == 'debitcreditcard'"></MarketCompoNetPayPayment>
-                                            <v-card v-else-if="modelRadioStepFourPaymentMethod == 'electronicspei'" color="white" style="font-size: 1.3rem" elevation="0" class="px-0">
-                                                <v-card-text class="text--primary">
-                                                    <v-row align="center" justify="space-between">
-                                                        <v-col cols="9">
-                                                            <span class="font-weight-bold mb-4" style="font-size: 1.4rem">Datos para la transferencia bancaria</span>
-                                                        </v-col>
-                                                        <v-col cols="3" class="d-flex justify-end">
-                                                            <v-img max-width="100" contain src="https://cdn2.downdetector.com/static/uploads/logo/spei.png"></v-img>
-                                                        </v-col>
-                                                    </v-row>
-                                                </v-card-text>
-                                                <v-card-text style="background-color: #E0E0E0" class="text--primary">
-                                                    <v-row no-gutters justify="center">
+                                    @emitDeleteBlindFromDetailCards="methodOpenDialogDeleteBlind"
+                                    @emitEditBlindFromBlindsProductDetailCardsView="localMethodEditBlindStepThreeMarketcar"
 
-                                                        <v-col cols="12" xl="6" lg="6" md="6" sm="12" :class="!$vuetify.breakpoint.mdAndUp ? 'd-flex flex-column align-center text-center' : ''">
-                                                            <div class="mb-7">
-                                                                <v-img max-width="430" min-width="300" contain src="http://www.visaalmundo.com/blog/wp-content/uploads/2016/10/Banorte-Logo-EPS-vector-image.png"></v-img>
-                                                            </div>
-                                                            <div class="text-uppercase">
-                                                                <div class="font-weight-bold">Total a pagar: </div>
-                                                                <div class="font-weight-bold" style="color: #3ba2a9; font-size: 1.8rem">{{mxCurrencyFormat.format(localModelSubtotalAndTotal)}} MXN</div>
-                                                            </div>
-                                                            <div class="text-uppercase my-2">
-                                                                <div class="font-weight-bold">No. de orden por pagar: </div>
-                                                                <div>{{localPropItemQuotationOrderNumberID}}</div>
-                                                            </div>
-                                                            <div class="text-uppercase my-2">
-                                                                <div class="font-weight-bold">No. de cuenta de banco:</div>
-                                                                <div>0892 6082 67</div>
-                                                            </div>
-                                                            <div class="text-uppercase my-2">
-                                                                <div class="font-weight-bold">CLABE Interbancaria: </div>
-                                                                <div>072 470 0089 2608 2678</div>
-                                                            </div>
-                                                            <div>
-                                                                <div class="font-weight-bold text-uppercase">Nombre de la cuenta: </div>
-                                                                <div>Materiales Decorativos S. de R.L. MI.</div>
-                                                            </div>
-                                                        </v-col>
+                                    @changeRadioValue="changeRadioValue"
+                                >
+                                </router-view>
+                            </div>
 
-                                                        <v-col cols="12" xl="6" lg="6" md="6" sm="12" :class="$vuetify.breakpoint.mdAndUp ? 'd-flex flex-column align-center' : 'd-flex flex-column align-center mt-3 text-center'">
-
-                                                            <v-card color="white" outlined min-height="330">
-                                                                <v-card-text class="text--primary font-weight-bold" style="font-size: 1.1rem">
-                                                                    Como hacer una transferencia bancaria desde tu banca móvil
-                                                                </v-card-text>
-                                                                <v-card-text class="text--primary">
-                                                                    <span>
-                                                                        1. Accede a la Banca Móvil desde la plataforma de tu cuenta
-                                                                        de banco favorita.
-                                                                    </span><br>
-                                                                    <span>
-                                                                        2. Encuentra y selecciona "Transferencias y Pagos".
-                                                                    </span><br>
-                                                                    <span>
-                                                                        3. Si tu plataforma es Banorte selecciona "Terceros Banorte y otros bancos".
-                                                                        Si tu plataforma es de otro banco, busca la opción que diga "Otros bancos".
-                                                                    </span><br>
-                                                                    <span>
-                                                                        4. Escribe la cuenta destinatario.
-                                                                    </span><br>
-                                                                    <span>
-                                                                        5. Ingresa el importe, el concepto, y el día en que quieres aplicar la transferencia.
-                                                                    </span><br>
-                                                                    <span>
-                                                                        6. Revisa los datos y finaliza la operación.
-                                                                    </span><br>
-                                                                </v-card-text>
-                                                            </v-card>
-
-                                                            <v-spacer></v-spacer>
-                                                            <v-btn large elevation="0" color="#3ba2a9" class="mt-3 white--text">
-                                                                <v-icon left>mdi-printer</v-icon>IMPRIMIR
-                                                            </v-btn>
-                                                        </v-col>
-
-                                                    </v-row>
-                                                    <v-divider class="mt-3"></v-divider>
-                                                </v-card-text>
-                                                <v-card-text style="background-color: #E0E0E0" class="text--primary mt-n4">
-                                                    <div style="font-size: 0.95rem" class="text-center">
-                                                        Estimado usuario, usted debe imprimir este documento y abonar el importe dentro de
-                                                        las próximas 48 horas hábiles en la entidad bancaria correspondiente. La confirmación de pago
-                                                        puede tardar entre 24 y 48 horas. Una vez que haya realizado su pago no olvide enviarnos una copia
-                                                        de su ficha de pago a <span class="text-decoration-underline">contacto@rollux.com.mx</span> junto con el número de su orden.
-                                                    </div>
-                                                </v-card-text>
-                                            </v-card>
-                                        </v-col>
-                                    </div>
-                                </v-window-item>
-                            </v-window>
-                            <!-- ESTE WINDOW TERMINA AQUÍ Y HARÁ LA FUNCION DE LOS PASOS DE COMPRA -->
 
                         </v-col>
                         <v-col v-else cols="12" class="d-flex align-center justify-center"  style="border: 1px solid #BDBDBD; min-height: 400px;">
@@ -286,7 +172,7 @@
                         <div class="text-end">
                             <v-btn
                                 @click="methodOpenDialogCancelAllOrders()"
-                                :disabled="computedNoPaidOrders.length > 0 ? false : true"
+                                :disabled="(computedNoPaidOrders.length > 0) ? false : true"
                                 v-if="modelWindowSteper == 1"
                                 large
                               color="#3ba2a9"
@@ -348,38 +234,16 @@
                             </v-checkbox>
                             <v-card-actions>
                               <v-btn
-                                @click="localMethodBtnContinueStepThree"
-                                v-if="(modelWindowSteper > 0 && modelWindowSteper < 3)"
-                                :disabled="(modelWindowSteper >= 2 && computedNoPaidOrders.length > 0 ) ? false : true"
+                                :disabled="(!computedIsNotNullLocalStorage == false && computedIsAceptedTerms == true) ? false : true"
+                                @click="methodContinueStep"
                                 large
                                 block
                                 color="orange darken-1"
                                 class="white--text font-weight-bold rounded-lg mx-auto mt-3"
-                                :class="modelWindowSteper <= 2 ? '' : 'mb-7'"
                               >
                                 {{btnContinuarTitle}}
                                   <v-icon
-                                  size="30"
-                                    right
-                                    dark
-                                  >
-                                    mdi-arrow-right
-                                  </v-icon>
-                              </v-btn>
-                              <v-btn
-                                @click="localMethodBtnPayStepFour"
-                                v-else-if="(modelWindowSteper == 3)"
-                                :disabled="(((modelWindowSteper == 3 && computedNoPaidOrders.length > 0 && !(isChargingPetitionSPEIPayment)) && checkboxPrivacyTermsAndContinue) && (modelRadioStepFourPaymentMethod != null && modelRadioStepFourPaymentMethod != '')) ? false : true"
-                                :loading="(isChargingPetitionSPEIPayment) ? true : false"
-                                large
-                                block
-                                color="orange darken-1"
-                                class="white--text font-weight-bold rounded-lg mx-auto mt-3"
-                                :class="modelWindowSteper <= 2 ? '' : 'mb-7'"
-                              >
-                                {{btnContinuarTitle}}
-                                  <v-icon
-                                  size="30"
+                                    size="30"
                                     right
                                     dark
                                   >
@@ -395,7 +259,7 @@
                   </v-row>
               </v-col>
           </v-row>
-          <DashboardOrdersAndQuotationsDialog :id="orderId" v-if="isOrdersAndQuotationsDialogActivated" @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" @emitCheckAndBuyFromOrdersAndQuotationsDialogView="localMethodStepThreeCheckAndBuy" ></DashboardOrdersAndQuotationsDialog>
+          <DashboardOrdersAndQuotationsDialog :id="orderId" v-if="isOrdersAndQuotationsDialogActivated" @emitClickCloseFromOrdersAndQuotationsDialog="emitClickCloseFromOrdersAndQuotationsDialog" @emitCheckAndBuyFromOrdersAndQuotationsDialogView="methodStepTwoCheckAndBuy" ></DashboardOrdersAndQuotationsDialog>
 
 
             <v-dialog v-model="modelDialogCancelAllOrders" persistent max-width="290">
@@ -448,16 +312,18 @@
 </template>
 
 <script>
-import OrdersCardsStepOne from '../../components/Dashboard/Marketcar/OrdersCardsStepOne.vue'
 import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/OrdersAndQuotations/DashboardOrdersAndQuotationsDialog.vue'
-import DashboardBlindsProductDetailCards from '../../components/Dashboard/BlindsProductDetailCards/DashboardBlindsProductDetailCards.vue';
-import MarketCompoNetPayPayment from '../../components/Dashboard/Marketcar/MarketCompoNetPayPayment.vue'
-import { mapState } from 'vuex';
 import axios from 'axios';
+import { mapState } from 'vuex';
 export default {
-    mounted(){
+    created(){
         this.$store.dispatch('getQuotedOrders').then(()=>{
             this.loadingOrdersToOrdersCardsStepOne = true
+            if(Object.keys(this.quotedOrder).length == 0){
+                if(localStorage.getItem('quotedOrder') !== null){
+                    Object.assign(this.quotedOrder, this.$store.getters.getQuotedOrder.order)
+                }
+            }
         })
     },
     data() {
@@ -473,26 +339,33 @@ export default {
             isChargingPetitionSPEIPayment: false,
             flagIsStepFour: false,
             urlNetPayPayment: null,
-            modelRadioStepFourPaymentMethod: '',
+            modelRadioStepFourPaymentMethod: localStorage.getItem('quotedOrder') !== null ? JSON.parse(localStorage.getItem('quotedOrder')).paymentType : '',
             mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
-            localCurrentIDQuotingOrderStepThree: -1,
-            localCurrentItemOfOrdersAndQuotationsDialogView: {},
-            localModelSubtotalAndTotal: 0,
+            localModelSubtotalAndTotal: localStorage.getItem('quotedOrder') !== null ? JSON.parse(localStorage.getItem('quotedOrder')).order.total : 0,
             modelWindowItemSteps: [
                 {step: 1, name: 'ChooseOrder'},
                 {step: 2, name: 'CheckAndBuy'},
                 {step: 3, name: 'Confirm'}
             ],
-            modelWindowSteper: 1,
+            modelWindowSteper: localStorage.getItem('quotedOrder') !== null ? JSON.parse(localStorage.getItem('quotedOrder')).step : 1,
             localToPropTotalPrice: 0,
-            localPropItemQuotationOrderNumberID: '',
+            localPropItemQuotationOrderNumberID: localStorage.getItem('quotedOrder') !== null ? JSON.parse(localStorage.getItem('quotedOrder')).order.order : '',
             isOrdersAndQuotationsDialogActivated: false,
             loadingOrdersToOrdersCardsStepOne: false,
-            checkboxPrivacyTermsAndContinue: false,
+            checkboxPrivacyTermsAndContinue: localStorage.getItem('quotedOrder') !== null ? JSON.parse(localStorage.getItem('quotedOrder')).isCheckTerms : false,
             marketStepsItems: [
                 { title: 'Elegir orden', icon: 'mdi-numeric-1' },
                 { title: 'Revisar y pagar', icon: 'mdi-numeric-2' },
                 { title: 'Confirmar compra', icon: 'mdi-numeric-3' },
+            ],
+            admins: [
+                {title: 'Mis Órdenes', route: {name: 'Orders', params: {option: 'ordenes'}}},
+                {title: 'Ordenes Distribuidores', route: {name: 'Orders', params: {option: 'ordenes-admin'}}}
+            ],
+
+            cruds: [
+                {title: 'Mis Cotizaciones', route: {name: 'Orders', params: {option: 'cotizaciones'}} },
+                {title: 'Cotizaciones Distribuidores', route: {name: 'Orders', params: {option: 'cotizaciones-admin'}}}
             ],
             orderId: 0,
         }
@@ -503,13 +376,13 @@ export default {
             this.modelDialogCancelAllOrders = true;
         },
 
-        methodOpenDialogCancelOneOrder(itemOrder){
-            this.modelCancelOneOrderItemId = itemOrder.id;
+        methodOpenDialogCancelOneOrder(itemID){
+            this.modelCancelOneOrderItemId = itemID;
             this.modelDialogCancelOneOrder = true;
         },
 
-        methodOpenDialogDeleteBlind(itemOrder){
-            this.modelDeleteBlindItemId = itemOrder.id;
+        methodOpenDialogDeleteBlind(itemBlindID){
+            this.modelDeleteBlindItemId = itemBlindID;
             this.modelDialogDeleteBlind = true;
         },
 
@@ -527,11 +400,21 @@ export default {
             this.modelDialogDeleteBlind = false;
         },
 
+        changeRadioValue(value){
+            this.modelRadioStepFourPaymentMethod = value;
+            if(localStorage.getItem('quotedOrder') !== null){
+                let localStorageObject = JSON.parse(localStorage.getItem('quotedOrder'))
+                localStorageObject.paymentType = this.modelRadioStepFourPaymentMethod;
+                localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
+            }
+        },
+
         methodCancelAllOrders(){
             this.isCancellingAllOrders = true;
             this.$store.dispatch('removeAllOrdersMarketcar').then(async ()=>{
                 await this.$store.dispatch('getQuotedOrders');
                 await this.$store.dispatch('getQuotingOrders');
+                localStorage.removeItem('quotedOrder');
                 this.isCancellingAllOrders = false;
                 this.methodCloseDialogCancelAllOrders();
                 console.log('mod')
@@ -541,6 +424,12 @@ export default {
         methodCancelOneOrder(){
             this.isCancellingOneOrder = true;
             if(this.modelCancelOneOrderItemId > -1){
+                if(localStorage.getItem('quotedOrder') !== null){
+                    let localStorageObject = JSON.parse(localStorage.getItem('quotedOrder'));
+                    if(localStorageObject.order.id == this.modelCancelOneOrderItemId){
+                        localStorage.removeItem('quotedOrder')
+                    }
+                }
                 this.$store.dispatch('removeOrderMarketcar', this.modelCancelOneOrderItemId).then(async()=>{
                     await this.$store.dispatch('getQuotedOrders');
                     await this.$store.dispatch('getQuotingOrders');
@@ -553,8 +442,16 @@ export default {
         methodDeleteBlind(){
             this.isDeletingBlind = true;
             if(this.modelDeleteBlindItemId > -1){
+                if(localStorage.getItem('quotedOrder') !== null){
+                    let localStorageObject = JSON.parse(localStorage.getItem('quotedOrder'))
+                    let findedIdBlind = localStorageObject.order.blinds.findIndex((itemBlind) => itemBlind.id == this.modelDeleteBlindItemId);
+                    if(findedIdBlind > -1){
+                        let removed = localStorageObject.order.blinds.splice(findedIdBlind, 1);
+                        localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
+                    }
+                }
                 this.$store.dispatch('deleteBlindFromOrder', this.modelDeleteBlindItemId).then(async()=>{
-                    await this.$store.dispatch('getQuotedOrder', this.localCurrentIDQuotingOrderStepThree);
+                    await this.$store.dispatch('getQuotedOrder', this.quotedOrder.id);
                     await this.$store.dispatch('getQuotedOrders');
                     this.isDeletingBlind = false;
                     this.methodCloseDialogDeleteBlind();
@@ -562,35 +459,31 @@ export default {
             }
         },
 
-        localMethodStepThreeCheckAndBuy(localItem){
+        methodStepTwoCheckAndBuy(localItem){
             this.$store.dispatch('getQuotedOrder', localItem.id).then(()=>{
+                localStorage.removeItem('quotedOrder');
+                localStorage.setItem('quotedOrder', JSON.stringify({order:this.quotedOrder, step: 2, paymentType: '', isCheckTerms: false}));
                 this.orderId = localItem.id;
                 this.isOrdersAndQuotationsDialogActivated = false;
                 this.modelWindowSteper = 2;
-                this.localCurrentIDQuotingOrderStepThree = localItem.id;
                 this.localPropItemQuotationOrderNumberID = localItem.order;
                 this.localModelSubtotalAndTotal = localItem.total;
+                this.$router.push({name: 'StepTwoDetails'});
 
             });
 
         },
 
-        localMethodIsOrdersAndQuotationsDialogActivatedOn(localItem){
-            this.$store.dispatch('getQuotedOrder', localItem.id).then(()=>{
-                this.orderId = localItem.id;
+        methodIsOrdersAndQuotationsDialogActivated(itemID){
+            this.$store.dispatch('getQuotedOrder', itemID).then(()=>{
+                this.orderId = itemID;
                 this.isOrdersAndQuotationsDialogActivated = true;
-                this.localCurrentIDQuotingOrderStepThree = localItem.id;
-                this.localPropItemQuotationOrderNumberID = localItem.order;
-                this.localToPropTotalPrice = localItem.total;
-                this.localCurrentItemOfOrdersAndQuotationsDialogView = localItem;
-            });
+            })
         },
 
-        localMethodEditBlindStepThreeMarketcar(){
-            if(this.localCurrentIDQuotingOrderStepThree > -1){
-                this.modelWindowSteper = 1;
-                this.localMethodIsOrdersAndQuotationsDialogActivatedOn(this.quotedOrders.find(item=>item.id == this.localCurrentIDQuotingOrderStepThree));
-            }
+        localMethodEditBlindStepThreeMarketcar(idItem){
+            this.modelWindowSteper = 1;
+            this.methodIsOrdersAndQuotationsDialogActivated(this.quotedOrders.find(item=>item.id == idItem).id);
         },
 
         localMethodBtnContinueStepThree(){
@@ -599,19 +492,22 @@ export default {
 
         localMethodBtnPayStepFour(){
             if(this.flagIsStepFour == false){
-                //HABILITAR RADIO Y BORRAR ESTE COMENTARIO
                 if(this.modelRadioStepFourPaymentMethod != '' && this.modelRadioStepFourPaymentMethod == 'debitcreditcard'){
-                    // axios.post(`/api/netpay-intent-pay/${this.quotedOrder.user.id}`).then((response)=>{
-                    //     if(response.status == 200){
-                            this.flagIsStepFour = true;
-                    //         this.urlNetPayPayment = response.data;
-                    //     }
-                    // });
+                    this.flagIsStepFour = true;
                 }
                 if(this.modelRadioStepFourPaymentMethod != '' && this.modelRadioStepFourPaymentMethod == 'electronicspei'){
                     this.isChargingPetitionSPEIPayment = true;
-                    axios.get(`/api/spei-payment/${this.orderId}`).then((response)=>{
+                    axios.get(`/api/spei-payment/${this.orderId}`).then(async(response)=>{
                         if(response.status == 200){
+                            if(this.user.role == 'Superadministrador' || this.user.role == 'Administrador'){
+                                await this.$store.dispatch('getAdminQuotedOrders')
+                                await this.$store.dispatch('getAdminQuotingOrders')
+                            }
+                            else{
+                                await this.$store.dispatch('getQuotedOrders')
+                                await this.$store.dispatch('getQuotingOrders')
+                            }
+                            localStorage.removeItem('quotedOrder');
                             this.flagIsStepFour = true;
                             this.isChargingPetitionSPEIPayment = false;
                         }
@@ -621,16 +517,57 @@ export default {
         },
 
         emitClickCloseFromOrdersAndQuotationsDialog(){
-            this.localToPropTotalPrice = 0;
-            this.localCurrentItemOfOrdersAndQuotationsDialogView = {};
-            this.localPropItemQuotationOrderNumberID = '';
             this.isOrdersAndQuotationsDialogActivated = false;
         },
 
-        changeStepWindowFromAlerts(index){
-            if(index <= 3 && index != this.modelWindowSteper){
-                this.modelWindowSteper = index;
+        methodChangeStepWindowFromAlerts(index){
+            if(this.computedIsNotNullLocalStorage){
+                if(index <= 3 && index != this.modelWindowSteper){
+                    this.modelWindowSteper = index;
+                    let localStorageObject = JSON.parse(localStorage.getItem('quotedOrder'))
+                    localStorageObject.step =  this.modelWindowSteper;
+                    localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
+                    switch(this.modelWindowSteper){
+                        case 1:
+                                this.$router.push({name: 'Marketcar'});
+                            break;
+                        case 2:
+                                this.$router.push({name: 'StepTwoDetails'});
+                            break;
+                        case 3:
+                                this.$router.push({name: 'StepThreeChoose'});
+                            break;
+                    }
+                }
             }
+        },
+
+        methodContinueStep(){
+            if(this.computedIsNotNullLocalStorage){
+                switch (this.$route.name) {
+                  case 'Marketcar':
+                        let localStorageObject1 = JSON.parse(localStorage.getItem('quotedOrder'))
+                        localStorageObject1.step = 2;
+                        this.modelWindowSteper = 2;
+                        localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject1));
+                      this.$router.push({name: 'StepTwoDetails'});
+                    break;
+                  case 'StepTwoDetails':
+                        let localStorageObject2 = JSON.parse(localStorage.getItem('quotedOrder'))
+                        localStorageObject2.step = 3;
+                        this.modelWindowSteper = 3;
+                        localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject2));
+                        this.$router.push({name: 'StepThreeChoose'});
+                    break;
+                //   case 'StepThreeChoose':
+
+                //     break;
+                //   default:
+
+                //     break;
+                }
+            }
+            console.log(this.$route.name)
         }
 
     },
@@ -638,33 +575,49 @@ export default {
         ...mapState({
             quotedOrders: state => state.ordersModule.quotedOrders,
             quotedOrder: state => state.ordersModule.quotedOrder,
-
+            user: state => state.user,
         }),
         btnContinuarTitle(){
             return this.modelWindowSteper == 3 ? 'Pagar' : 'Continuar';
         },
         computedNoPaidOrders(){
             return this.quotedOrders.filter(itemOrder=> itemOrder.state == 'No Pagada');
+        },
+        computedIsNotNullLocalStorage(){
+            if(localStorage.getItem('quotedOrder') !== null){
+                return true;
+            }
+            else{
+                return false;
+            }
+        },
+        computedIsAceptedTerms(){
+            if(this.modelWindowSteper == 3){
+                if(this.checkboxPrivacyTermsAndContinue == true && this.modelRadioStepFourPaymentMethod != ''){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+            return true;
+        }
+    },
+    watch:{
+        checkboxPrivacyTermsAndContinue(newValue, oldValue){
+            if(localStorage.getItem('quotedOrder') !== null){
+                let localStorageObject = JSON.parse(localStorage.getItem('quotedOrder'))
+                localStorageObject.isCheckTerms = newValue;
+                localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
+            }
         }
     },
     components:{
-        OrdersCardsStepOne,
         DashboardOrdersAndQuotationsDialog,
-        DashboardBlindsProductDetailCards,
-        MarketCompoNetPayPayment
     }
 }
 </script>
 
 <style scoped>
-.localBorderNoActiveClass{
-    border: 2px solid #757575;
-    border-radius: 5px;
-    filter: grayscale(1);
-}
->>>.v-radio.v-item--active{
-    border: 2px solid #3ba2a9;
-    border-radius: 5px;
-    filter: grayscale(0);
-}
+
 </style>

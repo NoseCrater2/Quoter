@@ -1,7 +1,7 @@
 <template>
     <v-row dense justify="space-around">
-      <v-col cols="12" xl="4" lg="6" md="12" sm="12" v-for="(item) in itemOrder" :key="item.id">
-            <v-card min-width="338" max-width="343" class="pa-2 mx-auto" outlined color="grey lighten-2">
+      <v-col cols="12" xl="4" lg="6" md="12" sm="12" v-for="(item) in computedNoPaidOrders" :key="item.id">
+            <v-card :color="methodColoredBorder(item.id) ? '#80CBC4' : 'grey lighten-2'" min-width="338" max-width="343" class="pa-2 mx-auto" outlined>
                 <v-list-item style="background-color: white">
                     <v-list-item-content>
                         <v-list-item-title class="text-uppercase text-start mt-n3">
@@ -46,12 +46,12 @@
                     </v-list-item-content>
                 </v-list-item>
                 <v-card-text>
-                    <v-btn @click="localMethodCheckAndBuySendToMarketcarView(item)" block color="orange darken-1" class="white--text font-weight-bold" style="font-size: 1.3rem" tile >REVISAR Y PAGAR</v-btn>
+                    <v-btn @click="pushToStepTwo(item)" block color="orange darken-1" class="white--text font-weight-bold" style="font-size: 1.3rem" tile >REVISAR Y PAGAR</v-btn>
                 </v-card-text>
                 <v-card-actions>
-                    <v-btn @click="localMethodDetailsItemSendToMarketcarView(item)" text class="text-decoration-underline">Ver detalles</v-btn>
+                    <v-btn @click="localMethodDetailsItemSendToMarketcarView(item.id)" text class="text-decoration-underline">Ver detalles</v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn @click="methodCancelOrder(item)" text>Cancelar orden</v-btn>
+                    <v-btn @click="methodCancelOrder(item.id)" text>Cancelar orden</v-btn>
                 </v-card-actions>
             </v-card>
       </v-col>
@@ -61,31 +61,52 @@
 <script>
 import { mapState } from 'vuex';
 export default {
+    created(){
+        if(Object.keys(this.quotedOrder).length == 0){
+            if(localStorage.getItem('quotedOrder') !== null){
+                Object.assign(this.quotedOrder, this.$store.getters.getQuotedOrder.order)
+                this.idSelectedOrder = this.quotedOrder.id;
+            }
+        }
+    },
     data() {
         return {
             mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
+            idSelectedOrder: localStorage.getItem('quotedOrder') !== null ? JSON.parse(localStorage.getItem('quotedOrder')).order.id : -1
         }
     },
     methods:{
-        localMethodCheckAndBuySendToMarketcarView(item){
-            this.$emit('emitCheckAndBuyFromOrdersCardsStepOneView', item)
+        pushToStepTwo(item){
+            this.$store.dispatch('getQuotedOrder', item.id).then(()=>{
+                localStorage.removeItem('quotedOrder');
+                localStorage.setItem('quotedOrder', JSON.stringify({order:this.quotedOrder, step: 2, paymentType: '', isCheckTerms: false}));
+                this.idSelectedOrder = this.quotedOrder.id;
+                this.$router.push({name: 'StepTwoDetails'});
+            })
+
         },
-        localMethodDetailsItemSendToMarketcarView(item){
-            this.$emit('emitDetailsItemFromOrdersCardsStepOneView', item)
+        methodCancelOrder(itemID){
+            this.$emit('emitCancelOrder', itemID);
         },
-        methodCancelOrder(item){
-            this.$emit('emitCancelOrder', item);
+        localMethodDetailsItemSendToMarketcarView(itemID){
+            this.$emit('emitDetailsItemFromOrdersCardsStepOneView', itemID);
+        },
+        methodColoredBorder(id){
+            if(this.idSelectedOrder > -1){
+                if(this.idSelectedOrder == id){
+                    return true;
+                }
+            }
+            return false;
         }
     },
     computed:{
-
-    },
-    components:{
-
-    },
-    props:{
-        itemOrder:{
-            type: Array
+        ...mapState({
+            quotedOrders: state => state.ordersModule.quotedOrders,
+            quotedOrder: state => state.ordersModule.quotedOrder,
+        }),
+        computedNoPaidOrders(){
+            return this.quotedOrders.filter(itemOrder=> itemOrder.state == 'No Pagada');
         }
     }
 }

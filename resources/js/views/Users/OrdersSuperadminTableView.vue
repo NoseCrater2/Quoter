@@ -1,7 +1,7 @@
 <template>
     <v-row>
-        <v-col cols="3">
-            <v-card>
+        <v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" xl="3" lg="3" md="3" sm="3">
+            <v-card outlined class="rounded-lg">
                 <v-card-title style="background: #3ba2a9" class="font-weight-bold white--text">
                     Mi cuenta
                 </v-card-title>
@@ -13,6 +13,7 @@
                             <v-list-item-title>Mi Perfil</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
+                    <v-divider></v-divider>
                     <v-list-group color="#3ba2a9" :value="true" no-action sub-group>
                         <template v-slot:activator>
                           <v-list-item-content>
@@ -26,7 +27,7 @@
                         :key="i"
                         link
                         >
-                          <v-list-item-title v-text="option.title"></v-list-item-title>
+                          <v-card-subtitle class="pa-0" style="font-size: 0.8125rem" v-text="option.title"></v-card-subtitle>
                         </v-list-item>
                     </v-list-group>
                     <v-list-group  color="#3ba2a9" :value="true" no-action sub-group>
@@ -42,13 +43,21 @@
                         :key="i"
                         link
                       >
-                        <v-list-item-title v-text="option.title"></v-list-item-title>
+                        <v-card-subtitle class="pa-0" style="font-size: 0.8125rem" v-text="option.title"></v-card-subtitle>
                       </v-list-item>
                     </v-list-group>
+                    <v-divider></v-divider>
+                    <v-list-item>
+                        <v-list-item-icon>
+                        </v-list-item-icon>
+                        <v-list-item-content>
+                            <v-list-item-title>Mis compras</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
                 </v-list>
             </v-card>
         </v-col>
-        <v-col cols="9">
+        <v-col cols="12" xl="9" lg="9" md="9" sm="12">
         <div class="text-center">
         </div>
         <v-data-table
@@ -77,6 +86,10 @@
             <template v-slot:item.total="{ item }">
                  {{mxCurrencyFormat.format(item.total)}} MXN
             </template>
+
+            <!-- <template v-if="option.includes('admin')" v-slot:item.user="{ item }">
+                 {{item.user}}
+            </template> -->
 
             <template v-slot:item.state="{ item }">
                 <div class="d-inline">
@@ -164,7 +177,7 @@
                 <v-col cols="12" xl="9" lg="9" md="9" sm="12">
                     <v-select
                       v-model="modelSelectActions"
-                      :items="arrayItemsActions"
+                      :items="computedArrayItemsActionsQuotingsOrders"
                       item-text="text"
                       item-value="value"
                       label="Selecciona acción a realizar"
@@ -324,7 +337,14 @@ export default {
           'getLoginStatus',
           'getUserStatus'
         ]),
-
+        computedArrayItemsActionsQuotingsOrders(){
+            if(this.option === 'ordenes-admin' || this.option === 'ordenes'){
+                return this.arrayItemsActions;
+            }
+            else if(this.option === 'cotizaciones-admin' || this.option === 'cotizaciones'){
+                return [this.arrayItemsActions[0]];
+            }
+        },
         items(){
             if(this.option.includes('ordenes')){
                 return this.orders

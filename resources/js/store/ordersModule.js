@@ -6,7 +6,7 @@ const ordersModule = {
       orders: [],
       totalPrice: 0,
       quotedOrders: [],
-      quotedOrder: [],
+      quotedOrder: {},
       quotingOrders: [],
       quotingOrder: [],
 
@@ -14,6 +14,10 @@ const ordersModule = {
 
 
     getters:{
+
+        getQuotedOrder(){
+           return JSON.parse(localStorage.getItem('quotedOrder'));
+        },
 
         currentVigentQuoutingItemListDistributors(state){
             return state.quotingOrders.filter(itemOrder=>{
@@ -74,6 +78,8 @@ const ordersModule = {
         },
 
         setQuotedOrder(state, order){
+            // localStorage.removeItem('quotedOrder');
+            // localStorage.setItem('quotedOrder', JSON.stringify({order:order, step: 2}));
           state.quotedOrder = order
           //state.newUserId = newUser.id;
         },

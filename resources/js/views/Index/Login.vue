@@ -171,6 +171,7 @@ export default {
 
         this.$store.dispatch("loadUser").then(()=>{
           const redirectPath = this.$route.query.redirect || '/dashboard';
+
           if(this.$route.query.is_quotation == 0 || this.$route.query.is_quotation == 1){
               this.$router.push({path: redirectPath, query: {is_quotation: this.$route.query.is_quotation}});
           }

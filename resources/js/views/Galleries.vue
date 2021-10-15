@@ -179,7 +179,6 @@ export default {
             if(this.imgLoaded){
                 this.arrayBoxHeight.push({objIndex: index, height: this.$refs.myBox[index].clientHeight});
                 if((this.arrayBoxHeight.length == this.images.length)){
-                    console.log(this.arrayBoxHeight)
                     this.generalCounter = true;
                 }
             }

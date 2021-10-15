@@ -160,11 +160,7 @@
         </v-col>
         <v-col cols="12">
             <div style="border: 1px dashed black;">
-                <v-row no-gutters>
-                    <v-col cols="12" xl="6" lg="6" md="12" sm="12" class="pa-2" v-for="(itemBlind, index) in order.blinds" :key="itemBlind.id">
-                        <DashboardBlindsProductDetailCards :propItemArrayBlindsObject="itemBlind" :propBlindCount="(index + 1)" :propOrderUser="order.user" :propBreakpointFromDialog="$vuetify.breakpoint"></DashboardBlindsProductDetailCards>
-                    </v-col>
-                </v-row>
+                <DashboardBlindsProductDetailCards></DashboardBlindsProductDetailCards>
             </div>
             <!-- <div v-else-if="propIsOrderOrQuotationString == 'quotation'" style="border: 1px dashed black;">
                 <v-row no-gutters>
@@ -269,7 +265,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import axios from 'axios'
 const FileDownload = require('js-file-download');
 import DashboardBlindsProductDetailCards from '../../Dashboard/BlindsProductDetailCards/DashboardBlindsProductDetailCards.vue'
@@ -296,14 +291,6 @@ export default {
       DashboardBlindsProductDetailCards
   },
   computed:{
-      ...mapState({
-        //   orders: state => state.ordersModule.orders,
-        //   quotedOrders: state => state.ordersModule.quotedOrders,
-        //   quotedOrder: state => state.ordersModule.quotedOrder,
-        //   quotingOrders: state => state.ordersModule.quotingOrders,
-        //   quotingOrder : state => state.ordersModule.quotingOrder,
-        //   user: (state) => state.user,
-      }),
       computedQuotingOrdersRoute(){
           if(this.$router.currentRoute.name == 'Orders'){
               if(this.propIsOrderOrQuotationString == 'order'){
@@ -328,7 +315,15 @@ export default {
     },
 
     deleteOrder(){
-      this.$store.dispatch('deleteQuotingOrder', this.id).then(()=>{
+      this.$store.dispatch('deleteQuotingOrder', this.id).then(async()=>{
+          if(localStorage.getItem('quotedOrder') !== null){
+              let localStorageObject = JSON.parse(localStorage.getItem('quotedOrder'));
+              if(localStorageObject.order.id == this.id){
+                  localStorage.removeItem('quotedOrder')
+              }
+          }
+          await this.$store.dispatch('getQuotedOrders');
+          await this.$store.dispatch('getQuotingOrders');
           this.$emit('emitClickCloseFromOrdersAndQuotationsDialog', false);
       })
     },
@@ -357,25 +352,9 @@ export default {
 
   },
   props:{
-      isOrdersAndQuotationsDialogActivated: {
-          type: Boolean
-      },
-      idOrderQuotationOrdersAndQuotationsDialog:{
-          type: Object
-      },
-
       id: {
           type: Number,
       }
-    //   propTotalPrice:{
-    //       type: Number
-    //   },
-    //   propIsOrderOrQuotationString: {
-    //       type: String
-    //   },
-    //   propItemQuotationOrderNumberID:{
-    //       type: String
-    //   }
   }
 }
 </script>
