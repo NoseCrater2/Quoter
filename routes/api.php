@@ -153,10 +153,6 @@ Route::post('auth-order-list-pdf-admins' , 'Api\ProductController@authExportPdf'
 Route::post('send-order-email-pdf' , 'Api\ProductController@sendOrderEmail');
 Route::post('sanctum/token','Auth\MobileAuthController@login');
 
-
-
-
-
-
-Route::resource('prices', 'PriceController')->only('index','show', 'store', 'update','destroy');
+Route::resource('prices', 'PriceController')->only('index','store', 'update','destroy');
+Route::resource('catalogs', 'CatalogController')->only('index','store', 'update','destroy');
 Route::get('reset-password/{email}' , 'UserController@resetPassword');

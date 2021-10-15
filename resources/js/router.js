@@ -102,6 +102,11 @@ const routes = [
                 component: () => import("./views/Users/PriceList.vue"),
                 name: "PriceList",
             },
+            {
+                path: "catalogList",
+                component: () => import("./views/Users/CatalogList.vue"),
+                name: "CatalogList",
+            },
 
             // {
             //     path: "quotations",
@@ -141,6 +146,16 @@ const routes = [
                 path: "importPdfs",
                 component: () => import("./components/ProductsTables/ImportPdfs.vue"),
                 name: "ImportPdfs",
+                meta: {
+                    requiresAuth: true,
+                }
+
+            },
+
+            {
+                path: "importCatalog",
+                component: () => import("./components/ProductsTables/ImportCatalog.vue"),
+                name: "importCatalog",
                 meta: {
                     requiresAuth: true,
                 }
