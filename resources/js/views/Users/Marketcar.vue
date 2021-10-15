@@ -234,7 +234,8 @@
                             </v-checkbox>
                             <v-card-actions>
                               <v-btn
-                                :disabled="(!computedIsNotNullLocalStorage == false && computedIsAceptedTerms == true) ? false : true"
+                                :disabled="((!computedIsNotNullLocalStorage == false && computedIsAceptedTerms == true) && isChargingPetitionSPEIPayment == false) ? false : true"
+                                :loading="isChargingPetitionSPEIPayment"
                                 @click="methodContinueStep"
                                 large
                                 block
@@ -337,7 +338,7 @@ export default {
             isCancellingOneOrder: false,
             isDeletingBlind: false,
             isChargingPetitionSPEIPayment: false,
-            flagIsStepFour: false,
+            flagIsStepFour: localStorage.getItem('quotedOrder') !== null ? JSON.parse(localStorage.getItem('quotedOrder')).flagIsStepFour : false,
             urlNetPayPayment: null,
             modelRadioStepFourPaymentMethod: localStorage.getItem('quotedOrder') !== null ? JSON.parse(localStorage.getItem('quotedOrder')).paymentType : '',
             mxCurrencyFormat : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}),
@@ -462,7 +463,7 @@ export default {
         methodStepTwoCheckAndBuy(localItem){
             this.$store.dispatch('getQuotedOrder', localItem.id).then(()=>{
                 localStorage.removeItem('quotedOrder');
-                localStorage.setItem('quotedOrder', JSON.stringify({order:this.quotedOrder, step: 2, paymentType: '', isCheckTerms: false}));
+                localStorage.setItem('quotedOrder', JSON.stringify({order:this.quotedOrder, step: 2, paymentType: '', isCheckTerms: false, flagIsStepFour: false}));
                 this.orderId = localItem.id;
                 this.isOrdersAndQuotationsDialogActivated = false;
                 this.modelWindowSteper = 2;
@@ -494,20 +495,28 @@ export default {
             if(this.flagIsStepFour == false){
                 if(this.modelRadioStepFourPaymentMethod != '' && this.modelRadioStepFourPaymentMethod == 'debitcreditcard'){
                     this.flagIsStepFour = true;
+                    let localStorageObject =  JSON.parse(localStorage.getItem('quotedOrder'));
+                    localStorageObject.flagIsStepFour = this.flagIsStepFour;
+                    localStorageObject.card = {isNewCard: false, isCurrentCard: false, currentCard: null};
+                    localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
+                    this.$router.push({name: 'StepFourNetpay'});
                 }
-                if(this.modelRadioStepFourPaymentMethod != '' && this.modelRadioStepFourPaymentMethod == 'electronicspei'){
+                else if(this.modelRadioStepFourPaymentMethod != '' && this.modelRadioStepFourPaymentMethod == 'electronicspei'){
                     this.isChargingPetitionSPEIPayment = true;
                     axios.get(`/api/spei-payment/${this.orderId}`).then(async(response)=>{
                         if(response.status == 200){
                             if(this.user.role == 'Superadministrador' || this.user.role == 'Administrador'){
                                 await this.$store.dispatch('getAdminQuotedOrders')
                                 await this.$store.dispatch('getAdminQuotingOrders')
+                                let localStorageObject =  JSON.parse(localStorage.getItem('quotedOrder'));
+                                localStorageObject.flagIsStepFour = this.flagIsStepFour;
+                                localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
+                                this.$router.push({name: 'StepFourSpei'});
                             }
                             else{
                                 await this.$store.dispatch('getQuotedOrders')
                                 await this.$store.dispatch('getQuotingOrders')
                             }
-                            localStorage.removeItem('quotedOrder');
                             this.flagIsStepFour = true;
                             this.isChargingPetitionSPEIPayment = false;
                         }
@@ -526,6 +535,7 @@ export default {
                     this.modelWindowSteper = index;
                     let localStorageObject = JSON.parse(localStorage.getItem('quotedOrder'))
                     localStorageObject.step =  this.modelWindowSteper;
+                    localStorageObject.flagIsStepFour = false;
                     localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
                     switch(this.modelWindowSteper){
                         case 1:
@@ -559,9 +569,9 @@ export default {
                         localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject2));
                         this.$router.push({name: 'StepThreeChoose'});
                     break;
-                //   case 'StepThreeChoose':
-
-                //     break;
+                  case 'StepThreeChoose':
+                      this.localMethodBtnPayStepFour();
+                    break;
                 //   default:
 
                 //     break;
