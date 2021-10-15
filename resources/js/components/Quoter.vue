@@ -308,6 +308,10 @@
                               height="120"
                               :style="active?'border: 2px solid #47a5ad':''"
                             >
+
+
+
+                            
                             <div class="d-flex  justify-space-around">
                               <div>
                                 <v-img
@@ -2121,7 +2125,6 @@ export default {
       if(this.user == null){
           this.redirectToLogin(1);
       }else{
-
           if(this.$route.params.order_id){
             this.$store.dispatch('updateQuotations', {'orders': this.orders, 'id': this.$route.params.order_id}).then( () => {
               this.savedBlindMessage = true
@@ -2361,6 +2364,7 @@ export default {
           });
         } else {
           this.$store.dispatch("addToOrder", this.order).then(() => {
+              console.log("QUOTEDKDKD", this.order)
             this.order = Object.assign({}, this.defaultOrder);
             this.order.canvas = [{width: null, height: null}],
             this.order.motor =  Object.assign({}, this.defaultMotor);

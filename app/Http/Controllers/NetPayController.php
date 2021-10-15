@@ -27,7 +27,7 @@ class NetPayController extends Controller
 
     public function netpayIntentPay(Request $request, User $user)
     {
-        $client = new Client([]);
+        $client = new Client([]);//COMENTARIO
 
         $method = 'POST';
         $requestUrl = $this->baseUrl.'v3/charges';
