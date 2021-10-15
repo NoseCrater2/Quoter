@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Order;
 use App\User;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
@@ -8,12 +10,27 @@ use GuzzleHttp\RequestOptions;
 
 class NetPayController extends Controller
 {
+    protected $baseUrl;
+    protected $secretKey;
+
+    public function __construct() {
+        if(config('netpay.mode') == 'live'){
+            $this->baseUrl = config('netpay.live.base_url');
+            $this->secretKey = config('netpay.live.secret_key');
+        }
+        else{
+            $this->baseUrl = config('netpay.sandbox.base_url');
+            $this->secretKey = config('netpay.sandbox.secret_key');
+        }
+
+    }
+
     public function netpayIntentPay(Request $request, User $user)
     {
         $client = new Client([]);
 
         $method = 'POST';
-        $requestUrl = 'https://gateway-154.netpaydev.com/gateway-ecommerce/v3/charges';
+        $requestUrl = $this->baseUrl.'v3/charges';
 
         $formParams = [
             'amount' => $request->amount,
@@ -41,11 +58,11 @@ class NetPayController extends Controller
             'cvv' => $request->cvv,
             'saveCard' => 'true',
             'source' => $request->token,
-            
+
         ];
         $headers = [
             'Accept'=> 'application/json',
-            'Authorization' => 'sk_netpay_MVdIgYbEdsTJngVCvuNyTwsQZknisxJjJZWBesUndPhBv',
+            'Authorization' => $this->secretKey,
             'Content-Type' => 'application/json'
         ];
 
@@ -56,8 +73,13 @@ class NetPayController extends Controller
         ]);
 
         $response = $response->getBody()->getContents();
-
-        return json_decode($response)->{'hostedCheckoutUrl'};
+        $status = json_decode($response)->{'status'};
+        if($status == 'success'){
+            $newOrder = Order::find($request->idOrder);
+            $newOrder->state = 'Recibida';
+            $newOrder->save();
+        }
+        return $status;
     }
 
     public function saveClient(Request $request, User $user)
@@ -65,7 +87,7 @@ class NetPayController extends Controller
         $client = new Client([]);
 
         $method = 'POST';
-        $requestUrl = 'https://gateway-154.netpaydev.com/gateway-ecommerce/v3/clients';
+        $requestUrl = $this->baseUrl.'v3/clients';
 
         $formParams = [
             'firstName' => $user->name,
@@ -80,9 +102,9 @@ class NetPayController extends Controller
         ];
         $headers = [
             'Accept' => 'application/json',
-            'secretkey'=> 'sk_netpay_MVdIgYbEdsTJngVCvuNyTwsQZknisxJjJZWBesUndPhBv',
+            'secretkey'=> $this->secretKey,
             'Content-Type' => 'application/json',
-            'Authorization' => 'sk_netpay_MVdIgYbEdsTJngVCvuNyTwsQZknisxJjJZWBesUndPhBv',
+            'Authorization' => $this->secretKey,
             'User-Agent' => 'ReadMe-API-Explorer'
 
         ];
@@ -101,10 +123,11 @@ class NetPayController extends Controller
 
     public function getClient(User $user)
     {
+        // dd(env('NETPAY_SECRET_KEY_SBOX'));
         $client = new Client([]);
 
         $method = 'GET';
-        $requestUrl = 'https://gateway-154.netpaydev.com/gateway-ecommerce/v3/clients/'.$user->netpayClientId;
+        $requestUrl = $this->baseUrl.'v3/clients/'.$user->netpayClientId;
         $headers = [
             'Accept' => 'application/json',
             'Authorization' => 'sk_netpay_MVdIgYbEdsTJngVCvuNyTwsQZknisxJjJZWBesUndPhBv',
@@ -125,7 +148,7 @@ class NetPayController extends Controller
         $client = new Client([]);
 
         $method = 'PUT';
-        $requestUrl = 'https://gateway-154.netpaydev.com/gateway-ecommerce/v3/clients/'.$user->netpayClientId.'/token';
+        $requestUrl = $this->baseUrl.'v3/clients/'.$user->netpayClientId.'/token';
 
         $formParams = [
             'token' => $request->token,
@@ -134,9 +157,9 @@ class NetPayController extends Controller
         ];
         $headers = [
             'Accept' => 'application/json',
-            'secretkey'=> 'sk_netpay_MVdIgYbEdsTJngVCvuNyTwsQZknisxJjJZWBesUndPhBv',
+            'secretkey'=> $this->secretKey,
             'Content-Type' => 'application/json',
-            'Authorization' => 'sk_netpay_MVdIgYbEdsTJngVCvuNyTwsQZknisxJjJZWBesUndPhBv',
+            'Authorization' => $this->secretKey,
             'User-Agent' => 'ReadMe-API-Explorer'
 
         ];
@@ -155,12 +178,12 @@ class NetPayController extends Controller
         $client = new Client([]);
 
         $method = "DELETE";
-        $requestUrl = 'https://gateway-154.netpaydev.com/gateway-ecommerce/v3/clients/'.$user->netpayClientId.'/token/'.$request->token;
+        $requestUrl = $this->baseUrl.'v3/clients/'.$user->netpayClientId.'/token/'.$request->token;
 
         $headers = [
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
-            'Authorization' => 'sk_netpay_MVdIgYbEdsTJngVCvuNyTwsQZknisxJjJZWBesUndPhBv',
+            'Authorization' => $this->secretKey,
         ];
 
         $response = $client->request($method, $requestUrl,  [

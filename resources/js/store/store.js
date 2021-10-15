@@ -103,6 +103,7 @@ actions:{
   logout({commit}){
     commit("setUser", null)
     commit("setLoggedIn", false)
+    localStorage.removeItem('quotedOrder');
     logOut()
   },
 

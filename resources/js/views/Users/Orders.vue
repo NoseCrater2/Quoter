@@ -6,6 +6,11 @@
             <h1 class="d-inline" style="color: #3ba2a9">DISTRIBUIDORES</h1>
         </div>
 
+        <div class="text-center" v-else>
+            <h1 class="d-inline" style="color: #3ba2a9">{{option.split('-')[0].toUpperCase()}}</h1>
+            <h1 class="font-weight-light d-inline">PROPIAS</h1>
+        </div>
+
         <OrdersSuperadminTableView
         v-if="user.role === 'Superadministrador' || user.role === 'Administrador' || user.role === 'Vendedor'"
         :option="option"
