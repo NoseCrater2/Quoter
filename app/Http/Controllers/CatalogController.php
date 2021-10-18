@@ -26,8 +26,8 @@ class CatalogController extends Controller
         $data = $request->all();
         $rules =[
             'title' => 'required|string|max:255',
-            // 'email' => 'required|string|email|max:255|unique:users',
-            // 'rfc' => 'nullable|string|size:13',
+            'file' => 'required|file|max:30000',
+            'thumbnail' => 'required|file:100',
         ];
 
         $validator= Validator::make($data,$rules, ErrorMessages::getMessages());
