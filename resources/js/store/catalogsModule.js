@@ -3,6 +3,7 @@
 const catalogsModule = {
     state: {
         catalogs: [],
+        progress: 0,
     },
 
     mutations: {
@@ -11,16 +12,16 @@ const catalogsModule = {
         },
 
         saveCatalog(state, catalog){
-            state.catalog.push(catalog)
+            state.catalogs.push(catalog)
         },
 
         deleteCatalog(state, catalog){
-            let  p = state.catalog.find((p => p.id === catalog.id))
-            state.catalog.splice(state.catalog.indexOf(p),1)
+            let  p = state.catalogs.find((p => p.id === catalog.id))
+            state.catalogs.splice(state.catalogs.indexOf(p),1)
         },
 
         editCatalog(state,catalog){
-            let  p = state.catalog.find((p => p.id === catalog.id))
+            let  p = state.catalogs.find((p => p.id === catalog.id))
             Object.assign(p,catalog);
         },
       
@@ -44,8 +45,14 @@ const catalogsModule = {
             }
             try {
                 const response = await axios
-                .post("/api/catalogs",p)
+                .post("/api/catalogs",p,{
+                onUploadProgress: function (progressEvent) {
+                    state.progress = parseInt( Math.round((progressEvent.loaded / progressEvent.total) * 100) )
+                    },
+                })
+                
                 commit('saveCatalog',response.data);   
+                state.progress = 0
               } catch (error) {
                  
               }
