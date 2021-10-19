@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Order;
+use App\PaymentType;
 use App\User;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
@@ -12,15 +13,18 @@ class NetPayController extends Controller
 {
     protected $baseUrl;
     protected $secretKey;
+    protected $verifySSL;
 
     public function __construct() {
         if(config('netpay.mode') == 'live'){
             $this->baseUrl = config('netpay.live.base_url');
             $this->secretKey = config('netpay.live.secret_key');
+            $this->verifySSL = true;
         }
         else{
             $this->baseUrl = config('netpay.sandbox.base_url');
             $this->secretKey = config('netpay.sandbox.secret_key');
+            $this->verifySSL = base_path('cacert.pem');
         }
 
     }
@@ -57,19 +61,20 @@ class NetPayController extends Controller
             ],
             'cvv' => $request->cvv,
             'saveCard' => 'true',
-            'source' => $request->token,
+            'source' => $request->token
 
         ];
         $headers = [
             'Accept'=> 'application/json',
             'Authorization' => $this->secretKey,
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
+            'User-Agent' => 'ReadMe-API-Explorer'
         ];
 
         $response = $client->request($method, $requestUrl,  [
             'json' => $formParams,
             'headers' => $headers,
-            'verify' => base_path('cacert.pem')
+            'verify' => $this->verifySSL
         ]);
 
         $response = $response->getBody()->getContents();
@@ -112,13 +117,17 @@ class NetPayController extends Controller
         $response = $client->request($method, $requestUrl,  [
             'json' => $formParams,
             'headers' => $headers,
-            'verify' => base_path('cacert.pem'),
+            'verify' => $this->verifySSL
         ]);
 
         $response = $response->getBody()->getContents();
 
         $user->netpayClientId =  json_decode($response)->{'id'};
         $user->save();
+        if(!$user->paymentTypes->contains('name', 'NetPay')){
+            $id = PaymentType::where('name', 'NetPay')->first()->id;
+            $user->paymentTypes()->attach($id);
+        }
     }
 
     public function getClient(User $user)
@@ -130,13 +139,14 @@ class NetPayController extends Controller
         $requestUrl = $this->baseUrl.'v3/clients/'.$user->netpayClientId;
         $headers = [
             'Accept' => 'application/json',
-            'Authorization' => 'sk_netpay_MVdIgYbEdsTJngVCvuNyTwsQZknisxJjJZWBesUndPhBv',
+            'Authorization' => $this->secretKey,
             'Content-Type' => 'application/json',
+            'User-Agent' => 'ReadMe-API-Explorer'
         ];
 
         $response = $client->request($method, $requestUrl,  [
             'headers' => $headers,
-            'verify' => base_path('cacert.pem'),
+            'verify' => $this->verifySSL
         ]);
 
         $response = $response->getBody()->getContents();
@@ -167,7 +177,7 @@ class NetPayController extends Controller
         $response = $client->request($method, $requestUrl,  [
             'json' => $formParams,
             'headers' => $headers,
-            'verify' => base_path('cacert.pem'),
+            'verify' => $this->verifySSL
         ]);
 
         $response = $response->getBody()->getContents();
@@ -184,11 +194,12 @@ class NetPayController extends Controller
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
             'Authorization' => $this->secretKey,
+            'User-Agent' => 'ReadMe-API-Explorer'
         ];
 
         $response = $client->request($method, $requestUrl,  [
             'headers' => $headers,
-            'verify' => base_path('cacert.pem'),
+            'verify' => $this->verifySSL
         ]);
 
         $response = $response->getBody()->getContents();

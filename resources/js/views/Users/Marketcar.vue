@@ -325,7 +325,26 @@ export default {
                     Object.assign(this.quotedOrder, this.$store.getters.getQuotedOrder.order)
                 }
             }
-        })
+            //REDIRICCIONAMIENTO CUANDO HAY ALGO EN LOCALSTORAGE Y SE MANDA LLAMAR EL CARRITO DESDE LOS BOTONES DEL COTIZADOR Y MI PERFIL
+            if(this.$route.name == 'Marketcar'){
+                if(localStorage.getItem('quotedOrder') !== null){
+                    if(JSON.parse(localStorage.getItem('quotedOrder')).step == 2){
+                        this.$router.push({name: 'StepTwoDetails'})
+                    }
+                    else if(JSON.parse(localStorage.getItem('quotedOrder')).step == 3){
+                        if(JSON.parse(localStorage.getItem('quotedOrder')).flagIsStepFour == true && JSON.parse(localStorage.getItem('quotedOrder')).isCheckTerms == true && JSON.parse(localStorage.getItem('quotedOrder')).paymentType=='debitcreditcard'){
+                            this.$router.push({name: 'StepFourNetpay'})
+                        }
+                        else if(JSON.parse(localStorage.getItem('quotedOrder')).flagIsStepFour == true && JSON.parse(localStorage.getItem('quotedOrder')).isCheckTerms == true && JSON.parse(localStorage.getItem('quotedOrder')).paymentType=='electronicspei'){
+                            this.$router.push({name: 'StepFourSpei'})
+                        }
+                        else if(JSON.parse(localStorage.getItem('quotedOrder')).flagIsStepFour == false){
+                            this.$router.push({name: 'StepThreeChoose'})
+                        }
+                    }
+                }
+            }
+        });
     },
     data() {
         return {
@@ -418,7 +437,6 @@ export default {
                 localStorage.removeItem('quotedOrder');
                 this.isCancellingAllOrders = false;
                 this.methodCloseDialogCancelAllOrders();
-                console.log('mod')
             });
         },
 
@@ -577,7 +595,6 @@ export default {
                 //     break;
                 }
             }
-            console.log(this.$route.name)
         }
 
     },

@@ -451,8 +451,13 @@ export default {
             this.chargeCards()
         }
 
-        NetPay.setApiKey(process.env.MIX_NETPAY_PUBLIC_KEY_SBOX);
-        NetPay.setSandboxMode(true);
+
+        // NetPay.setApiKey(process.env.MIX_NETPAY_PUBLIC_KEY_PROD); //PRODUCCION
+
+        NetPay.setApiKey(process.env.MIX_NETPAY_PUBLIC_KEY_SBOX);//SANDBOX
+        NetPay.setSandboxMode(true);//SANDBOX
+
+
         // let cardInformation = {
         //     cardNumber: "5499490519982367",
         //     expMonth: "04",
