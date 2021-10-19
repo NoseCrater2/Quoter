@@ -54,12 +54,12 @@
             </v-data-iterator>
         </v-card>
            <v-dialog persistent v-model="dialog1" max-width="500">
-                <v-card tile >
+                <v-card tile>
                     <v-card-title>
                         {{ titleDialog }} CATÁLOGO
                     </v-card-title>
                     <v-card-text class="text-center">
-                        <v-form ref="priceForm">
+                        <v-form ref="catalogForm">
                             <v-row >
                                 <v-col cols="12" md="12" sm="12">
                                     <v-file-input
@@ -70,7 +70,6 @@
                                     accept="application/pdf"
                                     prepend-icon="mdi-file-pdf-box"
                                     label="Cátalogo en pdf"
-                                    hide-details
                                     ></v-file-input>
                                 </v-col>
                                  <v-col cols="12" md="12" sm="12">
@@ -79,7 +78,6 @@
                                     v-model="title"
                                     label="Título"
                                     outlined
-                                    hide-details
                                     ></v-text-field>
                                 </v-col>
                                 <v-col cols="12" md="12" sm="12">
@@ -91,7 +89,6 @@
                                     accept="image/jpeg"
                                     prepend-icon="mdi-image"
                                     label="Miniatura"
-                                    hide-details
                                     ></v-file-input>
                                 </v-col>
                         </v-row>
@@ -100,8 +97,15 @@
                 <v-card-actions>
                     <v-btn text color="red"  @click="dialog1 = false; isEditing = false">CANCELAR</v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn :loading="loadingSaveButton" @click="save()" color="#47a5ad" text>GUARDAR</v-btn>
+                    <v-btn :loading="loadingSaveButton" @click="save()" color="#47a5ad" text>GUARDARR</v-btn>
                 </v-card-actions>
+                <v-card-text>
+                    <v-progress-linear
+                    v-if="$store.state.catalogsModule.progress"
+                    v-model="$store.state.catalogsModule.progress"
+                      color="teal"
+                    ></v-progress-linear>
+                </v-card-text>
             </v-card>
         </v-dialog>
         <v-dialog persistent v-model="dialogDelete"  max-width="300">
@@ -128,10 +132,10 @@ export default {
     data(){
         return{
             rules: [
-                value => !value || value.size < 5000000 || 'Archivo debe ser menor a 5MB',
+                value => !!value && value.size < 30000000 || 'Archivo debe ser menor a 30MB',
             ],
             rulesImage: [
-                value => !value || value.size < 100000 || 'Imagen debe ser menor a 100Kb',
+                value => !!value && value.size < 100000 || 'Imagen debe ser menor a 100Kb',
             ],
             price: {
                 title: null,
@@ -157,7 +161,6 @@ export default {
     },
 
      mounted(){
-         console.log('llegó aqui')
         this.$store.dispatch('getCatalogs')
     },
 
@@ -172,7 +175,10 @@ export default {
 
         title: {
             get: function () {
-                return this.price.file?this.price.file.name:null
+                if(this.price.file){
+                    let name = this.price.file.name.substring(0, this.price.file.name.length - 4)
+                    return name
+                }
             },
             set: function (newValue) {
                 this.price.title = newValue
@@ -223,22 +229,27 @@ export default {
         },
 
         save(){
-            this.loadingSaveButton = true
+            if(this.$refs.catalogForm.validate()){
+                this.price.title = this.title
+                this.loadingSaveButton = true
             if(this.isEditing){
                 this.$store.dispatch('editCatalog', this.price).then(() => {
                     this.loadingSaveButton = false
                     this.dialog1 = false
                     this.isEditing = false
-                    this.price = Object.assign({},this.defaultPrice)
+                    this.$refs.catalogForm.reset()
+                    //this.price = Object.assign({},this.defaultPrice)
                 })
             }else{
                 this.$store.dispatch('saveCatalog', this.price).then(() => {
                     this.loadingSaveButton = false
                     this.dialog1 = false
                     this.isEditing = false
-                    this.price = Object.assign({},this.defaultPrice)
+                    this.$refs.catalogForm.reset()
                 })
             }
+            }
+            
 
         }
 
