@@ -17,6 +17,7 @@ import { isLoggedIn, logOut } from '../utils/auth';
 import priceModule from './pricesModule';
 import catalogsModule from './catalogsModule';
 import notificationsModule from './notificationsModule';
+import paymentTypeModule from './paymentTypeModule';
 
 const store = new Vuex.Store({
 
@@ -35,7 +36,8 @@ const store = new Vuex.Store({
    loginModule,
    priceModule,
    notificationsModule,
-   catalogsModule
+   catalogsModule,
+   paymentTypeModule
   },
   state:{
     loginErrors : [],

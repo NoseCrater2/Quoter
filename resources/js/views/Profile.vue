@@ -10,6 +10,10 @@
                 GENERAL
         	  	<v-icon left>mdi-notebook</v-icon>
         	</v-tab>
+            <v-tab>
+                MÉTODOS DE PAGO
+        	  	<v-icon left>mdi-credit-card-multiple</v-icon>
+        	</v-tab>
         	<!-- <v-tab>
         	  	<v-icon left>mdi-cancel</v-icon>ROLES
         	</v-tab> -->
@@ -103,15 +107,74 @@
         		    </v-row>
                 </v-container>
     		</v-tab-item>
-        	<!-- <v-tab-item>
-        	  	<v-card flat>
-        	  	  	<v-list shaped>
-        	  	  	  	<v-list-item-group>
 
-        	  	  	  	</v-list-item-group>
-        	  	  	</v-list>
-        	  	</v-card>
-        	</v-tab-item> -->
+        	<v-tab-item>
+        	  	<v-container fluid>
+                      <v-row justify="center">
+                          <v-col cols="12">
+                            <h2 class="text-center mb-2">Tipos de pago</h2>
+                            <div v-if="paymentTypes.length > 0 && userPaymentTypes.length > 0">
+                                <v-row justify="center" class="ma-2">
+                                    <v-col cols="12" xl="4" lg="6" md="6" sm="12" v-for="payment in userPaymentTypes" :key="payment.id">
+                                        <v-card class="mx-auto" height="100%" outlined>
+
+                                          <v-img
+                                            class="my-4"
+                                            height="120"
+                                            width="auto"
+                                            contain
+                                            :src="payment.name == 'NetPay' ? 'https://www.datum.co.uk/sites/default/files/styles/logo_medium/public/content/service-provider/logo/NetPay%20logo%202019.jpg?itok=TXWIldxD' : payment.name == 'SPEI' ? 'https://cdn2.downdetector.com/static/uploads/logo/spei.png' : ''"
+                                          ></v-img>
+
+                                          <v-card-text class="mt-n4 text-center">
+                                            <h3>{{payment.description}}</h3>
+                                          </v-card-text>
+
+                                          <v-card-actions class="mt-n3">
+                                            <v-btn
+                                              v-if="payment.name == 'NetPay'"
+                                              color="#3ba2a9"
+                                              text
+                                              block
+                                              @click="openConfigNetPayDialog"
+                                            >
+                                              CONFIGURAR
+                                            </v-btn>
+                                          </v-card-actions>
+
+                                        </v-card>
+                                    </v-col>
+                                    <v-col cols="12" class="d-flex justify-center">
+                                        <v-btn
+                                          color="#3ba2a9"
+                                          class="white--text"
+                                           @click="openPaymentTypesDialog"
+                                        >
+                                          AGREGAR/QUITAR TIPOS DE PAGO
+                                        </v-btn>
+                                    </v-col>
+                                </v-row>
+                            </div>
+                            <div v-else-if="paymentTypes.length > 0 && userPaymentTypes.length == 0">
+                                <div class="text-center">Actualmente, no tienes tipos de pago configurados</div>
+                                <v-card-text class="text-center">
+                                    <v-btn
+                                        :disabled="paymentTypes.length > 0 ? false : true"
+                                        color="#3ba2a9"
+                                        fab
+                                        x-large
+                                        class="white--text"
+                                        @click="openPaymentTypesDialog"
+                                      >
+                                        <v-icon>mdi-plus</v-icon>
+                                    </v-btn>
+                                    <div class="mt-2">Agregar tipo de pago</div>
+                                </v-card-text>
+                            </div>
+                          </v-col>
+                      </v-row>
+                  </v-container>
+        	</v-tab-item>
     	</v-tabs>
 
       	<v-dialog v-model="dialog" persistent max-width="400px">
@@ -141,6 +204,50 @@
                 	</v-card-actions>
             	</v-card>
      	</v-dialog>
+
+        <v-dialog v-model="paymentTypesDialog" max-width="500px" persistent>
+        	<v-card tile>
+            	<v-card-title>
+            	  	<span class="headline">SELECCIONA TIPOS DE PAGO</span>
+            	</v-card-title>
+            	<v-card-text>
+              		<v-container>
+                		<v-row>
+                  			<v-col class="pb-0" cols="12">
+                                <v-combobox
+                                    v-model="modelComboSelectedPaymentTypes"
+                                    :items="paymentTypes"
+                                    label="Tipos de pago"
+                                    multiple
+                                    item-text="name"
+                                    item-value="id"
+                                    outlined
+                                    dense
+                                ></v-combobox>
+                  			</v-col>
+                		</v-row>
+              		</v-container>
+            	</v-card-text>
+            	<v-card-actions class="mt-n6">
+            	  	<v-spacer></v-spacer>
+            	  	<v-btn color="red"  :disabled="isAddingPaymentTypesToUser" text @click="closePaymentTypesDialog">Cancelar</v-btn>
+            	  	<v-btn color="teal" :disabled="isAddingPaymentTypesToUser" :loading="isAddingPaymentTypesToUser" text @click="saveUserPaymentTypes">Guardar</v-btn>
+            	</v-card-actions>
+        	</v-card>
+        </v-dialog>
+
+        <v-dialog v-model="configNetPayDialog" fullscreen persistent transition="dialog-bottom-transition">
+            <v-card tile flat>
+                <v-toolbar flat color="#3ba2a9">
+                    <v-btn icon dark @click="closeConfigNetPayDialog">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-toolbar>
+                <NetPayConfigurationCompo v-if="configNetPayDialog"></NetPayConfigurationCompo>
+            </v-card>
+        </v-dialog>
+
+
          <v-fab-transition>
             <v-snackbar
                 :timeout="localSnackbar.time"
@@ -158,10 +265,15 @@
 </template>
 
 <script>
-import {mapGetters,mapState } from 'vuex';
+import {mapGetters, mapState, mapActions } from 'vuex';
+import NetPayConfigurationCompo from '../components/Dashboard/UserPaymentConfiguration/NetPayConfigurationCompo.vue'
 export default {
   	data() {
     	return {
+            configNetPayDialog: false,
+            isAddingPaymentTypesToUser: false,
+            modelComboSelectedPaymentTypes: [],
+            paymentTypesDialog: false,
             isEditingButton: false,
             localSnackbar: {
                 message: '',
@@ -207,10 +319,32 @@ export default {
   	},
 
   	components: {
-
+          NetPayConfigurationCompo
   	},
 
   	methods: {
+          ...mapActions(['actionGetPaymentTypes', 'actionGetUserPaymentTypes', 'actionAddPaymentTypeToUser']),
+          openConfigNetPayDialog(){
+              this.configNetPayDialog = true;
+          },
+          closeConfigNetPayDialog(){
+              this.configNetPayDialog = false;
+          },
+          openPaymentTypesDialog(){
+              this.paymentTypesDialog = true;
+          },
+          closePaymentTypesDialog(){
+              this.paymentTypesDialog = false;
+          },
+          saveUserPaymentTypes(){
+              this.isAddingPaymentTypesToUser = true;
+              this.actionAddPaymentTypeToUser({user: this.user, paymentTypes: this.modelComboSelectedPaymentTypes}).then(()=>{
+                  this.actionGetUserPaymentTypes(this.user).then(()=>{
+                    this.isAddingPaymentTypesToUser = false;
+                    this.closePaymentTypesDialog();
+                  });
+              });
+          },
           resetLocalSnackbar(){
                 this.localSnackbar.message = ''
                 this.localSnackbar.time = 0
@@ -272,6 +406,15 @@ export default {
 
   	created(){
  		this.r = Math.floor(Math.random() * (this.colors.length - 0)) + 0;
+        this.actionGetPaymentTypes();
+        this.actionGetUserPaymentTypes(this.user).then(()=>{
+            if(this.userPaymentTypes.length > 0){
+                this.userPaymentTypes.forEach(item=>{
+                    let {pivot, ...copy} = item;
+                    this.modelComboSelectedPaymentTypes.push(copy);
+                })
+            }
+        });
   	},
 
  	computed:{
@@ -280,6 +423,8 @@ export default {
     	   	status: state => state.usersModule.usersStatus,
     	  	user: state => state.user,
     	  	checkStatus: state => state.loginModule.checkStatus,
+            paymentTypes: state => state.paymentTypeModule.paymentTypes,
+            userPaymentTypes: state => state.paymentTypeModule.userPaymentTypes
     	}),
 
       ...mapGetters([
