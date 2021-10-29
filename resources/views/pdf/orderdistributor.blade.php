@@ -420,7 +420,13 @@
                                             ?>
                                             <span>{{$concat3}}</span>
                                             <div style="text-transform: none;">
-                                                <span>Precio (m2): ${{$order['price']}} MXN // Descuento: {{$orders['user']['discount_percent']}}% // M2: @calculatemeters($order['canvas'][0]['width'],$order['canvas'][0]['height'])//</span>
+                                                <?php
+                                                    $installmentCharge = '';
+                                                    if($order['installmentCharge'] > 0){
+                                                        $installmentCharge .= '// CARGO POR INSTALACIÓN: $'.$order['installmentCharge'].' MXN';
+                                                    }
+                                                ?>
+                                                <span>Precio (m2): ${{$order['price']}} MXN {{$installmentCharge}} // Descuento: {{$orders['user']['discount_percent']}}% // M2: @calculatemeters($order['canvas'][0]['width'],$order['canvas'][0]['height']) //</span>
                                                 <?php
                                                     $totaldiscount = $order['price'] - (($orders['user']['discount_percent'] / 100) * $order['price']);
                                                 ?>
@@ -468,7 +474,8 @@
                                                     $order['motor']['manufacturerPrice'] +
                                                     $order['motor']['stringPrice'] +
                                                     $order['extraVertical'] +
-                                                    $order['extraEnrollable'];
+                                                    $order['extraEnrollable'] +
+                                                    $order['installmentCharge'];
                                                     $total += $unitaryPrice;
                                                 ?>
                                                 $@priceFormat(round($unitaryPrice, 1, PHP_ROUND_HALF_UP)) MXN
@@ -629,7 +636,13 @@
                                             ?>
                                             <span>{{$concat3}}</span>
                                             <div style="text-transform: none;">
-                                                <span>Precio (m2): ${{$order['price']}} MXN // Descuento: {{$orders['user']['discount_percent']}}% // M2: @calculatemeters($order['canvas'][0]['width'],$order['canvas'][0]['height'])//</span>
+                                                <?php
+                                                    $installmentCharge = '';
+                                                    if($order['installmentCharge'] > 0){
+                                                        $installmentCharge .= '// CARGO POR INSTALACIÓN: $'.$order['installmentCharge'].' MXN';
+                                                    }
+                                                ?>
+                                                <span>Precio (m2): ${{$order['price']}} MXN {{$installmentCharge}} // Descuento: {{$orders['user']['discount_percent']}}% // M2: @calculatemeters($order['canvas'][0]['width'],$order['canvas'][0]['height']) //</span>
                                                 <?php
                                                     $totaldiscount = $order['price'] - (($orders['user']['discount_percent'] / 100) * $order['price']);
                                                 ?>
@@ -677,7 +690,8 @@
                                                     $order['motor']['manufacturerPrice'] +
                                                     $order['motor']['stringPrice'] +
                                                     $order['extraVertical'] +
-                                                    $order['extraEnrollable'];
+                                                    $order['extraEnrollable'] +
+                                                    $order['installmentCharge'];
                                                     $total += $unitaryPrice;
                                                 ?>
                                                 $@priceFormat(round($unitaryPrice, 1, PHP_ROUND_HALF_UP)) MXN
@@ -720,10 +734,30 @@
                 </tr>
                 <tr style="border: 1px solid black;font-weight: bolder; font-size: 16px; background-color:#418686; color: white;">
                     <td style="text-align: center; padding-top: 3px; padding-bottom: 3px;">
-                        TOTAL
+                        <div>TOTAL</div>
+                        <div style="font-size: 7px;">Pago con SPEI (Transferencia bancaria)</div>
                     </td>
                     <td style="text-align: right; padding-right: 11px; padding-top: 3px; padding-bottom: 3px;">
-                        $@priceFormat(round($total, 1, PHP_ROUND_HALF_UP)) MXN
+                        <div>$@priceFormat(round($total, 1, PHP_ROUND_HALF_UP)) MXN</div>
+                    </td>
+                </tr>
+                <tr style="border: 1px solid black;font-weight: bolder; background-color:#E0E0E0;">
+                    <td style="font-size: 7px; text-align: center; padding-top: 3px; padding-bottom: 3px;">
+                        <div>Pago en una sola exhibición</div>
+                        <div>(Con Tarjeta de Débito) <span style="color: red">(+5%)</span></div>
+                    </td>
+                    <td style="font-size: 12px; text-align: right; padding-right: 11px; padding-top: 3px; padding-bottom: 3px;">
+                        $@priceFormat(round($total*1.05, 1, PHP_ROUND_HALF_UP)) MXN
+                    </td>
+                </tr>
+                <tr style="border: 1px solid black;font-weight: bolder; background-color:#E0E0E0;">
+                    <td style="font-size: 7px; text-align: center; padding-top: 3px; padding-bottom: 3px;">
+                        <div>Pago a 6 meses</div>
+                        <div>(Con Tarjeta de Crédito) <span style="color: red">(+15%)</span></div>
+                    </td>
+                    <td style="font-size: 12px; text-align: right; padding-right: 11px; padding-top: 3px; padding-bottom: 3px;">
+                        <div>$@priceFormat(round($total*1.15, 1, PHP_ROUND_HALF_UP)) MXN</div>
+                        <div style="font-size: 7px;">6 pagos de $@priceFormat(round((($total*1.15) / 6), 1, PHP_ROUND_HALF_UP)) MXN</div>
                     </td>
                 </tr>
             </table>

@@ -117,20 +117,60 @@
                                 <v-row justify="center" class="ma-2">
                                     <v-col cols="12" xl="4" lg="6" md="6" sm="12" v-for="payment in userPaymentTypes" :key="payment.id">
                                         <v-card class="mx-auto" height="100%" outlined>
-
-                                          <v-img
-                                            class="my-4"
-                                            height="120"
-                                            width="auto"
-                                            contain
-                                            :src="payment.name == 'NetPay' ? 'https://www.datum.co.uk/sites/default/files/styles/logo_medium/public/content/service-provider/logo/NetPay%20logo%202019.jpg?itok=TXWIldxD' : payment.name == 'SPEI' ? 'https://cdn2.downdetector.com/static/uploads/logo/spei.png' : ''"
-                                          ></v-img>
-
-                                          <v-card-text class="mt-n4 text-center">
+                                          <v-card elevation="0" height="auto" class="mb-6 mt-11" v-if="payment.name == 'NetPay'">
+                                              <v-row no-gutters justify="space-between">
+                                                  <v-col cols="6" xl="3" lg="4" md="4" sm="3">
+                                                    <v-img
+                                                      class="my-4"
+                                                      width="auto"
+                                                      height="60"
+                                                      contain
+                                                      :src="`/img/payments/VISA.svg`"
+                                                    ></v-img>
+                                                  </v-col>
+                                                  <v-col cols="6" xl="3" lg="4" md="4" sm="3">
+                                                    <v-img
+                                                      class="my-4"
+                                                      width="auto"
+                                                      height="60"
+                                                      contain
+                                                      :src="`/img/payments/mastercard.svg`"
+                                                    ></v-img>
+                                                  </v-col>
+                                                  <v-col cols="6" xl="3" lg="4" md="4" sm="3">
+                                                    <v-img
+                                                      class="my-4"
+                                                      width="auto"
+                                                      height="60"
+                                                      contain
+                                                      :src="`/img/payments/american-express.svg`"
+                                                    ></v-img>
+                                                  </v-col>
+                                                  <v-col cols="6" xl="3" lg="4" md="4" sm="3">
+                                                    <v-img
+                                                      class="my-4"
+                                                      width="auto"
+                                                      height="60"
+                                                      contain
+                                                      :src="`/img/payments/carnet.svg`"
+                                                    ></v-img>
+                                                  </v-col>
+                                              </v-row>
+                                          </v-card>
+                                          <v-card elevation="0" :class="payment.name != 'NetPay' && ($vuetify.breakpoint.lg || $vuetify.breakpoint.md) ? 'mt-16' : 'mt-7'" v-else>
+                                            <v-img
+                                              class="my-4"
+                                              width="auto"
+                                              height="120"
+                                              contain
+                                              :src="payment.name == 'NetPay' ? 'https://www.datum.co.uk/sites/default/files/styles/logo_medium/public/content/service-provider/logo/NetPay%20logo%202019.jpg?itok=TXWIldxD' : payment.name == 'SPEI' ? 'https://cdn2.downdetector.com/static/uploads/logo/spei.png' : ''"
+                                            ></v-img>
+                                          </v-card>
+                                          <v-card-text :class="payment.name != 'NetPay' && ($vuetify.breakpoint.lg || $vuetify.breakpoint.md) ? 'mt-16' : ''" class="text-center">
                                             <h3>{{payment.description}}</h3>
                                           </v-card-text>
 
-                                          <v-card-actions class="mt-n3">
+                                          <v-card-actions class="mt-n6">
                                             <v-btn
                                               v-if="payment.name == 'NetPay'"
                                               color="#3ba2a9"

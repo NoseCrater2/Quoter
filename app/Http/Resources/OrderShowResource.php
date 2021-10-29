@@ -39,6 +39,7 @@ class OrderShowResource extends JsonResource
                 return $blind->discount_price +
                         ( isset($blind->motorization) ? $blind->motorization->price: 0) +
                         ( isset($blind->control) ? $blind->control->price: 0) +
+                        $blind->installmentCharge +
                         $blind->flexiballet_price +
                         $blind->gallery_price +
                         $blind->manufacturer_price +
@@ -86,6 +87,7 @@ class OrderShowResource extends JsonResource
                     'motor_type' => $blind->motor_type,
                     'price' => floatval($blind->price),
                     'discount_price' => floatval($blind->discount_price),
+                    'installmentCharge' => floatval($blind->installmentCharge),
                     'rotate' => $blind->rotate,
                     'second_color' => $blind->second_color,//puede no tener
                     'type' => $blind->type,

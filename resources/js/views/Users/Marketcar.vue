@@ -115,7 +115,8 @@
                       </v-col>
                   </v-row>
                   <v-row class="mt-n5">
-                      <v-col cols="12" :xl="!flagIsStepFour ? '9' : '12'" :lg="!flagIsStepFour ? '9' : '12'" :md="!flagIsStepFour ? '9' : '12'" sm="12" order="2" order-xl="1" order-lg="1" order-md="1" order-sm="2">
+                      <!-- cols="12" :xl="!flagIsStepFour ? '9' : '12'" :lg="!flagIsStepFour ? '9' : '12'" :md="!flagIsStepFour ? '9' : '12'" sm="12" order="2" order-xl="1" order-lg="1" order-md="1" order-sm="2" -->
+                      <v-col cols="12" :xl="!flagIsStepFour ? '9' : '12'" :lg="!flagIsStepFour ? '9' : '12'" :md="!flagIsStepFour ? '9' : '12'" sm="12" order="2" :order-xl="!flagIsStepFour ? '1' : '2'" :order-lg="!flagIsStepFour ? '1' : '2'" :order-md="!flagIsStepFour ? '1' : '2'" order-sm="2">
                         <div v-if="modelWindowSteper == 1" class="text-start text-uppercase mb-2" style="font-size: 1.4rem;">
                             <span class="font-weight-bold" style="color: #3ba2a9">Órdenes </span><span>pendientes de pago</span>
                         </div>
@@ -188,8 +189,10 @@
                             </v-btn>
                         </div>
                       </v-col>
-                      <v-col v-if="!flagIsStepFour" cols="12" xl="3" lg="3" md="3" sm="12" order="1" order-xl="2" order-lg="2" order-md="2" order-sm="1" :style="!$vuetify.breakpoint.mdAndUp ? 'position: sticky; top: 15px; z-index: 2;' : ''" >
+                      <!-- v-if="!flagIsStepFour" -->
+                      <v-col cols="12" :xl="!flagIsStepFour ? '3' : '12'" :lg="!flagIsStepFour ? '3' : '12'" :md="!flagIsStepFour ? '3' : '12'" sm="12" order="1" :order-xl="!flagIsStepFour ? '2' : '1'" :order-lg="!flagIsStepFour ? '2' : '1'" :order-md="!flagIsStepFour ? '2' : '1'" order-sm="1" :style="!$vuetify.breakpoint.mdAndUp ? 'position: sticky; top: 15px; z-index: 2;' : 'position: sticky; top: 15px; z-index: 2;'" >
                         <v-card
+                        v-if="!flagIsStepFour"
                         :style="$vuetify.breakpoint.mdAndUp ? 'position: sticky; top: 60px; z-index: 2;' : ''"
                         class="rounded-lg"
                         :class="$vuetify.breakpoint.mdAndUp ? 'mt-10 ' : 'mt-5'"
@@ -223,6 +226,9 @@
                                 <div class="text-uppercase text-end">
                                     Total
                                 </div>
+                                <div v-if="modelRadioStepFourPaymentMethod == 'debitcreditcard' && modelWindowSteper == 3" style="font-size: 0.70rem; color: red" class="text-end font-weight-bold">
+                                    *Se harán cargos extras al seleccionar este método de pago
+                                </div>
                             </v-col>
                           </v-col>
                           <v-col cols="12" xl="12" lg="12" md="12" sm="4">
@@ -253,6 +259,61 @@
                               </v-btn>
                             </v-card-actions>
                             <!-- <div v-if="modelWindowSteper == 2" class="text-decoration-underline text-center mt-n1 mb-4" style="font-size: 0.77rem">Agregar otra persiana</div> -->
+                          </v-col>
+                          </v-row>
+                        </v-card>
+                        <v-card
+                        v-else-if="flagIsStepFour"
+                        class="rounded-lg mt-5"
+                        outlined
+                        >
+                          <div class="white--text text-center font-weight-bold pa-3 rounded-lg" style="background-color: #3ba2a9">Resumen de la orden de la compra</div>
+                          <v-row align="center" no-gutters>
+                          <v-col cols="12">
+                              <v-row class="pa-3" style="font-size: 0.87rem">
+                                  <v-col cols="5">
+                                      <div>Subtotal: </div>
+                                  </v-col>
+                                  <v-col cols="7">
+                                      <div class="text-end">{{mxCurrencyFormat.format(localModelSubtotalAndTotal)}} MXN</div>
+                                  </v-col>
+                                  <v-col v-if="modelRadioStepFourPaymentMethod == 'debitcreditcard' && creditDebitType != ''" cols="5" class="mt-n5">
+                                      <div v-if="creditDebitType != ''">
+                                          <span v-if="creditDebitType == 'debit'">Pago con Tarjeta de Débito (+5%): </span>
+                                          <span v-else-if="creditDebitType == 'credit'">Pago con Tarjeta de Crédito (+15%): </span>
+                                      </div>
+                                  </v-col>
+                                  <v-col v-if="modelRadioStepFourPaymentMethod == 'debitcreditcard' && creditDebitType != ''" cols="7" class="mt-n5">
+                                      <div class="text-end">
+                                          <span v-if="creditDebitType == 'debit'">{{mxCurrencyFormat.format(localModelSubtotalAndTotal * 0.05)}} MXN</span>
+                                          <span v-else-if="creditDebitType == 'credit'">{{mxCurrencyFormat.format(localModelSubtotalAndTotal * 0.15)}} MXN</span>
+                                      </div>
+                                  </v-col>
+                                  <v-col cols="5" class="mt-n5">
+                                      <div>I.V.A. </div>
+                                  </v-col>
+                                  <v-col cols="7" class="mt-n5">
+                                      <div class="text-end">INCLUIDO</div>
+                                  </v-col>
+                              </v-row>
+                          </v-col>
+                          <v-col cols="12" style="background-color: #B2DFDB">
+                            <v-col cols="12" style="background-color: #B2DFDB">
+                                <div class="text-end font-weight-bold" style="color: #3ba2a9; font-size: 1.45rem">
+                                      <div v-if="modelRadioStepFourPaymentMethod == 'debitcreditcard' && creditDebitType != ''">
+                                          <span v-if="creditDebitType == 'debit'">{{mxCurrencyFormat.format(localModelSubtotalAndTotal * 1.05)}} MXN</span>
+                                          <span v-else-if="creditDebitType == 'credit'">{{mxCurrencyFormat.format(localModelSubtotalAndTotal * 1.15)}} MXN</span>
+                                      </div>
+                                      <div v-else>
+                                          <span>{{mxCurrencyFormat.format(localModelSubtotalAndTotal)}} MXN</span>
+                                      </div>
+                                </div>
+                            </v-col>
+                            <v-col cols="12" style="background-color: #B2DFDB" class="mt-n6">
+                                <div class="text-uppercase text-end">
+                                    Total
+                                </div>
+                            </v-col>
                           </v-col>
                           </v-row>
                         </v-card>
@@ -315,7 +376,7 @@
 <script>
 import DashboardOrdersAndQuotationsDialog from '../../components/Dashboard/OrdersAndQuotations/DashboardOrdersAndQuotationsDialog.vue'
 import axios from 'axios';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 export default {
     created(){
         this.$store.dispatch('getQuotedOrders').then(()=>{
@@ -481,7 +542,7 @@ export default {
         methodStepTwoCheckAndBuy(localItem){
             this.$store.dispatch('getQuotedOrder', localItem.id).then(()=>{
                 localStorage.removeItem('quotedOrder');
-                localStorage.setItem('quotedOrder', JSON.stringify({order:this.quotedOrder, step: 2, paymentType: '', isCheckTerms: false, flagIsStepFour: false}));
+                localStorage.setItem('quotedOrder', JSON.stringify({order:this.quotedOrder, step: 2, paymentType: '', isCheckTerms: false, flagIsStepFour: false, card: {isNewCard: false, isCurrentCard: false, currentCard: null}}));
                 this.orderId = localItem.id;
                 this.isOrdersAndQuotationsDialogActivated = false;
                 this.modelWindowSteper = 2;
@@ -515,8 +576,10 @@ export default {
                     this.flagIsStepFour = true;
                     let localStorageObject =  JSON.parse(localStorage.getItem('quotedOrder'));
                     localStorageObject.flagIsStepFour = this.flagIsStepFour;
-                    localStorageObject.card = {isNewCard: false, isCurrentCard: false, currentCard: null};
                     localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
+                    if(localStorageObject.card.currentCard != null){
+                        this.$store.commit('setCreditDebitType', localStorageObject.card.currentCard.type);
+                    }
                     this.$router.push({name: 'StepFourNetpay'});
                 }
                 else if(this.modelRadioStepFourPaymentMethod != '' && this.modelRadioStepFourPaymentMethod == 'electronicspei'){
@@ -557,12 +620,15 @@ export default {
                     localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
                     switch(this.modelWindowSteper){
                         case 1:
+                                this.$store.commit('setCreditDebitType', '');
                                 this.$router.push({name: 'Marketcar'});
                             break;
                         case 2:
+                                this.$store.commit('setCreditDebitType', '');
                                 this.$router.push({name: 'StepTwoDetails'});
                             break;
                         case 3:
+                                this.$store.commit('setCreditDebitType', '');
                                 this.$router.push({name: 'StepThreeChoose'});
                             break;
                     }
@@ -603,7 +669,9 @@ export default {
             quotedOrders: state => state.ordersModule.quotedOrders,
             quotedOrder: state => state.ordersModule.quotedOrder,
             user: state => state.user,
+            creditDebitType: state => state.ordersModule.creditDebitType
         }),
+        ...mapGetters(['getQuotedOrder']),
         btnContinuarTitle(){
             return this.modelWindowSteper == 3 ? 'Pagar' : 'Continuar';
         },

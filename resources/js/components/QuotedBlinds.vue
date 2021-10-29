@@ -27,7 +27,8 @@
                           o.motor.manufacturerPrice +
                           o.motor.stringPrice +
                           o.extraEnrollable +
-                          o.extraVertical
+                          o.extraVertical +
+                          o.installmentCharge
                         )}} MXN
                     </v-toolbar-title>
                     <v-spacer> </v-spacer>
@@ -164,6 +165,12 @@
                       {{mxCurrencyFormat.format(o.price)}} MXN
                     </v-list-item-subtitle>
                   </v-list-item>
+                    <v-list-item class="overline" dense v-if="o.installmentCharge > 0">
+                        <v-list-item-title class="blue--text">CARGO DE INSTALACIÓN</v-list-item-title>
+                        <v-list-item-subtitle class="blue--text text-right">
+                          {{mxCurrencyFormat.format(o.installmentCharge)}} MXN
+                        </v-list-item-subtitle>
+                    </v-list-item>
                     <v-list-item class="overline" dense v-if="o.extraEnrollable > 0">
                         <v-list-item-title class="blue--text">CARGO EXTRA</v-list-item-title>
                         <v-list-item-subtitle class="blue--text text-right">

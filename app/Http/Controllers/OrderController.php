@@ -117,6 +117,8 @@ class OrderController extends Controller
                     // this.order.discount_price = this.order.price - ((this.user.discount_percent/100)*this.order.price)
                     $blind->discount_price = $b['price'] - ((auth()->user()->discount_percent/100)*$b['price']);
 
+                    $blind->installmentCharge = $b['installmentCharge'];
+
                     $blind->save();
 
                     $blind->canvases()->delete();
@@ -211,6 +213,8 @@ class OrderController extends Controller
                 $blind->extraVertical = $b['extraVertical'];
 
                 $blind->discount_price = $b['price'] - ((auth()->user()->discount_percent/100)*$b['price']);
+
+                $blind->installmentCharge = $b['installmentCharge'];
 
                 $blind->save();
                 $blind->canvases()->delete();

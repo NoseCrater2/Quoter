@@ -18,7 +18,7 @@
             </v-row>
             <!-- <v-item-group v-model="selectedCard" @change="intentOpenPayDialog()"> -->
                 <v-row v-if="selectedCard == null" justify="center">
-                    <v-col v-for="(card, index) in cards" cols="12" xl="4" lg="6" md="6" sm="12" :key="index">
+                    <v-col v-for="(card, index) in cards" cols="12" xl="4" lg="6" md="6" sm="12" :key="index" class="mt-3">
                         <!-- <v-item :value="card.card" v-slot="{active, toggle }" >
                             <div class="d-flex">
                                 <div  class="rounded-l-xl d-flex justify-space-between align-center" @click="toggle" style="background: #F5F5F5; width: 94%" :class="active?'teal lighten-2':''">
@@ -63,9 +63,12 @@
                                    </v-col>
                                     <v-col cols="6">
                                       <v-row justify="end">
-                                    <v-img v-if="card.card.brand=='mastercard'" height="40" max-width="50" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/mastercard.png"></v-img>
-                                    <v-img v-else-if="card.card.brand=='visa'" height="40" max-width="50" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/visa.png"></v-img>
-                                    <v-img v-else-if="card.card.brand=='amex'" height="40" max-width="50" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/amex.png"></v-img>
+                                    <v-img v-if="card.card.brand=='mastercard'" max-height="40" max-width="50" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/mastercard.png"></v-img>
+                                    <v-img v-else-if="card.card.brand=='visa'" max-height="40" max-width="70" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/visa.png"></v-img>
+                                    <v-img v-else-if="card.card.brand=='amex'" max-height="40" max-width="70" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/amex.png"></v-img>
+                                        </v-row>
+                                        <v-row justify="end">
+                                            <div style="color: white">{{card.card.type == 'credit' ? 'Crédito' : 'Débito'}}</div>
                                         </v-row>
                                    </v-col>
                                 </v-row>
@@ -76,7 +79,7 @@
                                 <v-card-title class="white--text text-center font-weight-bold" style="font-size: 1.5rem">{{card.card.brand=='amex' ? card.card.cardPrefix.slice(0, 4) +' ****** *'+ card.card.lastFourDigits : card.card.cardPrefix.slice(0, 4) +' **** **** '+ card.card.lastFourDigits}} </v-card-title>
                                  </v-row>
                               </v-col>
-                               <v-col cols="12" class="mt-n1">
+                               <v-col cols="12" class="mt-n5">
                                  <v-row>
                                     <v-col cols="8">
 
@@ -93,7 +96,7 @@
                                     </v-col>
                                  </v-row>
                                </v-col>
-                               <v-card-actions class="mt-n8">
+                               <v-card-actions class="mt-n11">
                                    <v-btn
                                         class="white--text"
                                         color="red"
@@ -168,9 +171,12 @@
                                    </v-col>
                                     <v-col cols="6">
                                       <v-row justify="end">
-                                    <v-img v-if="selectedCard.brand=='mastercard'" height="40" max-width="50" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/mastercard.png"></v-img>
-                                    <v-img v-else-if="selectedCard.brand=='visa'" height="40" max-width="50" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/visa.png"></v-img>
-                                    <v-img v-else-if="selectedCard.brand=='amex'" height="40" max-width="50" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/amex.png"></v-img>
+                                    <v-img v-if="selectedCard.brand=='mastercard'" max-height="40" max-width="50" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/mastercard.png"></v-img>
+                                    <v-img v-else-if="selectedCard.brand=='visa'" max-height="40" max-width="70" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/visa.png"></v-img>
+                                    <v-img v-else-if="selectedCard.brand=='amex'" max-height="40" max-width="70" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/amex.png"></v-img>
+                                        </v-row>
+                                        <v-row justify="end">
+                                            <div style="color: white">{{selectedCard.type == 'credit' ? 'Crédito' : 'Débito'}}</div>
                                         </v-row>
                                    </v-col>
                                 </v-row>
@@ -181,7 +187,7 @@
                                 <v-card-title class="white--text text-center font-weight-bold" style="font-size: 1.5rem">{{selectedCard.brand=='amex' ? selectedCard.cardPrefix.slice(0, 4) +' ****** *'+ selectedCard.lastFourDigits : selectedCard.cardPrefix.slice(0, 4) +' **** **** '+ selectedCard.lastFourDigits}} </v-card-title>
                                  </v-row>
                               </v-col>
-                               <v-col cols="12" class="mt-n1">
+                               <v-col cols="12" class="mt-n5">
                                  <v-row>
                                     <v-col cols="8">
 
@@ -457,13 +463,22 @@ export default {
         NetPay.setApiKey(process.env.MIX_NETPAY_PUBLIC_KEY_SBOX);//SANDBOX
         NetPay.setSandboxMode(true);//SANDBOX
 
-
+        //DEBIT CARD
         // let cardInformation = {
         //     cardNumber: "5499490519982367",
         //     expMonth: "04",
         //     expYear: "25",
         //     cvv2: "999",
         // };
+
+        //CREDIT CARD
+        // let cardInformation = {
+        //     cardNumber: "4918717162313532",
+        //     expMonth: "04",
+        //     expYear: "25",
+        //     cvv2: "999",
+        // };
+
     },
 
     mounted(){
@@ -584,6 +599,7 @@ export default {
             localStorageObject.card.currentCard = this.selectedCard;
             localStorageObject.card.isCurrentCard = true;
             localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject))
+            this.$store.commit('setCreditDebitType', this.selectedCard.type);
             this.intentClosePayDialog();
         },
 
@@ -594,11 +610,20 @@ export default {
             localStorageObject.card.currentCard = this.selectedCard;
             localStorageObject.card.isCurrentCard = false;
             localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject))
+            this.$store.commit('setCreditDebitType', '');
         },
 
         confirmPayWithCVV(){
             this.loadingPayButton = true
-            axios.post('/api/netpay-intent-pay/'+this.user.id, {cvv: this.modelCVVOnPay, token: this.selectedCard.token, amount: ''+this.$store.getters.getQuotedOrder.order.total, order: this.$store.getters.getQuotedOrder.order.order, idOrder: this.$store.getters.getQuotedOrder.order.id}).then(async(response) => {
+            let totalOrderPrice = this.$store.getters.getQuotedOrder.order.total;
+            if(this.creditDebitType == 'debit'){
+                totalOrderPrice = this.$store.getters.getQuotedOrder.order.total * 1.05;
+            }
+            else if(this.creditDebitType == 'credit'){
+                totalOrderPrice = this.$store.getters.getQuotedOrder.order.total * 1.15;
+            }
+            totalOrderPrice = Math.round(totalOrderPrice * 10) / 10;
+            axios.post('/api/netpay-intent-pay/'+this.user.id, {cvv: this.modelCVVOnPay, token: this.selectedCard.token, amount: ''+totalOrderPrice, order: this.$store.getters.getQuotedOrder.order.order, idOrder: this.$store.getters.getQuotedOrder.order.id, cardType: this.selectedCard.type }).then(async(response) => {
                 if(response.status == 200){
                     localStorage.removeItem('quotedOrder');
                     if(this.user.role == 'Superadministrador' || this.user.role == 'Administrador'){
@@ -623,6 +648,7 @@ export default {
             })
         },
         goToOrders(){
+            this.$store.commit('setCreditDebitType', '');
             if(this.user.role == 'Superadministrador' || this.user.role == 'Administrador'){
                 this.$router.push({name: 'Orders', params: {option: 'ordenes-admin'}});
             }
@@ -631,6 +657,7 @@ export default {
             }
         },
         stayInMarketcar(){
+            this.$store.commit('setCreditDebitType', '');
             this.$router.push({name:'Marketcar'});
         }
     },
@@ -639,6 +666,7 @@ export default {
         ...mapState({
             user: state => state.user,
             quotedOrder: state => state.ordersModule.quotedOrder,
+            creditDebitType: state => state.ordersModule.creditDebitType
         }),
 
         validateCard(){

@@ -1,7 +1,7 @@
 import { mapState } from 'vuex';
 <template>
     <v-col cols="12">
-        <v-card elevation="0">
+        <v-card v-if="isCharguedUserPayments" elevation="0">
             <div class="font-weight-bold mb-2">Elije el metodo de pago que mas prefieras</div>
             <!-- <v-alert
               color="#3ba2a9"
@@ -105,20 +105,35 @@ import { mapState } from 'vuex';
 import {mapState, mapActions} from 'vuex';
 export default {
     created(){
-        this.actionGetUserPaymentTypes(this.user);
-        if(this.$route.name == 'StepThreeChoose'){
-            if(Object.keys(this.quotedOrder).length == 0){
-                if(localStorage.getItem('quotedOrder') !== null){
-                    Object.assign(this.quotedOrder, this.$store.getters.getQuotedOrder.order)
-                }
-                else if(localStorage.getItem('quotedOrder') === null){
-                    this.$router.push({name: 'Marketcar'});
+        this.actionGetUserPaymentTypes(this.user).then(()=>{
+            this.isCharguedUserPayments = true;
+            if(this.$route.name == 'StepThreeChoose'){
+                if(Object.keys(this.quotedOrder).length == 0){
+                    if(localStorage.getItem('quotedOrder') !== null){
+                        Object.assign(this.quotedOrder, this.$store.getters.getQuotedOrder.order)
+                    }
+                    else if(localStorage.getItem('quotedOrder') === null){
+                        this.$router.push({name: 'Marketcar'});
+                    }
                 }
             }
-        }
+        }).catch(()=>{
+            this.isCharguedUserPayments = true;
+            if(this.$route.name == 'StepThreeChoose'){
+                if(Object.keys(this.quotedOrder).length == 0){
+                    if(localStorage.getItem('quotedOrder') !== null){
+                        Object.assign(this.quotedOrder, this.$store.getters.getQuotedOrder.order)
+                    }
+                    else if(localStorage.getItem('quotedOrder') === null){
+                        this.$router.push({name: 'Marketcar'});
+                    }
+                }
+            }
+        });
     },
     data() {
         return {
+            isCharguedUserPayments: false,
             modelRadioStepFourPaymentMethod: localStorage.getItem('quotedOrder') !== null ? JSON.parse(localStorage.getItem('quotedOrder')).paymentType : ''
         }
     },
