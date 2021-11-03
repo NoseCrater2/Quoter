@@ -197,10 +197,42 @@
                         <div>
                             TOTAL
                         </div>
+                        <div style="font-size: 0.63rem">
+                            Pago con SPEI (Transferencia bancaria)
+                        </div>
                     </v-col>
                     <v-col cols="6" class="white--text text-end" style="background-color: #47a5ad; font-size: 1.3rem; border: 1px solid black">
                         <div>
                             {{mxCurrencyFormat.format(order.total)}} MXN
+                        </div>
+                    </v-col>
+                    <v-col cols="6" class="text-center" style="font-size: 0.63rem; background-color: #E0E0E0;">
+                        <div>
+                            Pago con tarjeta 1 sola emisión.
+                        </div>
+                        <!-- <div>
+                            (Con Tarjeta de Débito) <span style="color: red">(+5%)</span>
+                        </div> -->
+                    </v-col>
+                    <v-col cols="6" class="text-end" style="background-color: #E0E0E0;">
+                        <div>
+                            {{mxCurrencyFormat.format((order.total * 1.05))}} MXN
+                        </div>
+                    </v-col>
+                    <v-col cols="6" class="text-center" style="font-size: 0.63rem; background-color: #E0E0E0;">
+                        <div>
+                            Pago a 6 meses.
+                        </div>
+                        <!-- <div>
+                            (Con Tarjeta de Crédito) <span style="color: red">(+15%)</span>
+                        </div> -->
+                    </v-col>
+                    <v-col cols="6" class="text-end" style="background-color: #E0E0E0;">
+                        <div>
+                            {{mxCurrencyFormat.format((order.total * 1.15))}} MXN
+                        </div>
+                        <div style="font-size: 0.63rem;">
+                            6 Pagos de {{mxCurrencyFormat.format(((order.total * 1.15) / 6))}} MXN
                         </div>
                     </v-col>
                 </v-row>

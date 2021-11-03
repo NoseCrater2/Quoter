@@ -66,7 +66,7 @@
                               <span>{{itemBlind.motor.flexiballetPrice > 0 ? '(+$'+itemBlind.motor.flexiballetPrice+')' : ''}}</span>
                           </div>
                           <div>
-                              <span>Precio (m2): {{mxCurrencyFormat.format(itemBlind.price)}} MXN // Descuento: {{quotedOrder.user.discount_percent}} % // M2: {{squareMeters(itemBlind.canvas[0].width, itemBlind.canvas[0].height)}} //</span>
+                              <span>Precio (m2): {{mxCurrencyFormat.format(itemBlind.price)}} MXN {{itemBlind.installmentCharge > 0 ? ` // CARGO POR INSTALACIÓN: ${mxCurrencyFormat.format(itemBlind.installmentCharge)} MXN` : `` }} // Descuento: {{quotedOrder.user.discount_percent}} % // M2: {{squareMeters(itemBlind.canvas[0].width, itemBlind.canvas[0].height)}} //</span>
                               <span>
                                   Precio con Descto: {{mxCurrencyFormat.format(itemBlind.discount_price)}} MXN
                               </span>
@@ -102,7 +102,8 @@
                                       parseFloat(itemBlind.motor.manufacturerPrice) +
                                       parseFloat(itemBlind.motor.stringPrice) +
                                       parseFloat(itemBlind.extraVertical) +
-                                      parseFloat(itemBlind.extraEnrollable)
+                                      parseFloat(itemBlind.extraEnrollable) +
+                                      parseFloat(itemBlind.installmentCharge)
                                   )}} MXN
                               </span>
                           </div>
@@ -188,7 +189,7 @@
                               <span>{{itemBlind.motor.flexiballetPrice > 0 ? '(+$'+itemBlind.motor.flexiballetPrice+')' : ''}}</span>
                           </div>
                           <div>
-                              <span>Precio (m2): {{mxCurrencyFormat.format(itemBlind.price)}} MXN // Descuento: {{quotedOrder.user.discount_percent}} % // M2: {{squareMeters(itemBlind.canvas[0].width, itemBlind.canvas[0].height)}} //</span>
+                              <span>Precio (m2): {{mxCurrencyFormat.format(itemBlind.price)}} MXN {{itemBlind.installmentCharge > 0 ? ` // CARGO POR INSTALACIÓN: ${mxCurrencyFormat.format(itemBlind.installmentCharge)} MXN` : `` }} // Descuento: {{quotedOrder.user.discount_percent}} % // M2: {{squareMeters(itemBlind.canvas[0].width, itemBlind.canvas[0].height)}} //</span>
                               <span>
                                   Precio con Descto: {{mxCurrencyFormat.format(itemBlind.discount_price)}} MXN
                               </span>
@@ -224,7 +225,8 @@
                                       parseFloat(itemBlind.motor.manufacturerPrice) +
                                       parseFloat(itemBlind.motor.stringPrice) +
                                       parseFloat(itemBlind.extraVertical) +
-                                      parseFloat(itemBlind.extraEnrollable)
+                                      parseFloat(itemBlind.extraEnrollable) +
+                                      parseFloat(itemBlind.installmentCharge)
                                   )}} MXN
                               </span>
                           </div>

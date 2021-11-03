@@ -25,6 +25,7 @@ class OrderIndexResource extends JsonResource
                 return $blind->discount_price == 0 ? $blind->price : $blind->discount_price +
                         ( isset($blind->motorization) ? $blind->motorization->price: 0) +
                         ( isset($blind->control) ? $blind->control->price: 0) +
+                        $blind->installmentCharge +
                         $blind->flexiballet_price +
                         $blind->gallery_price +
                         $blind->manufacturer_price +

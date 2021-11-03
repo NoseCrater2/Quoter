@@ -290,6 +290,24 @@
                 value="Motorizado">
                 </v-radio>
               </v-radio-group>
+              <div v-if="user != null">
+                <span style="font-size: 1em" class="font-weight-bold">
+                  Agregue un cargo por instalación (opcional)</span>
+                <v-text-field
+                  min="0"
+                  :value="0"
+                  dense
+                  type="number"
+                  label="Cargo por instalación"
+                  class="ma-1"
+                  hide-details
+                  placeholder="0.00"
+                  outlined
+                  color="#47a5ad"
+                  background-color="white"
+                  v-model.number="order.installmentCharge"
+                ></v-text-field>
+              </div>
               </div>
                <div  v-else-if="order.type == 'celular'">
                 <v-item-group  v-model="order.celular_type" @change="showMargins" >
@@ -311,7 +329,7 @@
 
 
 
-                            
+
                             <div class="d-flex  justify-space-around">
                               <div>
                                 <v-img
@@ -459,6 +477,24 @@
               background-color="white"
               label="Modelo"
               ></v-autocomplete>
+              <div v-if="user != null">
+                <span style="font-size: 1em" class="font-weight-bold">
+                  Agregue un cargo por instalación (opcional)</span>
+                <v-text-field
+                  min="0"
+                  :value="0"
+                  dense
+                  type="number"
+                  label="Cargo por instalación"
+                  class="ma-1"
+                  hide-details
+                  placeholder="0.00"
+                  outlined
+                  color="#47a5ad"
+                  background-color="white"
+                  v-model.number="order.installmentCharge"
+                ></v-text-field>
+              </div>
               </div>
             </v-col>
 
@@ -503,7 +539,7 @@
 
                </div>
                <div v-if="order.type == 'horizontal-madera-2'" class="d-flex  justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;">
-                  {{mxCurrencyFormat.format( roundToOneDecimal(findWoodPrice) )}} MXN
+                  {{mxCurrencyFormat.format( roundToOneDecimal(findWoodPrice))}} MXN
                </div>
 
                 <div v-else class="d-flex  justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
@@ -589,6 +625,26 @@
                     <v-radio @click="openCelularDialog"  color="#47a5ad" label="Cordón" value="Cordón"></v-radio>
                     <v-radio @click="openCelularDialog"  color="#47a5ad" label="Motor" value="Motor"></v-radio>
                 </v-radio-group>
+
+              <div v-if="user != null">
+                <span style="font-size: 1em" class="font-weight-bold">
+                  Agregue un cargo por instalación (opcional)</span>
+                <v-text-field
+                  min="0"
+                  :value="0"
+                  dense
+                  type="number"
+                  label="Cargo por instalación"
+                  class="ma-1"
+                  hide-details
+                  placeholder="0.00"
+                  outlined
+                  color="#47a5ad"
+                  background-color="white"
+                  v-model.number="order.installmentCharge"
+                ></v-text-field>
+              </div>
+
                 <v-row v-if="order.celular_drive == 'Muelle' && order.motor.frame != null" no-gutters justify="center" align="center">
                   <v-col cols="12" md="6" sm="12">
                     <v-img
@@ -1718,6 +1774,7 @@ export default {
         cloth_holder: null,
         price: 0,
         discount_price: 0,
+        installmentCharge: 0,
         rotate: false,
         motor_type: null,
         extraVertical: 0,
@@ -1771,6 +1828,7 @@ export default {
         cloth_holder: null,
         price: 0,
         discount_price: 0,
+        installmentCharge: 0,
         rotate: false,
         motor_type: null,
         extraVertical: 0,
@@ -2355,6 +2413,15 @@ export default {
         //     this.order.discount_price = this.order.price - ( (this.order.discount_pricet/100)*this.order.price)
         //   }
 
+        if(typeof(this.order.installmentCharge) != 'string'){
+            if(this.order.installmentCharge < 0){
+                this.order.installmentCharge = 0;
+            }
+        }
+        else{
+            this.order.installmentCharge = 0;
+        }
+
         if (this.editable) {
           this.$store.dispatch("editOrder", this.order).then(() => {
             this.order = Object.assign({}, this.defaultOrder);
@@ -2364,7 +2431,6 @@ export default {
           });
         } else {
           this.$store.dispatch("addToOrder", this.order).then(() => {
-              console.log("QUOTEDKDKD", this.order)
             this.order = Object.assign({}, this.defaultOrder);
             this.order.canvas = [{width: null, height: null}],
             this.order.motor =  Object.assign({}, this.defaultMotor);
@@ -2603,6 +2669,22 @@ export default {
       }else{
         return 0
       }
+    },
+
+    computedInstallmentCharge(){
+        if(typeof(this.order.installmentCharge) != 'string'){
+            if(this.order.installmentCharge >= 0){
+                return this.order.installmentCharge;
+            }
+            else{
+                this.order.installmentCharge = 0;
+                return this.order.installmentCharge;
+            }
+        }
+        else{
+            this.order.installmentCharge = 0;
+            return this.order.installmentCharge;
+        }
     },
 
     celularMotors (){

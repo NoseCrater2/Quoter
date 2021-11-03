@@ -33,14 +33,30 @@ class NetPayController extends Controller
     {
         $client = new Client([]);//COMENTARIO
 
+        $monthCount = 0;
+        if($request->selectedPaymentSchema == 'credit' && $request->cardType == 'credit'){
+            $monthCount = 6;
+        }
+        // "installments" => [
+        //     "plan" => [
+        //         "count" => 3,
+        //         "interval"=> "month"
+        //     ]
+        // ],
+
         $method = 'POST';
         $requestUrl = $this->baseUrl.'v3/charges';
-
         $formParams = [
             'amount' => $request->amount,
             'description' => $request->order,
             'paymentMethod' => 'card',
             'currency' => 'MXN',
+            "installments" => [
+                "plan" => [
+                    "count" => $monthCount,
+                    "interval"=> "month"
+                ]
+            ],
             'billing' => [
                 'firstName' => $user->name,
                 'lastName' => $user->last_name,
@@ -71,7 +87,7 @@ class NetPayController extends Controller
             'User-Agent' => 'ReadMe-API-Explorer'
         ];
 
-        $response = $client->request($method, $requestUrl,  [
+        $response = $client->request($method, $requestUrl, [
             'json' => $formParams,
             'headers' => $headers,
             'verify' => $this->verifySSL

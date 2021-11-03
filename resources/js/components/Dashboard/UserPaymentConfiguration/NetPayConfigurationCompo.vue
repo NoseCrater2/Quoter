@@ -36,11 +36,14 @@
                               </v-row>
                            </v-col>
                             <v-col cols="6">
-                              <v-row justify="end">
-                            <v-img v-if="card.card.brand=='mastercard'" height="40" max-width="50" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/mastercard.png"></v-img>
-                            <v-img v-else-if="card.card.brand=='visa'" height="40" max-width="50" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/visa.png"></v-img>
-                            <v-img v-else-if="card.card.brand=='amex'" height="40" max-width="50" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/amex.png"></v-img>
+                                <v-row justify="end">
+                                    <v-img v-if="card.card.brand=='mastercard'" max-height="40" max-width="50" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/mastercard.png"></v-img>
+                                    <v-img v-else-if="card.card.brand=='visa'" max-height="40" max-width="70" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/visa.png"></v-img>
+                                    <v-img v-else-if="card.card.brand=='amex'" max-height="40" max-width="70" src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/amex.png"></v-img>
                                 </v-row>
+                            <v-row justify="end">
+                                <div style="color: white">{{card.card.type == 'credit' ? 'Crédito' : 'Débito'}}</div>
+                            </v-row>
                            </v-col>
                         </v-row>
                       </v-col>
@@ -49,7 +52,7 @@
                         <v-card-title class="white--text text-center font-weight-bold" style="font-size: 1.5rem">{{card.card.brand=='amex' ? card.card.cardPrefix.slice(0, 4) +' ****** *'+ card.card.lastFourDigits : card.card.cardPrefix.slice(0, 4) +' **** **** '+ card.card.lastFourDigits}} </v-card-title>
                          </v-row>
                       </v-col>
-                       <v-col cols="12" class="mt-n1">
+                       <v-col cols="12" class="mt-n5">
                          <v-row>
                             <v-col cols="8">
                                 <v-card-title class="white--text font-weight-bold" style="font-size: 0.73rem">Entidad</v-card-title>
@@ -362,6 +365,17 @@ export default {
             this.isDeletingCard = true;
             axios.post('/api/netpay-delete-card/'+this.user.id, {token: this.selectedToken}).then((response)=> {
                 if(response.status == 200){
+                    if(localStorage.getItem('quotedOrder') != null){
+                        let localStorageObject = JSON.parse(localStorage.getItem('quotedOrder'));
+                        if(localStorageObject.card.currentCard != null){
+                            if(localStorageObject.card.currentCard.token == this.selectedToken){
+                                localStorageObject.card.currentCard = null;
+                                localStorageObject.card.isCurrentCard = false;
+                                localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
+                            }
+                        }
+                    }
+                    this.selectedToken = null;
                     this.chargeCards()
                 }else{
                     this.errors = 'Ocurrió un error, intente de nuevo'
