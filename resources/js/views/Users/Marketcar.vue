@@ -136,7 +136,7 @@
                         </div>
                         <v-col cols="12" v-if="loadingOrdersToOrdersCardsStepOne" :class="(loadingOrdersToOrdersCardsStepOne && computedNoPaidOrders.length == 0) ? 'd-flex align-center justify-center' : ''"  style="border: 1px solid #BDBDBD; min-height: 400px;">
                             <!-- V-IF: SI EL CARRITO ESTÁ VACÍO -->
-                            <div v-if="loadingOrdersToOrdersCardsStepOne && computedNoPaidOrders.length == 0">
+                            <div v-if="computedNoPaidOrders.length == 0">
                                 <v-img
                                   contain
                                   height="160"
@@ -147,7 +147,7 @@
                                 </h3>
                             </div>
 
-                            <div v-else-if="loadingOrdersToOrdersCardsStepOne && computedNoPaidOrders.length > 0">
+                            <div v-else-if="computedNoPaidOrders.length > 0">
                                 <router-view
                                     :key="$route.path"
                                     @emitCancelOrder="methodOpenDialogCancelOneOrder"
@@ -277,16 +277,16 @@
                                   <v-col cols="7">
                                       <div class="text-end">{{mxCurrencyFormat.format(localModelSubtotalAndTotal)}} MXN</div>
                                   </v-col>
-                                  <v-col v-if="modelRadioStepFourPaymentMethod == 'debitcreditcard' && creditDebitType != ''" cols="5" class="mt-n5">
-                                      <div v-if="creditDebitType != ''">
-                                          <span v-if="creditDebitType == 'debit'">Pago con Tarjeta de Débito (+5%): </span>
-                                          <span v-else-if="creditDebitType == 'credit'">Pago con Tarjeta de Crédito (+15%): </span>
+                                  <v-col v-if="modelRadioStepFourPaymentMethod == 'debitcreditcard' && selectedPaymentSchema != ''" cols="5" class="mt-n5">
+                                      <div v-if="selectedPaymentSchema != ''">
+                                          <span v-if="selectedPaymentSchema == 'debit'">Pago en una sola exhibición (+5%): </span>
+                                          <span v-else-if="selectedPaymentSchema == 'credit'">Pago a 6 meses (+15%): </span>
                                       </div>
                                   </v-col>
-                                  <v-col v-if="modelRadioStepFourPaymentMethod == 'debitcreditcard' && creditDebitType != ''" cols="7" class="mt-n5">
+                                  <v-col v-if="modelRadioStepFourPaymentMethod == 'debitcreditcard' && selectedPaymentSchema != ''" cols="7" class="mt-n5">
                                       <div class="text-end">
-                                          <span v-if="creditDebitType == 'debit'">{{mxCurrencyFormat.format(localModelSubtotalAndTotal * 0.05)}} MXN</span>
-                                          <span v-else-if="creditDebitType == 'credit'">{{mxCurrencyFormat.format(localModelSubtotalAndTotal * 0.15)}} MXN</span>
+                                          <span v-if="selectedPaymentSchema == 'debit'">{{mxCurrencyFormat.format(localModelSubtotalAndTotal * 0.05)}} MXN</span>
+                                          <span v-else-if="selectedPaymentSchema == 'credit'">{{mxCurrencyFormat.format(localModelSubtotalAndTotal * 0.15)}} MXN</span>
                                       </div>
                                   </v-col>
                                   <v-col cols="5" class="mt-n5">
@@ -300,9 +300,9 @@
                           <v-col cols="12" style="background-color: #B2DFDB">
                             <v-col cols="12" style="background-color: #B2DFDB">
                                 <div class="text-end font-weight-bold" style="color: #3ba2a9; font-size: 1.45rem">
-                                      <div v-if="modelRadioStepFourPaymentMethod == 'debitcreditcard' && creditDebitType != ''">
-                                          <span v-if="creditDebitType == 'debit'">{{mxCurrencyFormat.format(localModelSubtotalAndTotal * 1.05)}} MXN</span>
-                                          <span v-else-if="creditDebitType == 'credit'">{{mxCurrencyFormat.format(localModelSubtotalAndTotal * 1.15)}} MXN</span>
+                                      <div v-if="modelRadioStepFourPaymentMethod == 'debitcreditcard' && selectedPaymentSchema != ''">
+                                          <span v-if="selectedPaymentSchema == 'debit'">{{mxCurrencyFormat.format(localModelSubtotalAndTotal * 1.05)}} MXN</span>
+                                          <span v-else-if="selectedPaymentSchema == 'credit'">{{mxCurrencyFormat.format(localModelSubtotalAndTotal * 1.15)}} MXN</span>
                                       </div>
                                       <div v-else>
                                           <span>{{mxCurrencyFormat.format(localModelSubtotalAndTotal)}} MXN</span>
@@ -312,6 +312,12 @@
                             <v-col cols="12" style="background-color: #B2DFDB" class="mt-n6">
                                 <div class="text-uppercase text-end">
                                     Total
+                                </div>
+                                <div v-if="selectedPaymentSchema == 'credit'">
+                                    <v-divider class="my-2"></v-divider>
+                                    <div class="text-end" style="font-size: 0.85rem">
+                                        6 pagos de {{mxCurrencyFormat.format((localModelSubtotalAndTotal * 1.15) / 6)}} MXN
+                                    </div>
                                 </div>
                             </v-col>
                           </v-col>
@@ -542,7 +548,7 @@ export default {
         methodStepTwoCheckAndBuy(localItem){
             this.$store.dispatch('getQuotedOrder', localItem.id).then(()=>{
                 localStorage.removeItem('quotedOrder');
-                localStorage.setItem('quotedOrder', JSON.stringify({order:this.quotedOrder, step: 2, paymentType: '', isCheckTerms: false, flagIsStepFour: false, card: {isNewCard: false, isCurrentCard: false, currentCard: null}}));
+                localStorage.setItem('quotedOrder', JSON.stringify({order:this.quotedOrder, step: 2, paymentType: '', isCheckTerms: false, flagIsStepFour: false, card: {isNewCard: false, isCurrentCard: false, currentCard: null, selectedPaymentSchema: ''}}));
                 this.orderId = localItem.id;
                 this.isOrdersAndQuotationsDialogActivated = false;
                 this.modelWindowSteper = 2;
@@ -577,8 +583,8 @@ export default {
                     let localStorageObject =  JSON.parse(localStorage.getItem('quotedOrder'));
                     localStorageObject.flagIsStepFour = this.flagIsStepFour;
                     localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
-                    if(localStorageObject.card.currentCard != null){
-                        this.$store.commit('setCreditDebitType', localStorageObject.card.currentCard.type);
+                    if(localStorageObject.card.selectedPaymentSchema != ''){
+                        this.$store.commit('setSelectedPaymentSchema', localStorageObject.card.selectedPaymentSchema);
                     }
                     this.$router.push({name: 'StepFourNetpay'});
                 }
@@ -617,18 +623,19 @@ export default {
                     let localStorageObject = JSON.parse(localStorage.getItem('quotedOrder'))
                     localStorageObject.step =  this.modelWindowSteper;
                     localStorageObject.flagIsStepFour = false;
+                    localStorageObject.card.selectedPaymentSchema = '';
                     localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
                     switch(this.modelWindowSteper){
                         case 1:
-                                this.$store.commit('setCreditDebitType', '');
+                                this.$store.commit('setSelectedPaymentSchema', '');
                                 this.$router.push({name: 'Marketcar'});
                             break;
                         case 2:
-                                this.$store.commit('setCreditDebitType', '');
+                                this.$store.commit('setSelectedPaymentSchema', '');
                                 this.$router.push({name: 'StepTwoDetails'});
                             break;
                         case 3:
-                                this.$store.commit('setCreditDebitType', '');
+                                this.$store.commit('setSelectedPaymentSchema', '');
                                 this.$router.push({name: 'StepThreeChoose'});
                             break;
                     }
@@ -669,7 +676,7 @@ export default {
             quotedOrders: state => state.ordersModule.quotedOrders,
             quotedOrder: state => state.ordersModule.quotedOrder,
             user: state => state.user,
-            creditDebitType: state => state.ordersModule.creditDebitType
+            selectedPaymentSchema: state => state.ordersModule.selectedPaymentSchema
         }),
         ...mapGetters(['getQuotedOrder']),
         btnContinuarTitle(){

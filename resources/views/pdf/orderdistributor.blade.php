@@ -743,8 +743,8 @@
                 </tr>
                 <tr style="border: 1px solid black;font-weight: bolder; background-color:#E0E0E0;">
                     <td style="font-size: 7px; text-align: center; padding-top: 3px; padding-bottom: 3px;">
-                        <div>Pago en una sola exhibición</div>
-                        <div>(Con Tarjeta de Débito) <span style="color: red">(+5%)</span></div>
+                        <div>Pago con tarjeta 1 sola emisión.</div>
+
                     </td>
                     <td style="font-size: 12px; text-align: right; padding-right: 11px; padding-top: 3px; padding-bottom: 3px;">
                         $@priceFormat(round($total*1.05, 1, PHP_ROUND_HALF_UP)) MXN
@@ -752,8 +752,8 @@
                 </tr>
                 <tr style="border: 1px solid black;font-weight: bolder; background-color:#E0E0E0;">
                     <td style="font-size: 7px; text-align: center; padding-top: 3px; padding-bottom: 3px;">
-                        <div>Pago a 6 meses</div>
-                        <div>(Con Tarjeta de Crédito) <span style="color: red">(+15%)</span></div>
+                        <div>Pago a 6 meses.</div>
+
                     </td>
                     <td style="font-size: 12px; text-align: right; padding-right: 11px; padding-top: 3px; padding-bottom: 3px;">
                         <div>$@priceFormat(round($total*1.15, 1, PHP_ROUND_HALF_UP)) MXN</div>

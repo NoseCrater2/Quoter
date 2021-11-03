@@ -208,11 +208,11 @@
                     </v-col>
                     <v-col cols="6" class="text-center" style="font-size: 0.63rem; background-color: #E0E0E0;">
                         <div>
-                            Pago en una sola exhibición
+                            Pago con tarjeta 1 sola emisión.
                         </div>
-                        <div>
+                        <!-- <div>
                             (Con Tarjeta de Débito) <span style="color: red">(+5%)</span>
-                        </div>
+                        </div> -->
                     </v-col>
                     <v-col cols="6" class="text-end" style="background-color: #E0E0E0;">
                         <div>
@@ -221,11 +221,11 @@
                     </v-col>
                     <v-col cols="6" class="text-center" style="font-size: 0.63rem; background-color: #E0E0E0;">
                         <div>
-                            Pago a 6 meses
+                            Pago a 6 meses.
                         </div>
-                        <div>
+                        <!-- <div>
                             (Con Tarjeta de Crédito) <span style="color: red">(+15%)</span>
-                        </div>
+                        </div> -->
                     </v-col>
                     <v-col cols="6" class="text-end" style="background-color: #E0E0E0;">
                         <div>

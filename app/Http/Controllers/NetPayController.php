@@ -34,11 +34,9 @@ class NetPayController extends Controller
         $client = new Client([]);//COMENTARIO
 
         $monthCount = 0;
-
-        if($request->cardType == 'credit'){
+        if($request->selectedPaymentSchema == 'credit' && $request->cardType == 'credit'){
             $monthCount = 6;
         }
-
         // "installments" => [
         //     "plan" => [
         //         "count" => 3,

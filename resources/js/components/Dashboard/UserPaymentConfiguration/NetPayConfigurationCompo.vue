@@ -372,7 +372,6 @@ export default {
                                 localStorageObject.card.currentCard = null;
                                 localStorageObject.card.isCurrentCard = false;
                                 localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
-                                this.$store.commit('setCreditDebitType', '');
                             }
                         }
                     }

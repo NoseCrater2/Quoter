@@ -9,7 +9,7 @@ const ordersModule = {
       quotedOrder: {},
       quotingOrders: [],
       quotingOrder: [],
-      creditDebitType: localStorage.getItem('quotedOrder') !== null ? (JSON.parse(localStorage.getItem('quotedOrder')).card.currentCard != null ? JSON.parse(localStorage.getItem('quotedOrder')).card.currentCard.type : '') : ''
+      selectedPaymentSchema: localStorage.getItem('quotedOrder') !== null ? (JSON.parse(localStorage.getItem('quotedOrder')).card.selectedPaymentSchema != '' ? JSON.parse(localStorage.getItem('quotedOrder')).card.selectedPaymentSchema : '') : ''
 
     },
 
@@ -75,8 +75,8 @@ const ordersModule = {
             //state.newUserId = newUser.id;
         },
 
-        setCreditDebitType(state, payload){
-            state.creditDebitType = payload;
+        setSelectedPaymentSchema(state, payload){
+            state.selectedPaymentSchema = payload;
         },
 
         setQuotedOrders(state, orders){
