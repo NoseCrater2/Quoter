@@ -117,6 +117,10 @@ Route::middleware(['auth:sanctum'])->group(function()
     Route::get('netpay-get-client/{user}', 'NetPayController@getClient');
     Route::post('netpay-delete-card/{user}', 'NetPayController@deleteCard');
 
+    Route::get('payment-types', 'PaymentTypeController@index');
+    Route::post('payment-type-to-user/{user}', 'PaymentTypeController@addPaymentTypeToUser');
+    Route::get('user-payment-types/{user}', 'PaymentTypeController@getUserPaymentTypes');
+
     Route::get('change-state/{order}', 'OrderController@changeState');
     Route::post('executeactions-allorders/{action}', 'OrderController@executeActionsAllorders');
 

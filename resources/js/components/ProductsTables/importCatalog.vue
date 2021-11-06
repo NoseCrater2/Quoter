@@ -97,7 +97,7 @@
                 <v-card-actions>
                     <v-btn text color="red"  @click="dialog1 = false; isEditing = false">CANCELAR</v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn :loading="loadingSaveButton" @click="save()" color="#47a5ad" text>GUARDARR</v-btn>
+                    <v-btn :loading="loadingSaveButton" @click="save()" color="#47a5ad" text>GUARDAR</v-btn>
                 </v-card-actions>
                 <v-card-text>
                     <v-progress-linear
@@ -249,7 +249,7 @@ export default {
                 })
             }
             }
-            
+
 
         }
 

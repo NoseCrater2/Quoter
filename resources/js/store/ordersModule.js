@@ -9,6 +9,7 @@ const ordersModule = {
       quotedOrder: {},
       quotingOrders: [],
       quotingOrder: [],
+      selectedPaymentSchema: localStorage.getItem('quotedOrder') !== null ? (JSON.parse(localStorage.getItem('quotedOrder')).card.selectedPaymentSchema != '' ? JSON.parse(localStorage.getItem('quotedOrder')).card.selectedPaymentSchema : '') : ''
 
     },
 
@@ -52,7 +53,8 @@ const ordersModule = {
                 parseFloat(order.motor.manufacturerPrice) +
                 parseFloat(order.motor.stringPrice) +
                 parseFloat(order.extraEnrollable) +
-                parseFloat (order.extraVertical)
+                parseFloat (order.extraVertical) +
+                parseFloat (order.installmentCharge)
                 return prices += pt
            })
 
@@ -64,12 +66,17 @@ const ordersModule = {
 
     },
     mutations:{
+
         mutationDeleteAllBlinds(state){
             state.orders = [];
         },
         saveOrder(state,newOrder){
             state.orders.push(newOrder);
             //state.newUserId = newUser.id;
+        },
+
+        setSelectedPaymentSchema(state, payload){
+            state.selectedPaymentSchema = payload;
         },
 
         setQuotedOrders(state, orders){

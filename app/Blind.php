@@ -46,7 +46,9 @@ class Blind extends Model
         'control_id',
 
         'extraEnrollable',
-        'extraVertical'
+        'extraVertical',
+
+        'installmentCharge' //nueva (0.00)
     ];
 
     public function order()
