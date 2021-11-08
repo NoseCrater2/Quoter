@@ -160,15 +160,8 @@
         </v-col>
         <v-col cols="12">
             <div style="border: 1px dashed black;">
-                <DashboardBlindsProductDetailCards></DashboardBlindsProductDetailCards>
+                <DashboardBlindsProductDetailCards :idOrder="id" :isFromDialog="true"></DashboardBlindsProductDetailCards>
             </div>
-            <!-- <div v-else-if="propIsOrderOrQuotationString == 'quotation'" style="border: 1px dashed black;">
-                <v-row no-gutters>
-                    <v-col cols="12" xl="6" lg="6" md="12" sm="12" class="pa-2" v-for="(itemBlind, index) in quotingOrder.blinds" :key="itemBlind.id">
-                        <DashboardBlindsProductDetailCards :propIsOrderOrQuotationString="'quotation'" :propItemArrayBlindsObject="itemBlind" :propBlindCount="(index + 1)" :propBreakpointFromDialog="$vuetify.breakpoint"></DashboardBlindsProductDetailCards>
-                    </v-col>
-                </v-row>
-            </div> -->
         </v-col>
         <v-row no-gutters justify="center" justify-xl="end" justify-lg="end" justify-md="end" justify-sm="center" class="mr-3 mt-3">
             <v-col cols="12" xl="4" lg="4" md="4" sm="12">

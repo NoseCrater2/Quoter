@@ -55,7 +55,7 @@
 
           </v-list-group>
 
-          <v-list-item style="background-color: black;"  :to="{name: 'Orders', params:{option: 'cotizaciones'}}">
+          <v-list-item style="background-color: black;"  :to="{name: 'Marketcar'}">
             <v-list-item-icon>
               <v-icon dark>mdi-cart</v-icon>
             </v-list-item-icon>
@@ -261,7 +261,7 @@
               </v-list>
               </v-menu>
               <v-btn
-              :to="{name: 'Orders', params: {option: 'cotizaciones'}}"
+              :to="{name: 'Marketcar'}"
               height="65px"
               class="white--text ml-2"
               depressed tile color="#404042">

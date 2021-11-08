@@ -209,6 +209,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { mapState, mapGetters} from "vuex";
 import woodMatrix from '../../utils/woodMatrixOne';
 import woodMotorized from '../../utils/woodMatrixTwo';
@@ -297,12 +298,18 @@ export default {
             }
         },
         localMethodIsOrdersAndQuotationsDialogActivatedOn(localItem){
-            this.$store.dispatch('getQuotingOrder', localItem).then(()=>{
-                this.orderId = localItem;
+            axios.get('/api/orders/'+localItem).then((response)=>{
+                this.orderId = response.data.data.id
                 // this.localPropItemQuotationOrderNumberID = localItem.order;
                 // this.localToPropTotalPrice = localItem.total;
                 this.isOrdersAndQuotationsDialogActivated = true;
-            });
+            })
+            // this.$store.dispatch('getQuotingOrder', localItem).then(()=>{
+            //     this.orderId = localItem;
+            //     // this.localPropItemQuotationOrderNumberID = localItem.order;
+            //     // this.localToPropTotalPrice = localItem.total;
+            //     this.isOrdersAndQuotationsDialogActivated = true;
+            // });
 
         },
         emitClickCloseFromOrdersAndQuotationsDialog(){
