@@ -539,8 +539,15 @@ export default {
                 this.$store.dispatch('deleteBlindFromOrder', this.modelDeleteBlindItemId).then(async()=>{
                     await this.$store.dispatch('getQuotedOrder', this.quotedOrder.id);
                     await this.$store.dispatch('getQuotedOrders');
+                    this.localModelSubtotalAndTotal = this.quotedOrder.total;
+                    if(localStorage.getItem('quotedOrder') !== null){
+                        let localStorageObject = JSON.parse(localStorage.getItem('quotedOrder'))
+                        localStorageObject.order.total = this.localModelSubtotalAndTotal;
+                        localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
+                    }
                     this.isDeletingBlind = false;
                     this.methodCloseDialogDeleteBlind();
+                    this.$router.go();
                 })
             }
         },
@@ -568,7 +575,6 @@ export default {
         },
 
         localMethodEditBlindStepThreeMarketcar(idItem){
-            this.modelWindowSteper = 1;
             this.methodIsOrdersAndQuotationsDialogActivated(this.quotedOrders.find(item=>item.id == idItem).id);
         },
 

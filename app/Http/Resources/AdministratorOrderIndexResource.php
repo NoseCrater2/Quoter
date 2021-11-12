@@ -30,7 +30,9 @@ class AdministratorOrderIndexResource extends JsonResource
                         $blind->flexiballet_price +
                         $blind->gallery_price +
                         $blind->manufacturar_price +
-                        $blind->string_price;
+                        $blind->string_price  +
+                        $blind->extraVertical +
+                        $blind->extraEnrollable;
             })->sum(),
             'created_at' => Carbon::parse($this->created_at)->toFormattedDateString(),
             'updated_at' =>Carbon::parse($this->updated_at)->toFormattedDateString(),
