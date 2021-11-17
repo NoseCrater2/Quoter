@@ -85,7 +85,7 @@ const routes = [
             },
 
 
-            
+
             {
                 path: "netpay-payment",
                 component: () => import("./components/Dashboard/Marketcar/MarketCompoNetPayPayment.vue"),
@@ -101,6 +101,11 @@ const routes = [
                 path: "priceList",
                 component: () => import("./views/Users/PriceList.vue"),
                 name: "PriceList",
+            },
+            {
+                path: "priceListPromo",
+                component: () => import("./views/Users/PriceListPromo.vue"),
+                name: "PriceListPromo",
             },
             {
                 path: "catalogList",
@@ -146,6 +151,15 @@ const routes = [
                 path: "importPdfs",
                 component: () => import("./components/ProductsTables/ImportPdfs.vue"),
                 name: "ImportPdfs",
+                meta: {
+                    requiresAuth: true,
+                }
+
+            },
+            {
+                path: "importPdfsPromo",
+                component: () => import("./components/ProductsTables/ImportPdfsPromo.vue"),
+                name: "ImportPdfsPromo",
                 meta: {
                     requiresAuth: true,
                 }

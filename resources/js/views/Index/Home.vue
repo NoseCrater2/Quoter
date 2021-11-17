@@ -162,7 +162,10 @@
                     <v-list-item-title>GALERÍAS</v-list-item-title>
                   </v-list-item>
                 <v-list-item :to="{name: 'ImportPdfs'}">
-                    <v-list-item-title>PDF Listas</v-list-item-title>
+                    <v-list-item-title>PDF Listas Precios</v-list-item-title>
+                </v-list-item>
+                <v-list-item :to="{name: 'ImportPdfsPromo'}">
+                    <v-list-item-title>PDF Gaceta Promociones</v-list-item-title>
                 </v-list-item>
                 <v-list-item :to="{name: 'importCatalog'}">
                     <v-list-item-title>PDF Catálogos</v-list-item-title>
