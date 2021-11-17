@@ -4,6 +4,7 @@
             <v-carousel-item
             eager
             :to="item.route"
+            :href="item.href"
             v-for="(item, i) in persianas"
             :key="i">
                 <v-img  :src="item.src" height="55vh" min-height="55vh" max-height="750"  position="center center" eager>
@@ -98,6 +99,10 @@ export default {
             isMobile: false,
             persianas: [
                 {
+                    href: 'https://rollux.com.mx/img/pdfs/archivos/xBEgmFvqGbB2D5q2mtGxRvLpXdtC8kzuzxNghqd5.pdf',
+                    src: '/img/dashboard/slide3BuenFin.jpg'
+                },
+                {
                     route: {name: 'PriceList'},
                     src: '/img/dashboard/slide1.jpg'
                 },
@@ -127,10 +132,10 @@ export default {
                     route: {name: 'CatalogList'}
                 },
                 {
-                    title: 'Tus Pedidos',
-                    text: 'Consulta en cualquier momento tus órdenes y cotizaciones',
-                    icon:'/img/dashboard/icon_pedidos.png',
-                    route: '#'
+                    title: 'Gacetas de promociones',
+                    text: 'Descarga la lista de  promociones que Rollux tiene este mes.',
+                    icon:'/img/dashboard/gaceta_index.svg',
+                    route: {name: 'PriceListPromo'}
                 },
             ],
             clientArea: [
