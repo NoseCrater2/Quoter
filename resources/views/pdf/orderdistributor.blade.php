@@ -426,7 +426,22 @@
                                                         $installmentCharge .= '// CARGO POR INSTALACIÓN: $'.$order['installmentCharge'].' MXN';
                                                     }
                                                 ?>
-                                                <span>Precio (m2): ${{$order['price']}} MXN {{$installmentCharge}} // Descuento: {{$orders['user']['discount_percent']}}% // M2: @calculatemeters($order['canvas'][0]['width'],$order['canvas'][0]['height']) //</span>
+                                                <?php
+                                                    $width = $order['canvas'][0]['width'] + 0;
+                                                    $height = $order['canvas'][0]['height'] + 0;
+                                                    $resultWidhtXHeight = 0;
+                                                    if(floatval($width) < 1 && floatval($height) < 1){
+                                                        $resultWidhtXHeight = 1;
+                                                    }else if(floatval($width) < 1){
+                                                        $resultWidhtXHeight = number_format((floatval(1) * floatval($height)), 3, '.', '');
+                                                    }elseif(floatval($height) < 1){
+                                                        $resultWidhtXHeight = number_format((floatval(1) * floatval($width)), 3, '.', '');
+                                                    }
+                                                    else{
+                                                        $resultWidhtXHeight = number_format(floatval($width) * floatval($height), 3, '.', '');
+                                                    }
+                                                ?>
+                                                <span>Precio (M<sup>2</sup>): ${{$order['price']}} MXN {{$installmentCharge}} // Descuento: {{$orders['user']['discount_percent']}}% // M<sup>2</sup>: {{$resultWidhtXHeight}} //</span>
                                                 <?php
                                                     $totaldiscount = $order['price'] - (($orders['user']['discount_percent'] / 100) * $order['price']);
                                                 ?>
@@ -642,7 +657,22 @@
                                                         $installmentCharge .= '// CARGO POR INSTALACIÓN: $'.$order['installmentCharge'].' MXN';
                                                     }
                                                 ?>
-                                                <span>Precio (m2): ${{$order['price']}} MXN {{$installmentCharge}} // Descuento: {{$orders['user']['discount_percent']}}% // M2: @calculatemeters($order['canvas'][0]['width'],$order['canvas'][0]['height']) //</span>
+                                                <?php
+                                                    $width = $order['canvas'][0]['width'] + 0;
+                                                    $height = $order['canvas'][0]['height'] + 0;
+                                                    $resultWidhtXHeight = 0;
+                                                    if(floatval($width) < 1 && floatval($height) < 1){
+                                                        $resultWidhtXHeight = 1;
+                                                    }else if(floatval($width) < 1){
+                                                        $resultWidhtXHeight = number_format((floatval(1) * floatval($height)), 3, '.', '');
+                                                    }elseif(floatval($height) < 1){
+                                                        $resultWidhtXHeight = number_format((floatval(1) * floatval($width)), 3, '.', '');
+                                                    }
+                                                    else{
+                                                        $resultWidhtXHeight = number_format(floatval($width) * floatval($height), 3, '.', '');
+                                                    }
+                                                ?>
+                                                <span>Precio (M<sup>2</sup>): ${{$order['price']}} MXN {{$installmentCharge}} // Descuento: {{$orders['user']['discount_percent']}}% // M<sup>2</sup>: {{$resultWidhtXHeight}} //</span>
                                                 <?php
                                                     $totaldiscount = $order['price'] - (($orders['user']['discount_percent'] / 100) * $order['price']);
                                                 ?>

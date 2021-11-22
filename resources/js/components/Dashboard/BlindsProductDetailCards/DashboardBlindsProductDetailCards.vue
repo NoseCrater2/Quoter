@@ -66,7 +66,7 @@
                               <span>{{itemBlind.motor.flexiballetPrice > 0 ? '(+$'+itemBlind.motor.flexiballetPrice+')' : ''}}</span>
                           </div>
                           <div>
-                              <span>Precio (m2): {{mxCurrencyFormat.format(itemBlind.price)}} MXN {{itemBlind.installmentCharge > 0 ? ` // CARGO POR INSTALACIÓN: ${mxCurrencyFormat.format(itemBlind.installmentCharge)} MXN` : `` }} // Descuento: {{localOrder.user.discount_percent}} % // M2: {{squareMeters(itemBlind.canvas[0].width, itemBlind.canvas[0].height)}} //</span>
+                              <span>Precio (M<sup>2</sup>): {{mxCurrencyFormat.format(itemBlind.price)}} MXN {{itemBlind.installmentCharge > 0 ? ` // CARGO POR INSTALACIÓN: ${mxCurrencyFormat.format(itemBlind.installmentCharge)} MXN` : `` }} // Descuento: {{localOrder.user.discount_percent}} % // M<sup>2</sup> {{squareMeters(itemBlind.canvas[0].width, itemBlind.canvas[0].height)}} //</span>
                               <span>
                                   Precio con Descto: {{mxCurrencyFormat.format(itemBlind.discount_price)}} MXN
                               </span>
@@ -189,7 +189,7 @@
                               <span>{{itemBlind.motor.flexiballetPrice > 0 ? '(+$'+itemBlind.motor.flexiballetPrice+')' : ''}}</span>
                           </div>
                           <div>
-                              <span>Precio (m2): {{mxCurrencyFormat.format(itemBlind.price)}} MXN {{itemBlind.installmentCharge > 0 ? ` // CARGO POR INSTALACIÓN: ${mxCurrencyFormat.format(itemBlind.installmentCharge)} MXN` : `` }} // Descuento: {{localOrder.user.discount_percent}} % // M2: {{squareMeters(itemBlind.canvas[0].width, itemBlind.canvas[0].height)}} //</span>
+                              <span>Precio (M<sup>2</sup>): {{mxCurrencyFormat.format(itemBlind.price)}} MXN {{itemBlind.installmentCharge > 0 ? ` // CARGO POR INSTALACIÓN: ${mxCurrencyFormat.format(itemBlind.installmentCharge)} MXN` : `` }} // Descuento: {{localOrder.user.discount_percent}} % // M<sup>2</sup> {{squareMeters(itemBlind.canvas[0].width, itemBlind.canvas[0].height)}} //</span>
                               <span>
                                   Precio con Descto: {{mxCurrencyFormat.format(itemBlind.discount_price)}} MXN
                               </span>
@@ -280,15 +280,19 @@ export default {
     },
     methods:{
         squareMeters(width, height){
+            let resultWidhtXHeight = 0;
             if(width < 1 && height < 1){
-                return 1
+                resultWidhtXHeight = 1;
+                return resultWidhtXHeight;
             }else if(width < 1){
-                return Math.round(height) * 10 / 10
+                resultWidhtXHeight = 1 * height;
+                return resultWidhtXHeight.toFixed(3);
             }else if(height < 1){
-                return Math.round(width) * 10 / 10
+                resultWidhtXHeight = 1 * width;
+                return resultWidhtXHeight.toFixed(3);
             }else{
-               return Math.round((width * height) * 10) / 10
-
+                resultWidhtXHeight = height * width;
+                return resultWidhtXHeight.toFixed(3);
             }
         },
         methodDeleteBlind(itemBlindID){
