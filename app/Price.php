@@ -8,12 +8,13 @@ class Price extends Model
 {
 
     public $timestamps = false;
-    protected $fillable = 
+    protected $fillable =
     [
         'title',
         'path',
-        'thumbnail'
+        'thumbnail',
+        'is_promo'
     ];
 
-    
+
 }

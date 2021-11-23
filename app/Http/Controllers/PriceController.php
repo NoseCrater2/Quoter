@@ -12,7 +12,7 @@ class PriceController extends Controller
 {
     public function index()
     {
-        return Price::all();
+        return Price::where('is_promo', 0)->get();
     }
 
 
@@ -26,6 +26,7 @@ class PriceController extends Controller
         $data = $request->all();
         $rules =[
             'title' => 'required|string|max:255',
+            'is_promo' => 'required|in:0,1'
             // 'email' => 'required|string|email|max:255|unique:users',
             // 'rfc' => 'nullable|string|size:13',
         ];
@@ -42,7 +43,7 @@ class PriceController extends Controller
            if($request->hasFile('thumbnail')){
                 $data['thumbnail'] = $request->thumbnail->store('pdfs/thumbnails');
             }
-            
+
            $price = Price::create($data);
            return $price;
             //return new UserIndexResource(User::findOrFail($user->id));
@@ -70,10 +71,15 @@ class PriceController extends Controller
                 Storage::delete($price->thumbnail);
                 $data['thumbnail'] = $request->thumbnail->store('pdfs/thumbnails');
             }
-            
+
            $price->update($data);
            return $price;
         }
+    }
+
+    public function isPromo()
+    {
+        return Price::where('is_promo', 1)->get();
     }
 
     public function destroy(Price $price)

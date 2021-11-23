@@ -7,14 +7,14 @@
             hide-default-footer
             :items-per-page.sync="itemsPerPage"
             :page.sync="page"
-            :items="prices">
+            :items="promos">
             <template v-slot:header>
                 <v-toolbar
                   class="mb-2"
                   color="#47a5ad"
                   dark
                   flat>
-                    <v-toolbar-title>LISTA DE PRECIOS PDF <span style="font-size: 0.87rem important!"></span>({{prices.length}} en total)</v-toolbar-title>
+                    <v-toolbar-title>GACETA DE PROMOCIONES PDF <span style="font-size: 0.87rem important!"></span>({{promos.length}} en total)</v-toolbar-title>
                     <v-spacer></v-spacer>
                      <v-btn @click="openPriceDialog(null)" rounded icon color="white">
                         <v-icon size="60">mdi-plus</v-icon>
@@ -186,7 +186,7 @@
                                 <v-col cols="12" md="12" sm="12">
                                     <v-file-input
                                     outlined
-                                    v-model="price.file"
+                                    v-model="promo.file"
                                     :rules="rules"
                                     show-size
                                     accept="application/pdf"
@@ -207,7 +207,7 @@
                                 <v-col cols="12" md="12" sm="12">
                                     <v-file-input
                                     outlined
-                                    v-model="price.thumbnail"
+                                    v-model="promo.thumbnail"
                                     :rules="rulesImage"
                                     show-size
                                     accept="image/jpeg"
@@ -254,18 +254,18 @@ export default {
             rulesImage: [
                 value => !value || value.size < 100000 || 'Imagen debe ser menor a 100Kb',
             ],
-            price: {
+            promo: {
                 title: null,
                 file: null,
                 thumbnail: null,
-                is_promo: 0,
+                is_promo: 1,
             },
 
-            defaultPrice: {
+            defaultPromo: {
                 title: null,
                 file: null,
                 thumbnail: null,
-                is_promo: 0,
+                is_promo: 1,
             },
             isEditing: false,
             dialogDelete: false,
@@ -283,12 +283,12 @@ export default {
     },
 
      mounted(){
-        this.$store.dispatch('getPrices')
+        this.$store.dispatch('getPromos')
     },
 
     computed:{
         ...mapState({
-            prices: state => state.priceModule.prices,
+            promos: state => state.priceModule.promos,
         }),
 
         titleDialog(){
@@ -297,15 +297,15 @@ export default {
 
         title: {
             get: function () {
-                return this.price.file?this.price.file.name:null
+                return this.promo.file?this.promo.file.name:null
             },
             set: function (newValue) {
-                this.price.title = newValue
+                this.promo.title = newValue
             }
         },
 
         numberOfPages () {
-          return Math.ceil(this.prices.length / this.itemsPerPage)
+          return Math.ceil(this.promos.length / this.itemsPerPage)
         },
     },
 
@@ -322,8 +322,8 @@ export default {
         openPriceDialog(list){
             if(list){
                 this.isEditing = true
-                this.price.id = list.id
-                this.price.title = list.title
+                this.promo.id = list.id
+                this.promo.title = list.title
                 this.getImageFromServer('https://rollux.com.mx/img/'+list.thumbnail,list.title)
                 this.getFileFromServer('https://rollux.com.mx/img/'+list.path,list.title)
             }
@@ -339,7 +339,7 @@ export default {
         remove(){
             this.loadinDeleteButton = true
             this.$store.dispatch('deletePrice', this.selectedList.id).then(()=>{
-                this.$store.dispatch('getPrices').then(()=>{
+                this.$store.dispatch('getPromos').then(()=>{
                     this.loadinDeleteButton = false
                     this.dialogDelete = false
                 }).catch(()=>{
@@ -353,7 +353,7 @@ export default {
             fetch(url)
               .then(res => res.blob()) // Gets the response and returns it as a blob
               .then(blob => {
-                  this.price.thumbnail =  new File([blob],title);
+                  this.promo.thumbnail =  new File([blob],title);
             });
         },
 
@@ -361,38 +361,38 @@ export default {
             fetch(url)
                 .then(res => res.blob()) // Gets the response and returns it as a blob
                 .then(blob => {
-                    this.price.file=  new File([blob],title);
+                    this.promo.file=  new File([blob],title);
             });
         },
 
         save(){
             this.loadingSaveButton = true
             if(this.isEditing){
-                this.$store.dispatch('editPrice', this.price).then(() => {
-                    this.$store.dispatch('getPrices').then(()=>{
+                this.$store.dispatch('editPrice', this.promo).then(() => {
+                    this.$store.dispatch('getPromos').then(()=>{
                         this.loadingSaveButton = false
                         this.dialog1 = false
                         this.isEditing = false
-                        this.price = Object.assign({},this.defaultPrice)
+                        this.promo = Object.assign({},this.defaultPromo)
                     }).catch(()=>{
                         this.loadingSaveButton = false
                         this.dialog1 = false
                         this.isEditing = false
-                        this.price = Object.assign({},this.defaultPrice)
+                        this.promo = Object.assign({},this.defaultPromo)
                     })
                 })
             }else{
-                this.$store.dispatch('savePrice', this.price).then(() => {
-                    this.$store.dispatch('getPrices').then(()=>{
+                this.$store.dispatch('savePrice', this.promo).then(() => {
+                    this.$store.dispatch('getPromos').then(()=>{
                         this.loadingSaveButton = false
                         this.dialog1 = false
                         this.isEditing = false
-                        this.price = Object.assign({},this.defaultPrice)
+                        this.promo = Object.assign({},this.defaultPromo)
                     }).catch(()=>{
                         this.loadingSaveButton = false
                         this.dialog1 = false
                         this.isEditing = false
-                        this.price = Object.assign({},this.defaultPrice)
+                        this.promo = Object.assign({},this.defaultPromo)
                     })
                 })
             }
