@@ -1,7 +1,8 @@
 <template>
-    <div v-if="!computedIsDiferenMarketcar">
+    
+    <div v-if="computedIsDiferenMarketcar">
         <v-row no-gutters>
-        <v-col cols="12" class="mt-3" v-for="(itemBlind, index) in localOrder.blinds" :key="itemBlind.id">
+        <v-col cols="12" xl="6" lg="6" md="12" sm="12" class="pa-2" v-for="(itemBlind, index) in quotedOrder.blinds" :key="itemBlind.id">
             <v-card outlined>
               <v-row no-gutters>
                   <!-- style="color: #47a5ad; background-color: #E0E0E0; writing-mode: tb-rl; transform: rotate(-180deg);" -->
@@ -111,20 +112,12 @@
                   </v-col>
               </v-row>
             </v-card>
-            <v-row no-gutters justify="end">
-                <v-btn @click="methodEditBlind()" small elevation="0" color="#47a5ad" class="white--text">
-                    <v-icon left>mdi-square-edit-outline</v-icon>Editar
-                </v-btn>
-                <v-btn :disabled="localOrder.blinds.length < 2" @click="methodDeleteBlind(itemBlind.id)" small elevation="0" color="#757575" class="white--text ml-1">
-                    <v-icon left>mdi-delete</v-icon>Borrar
-                </v-btn>
-            </v-row>
         </v-col>
         </v-row>
     </div>
-    <div v-else-if="computedIsDiferenMarketcar">
+    <div v-else>
         <v-row no-gutters>
-        <v-col cols="12" xl="6" lg="6" md="12" sm="12" class="pa-2" v-for="(itemBlind, index) in localOrder.blinds" :key="itemBlind.id">
+        <v-col cols="12" class="mt-3" v-for="(itemBlind, index) in quotedOrder.blinds" :key="itemBlind.id">
             <v-card outlined>
               <v-row no-gutters>
                   <!-- style="color: #47a5ad; background-color: #E0E0E0; writing-mode: tb-rl; transform: rotate(-180deg);" -->
@@ -234,6 +227,14 @@
                   </v-col>
               </v-row>
             </v-card>
+            <v-row no-gutters justify="end" v-if="$route.name == 'StepTwoDetails'">
+                <v-btn @click="methodEditBlind()" small elevation="0" color="#47a5ad" class="white--text">
+                    <v-icon left>mdi-square-edit-outline</v-icon>Editar
+                </v-btn>
+                <v-btn :disabled="quotedOrder.blinds.length < 2" @click="methodDeleteBlind(itemBlind.id)" small elevation="0" color="#757575" class="white--text ml-1">
+                    <v-icon left>mdi-delete</v-icon>Borrar
+                </v-btn>
+            </v-row>
         </v-col>
         </v-row>
     </div>
