@@ -366,8 +366,8 @@ export default {
     },
 
     downloadPdf(){
-        axios.post("/api/auth-order-list-pdf-distributor", {orders: this.order.blinds, user: this.order.user, distributorImagePrint: false}, {responseType: 'blob',}).then((response)=>{
-          FileDownload(response.data, this.order.order+'.pdf')
+        axios.post("/api/auth-order-list-pdf-distributor", {orders: this.quotedOrder.blinds, user: this.quotedOrder.user, distributorImagePrint: false}, {responseType: 'blob',}).then((response)=>{
+          FileDownload(response.data, this.quotedOrder.order+'.pdf')
       }).catch(()=>{
         //  this.isPrintingSuperAdminUserPDF = false;
       })

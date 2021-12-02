@@ -31,13 +31,13 @@
             color="#47a5ad"
             class="ma-1"
             dense
-            placeholder="0.5 a 99"
+            placeholder="0.5 a 2"
             hide-details
             label="Altura"
             outlined
             type="number"
             suffix="mts"
-            :rules="[(v) => !!v && (v >= 0.5 && v <= 99 )|| 'Requerido']"
+            :rules="[(v) => !!v && (v >= 0.5 && v <= 2 )|| 'Requerido']"
             v-model="motor.height_control">
           </v-text-field>
         </v-col>

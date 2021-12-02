@@ -88,6 +88,7 @@ class OrderShowResource extends JsonResource
                     ],
                     'motor_type' => $blind->motor_type,
                     'price' => floatval($blind->price),
+                    'base_price' => floatval($blind->base_price),
                     'discount_price' => floatval($blind->discount_price),
                     'installmentCharge' => floatval($blind->installmentCharge),
                     'rotate' => $blind->rotate,

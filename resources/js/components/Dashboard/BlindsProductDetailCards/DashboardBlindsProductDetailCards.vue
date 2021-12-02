@@ -67,9 +67,9 @@
                               <span>{{itemBlind.motor.flexiballetPrice > 0 ? '(+$'+itemBlind.motor.flexiballetPrice+')' : ''}}</span>
                           </div>
                           <div>
-                              <span>Precio (M<sup>2</sup>): {{mxCurrencyFormat.format(itemBlind.price)}} MXN {{itemBlind.installmentCharge > 0 ? ` // CARGO POR INSTALACIÓN: ${mxCurrencyFormat.format(itemBlind.installmentCharge)} MXN` : `` }} // Descuento: {{localOrder.user.discount_percent}} % // M<sup>2</sup> {{squareMeters(itemBlind.canvas[0].width, itemBlind.canvas[0].height)}} //</span>
+                              <span>Precio base (M<sup>2</sup>): ${{itemBlind.base_price}} //  M<sup>2</sup> {{squareMeters(itemBlind.canvas[0].width, itemBlind.canvas[0].height)}} // Precio Neto (M<sup>2</sup>): {{mxCurrencyFormat.format(itemBlind.price)}} MXN {{itemBlind.installmentCharge > 0 ? ` // CARGO POR INSTALACIÓN: ${mxCurrencyFormat.format(itemBlind.installmentCharge)} MXN` : `` }} // Descuento: {{localOrder.user.discount_percent}} % //</span>
                               <span>
-                                  Precio con Descto: {{mxCurrencyFormat.format(itemBlind.discount_price)}} MXN
+                                  Precio Neto con Descto: {{mxCurrencyFormat.format(itemBlind.discount_price)}} MXN
                               </span>
                           </div>
 
@@ -182,7 +182,7 @@
                               <span>{{itemBlind.motor.flexiballetPrice > 0 ? '(+$'+itemBlind.motor.flexiballetPrice+')' : ''}}</span>
                           </div>
                           <div>
-                              <span>Precio (M<sup>2</sup>): {{mxCurrencyFormat.format(itemBlind.price)}} MXN {{itemBlind.installmentCharge > 0 ? ` // CARGO POR INSTALACIÓN: ${mxCurrencyFormat.format(itemBlind.installmentCharge)} MXN` : `` }} // Descuento: {{localOrder.user.discount_percent}} % // M<sup>2</sup> {{squareMeters(itemBlind.canvas[0].width, itemBlind.canvas[0].height)}} //</span>
+                            <span>Precio base (M<sup>2</sup>): ${{itemBlind.base_price}} //  M<sup>2</sup> {{squareMeters(itemBlind.canvas[0].width, itemBlind.canvas[0].height)}} // Precio Neto (M<sup>2</sup>): {{mxCurrencyFormat.format(itemBlind.price)}} MXN {{itemBlind.installmentCharge > 0 ? ` // CARGO POR INSTALACIÓN: ${mxCurrencyFormat.format(itemBlind.installmentCharge)} MXN` : `` }} // Descuento: {{localOrder.user.discount_percent}} % //</span>
                               <span>
                                   Precio con Descto: {{mxCurrencyFormat.format(itemBlind.discount_price)}} MXN
                               </span>
