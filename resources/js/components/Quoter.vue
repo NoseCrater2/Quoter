@@ -1772,6 +1772,7 @@ export default {
         ],
         instalation_side: null,
         cloth_holder: null,
+        base_price: 0,
         price: 0,
         discount_price: 0,
         installmentCharge: 0,
@@ -1826,6 +1827,7 @@ export default {
         ],
         instalation_side: null,
         cloth_holder: null,
+        base_price: 0,
         price: 0,
         discount_price: 0,
         installmentCharge: 0,
@@ -2406,13 +2408,6 @@ export default {
             this.order.price = this.roundToOneDecimal(this.unitaryPrice)
           }
 
-        //   if(this.user != null){
-        //     this.order.discount_price = this.order.price - ((this.user.discount_percent/100)*this.order.price)
-        //   }
-        //   if(this.selectedUser.discount_percent > 0){
-        //     this.order.discount_price = this.order.price - ( (this.order.discount_pricet/100)*this.order.price)
-        //   }
-
         if(typeof(this.order.installmentCharge) != 'string'){
             if(this.order.installmentCharge < 0){
                 this.order.installmentCharge = 0;
@@ -2704,6 +2699,7 @@ export default {
     },
 
     findWoodPrice(){
+     
       let result = 'Medida no válida'
       if(this.order.motor_type == 'Manual'){
          result  =  woodMatrix.filter((m) => m.width >= this.order.canvas[0].width && m.height >= this.order.canvas[0].height)
@@ -2713,9 +2709,13 @@ export default {
 
       if(result[0]){
         if(this.order.motor_type == 'Manual' && this.order.motor.drive == 'cinta'){
-          return result[0].price + (result[0].price * 0.15)
+          let price =  this.order.base_price = 
+          this.order.base_price = price
+          return price
         }else{
-          return result[0].price
+          let price = result[0].price 
+          this.order.base_price = price
+          return price
         }
       }
     },
@@ -2872,6 +2872,7 @@ export default {
     },
 
     unitaryPrice() {
+      
         if(this.order.variant2 != null){
         let partialHeight  = this.order.canvas[0].height / 2
         let price = 0
@@ -2899,6 +2900,7 @@ export default {
 
       }
       else if (this.order.canvas.length > 0 && this.variant) {
+        this.order.base_price = this.variant.price;
         let price = 0;
         for (let index = 0; index < this.order.canvas.length; index++) {
           if (

@@ -7,13 +7,13 @@
             </v-btn>
             <div class="white--text text-uppercase" :style="$vuetify.breakpoint.mdAndUp ? 'font-size: 1.43rem': 'font-size: 1.0rem'">Detalles de la
 
-                <span  v-if="order.is_quotation == 1">COTIZACIÓN</span>
+                <span  v-if="quotedOrder.is_quotation == 1">COTIZACIÓN</span>
                 <span  v-else>ORDEN</span>
-                <span>/#{{order.order}}</span>
+                <span>/#{{quotedOrder.order}}</span>
             </div>
             <v-spacer></v-spacer>
 
-            <div v-if="order.is_quotation == 1" class="mr-1">
+            <div v-if="quotedOrder.is_quotation == 1" class="mr-1">
                 <v-btn
                 :large="$vuetify.breakpoint.mdAndUp ? true : false" :icon="!$vuetify.breakpoint.mdAndUp ? true : false"
                 elevation="0"
@@ -54,7 +54,7 @@
                 </v-tooltip>
             </div>
 
-            <div v-else-if="(order.is_quotation == 0 && order.state == 'No Pagada')" class="mr-1">
+            <div v-else-if="(quotedOrder.is_quotation == 0 && quotedOrder.state == 'No Pagada')" class="mr-1">
                 <v-btn @click="localMethodCheckAndBuyFromOrdersAndQuotationsDialogView()" large elevation="0" color="orange darken-1" class="white--text font-weight-bold mr-2">
                     Comprar
                     <v-icon size="30" right>mdi-arrow-right</v-icon>
@@ -85,20 +85,20 @@
                 </v-tooltip>
             </div>
 
-            <div v-else-if="(order.is_quotation == 0 && order.state != 'No Pagada')" class="mr-1">
+            <div v-else-if="(quotedOrder.is_quotation == 0 && quotedOrder.state != 'No Pagada')" class="mr-1">
                 <v-row no-gutters align="center">
                     <div class="white--text mr-1">Estado de la orden: </div>
                     <div style="background-color: black" class="mx-2">
                         <v-chip color="black" text-color="black">
-                            <v-avatar v-if="order.state === 'Recibida'" size="22" class="grey lighten-1"></v-avatar>
-                            <v-avatar v-if="order.state === 'En produccion'" size="22" class="orange darken-1"></v-avatar>
-                            <v-avatar v-if="order.state === 'Paqueteria'" size="22" class="blue darken-1"></v-avatar>
-                            <v-avatar v-if="order.state === 'Entregada'" size="22" class="green darken-1"></v-avatar>
-                            <v-avatar v-if="order.state === 'Cancelada'" size="22" class="red darken-2"></v-avatar>
-                            <v-avatar v-if="order.state === 'No Pagada'" size="22" class="black"></v-avatar>
-                            <v-avatar v-if="order.state === 'En Verificacion'" size="22" class="yellow"></v-avatar>
+                            <v-avatar v-if="quotedOrder.state === 'Recibida'" size="22" class="grey lighten-1"></v-avatar>
+                            <v-avatar v-if="quotedOrder.state === 'En produccion'" size="22" class="orange darken-1"></v-avatar>
+                            <v-avatar v-if="quotedOrder.state === 'Paqueteria'" size="22" class="blue darken-1"></v-avatar>
+                            <v-avatar v-if="quotedOrder.state === 'Entregada'" size="22" class="green darken-1"></v-avatar>
+                            <v-avatar v-if="quotedOrder.state === 'Cancelada'" size="22" class="red darken-2"></v-avatar>
+                            <v-avatar v-if="quotedOrder.state === 'No Pagada'" size="22" class="black"></v-avatar>
+                            <v-avatar v-if="quotedOrder.state === 'En Verificacion'" size="22" class="yellow"></v-avatar>
                         </v-chip>
-                        <span class="white--text font-weight-bold mr-4">{{order.state}}</span>
+                        <span class="white--text font-weight-bold mr-4">{{quotedOrder.state}}</span>
                     </div>
                     <v-btn icon color="white" @click="downloadPdf()">
                         <v-icon size="30">mdi-printer</v-icon>
@@ -107,49 +107,49 @@
             </div>
 
         </v-toolbar>
-        <v-row no-gutters align="center" class="mt-4" v-if="order.user != null">
+        <v-row no-gutters align="center" class="mt-4" v-if="quotedOrder.user != null">
             <v-col cols="3">
                 <v-img class="mx-auto" width="300" src="/img/logos/rollux.png" ></v-img>
             </v-col>
             <v-col cols="6" style="border-left: 4px solid #47a5ad">
                 <v-card outlined class="ml-5">
                     <v-col cols="12" style="background-color: #E0E0E0">
-                        <div v-if="order.user.company != null || order.user.company != ''" class="text-center my-n3" style="font-size: 1.27rem">
-                            <span class="font-weight-bold">{{order.user.company}}</span> | <span>Distribuidor Autorizado</span>
+                        <div v-if="quotedOrder.user.company != null || quotedOrder.user.company != ''" class="text-center my-n3" style="font-size: 1.27rem">
+                            <span class="font-weight-bold">{{quotedOrder.user.company}}</span> | <span>Distribuidor Autorizado</span>
                         </div>
                         <div v-else class="text-center my-n3" style="font-size: 1.27rem">
-                            <span class="font-weight-bold">{{order.user.name+' '+order.user.last_name}}</span> | <span>Distribuidor Autorizado</span>
+                            <span class="font-weight-bold">{{quotedOrder.user.name+' '+quotedOrder.user.last_name}}</span> | <span>Distribuidor Autorizado</span>
                         </div>
                     </v-col>
                     <v-row no-gutters justify="center" class="pa-5" align="start">
                         <v-col cols="12" xl="5" lg="5" md="5" sm="12" style="font-size: 1.15rem" class="mt-n4" :class="!$vuetify.breakpoint.mdAndUp ? 'text-center':''">
-                            <div class="font-weight-bold" style="font-size: 1.6rem" v-if="order.is_quotation">Cotización</div>
+                            <div class="font-weight-bold" style="font-size: 1.6rem" v-if="quotedOrder.is_quotation">Cotización</div>
                             <div class="font-weight-bold" style="font-size: 1.6rem" v-else>Orden</div>
-                            <div>Folio <span class="font-weight-bold" style="color: #47a5ad">{{order.order}}</span></div>
-                            <div>Fecha: {{order.created_at}}</div>
-                            <div v-if="order.is_quotation" style="font-size: 1.0rem">Vigencia hasta: {{order.validity}}</div>
+                            <div>Folio <span class="font-weight-bold" style="color: #47a5ad">{{quotedOrder.order}}</span></div>
+                            <div>Fecha: {{quotedOrder.created_at}}</div>
+                            <div v-if="quotedOrder.is_quotation" style="font-size: 1.0rem">Vigencia hasta: {{quotedOrder.validity}}</div>
                         </v-col>
                         <v-col cols="12" xl="7" lg="7" md="7" sm="12" style="font-size: 0.85rem" :class="$vuetify.breakpoint.mdAndUp ? 'mt-n2' : 'text-center'">
-                            <div v-if="order.user.company != null || order.user.company != ''" class="font-weight-bold">Cliente: {{order.user.name+' '+order.user.last_name}}</div>
-                            <div v-if="order.user.ship_address != null || order.user.ship_address != ''">
-                                <span>Dirección: {{order.user.ship_address}}</span>
+                            <div v-if="quotedOrder.user.company != null || quotedOrder.user.company != ''" class="font-weight-bold">Cliente: {{quotedOrder.user.name+' '+quotedOrder.user.last_name}}</div>
+                            <div v-if="quotedOrder.user.ship_address != null || quotedOrder.user.ship_address != ''">
+                                <span>Dirección: {{quotedOrder.user.ship_address}}</span>
                             </div>
-                            <div v-if="order.user.rfc != null || order.user.rfc != ''">
-                                <span>RFC: {{order.user.rfc}}</span>
+                            <div v-if="quotedOrder.user.rfc != null || quotedOrder.user.rfc != ''">
+                                <span>RFC: {{quotedOrder.user.rfc}}</span>
                             </div>
-                            <div v-if="order.user.phone != null || order.user.phone != ''">
-                                <span>Teléfono: {{order.user.phone}}</span>
+                            <div v-if="quotedOrder.user.phone != null || quotedOrder.user.phone != ''">
+                                <span>Teléfono: {{quotedOrder.user.phone}}</span>
                             </div>
 
-                            <div v-if="order.user.email != null || order.user.email != ''">
-                                <span>Email: {{order.user.email}}</span>
+                            <div v-if="quotedOrder.user.email != null || quotedOrder.user.email != ''">
+                                <span>Email: {{quotedOrder.user.email}}</span>
                             </div>
                         </v-col>
                     </v-row>
                 </v-card>
             </v-col>
             <v-col cols="3" >
-                <v-img class="mx-auto" width="300" :src="'/img/'+order.user.logo" ></v-img>
+                <v-img class="mx-auto" width="300" :src="'/img/'+quotedOrder.user.logo" ></v-img>
             </v-col>
         </v-row>
         <v-col cols="12" style="font-size: 0.85rem;">
@@ -173,7 +173,7 @@
                     </v-col>
                     <v-col cols="6" class="text-end" style="border: 1px solid black">
                         <div>
-                            {{mxCurrencyFormat.format(order.total)}} MXN
+                            {{mxCurrencyFormat.format(quotedOrder.total)}} MXN
                         </div>
                     </v-col>
                     <v-col cols="6" class="text-center" style="border: 1px solid black">
@@ -196,7 +196,7 @@
                     </v-col>
                     <v-col cols="6" class="white--text text-end" style="background-color: #47a5ad; font-size: 1.3rem; border: 1px solid black">
                         <div>
-                            {{mxCurrencyFormat.format(order.total)}} MXN
+                            {{mxCurrencyFormat.format(quotedOrder.total)}} MXN
                         </div>
                     </v-col>
                     <v-col cols="6" class="text-center" style="font-size: 0.63rem; background-color: #E0E0E0;">
@@ -209,7 +209,7 @@
                     </v-col>
                     <v-col cols="6" class="text-end" style="background-color: #E0E0E0;">
                         <div>
-                            {{mxCurrencyFormat.format((order.total * 1.05))}} MXN
+                            {{mxCurrencyFormat.format((quotedOrder.total * 1.05))}} MXN
                         </div>
                     </v-col>
                     <v-col cols="6" class="text-center" style="font-size: 0.63rem; background-color: #E0E0E0;">
@@ -222,10 +222,10 @@
                     </v-col>
                     <v-col cols="6" class="text-end" style="background-color: #E0E0E0;">
                         <div>
-                            {{mxCurrencyFormat.format((order.total * 1.15))}} MXN
+                            {{mxCurrencyFormat.format((quotedOrder.total * 1.15))}} MXN
                         </div>
                         <div style="font-size: 0.63rem;">
-                            6 Pagos de {{mxCurrencyFormat.format(((order.total * 1.15) / 6))}} MXN
+                            6 Pagos de {{mxCurrencyFormat.format(((quotedOrder.total * 1.15) / 6))}} MXN
                         </div>
                     </v-col>
                 </v-row>
@@ -253,7 +253,7 @@
     </v-card>
     <v-dialog  v-model="dialog2" max-width="300px">
         <v-card>
-            <v-card-title v-if="order.is_quotation">
+            <v-card-title v-if="quotedOrder.is_quotation">
               ¿Eliminar esta cotización?
             </v-card-title>
             <v-card-title v-else>
@@ -291,6 +291,7 @@
 
 <script>
 import axios from 'axios'
+import {mapState} from 'vuex';
 const FileDownload = require('js-file-download');
 import DashboardBlindsProductDetailCards from '../../Dashboard/BlindsProductDetailCards/DashboardBlindsProductDetailCards.vue'
 export default {
@@ -307,15 +308,26 @@ export default {
   },
 
   mounted(){
-      axios.get('/api/orders/'+this.id).then((response)=>{
-          this.order = response.data.data
-      })
+    //   axios.get('/api/orders/'+this.id).then((response)=>{
+    //       this.
+    //       this.order = response.data.data
+
+          this.$store.dispatch('getQuotedOrder', this.id).then(async() => {
+            // await this.$store.dispatch('getQuotedOrders');
+            // this.loadingChange = false
+            // this.$emit('emitClickCloseFromOrdersAndQuotationsDialog', false);
+        })
+      //})
   },
 
   components: {
       DashboardBlindsProductDetailCards
   },
   computed:{
+
+       ...mapState({
+            quotedOrder: state => state.ordersModule.quotedOrder,
+        }),
       computedQuotingOrdersRoute(){
           if(this.$router.currentRoute.name == 'Orders'){
               if(this.propIsOrderOrQuotationString == 'order'){
@@ -354,8 +366,8 @@ export default {
     },
 
     downloadPdf(){
-        axios.post("/api/auth-order-list-pdf-distributor", {orders: this.order.blinds, user: this.order.user, distributorImagePrint: false}, {responseType: 'blob',}).then((response)=>{
-          FileDownload(response.data, this.order.order+'.pdf')
+        axios.post("/api/auth-order-list-pdf-distributor", {orders: this.quotedOrder.blinds, user: this.quotedOrder.user, distributorImagePrint: false}, {responseType: 'blob',}).then((response)=>{
+          FileDownload(response.data, this.quotedOrder.order+'.pdf')
       }).catch(()=>{
         //  this.isPrintingSuperAdminUserPDF = false;
       })
