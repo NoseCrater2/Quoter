@@ -30,7 +30,9 @@
 </head>
 <body style="margin-top: 20px;">
     <?php
-        function returnedOneTwoOrders($localIndex, $localorders) {
+
+
+function returnedOneTwoOrders($localIndex, $localorders) {
             $multiX2 = $localIndex * 2;
             return array_slice($localorders, ($multiX2 - 2), 2);
         }
@@ -279,14 +281,6 @@
                             <tbody>
                                 <tr>
                                     <td class="vertical" style="width: 7%; border-right: 1px solid #d1d3d4; background-color: #f1f1f2;">
-                                    <?php
-                                        // $blindVariant1 = App\Variant::find($order['variant']);
-                                        // $blindVariant2 = null;
-                                        // $motorization = null;
-                                        //     if ($order['variant2'] != null){
-                                        //         $blindVariant2 = App\Variant::find($order['variant2']);
-                                        //     }
-                                    ?>
                                         <div>
                                             <span>
                                                 PERSIANA {{($countBlinds++)}}
@@ -441,11 +435,11 @@
                                                         $resultWidhtXHeight = number_format(floatval($width) * floatval($height), 3, '.', '');
                                                     }
                                                 ?>
-                                                <span>Precio (M<sup>2</sup>): ${{$order['price']}} MXN {{$installmentCharge}} // Descuento: {{$orders['user']['discount_percent']}}% // M<sup>2</sup>: {{$resultWidhtXHeight}} //</span>
+                                                 <span>Precio base (M<sup>2</sup>) ${{ $order['base_price'] }} //  M<sup>2</sup>: {{$resultWidhtXHeight}} // Precio Neto (M<sup>2</sup>): ${{$order['price']}} MXN {{$installmentCharge}} // Descuento: {{$orders['user']['discount_percent']}}% //</span>
                                                 <?php
                                                     $totaldiscount = $order['price'] - (($orders['user']['discount_percent'] / 100) * $order['price']);
                                                 ?>
-                                                <span>Precio con Descto: ${{$totaldiscount}} MXN</span>
+                                                <span>Precio neto con Descto: ${{$totaldiscount}} MXN</span>
                                             </div>
                                         </div>
                                     </td>
@@ -672,11 +666,11 @@
                                                         $resultWidhtXHeight = number_format(floatval($width) * floatval($height), 3, '.', '');
                                                     }
                                                 ?>
-                                                <span>Precio (M<sup>2</sup>): ${{$order['price']}} MXN {{$installmentCharge}} // Descuento: {{$orders['user']['discount_percent']}}% // M<sup>2</sup>: {{$resultWidhtXHeight}} //</span>
+                                                <span>Precio base (M<sup>2</sup>) ${{ $order['base_price'] }} //  M<sup>2</sup>: {{$resultWidhtXHeight}} // Precio Neto (M<sup>2</sup>): ${{$order['price']}} MXN {{$installmentCharge}} // Descuento: {{$orders['user']['discount_percent']}}% //</span>
                                                 <?php
                                                     $totaldiscount = $order['price'] - (($orders['user']['discount_percent'] / 100) * $order['price']);
                                                 ?>
-                                                <span>Precio con Descto: ${{$totaldiscount}} MXN</span>
+                                                <span>Precio neto con Descto: ${{$totaldiscount}} MXN</span>
                                             </div>
                                         </div>
                                     </td>

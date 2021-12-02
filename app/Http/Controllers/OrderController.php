@@ -97,7 +97,7 @@ class OrderController extends Controller
                     $blind->instalation_side = $b['instalation_side'];
                     $blind->motor_type = $b['motor_type'];
                     $blind->price = $b['price'];
-                    // $blind->discount_price = $b['discount_price'];
+                    $blind->base_price = $b['base_price'];
                     $blind->rotate = $b['rotate'];
                     $blind->canvas = $b['motor']['canvas'];
                     $blind->comment = $b['motor']['comment'];
@@ -195,6 +195,7 @@ class OrderController extends Controller
                 $blind->celular_variant = json_encode($b['celular_variant']);
                 $blind->instalation_side = $b['instalation_side'];
                 $blind->motor_type = $b['motor_type'];
+                $blind->base_price = $b['base_price'];
                 $blind->price = $b['price'];
                 $blind->rotate = $b['rotate'];
                 $blind->canvas = $b['motor']['canvas'];

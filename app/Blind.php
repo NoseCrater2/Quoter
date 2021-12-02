@@ -20,6 +20,7 @@ class Blind extends Model
         'motor_type',//nueva (null)
         'price',//nueva (0.0)
         'discount_price',
+        'base_price',
         'rotate',//nueva (false)
         'canvas',//nueva (0)
         'comment',//nueva (null)
