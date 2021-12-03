@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\BuyedOrderAdminNetpay;
+use App\Mail\BuyedOrderClientNetpay;
 use App\Order;
 use App\PaymentType;
 use App\User;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
+use Illuminate\Support\Facades\Mail;
 
 class NetPayController extends Controller
 {
@@ -99,6 +102,8 @@ class NetPayController extends Controller
             $newOrder = Order::find($request->idOrder);
             $newOrder->state = 'Recibida';
             $newOrder->save();
+            Mail::to(['sac1@rollux.com.mx', 'distribuidores@rollux.com.mx'])->send(new BuyedOrderAdminNetpay($newOrder));
+            Mail::to($newOrder->user->email)->send(new BuyedOrderClientNetpay($newOrder));
         }
         return $status;
     }

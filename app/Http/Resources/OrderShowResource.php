@@ -36,16 +36,18 @@ class OrderShowResource extends JsonResource
             'validity' =>Carbon::parse($this->updated_at)->addDays(20)->format('d/m/Y'),
             'created_at' => Carbon::parse($this->created_at)->toFormattedDateString(),
             'total' => $this->blinds->map( function( $blind ){
-                return $blind->discount_price +
+                $countSameBlinds = ($blind->count_same_blinds <= 0) ? 1 : $blind->count_same_blinds;
+                return ($blind->discount_price +
                         ( isset($blind->motorization) ? $blind->motorization->price: 0) +
                         ( isset($blind->control) ? $blind->control->price: 0) +
+                        (isset($blind->gallery) ? $blind->gallery->price : 0) +
                         $blind->installmentCharge +
                         $blind->flexiballet_price +
                         $blind->gallery_price +
                         $blind->manufacturer_price +
                         $blind->string_price +
                         $blind->extraVertical +
-                        $blind->extraEnrollable;
+                        $blind->extraEnrollable) * $countSameBlinds;
             })->sum(),
             'blinds' => $this->blinds->map(function($blind)
             {
@@ -89,6 +91,7 @@ class OrderShowResource extends JsonResource
                     'motor_type' => $blind->motor_type,
                     'price' => floatval($blind->price),
                     'base_price' => floatval($blind->base_price),
+                    'count_same_blinds' =>intval($blind->count_same_blinds),
                     'discount_price' => floatval($blind->discount_price),
                     'installmentCharge' => floatval($blind->installmentCharge),
                     'rotate' => $blind->rotate,

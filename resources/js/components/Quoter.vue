@@ -352,6 +352,24 @@
                       </v-col>
                     </v-row>
                   </v-item-group>
+                <div class="mt-3">
+                <span style="font-size: 1em" class="font-weight-bold">
+                  Ingrese cantidad de persianas de este tipo (opcional)</span>
+                <v-text-field
+                  min="1"
+                  :value="1"
+                  dense
+                  type="number"
+                  label="Cantidad de persianas de este tipo"
+                  class="ma-1"
+                  hide-details
+                  placeholder="0"
+                  outlined
+                  color="#47a5ad"
+                  background-color="white"
+                  v-model.number="order.count_same_blinds "
+                ></v-text-field>
+                 </div>
 
               </div>
 
@@ -539,11 +557,11 @@
 
                </div>
                <div v-if="order.type == 'horizontal-madera-2'" class="d-flex  justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;">
-                  {{mxCurrencyFormat.format( roundToOneDecimal(findWoodPrice))}} MXN
+                  {{mxCurrencyFormat.format(roundToOneDecimal(findWoodPrice * order.count_same_blinds))}} MXN
                </div>
 
                 <div v-else class="d-flex  justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
-                    {{mxCurrencyFormat.format(roundToOneDecimal(unitaryPrice) + parseFloat(extraEnrollablePrice) + parseFloat(extraVerticalPrice))}} MXN
+                    {{mxCurrencyFormat.format(roundToOneDecimal(unitaryPrice * order.count_same_blinds) + parseFloat(extraEnrollablePrice) + parseFloat(extraVerticalPrice))}} MXN
                  </div>
 
                <v-divider></v-divider>
@@ -575,6 +593,24 @@
                   {{ c.height }}M (Alto)
                 </v-chip>
               </div>
+                <div class="mt-3">
+                <span style="font-size: 1em" class="font-weight-bold">
+                  Ingrese cantidad de persianas de este tipo (opcional)</span>
+                <v-text-field
+                  min="1"
+                  :value="1"
+                  dense
+                  type="number"
+                  label="Cantidad de persianas de este tipo"
+                  class="ma-1"
+                  hide-details
+                  placeholder="0"
+                  outlined
+                  color="#47a5ad"
+                  background-color="white"
+                  v-model.number="order.count_same_blinds "
+                ></v-text-field>
+                 </div>
 
            </div>
            <div v-else>
@@ -630,8 +666,8 @@
                 <span style="font-size: 1em" class="font-weight-bold">
                   Agregue un cargo por instalación (opcional)</span>
                 <v-text-field
-                  min="0"
-                  :value="0"
+                  min="1"
+                  :value="1"
                   dense
                   type="number"
                   label="Cargo por instalación"
@@ -673,7 +709,7 @@
                         PERSIANA
                     </div>
                     <div class="d-flex  justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
-                        {{mxCurrencyFormat.format(roundToOneDecimal(unitaryPrice) + parseFloat(extraEnrollablePrice) + parseFloat(extraVerticalPrice))}} MXN
+                        {{mxCurrencyFormat.format(roundToOneDecimal(unitaryPrice * order.count_same_blinds) + parseFloat(extraEnrollablePrice) + parseFloat(extraVerticalPrice))}} MXN
                     </div>
 
                     <v-divider></v-divider>
@@ -1776,6 +1812,7 @@ export default {
         price: 0,
         discount_price: 0,
         installmentCharge: 0,
+        count_same_blinds: 1,
         rotate: false,
         motor_type: null,
         extraVertical: 0,
@@ -1831,6 +1868,7 @@ export default {
         price: 0,
         discount_price: 0,
         installmentCharge: 0,
+        count_same_blinds: 1,
         rotate: false,
         motor_type: null,
         extraVertical: 0,
@@ -2417,6 +2455,15 @@ export default {
             this.order.installmentCharge = 0;
         }
 
+        if(typeof(this.order.count_same_blinds) != 'string'){
+            if(this.order.count_same_blinds < 0){
+                this.order.count_same_blinds = 0;
+            }
+        }
+        else{
+            this.order.count_same_blinds = 0;
+        }
+
         if (this.editable) {
           this.$store.dispatch("editOrder", this.order).then(() => {
             this.order = Object.assign({}, this.defaultOrder);
@@ -2699,7 +2746,7 @@ export default {
     },
 
     findWoodPrice(){
-     
+
       let result = 'Medida no válida'
       if(this.order.motor_type == 'Manual'){
          result  =  woodMatrix.filter((m) => m.width >= this.order.canvas[0].width && m.height >= this.order.canvas[0].height)
@@ -2709,11 +2756,11 @@ export default {
 
       if(result[0]){
         if(this.order.motor_type == 'Manual' && this.order.motor.drive == 'cinta'){
-          let price =  this.order.base_price = 
+          let price =  this.order.base_price =
           this.order.base_price = price
           return price
         }else{
-          let price = result[0].price 
+          let price = result[0].price
           this.order.base_price = price
           return price
         }
@@ -2872,7 +2919,7 @@ export default {
     },
 
     unitaryPrice() {
-      
+
         if(this.order.variant2 != null){
         let partialHeight  = this.order.canvas[0].height / 2
         let price = 0
