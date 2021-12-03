@@ -119,6 +119,8 @@ class OrderController extends Controller
 
                     $blind->installmentCharge = $b['installmentCharge'];
 
+                    $blind->count_same_blinds = $b['count_same_blinds'];
+
                     $blind->save();
 
                     $blind->canvases()->delete();
@@ -216,6 +218,8 @@ class OrderController extends Controller
                 $blind->discount_price = $b['price'] - ((auth()->user()->discount_percent/100)*$b['price']);
 
                 $blind->installmentCharge = $b['installmentCharge'];
+
+                $blind->count_same_blinds = $b['count_same_blinds'];
 
                 $blind->save();
                 $blind->canvases()->delete();

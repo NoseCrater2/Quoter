@@ -49,7 +49,8 @@ class Blind extends Model
         'extraEnrollable',
         'extraVertical',
 
-        'installmentCharge' //nueva (0.00)
+        'installmentCharge', //nueva (0.00)
+        'count_same_blinds'
     ];
 
     public function order()

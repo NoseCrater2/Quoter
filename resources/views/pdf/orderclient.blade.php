@@ -222,6 +222,13 @@
                                                 }
                                             ?>
                                             <span>{{$concat3}}</span>
+                                            <?php
+                                                    $countSameBlinds = '';
+                                                    if($order['count_same_blinds'] > 1){
+                                                        $countSameBlinds = 'CANTIDAD PERSIANAS ESTE TIPO: '.$order['count_same_blinds'];
+                                                    }
+                                            ?>
+                                            <div style="color:red">{{$countSameBlinds}}</div>
                                         </div>
                                     </td>
                                     <td style="width: 33%; background-color: white;">
@@ -257,14 +264,14 @@
                                             <span>TOTAL: </span>
                                             <span style="color: #47a5ad">
                                                 <?php
-                                                    $unitaryPrice = $order['price'] +
+                                                    $unitaryPrice = ($order['count_same_blinds'] <= 0 ? 1 : $order['count_same_blinds']) * ($order['price'] +
                                                     $order['motor']['price'] +
                                                     $order['motor']['flexiballetPrice'] +
                                                     $order['motor']['galleryPrice'] +
                                                     $order['motor']['manufacturerPrice'] +
                                                     $order['motor']['stringPrice'] +
                                                     $order['extraVertical'] +
-                                                    $order['extraEnrollable'];
+                                                    $order['extraEnrollable']);
                                                     $total += $unitaryPrice;
                                                 ?>
                                                 $@priceFormat(round($unitaryPrice, 1, PHP_ROUND_HALF_UP)) MXN
@@ -413,6 +420,13 @@
                                                 }
                                             ?>
                                             <span>{{$concat3}}</span>
+                                            <?php
+                                                    $countSameBlinds = '';
+                                                    if($order['count_same_blinds'] > 1){
+                                                        $countSameBlinds = 'CANTIDAD PERSIANAS ESTE TIPO: '.$order['count_same_blinds'];
+                                                    }
+                                            ?>
+                                            <div style="color:red">{{$countSameBlinds}}</div>
                                         </div>
                                     </td>
                                     <td style="width: 33%; background-color: white;">
@@ -448,14 +462,14 @@
                                             <span>TOTAL: </span>
                                             <span style="color: #47a5ad">
                                                 <?php
-                                                    $unitaryPrice = $order['price'] +
+                                                    $unitaryPrice = ($order['count_same_blinds'] <= 0 ? 1 : $order['count_same_blinds']) * ($order['price'] +
                                                     $order['motor']['price'] +
                                                     $order['motor']['flexiballetPrice'] +
                                                     $order['motor']['galleryPrice'] +
                                                     $order['motor']['manufacturerPrice'] +
                                                     $order['motor']['stringPrice'] +
                                                     $order['extraVertical'] +
-                                                    $order['extraEnrollable'];
+                                                    $order['extraEnrollable']);
                                                     $total += $unitaryPrice;
                                                 ?>
                                                 $@priceFormat(round($unitaryPrice, 1, PHP_ROUND_HALF_UP)) MXN

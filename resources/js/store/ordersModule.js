@@ -55,9 +55,8 @@ const ordersModule = {
                 parseFloat(order.extraEnrollable) +
                 parseFloat (order.extraVertical) +
                 parseFloat (order.installmentCharge)
-                return prices += pt
+                return prices += ((order.count_same_blinds > 0 ? order.count_same_blinds : 1) * pt)
            })
-
             return prices
 
         },
