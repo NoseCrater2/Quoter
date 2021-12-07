@@ -554,6 +554,7 @@ export default {
 
         methodStepTwoCheckAndBuy(localItem){
             this.$store.dispatch('getQuotedOrder', localItem.id).then(()=>{
+                console.log(localItem.id)
                 localStorage.removeItem('quotedOrder');
                 localStorage.setItem('quotedOrder', JSON.stringify({order:this.quotedOrder, step: 2, paymentType: '', isCheckTerms: false, flagIsStepFour: false, card: {isNewCard: false, isCurrentCard: false, currentCard: null, selectedPaymentSchema: ''}}));
                 this.orderId = localItem.id;
@@ -596,22 +597,17 @@ export default {
                 }
                 else if(this.modelRadioStepFourPaymentMethod != '' && this.modelRadioStepFourPaymentMethod == 'electronicspei'){
                     this.isChargingPetitionSPEIPayment = true;
-                    axios.get(`/api/spei-payment/${this.orderId}`).then(async(response)=>{
+                    let localStorageObject =  JSON.parse(localStorage.getItem('quotedOrder'));
+                    axios.get(`/api/spei-payment/${localStorageObject.order.id}`).then(async(response)=>{
                         if(response.status == 200){
-                            if(this.user.role == 'Superadministrador' || this.user.role == 'Administrador'){
-                                await this.$store.dispatch('getAdminQuotedOrders')
-                                await this.$store.dispatch('getAdminQuotingOrders')
-                                let localStorageObject =  JSON.parse(localStorage.getItem('quotedOrder'));
-                                localStorageObject.flagIsStepFour = this.flagIsStepFour;
-                                localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
-                                this.$router.push({name: 'StepFourSpei'});
-                            }
-                            else{
-                                await this.$store.dispatch('getQuotedOrders')
-                                await this.$store.dispatch('getQuotingOrders')
-                            }
+                            await this.$store.dispatch('getAdminQuotedOrders')
+                            await this.$store.dispatch('getAdminQuotingOrders')
                             this.flagIsStepFour = true;
+                            let localStorageObject =  JSON.parse(localStorage.getItem('quotedOrder'));
+                            localStorageObject.flagIsStepFour = this.flagIsStepFour;
+                            localStorage.setItem('quotedOrder', JSON.stringify(localStorageObject));
                             this.isChargingPetitionSPEIPayment = false;
+                            this.$router.push({name: 'StepFourSpei'});
                         }
                     });
                 }

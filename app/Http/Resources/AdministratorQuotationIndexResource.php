@@ -17,6 +17,7 @@ class AdministratorQuotationIndexResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'payed' => $this->ticket,
             'state' => Carbon::now()->diffInDays($this->created_at) > 20 ?'No':'Sí',
             'order' => $this->user->id.'PT'.Carbon::parse($this->created_at)->format('dmy').$this->id,
             'blinds' => $this->blinds->count(),

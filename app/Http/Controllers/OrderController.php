@@ -351,6 +351,10 @@ class OrderController extends Controller
     {
        $newOrder = Order::find($order->id);
        $newOrder->state = 'En Verificacion';
+       $ticket = new Ticket();
+       $ticket->payment_channel = 'SPEI';
+       $ticket->order_date_at = now();
+       $newOrder->ticket()->save($ticket);
        $newOrder->save();
        Mail::to(['sac1@rollux.com.mx', 'distribuidores@rollux.com.mx'])->send(new BuyedOrderAdmin($newOrder));
        Mail::to($newOrder->user->email)->send(new BuyedOrderClient($newOrder));

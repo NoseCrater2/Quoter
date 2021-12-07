@@ -7,9 +7,11 @@ use App\Mail\BuyedOrderClientNetpay;
 use App\Order;
 use App\PaymentType;
 use App\User;
+use App\Ticket;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class NetPayController extends Controller
@@ -101,6 +103,14 @@ class NetPayController extends Controller
         if($status == 'success'){
             $newOrder = Order::find($request->idOrder);
             $newOrder->state = 'Recibida';
+            $ticket = new Ticket();
+            $ticket->payment_channel = 'Netpay';
+            $ticket->card_type = json_decode($response)->paymentSource->card->type;
+            if(json_decode($response)->paymentSource->card->type == 'credit'){
+                $ticket->months_interest_free = '6';
+            }
+            $ticket->order_date_at = now();
+            $newOrder->ticket()->save($ticket);
             $newOrder->save();
             Mail::to(['sac1@rollux.com.mx', 'distribuidores@rollux.com.mx'])->send(new BuyedOrderAdminNetpay($newOrder));
             Mail::to($newOrder->user->email)->send(new BuyedOrderClientNetpay($newOrder));

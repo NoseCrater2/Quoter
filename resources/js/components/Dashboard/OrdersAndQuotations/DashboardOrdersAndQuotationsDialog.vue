@@ -163,7 +163,7 @@
                 <DashboardBlindsProductDetailCards :idOrder="id" :isFromDialog="true"></DashboardBlindsProductDetailCards>
             </div>
         </v-col>
-        <v-row no-gutters justify="center" justify-xl="end" justify-lg="end" justify-md="end" justify-sm="center" class="mr-3 mt-3">
+        <v-row v-if="!quotedOrder.payed" no-gutters justify="center" justify-xl="end" justify-lg="end" justify-md="end" justify-sm="center" class="mr-3 mt-3">
             <v-col cols="12" xl="4" lg="4" md="4" sm="12">
                 <v-row no-gutters class="font-weight-bold" style="border: 1px solid black">
                     <v-col cols="6" class="text-center" style="border: 1px solid black">
@@ -225,6 +225,49 @@
                             {{mxCurrencyFormat.format((quotedOrder.total * 1.15))}} MXN
                         </div>
                         <div style="font-size: 0.63rem;">
+                            6 Pagos de {{mxCurrencyFormat.format(((quotedOrder.total * 1.15) / 6))}} MXN
+                        </div>
+                    </v-col>
+                </v-row>
+            </v-col>
+        </v-row>
+        <v-row v-else-if="quotedOrder.payed" no-gutters justify="center" justify-xl="end" justify-lg="end" justify-md="end" justify-sm="center" class="mr-3 mt-3">
+            <v-col cols="12" xl="4" lg="4" md="4" sm="12">
+                <v-row no-gutters class="font-weight-bold" style="border: 1px solid black">
+                    <v-col cols="6" class="text-center" style="border: 1px solid black">
+                        <div>
+                            SUBTOTAL
+                        </div>
+                    </v-col>
+                    <v-col cols="6" class="text-end" style="border: 1px solid black">
+                        <div>
+                            {{mxCurrencyFormat.format(quotedOrder.total)}} MXN
+                        </div>
+                    </v-col>
+                    <v-col cols="6" class="text-center" style="border: 1px solid black">
+                        <div>
+                            IVA
+                        </div>
+                    </v-col>
+                    <v-col cols="6" class="text-end" style="border: 1px solid black">
+                        <div>
+                            INCLUIDO
+                        </div>
+                    </v-col>
+                    <v-col cols="6" class="white--text text-center" style="background-color: #47a5ad; font-size: 1.3rem; border: 1px solid black">
+                        <div>
+                            TOTAL
+                        </div>
+                        <div style="font-size: 0.63rem;">
+                            <div v-if="quotedOrder.payed.payment_channel == 'SPEI'">Pagado con SPEI (Transferencia bancaria)</div>
+                            <div v-else-if="quotedOrder.payed.payment_channel == 'Netpay'">Pagado con tarjeta (NETPAY) - {{quotedOrder.payed.card_type == 'debit' ? 'Débito 1 sola emisión' : 'Crédito a 6 meses'}}</div>
+                        </div>
+                    </v-col>
+                    <v-col cols="6" class="white--text text-end" style="background-color: #47a5ad; font-size: 1.3rem; border: 1px solid black">
+                        <div>
+                            {{quotedOrder.payed.payment_channel == 'SPEI' ? mxCurrencyFormat.format(quotedOrder.total)+' MXN' : (quotedOrder.payed.payment_channel == 'Netpay' && quotedOrder.payed.card_type == 'debit') ? mxCurrencyFormat.format((quotedOrder.total * 1.05))+' MXN' : (quotedOrder.payed.payment_channel == 'Netpay' && quotedOrder.payed.card_type == 'credit') ? mxCurrencyFormat.format((quotedOrder.total * 1.15))+' MXN' : ''}}
+                        </div>
+                        <div v-if="quotedOrder.payed.card_type == 'credit'" style="font-size: 0.63rem;">
                             6 Pagos de {{mxCurrencyFormat.format(((quotedOrder.total * 1.15) / 6))}} MXN
                         </div>
                     </v-col>

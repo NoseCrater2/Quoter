@@ -16,7 +16,7 @@ class OrderShowResource extends JsonResource
     public function toArray($request)
     {
         //ORDER
-        $code = $this->ticket?'PT':'P';
+        $code = 'P';
         //'order' => $code.Carbon::parse($this->created_at)->format('dmy').'/'.$this->id,
         //'state' => $this->state,
 
