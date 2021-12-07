@@ -15,9 +15,10 @@ class OrderIndexResource extends JsonResource
      */
     public function toArray($request)
     {
-        $code = $this->ticket?'PT':'P';
+        $code = 'P';
         return [
             'id' => $this->id,
+            'payed' => $this->ticket,
             'order' => $this->user->id.$code.Carbon::parse($this->created_at)->format('dmy').$this->id,
             'blinds' => $this->blinds->count(),
             'state' => $this->state,

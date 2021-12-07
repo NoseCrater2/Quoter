@@ -1,4 +1,3 @@
-import { mapState } from 'vuex';
 <template>
     <v-card color="white" style="font-size: 1.3rem" elevation="0" class="px-0">
         <v-card-text class="text--primary">
