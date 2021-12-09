@@ -1,5 +1,5 @@
 <template>
-    
+
     <div v-if="computedIsDiferenMarketcar">
         <v-row no-gutters>
         <v-col cols="12" xl="6" lg="6" md="12" sm="12" class="pa-2" v-for="(itemBlind, index) in quotedOrder.blinds" :key="itemBlind.id">
@@ -71,6 +71,9 @@
                               <span>
                                   Precio Neto con Descto: {{mxCurrencyFormat.format(itemBlind.discount_price)}} MXN
                               </span>
+                              <div class="red--text">
+                                  {{itemBlind.count_same_blinds > 1 ? 'CANTIDAD PERSIANAS ESTE TIPO: '+itemBlind.count_same_blinds : ''}}
+                              </div>
                           </div>
 
                       </div>
@@ -95,8 +98,8 @@
                           <div>
                               <span>Total: </span>
                               <span style="color: #47a5ad;">
-                                  {{mxCurrencyFormat.format(
-                                      parseFloat(itemBlind.discount_price) +
+                                  {{mxCurrencyFormat.format((itemBlind.count_same_blinds > 0 ? itemBlind.count_same_blinds : 1) *
+                                      (parseFloat(itemBlind.discount_price) +
                                       parseFloat(itemBlind.motor.price) +
                                       parseFloat(itemBlind.motor.flexiballetPrice) +
                                       parseFloat(itemBlind.motor.galleryPrice) +
@@ -104,7 +107,7 @@
                                       parseFloat(itemBlind.motor.stringPrice) +
                                       parseFloat(itemBlind.extraVertical) +
                                       parseFloat(itemBlind.extraEnrollable) +
-                                      parseFloat(itemBlind.installmentCharge)
+                                      parseFloat(itemBlind.installmentCharge))
                                   )}} MXN
                               </span>
                           </div>
@@ -184,8 +187,11 @@
                           <div>
                             <span>Precio base (M<sup>2</sup>): ${{itemBlind.base_price}} //  M<sup>2</sup> {{squareMeters(itemBlind.canvas[0].width, itemBlind.canvas[0].height)}} // Precio Neto (M<sup>2</sup>): {{mxCurrencyFormat.format(itemBlind.price)}} MXN {{itemBlind.installmentCharge > 0 ? ` // CARGO POR INSTALACIÓN: ${mxCurrencyFormat.format(itemBlind.installmentCharge)} MXN` : `` }} // Descuento: {{localOrder.user.discount_percent}} % //</span>
                               <span>
-                                  Precio con Descto: {{mxCurrencyFormat.format(itemBlind.discount_price)}} MXN
+                                  Precio Neto con Descto: {{mxCurrencyFormat.format(itemBlind.discount_price)}} MXN
                               </span>
+                              <div class="red--text">
+                                  {{itemBlind.count_same_blinds > 1 ? 'CANTIDAD PERSIANAS ESTE TIPO: '+itemBlind.count_same_blinds : ''}}
+                              </div>
                           </div>
 
                       </div>
@@ -210,8 +216,8 @@
                           <div>
                               <span>Total: </span>
                               <span style="color: #47a5ad;">
-                                  {{mxCurrencyFormat.format(
-                                      parseFloat(itemBlind.discount_price) +
+                                  {{mxCurrencyFormat.format((itemBlind.count_same_blinds > 0 ? itemBlind.count_same_blinds : 1) *
+                                      (parseFloat(itemBlind.discount_price) +
                                       parseFloat(itemBlind.motor.price) +
                                       parseFloat(itemBlind.motor.flexiballetPrice) +
                                       parseFloat(itemBlind.motor.galleryPrice) +
@@ -219,7 +225,7 @@
                                       parseFloat(itemBlind.motor.stringPrice) +
                                       parseFloat(itemBlind.extraVertical) +
                                       parseFloat(itemBlind.extraEnrollable) +
-                                      parseFloat(itemBlind.installmentCharge)
+                                      parseFloat(itemBlind.installmentCharge))
                                   )}} MXN
                               </span>
                           </div>

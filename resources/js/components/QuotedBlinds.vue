@@ -20,7 +20,7 @@
                     <v-toolbar-title>
                       TOTAL: {{
                         mxCurrencyFormat.format(
-                          o.price +
+                          (o.price +
                           o.motor.price +
                           o.motor.flexiballetPrice +
                           o.motor.galleryPrice +
@@ -28,7 +28,7 @@
                           o.motor.stringPrice +
                           o.extraEnrollable +
                           o.extraVertical +
-                          o.installmentCharge
+                          o.installmentCharge) * ((o.count_same_blinds > 0) ? o.count_same_blinds : 1)
                         )}} MXN
                     </v-toolbar-title>
                     <v-spacer> </v-spacer>
@@ -165,6 +165,12 @@
                       {{mxCurrencyFormat.format(o.price)}} MXN
                     </v-list-item-subtitle>
                   </v-list-item>
+                    <v-list-item class="overline" dense v-if="o.count_same_blinds > 1">
+                        <v-list-item-title class="blue--text">CANTIDAD DE PERSIANAS DE ESTE TIPO</v-list-item-title>
+                        <v-list-item-subtitle class="blue--text text-right">
+                          {{o.count_same_blinds}}
+                        </v-list-item-subtitle>
+                    </v-list-item>
                     <v-list-item class="overline" dense v-if="o.installmentCharge > 0">
                         <v-list-item-title class="blue--text">CARGO DE INSTALACIÓN</v-list-item-title>
                         <v-list-item-subtitle class="blue--text text-right">
