@@ -47,13 +47,14 @@ class MotorizationImport implements WithHeadingRow, ToCollection, SkipsOnError, 
 
             $motorization = Motorization::firstOrCreate(
                 [
-                    'code' => $row['codigo'],
+                   // 'code' => $row['codigo'],
                     'motorization_type_id' => $typeM ==! null?$typeM->id:null,
                     'system' => $row['sistema'],
                     'line_id' => $manufacturer->id,
                     'type_id' => $type->id,
                 ],
                 [
+                    'code' => $row['code'],
                     'canvas' => $row->has('lienzo') && $row['lienzo']?$row['lienzo']:0,
                     'system' => $row->has('sistema') && $row['sistema']?$row['sistema']:null,
                     'width' => $row->has('ancho') && $row['ancho']?$row['ancho']:0,

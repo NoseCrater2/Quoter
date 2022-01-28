@@ -8,6 +8,7 @@ use App\MotorizationType;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\MotorizationImport;
+use App\Exports\MotorizationExport;
 use App\Http\Resources\IndexMotorizationResource;
 use App\Type;
 
@@ -113,6 +114,12 @@ class MotorizationController extends Controller
         if($import->failures()->isNotEmpty()){
            return response($import->failures());
         }
+    }
+
+    public function exportMotorizations()
+    {
+
+        return Excel::download( new MotorizationExport, 'motores.xlsx');
     }
 
     public function getFilteredMotorizations(Type $type)

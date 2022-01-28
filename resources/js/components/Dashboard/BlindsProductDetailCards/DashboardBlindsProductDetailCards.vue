@@ -55,7 +55,7 @@
                               <span v-if="itemBlind.motor.motor != 0 && itemBlind.motor.motor != null">
                                   <span>
                                       {{$store.getters.getMotor(itemBlind.motor.motor).system+' // '+$store.getters.getMotor(itemBlind.motor.motor).motorizationType+' // '+$store.getters.getMotor(itemBlind.motor.motor).manufacturer+' '}}
-                                      <span>{{$store.getters.getMotor(itemBlind.motor.motor).price > 0 ? '(+$'+$store.getters.getMotor(itemBlind.motor.motor).price+') // ' : '// '}}</span>
+                                      <span>{{itemBlind.motor.price > 0 ? '(+$'+itemBlind.motor.price+') // ' : '// '}}</span>
                                   </span>
                               </span>
 
@@ -173,7 +173,7 @@
                               <span v-if="itemBlind.motor.motor != 0 && itemBlind.motor.motor != null">
                                   <span>
                                       {{$store.getters.getMotor(itemBlind.motor.motor).system+' // '+$store.getters.getMotor(itemBlind.motor.motor).motorizationType+' // '+$store.getters.getMotor(itemBlind.motor.motor).manufacturer+' '}}
-                                      <span>{{$store.getters.getMotor(itemBlind.motor.motor).price > 0 ? '(+$'+$store.getters.getMotor(itemBlind.motor.motor).price+') // ' : '// '}}</span>
+                                      <span>{{itemBlind.motor.price > 0 ? '(+$'+itemBlind.motor.price+') // ' : '// '}}</span>
                                   </span>
                               </span>
 

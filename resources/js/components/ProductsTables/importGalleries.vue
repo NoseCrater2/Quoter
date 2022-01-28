@@ -1,13 +1,13 @@
 <template>
     <div class="text-center">
-            <h2 class="mt-2 mb-5">MOTORIZACIÓN AUTOMÁTICA</h2>
+            <h2 class="mt-2 mb-5">GALERÍAS</h2>
         <v-card>
             <v-card-actions>
                 <v-row justify="center" align="center">
                     <v-col cols="12" xl="12" lg="12" md="12" sm="12" xs="12">
                         <input type="file" id="file" ref="btnUploadFile" style="display:none" @change="selectImage($event)" accept=".xlsx,.csv"/>
                         <v-btn rounded color="#47a5ad" dark @click="dialog1 = true">
-                            IMPORTAR INFORMACIÓN DE GALERIAS
+                            IMPORTAR INFORMACIÓN DE GALERÍAS
                         </v-btn>
                     </v-col>
                 </v-row>

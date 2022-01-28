@@ -76,6 +76,7 @@ Route::post('importGalleries', 'GalleryController@importGalleries');
 
 
 Route::get('exportExcel', 'VariantController@exportExcel');
+Route::get('exportMotorizations', 'MotorizationController@exportMotorizations');
 
 //
 
@@ -161,3 +162,18 @@ Route::resource('prices', 'PriceController')->only('index','store', 'update','de
 Route::get('promos' , 'PriceController@isPromo');
 Route::resource('catalogs', 'CatalogController')->only('index','store', 'update','destroy');
 Route::get('reset-password/{email}' , 'UserController@resetPassword');
+
+Route::get('ronoco', 'MatrixController@getRonoco');
+Route::get('rotrmu', 'MatrixController@getRotrmu');
+Route::get('rotrco', 'MatrixController@getRotrco');
+Route::get('ronomu', 'MatrixController@getRonomu');
+Route::get('rodnco', 'MatrixController@getRodnco');
+Route::get('rodnmu', 'MatrixController@getRodnmu');
+Route::get('bonoco', 'MatrixController@getBonoco');
+Route::get('bonomu', 'MatrixController@getBonomu');
+Route::get('botrco', 'MatrixController@getBotrco');
+Route::get('botrmu', 'MatrixController@getBotrmu');
+Route::get('bodnco', 'MatrixController@getBodnco');
+Route::get('bodnmu', 'MatrixController@getBodnmu');
+Route::get('sonocm', 'MatrixController@getSonocm');
+Route::get('sodncm', 'MatrixController@getSodncm');

@@ -3,14 +3,20 @@
         <h2 class="mt-2 mb-5">MOTORIZACIÓN AUTOMÁTICA</h2>
         <v-card>
             <v-card-actions>
-                <v-row justify="center" align="center">
-                    <v-col cols="12" xl="12" lg="12" md="12" sm="12" xs="12">
-                        <input type="file" id="file" ref="btnUploadFile" style="display:none" @change="selectImage($event)" accept=".xlsx,.csv"/>
-                        <v-btn rounded color="#47a5ad" dark @click="dialog1 = true">
-                            IMPORTAR INFORMACIÓN DE MOTORIZACIÓN
-                        </v-btn>
-                    </v-col>
-                </v-row>
+                <v-spacer></v-spacer>
+                <div>
+                    <input type="file" id="file" ref="btnUploadFile" style="display:none" @change="selectImage($event)" accept=".xlsx,.csv"/>
+                    <v-btn rounded color="#47a5ad" dark @click="dialog1 = true">
+                        IMPORTAR INFORMACIÓN DE MOTORIZACIÓN
+                         <v-icon right>mdi-database-import-outline</v-icon>
+                    </v-btn>
+                </div>
+                <v-spacer></v-spacer>
+                 <v-btn rounded @click="exportarAExcel()" color="#47a5ad" dark >
+                    EXPORTAR INFORMACIÓN DE MOTORIZACIÓN
+                    <v-icon right>mdi-database-export-outline</v-icon>
+                </v-btn>
+                <v-spacer></v-spacer>
             </v-card-actions>
             <v-data-table
             v-if="motorizations"
@@ -176,6 +182,12 @@ export default {
                 this.errors2 =  errors2.response.data.errors
             });
         },
+
+        exportarAExcel(){
+              axios.get('/api/exportMotorizations',{responseType: 'blob',}).then(response => {
+                FileDownload(response.data, 'motorizacion.xlsx')
+            });
+        }
     }
 }
 </script>
