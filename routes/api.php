@@ -77,7 +77,8 @@ Route::post('importGalleries', 'GalleryController@importGalleries');
 
 Route::get('exportExcel', 'VariantController@exportExcel');
 Route::get('exportMotorizations', 'MotorizationController@exportMotorizations');
-
+Route::get('exportGaleries', 'GalleryController@exportGaleries');
+//exportGaleries
 //
 
 Route::post('importSunblinds', 'SunblindController@importSunblinds');

@@ -3,14 +3,23 @@
             <h2 class="mt-2 mb-5">GALERÍAS</h2>
         <v-card>
             <v-card-actions>
-                <v-row justify="center" align="center">
-                    <v-col cols="12" xl="12" lg="12" md="12" sm="12" xs="12">
+                <v-spacer></v-spacer>
+                <!-- <v-row justify="center" align="center">
+                    <v-col cols="12" xl="12" lg="12" md="12" sm="12" xs="12"> -->
                         <input type="file" id="file" ref="btnUploadFile" style="display:none" @change="selectImage($event)" accept=".xlsx,.csv"/>
                         <v-btn rounded color="#47a5ad" dark @click="dialog1 = true">
                             IMPORTAR INFORMACIÓN DE GALERÍAS
                         </v-btn>
-                    </v-col>
-                </v-row>
+                    <!-- </v-col>
+                </v-row> -->
+                <v-spacer></v-spacer>
+                <v-btn
+                @click="exportar()"
+                rounded
+                color="#47a5ad"
+                dark
+                >EXPORTAR INFORMACIÓN DE GALERÍAS</v-btn>
+                <v-spacer></v-spacer>
             </v-card-actions>
             <v-data-table
             v-if="galleries"
@@ -175,6 +184,12 @@ export default {
                 this.errors2 =  errors2.response.data.errors
             });
         },
+
+        exportar(){
+              axios.get('/api/exportGaleries',{responseType: 'blob',}).then(response => {
+                FileDownload(response.data, 'Galerías.xlsx')
+            });
+        }
     }
 }
 </script>
