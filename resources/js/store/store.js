@@ -18,6 +18,7 @@ import priceModule from './pricesModule';
 import catalogsModule from './catalogsModule';
 import notificationsModule from './notificationsModule';
 import paymentTypeModule from './paymentTypeModule';
+import matrixModule from './matrixModule';
 
 const store = new Vuex.Store({
 
@@ -37,7 +38,8 @@ const store = new Vuex.Store({
    priceModule,
    notificationsModule,
    catalogsModule,
-   paymentTypeModule
+   paymentTypeModule,
+   matrixModule
   },
   state:{
     loginErrors : [],

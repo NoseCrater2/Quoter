@@ -38,7 +38,7 @@ class OrderShowResource extends JsonResource
             'total' => $this->blinds->map( function( $blind ){
                 $countSameBlinds = ($blind->count_same_blinds <= 0) ? 1 : $blind->count_same_blinds;
                 return ($blind->discount_price +
-                        ( isset($blind->motorization) ? $blind->motorization->price: 0) +
+                        ( isset($blind->control_price) ? $blind->control_price: 0) +
                         ( isset($blind->control) ? $blind->control->price: 0) +
                         (isset($blind->gallery) ? $blind->gallery->price : 0) +
                         $blind->installmentCharge +

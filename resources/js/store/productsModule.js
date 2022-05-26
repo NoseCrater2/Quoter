@@ -63,7 +63,6 @@ const productsModule = {
             state.sunblinds = sunblinds
         },
 
-
     },
 
     actions: {
@@ -144,6 +143,13 @@ const productsModule = {
         //         commit('setVariants',response.data.data);
         //     } catch (error) {}
         // },
+        deactiveVariant: async function ({commit}, options) {
+            try {
+                const response = await axios
+                .post("/api/deactive/" + options.id, options)
+                commit('setSunblinds',response.data.data);
+            } catch (error) {}
+        },
 
         getVariantsByProduct: async function ({ commit }, idProduct){
             try {

@@ -6,7 +6,10 @@ use App\Gallery;
 use Illuminate\Http\Request;
 use App\Http\Resources\IndexGalleryResource;
 use App\Imports\GalleryImport;
+use App\Exports\ExportGaleries;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class GalleryController extends Controller
 {
@@ -104,5 +107,10 @@ class GalleryController extends Controller
         $data = $request->all();
         $files = Storage::files('galerias/'.$data['product'].'/'.$data['type']);
         return $files;
+    }
+
+    public function exportGaleries()
+    {
+        return Excel::download( new ExportGaleries, 'galeries.xlsx');
     }
 }

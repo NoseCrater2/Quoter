@@ -88,6 +88,15 @@
                     >
                     </v-text-field>
                 </template>
+                <template v-slot:item.active="{ item }">
+                    <v-switch
+                    @click="openDeactiveDialog(item)"
+                    v-model="item.active"
+                    readonly
+                    color="primary"
+                    hide-details
+                    ></v-switch>
+                </template>
             </v-data-table>
         </v-card>
         </div>
@@ -165,15 +174,49 @@
                     </v-card-text>
                 </v-card>
         </v-dialog>
+        <v-dialog max-width="350" v-model="showDeactiveDialog">
+            <v-card max-width="350">
+                <v-card-text class="text-h6 pa-2 flex justify-center" v-if="selectedItem != null">
+                    ¿{{selectedItem.active == 1?'Despublicar':'Publicar'}} persiana {{selectedItem.name}}?
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-text>
+                     <v-switch
+                    inset
+                    v-model="inactiveForType"
+                    :label="`Hacer lo mismo con todas las persianas ${selectedItem != null ? selectedItem.type.name : ''}`"
+                    color="teal"
+                    hide-details
+                    ></v-switch>
+                     <v-switch
+                    inset
+                    v-model="inactiveForLine"
+                    :label="`Hacer lo mismo con todas las persianas ${selectedItem != null ? selectedItem.line.name : ''}`"
+                    color="teal"
+                    hide-details
+                    ></v-switch>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                   <v-btn text @click="closeDeactiveDialog()" color="red">cancelar</v-btn>
+                   <v-spacer></v-spacer>
+                   <v-btn text color="teal" @click="deactiveItem()">aceptar</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapState } from 'vuex';
 const FileDownload = require('js-file-download');
 export default {
     data(){
         return{
+            selectedItem: null,
+            inactiveForType: false,
+            inactiveForLine: false,
+            showDeactiveDialog: false,
             fab: false,
             dialog1: false,
             dialog2: false,
@@ -206,6 +249,7 @@ export default {
                 { text: 'Ancho', value: 'width', align: 'center' },
                 { text: 'Lienzo', value: 'rotate', align: 'center' },
                 { text: 'Precio', value: 'price', align: 'center' },
+                { text: 'Publicado', value: 'active', align: 'center' },
             ],
         }
     },
@@ -229,6 +273,28 @@ export default {
     },
 
     methods:{
+        deactiveItem(){
+            const options = {
+                id: this.selectedItem.id,
+                line: this.inactiveForLine ? this.selectedItem.line.id : null,
+                type: this.inactiveForType ? this.selectedItem.type.id : null,
+            }
+            this.$store.dispatch('deactiveVariant', options).then(() => {
+                this.closeDeactiveDialog()
+            })
+        },
+        closeDeactiveDialog () {
+            this.selectedItem = null
+            this.inactiveForType = false
+            this.inactiveForLine = false
+            this.showDeactiveDialog = false
+
+        },
+
+        openDeactiveDialog ( item ) {
+            this.selectedItem = item
+            this.showDeactiveDialog = true
+        },
         editModel(model){
             if(model.price && model.price > 0){
                 this.$store.dispatch('editModel', model).then(()=>{})

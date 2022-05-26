@@ -18,6 +18,7 @@ class Motorization extends Model
         'motorization_type_id',
         'line_id',
         'type_id',
+        'active'
      ];
 
      public function motorizationType()

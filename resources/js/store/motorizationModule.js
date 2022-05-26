@@ -34,6 +34,13 @@ const motorizationsModule = {
         setGalleries(state, galleries){
             state.galleries = galleries
         },
+        editMotorization(state,edited){
+            state.motorizations.map(function(current){
+              if(current.id === edited.id){
+                Object.assign(current,edited);
+              }
+            });
+          },
     },
 
     actions: {
@@ -70,12 +77,22 @@ const motorizationsModule = {
 
         getGalleries: async function ({ commit, state }){
             if(state.galleries.length === 0){
-            try {
-                const response = await axios
-                .get("/api/galleries")
-                commit('setGalleries',response.data.data);
-            } catch (error) {}
-        }
+                try {
+                    const response = await axios
+                    .get("/api/galleries")
+                    commit('setGalleries',response.data.data);
+                } catch (error) {}
+            }
+        },
+
+        editMotorization: async function ({ commit, state }, item){
+            if(state.galleries.length === 0){
+                try {
+                    const response = await axios
+                    .put("/api/motorizations/" + item.id, item)
+                    commit('editMotorization',response.data);
+                } catch (error) {}
+            }
         },
     }
 }

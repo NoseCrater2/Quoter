@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +47,7 @@ Route::resource('variants', 'VariantController')->only('index','update');
 Route::resource('products', 'Api\ProductController')->only('index','show');
 
 Route::resource('motorization_types', 'MotorizationTypeController')->only('index','show');
-Route::resource('motorizations', 'MotorizationController')->only('index','show');
+Route::resource('motorizations', 'MotorizationController')->only('index','show','update');
 Route::get('getFilteredMotorizations/{type}', 'MotorizationController@getFilteredMotorizations');
 
 Route::resource('controls', 'ControlController')->only('index','show');
@@ -76,7 +78,9 @@ Route::post('importGalleries', 'GalleryController@importGalleries');
 
 
 Route::get('exportExcel', 'VariantController@exportExcel');
-
+Route::get('exportMotorizations', 'MotorizationController@exportMotorizations');
+Route::get('exportGaleries', 'GalleryController@exportGaleries');
+//exportGaleries
 //
 
 Route::post('importSunblinds', 'SunblindController@importSunblinds');
@@ -147,7 +151,9 @@ Route::middleware(['auth:sanctum'])->group(function()
     // Route::delete('users/{user}','UserController@destroy')->name('users.destroy');
     // Route::get('users/{user}/edit','UserController@edit')->name('users.edit');
     Route::delete('blinds/{blind}', 'BlindController@destroy');
+    Route::post('deactive/{variant}', 'VariantController@deactive');
 
+    Route::get('close-all-sessions', 'Api\AuthController@closeAllSesions');
 
 });
 
@@ -161,3 +167,28 @@ Route::resource('prices', 'PriceController')->only('index','store', 'update','de
 Route::get('promos' , 'PriceController@isPromo');
 Route::resource('catalogs', 'CatalogController')->only('index','store', 'update','destroy');
 Route::get('reset-password/{email}' , 'UserController@resetPassword');
+
+Route::get('ronoco', 'MatrixController@getRonoco');
+Route::get('rotrmu', 'MatrixController@getRotrmu');
+Route::get('rotrco', 'MatrixController@getRotrco');
+Route::get('ronomu', 'MatrixController@getRonomu');
+Route::get('rodnco', 'MatrixController@getRodnco');
+Route::get('rodnmu', 'MatrixController@getRodnmu');
+Route::get('bonoco', 'MatrixController@getBonoco');
+Route::get('bonomu', 'MatrixController@getBonomu');
+Route::get('botrco', 'MatrixController@getBotrco');
+Route::get('botrmu', 'MatrixController@getBotrmu');
+Route::get('bodnco', 'MatrixController@getBodnco');
+Route::get('bodnmu', 'MatrixController@getBodnmu');
+Route::get('sonocm', 'MatrixController@getSonocm');
+Route::get('sodncm', 'MatrixController@getSodncm');
+
+Route::get('download-catalogs/{id}', function ($id) {
+    $path = DB::table('catalogs')->where('id', $id)->first()->path;
+   return Storage::download($path);
+});
+
+Route::get('download-prices/{id}', function ($id) {
+    $path = DB::table('prices')->where('id', $id)->first()->path;
+   return Storage::download($path);
+});
