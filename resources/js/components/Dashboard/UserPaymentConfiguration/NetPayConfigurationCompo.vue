@@ -276,10 +276,10 @@ export default {
         }
 
 
-        // NetPay.setApiKey(process.env.MIX_NETPAY_PUBLIC_KEY_PROD); //PRODUCCION
+        NetPay.setApiKey(process.env.MIX_NETPAY_PUBLIC_KEY_PROD); //PRODUCCION
 
-        NetPay.setApiKey(process.env.MIX_NETPAY_PUBLIC_KEY_SBOX);//SANDBOX
-        NetPay.setSandboxMode(true);//SANDBOX
+        // NetPay.setApiKey(process.env.MIX_NETPAY_PUBLIC_KEY_SBOX);//SANDBOX
+        // NetPay.setSandboxMode(true);//SANDBOX
 
 
         // let cardInformation = {

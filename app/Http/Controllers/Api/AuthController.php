@@ -113,4 +113,12 @@ class AuthController extends Controller
         ];
         return response($response, 200);
     }
+
+    public function closeAllSesions(){
+        auth()->user()->tokens()->delete();
+        $response = [
+            'message' => "Has cerrado tu sesión existosamente"
+        ];
+        return response($response, 200);
+    }
 }

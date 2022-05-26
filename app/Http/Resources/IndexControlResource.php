@@ -20,6 +20,7 @@ class IndexControlResource extends JsonResource
             'description' => $this->description.' de '.$this->channel.' canal(es)',
             'price' =>  floatval($this->price),
             'manufacturer' => $this->manufacturer,
+            'channel' => $this->channel,
         ];
     }
 }

@@ -3,7 +3,7 @@
       <v-dialog
         persistent
         v-model="pdfDialog"
-        width="auto"
+        max-width
       >
         <v-card height="100%">
           <v-toolbar
@@ -42,6 +42,13 @@
                 @click="downloadButtonPdfAuth()"
               >
               <v-icon>mdi-arrow-collapse-down</v-icon>
+              </v-btn>
+              <v-btn
+              icon
+              class="white--text"
+              href="https://wa.me/send?phone=5214451448055&attachment=c://users/angel/downloads/cobors-1.pdf" target="_blank"
+              >
+              <v-icon>mdi-whatsapp</v-icon>
               </v-btn>
             </v-toolbar-items>
           </v-toolbar>
@@ -315,21 +322,16 @@
                     <v-row >
                       <v-col
                         cols="12"
-                        md="4"
+                        md="6"
                         sm="12"
                         v-for="celular in celulares"
                         :key="celular.title">
                         <v-item v-slot="{ active, toggle }" :value="celular.title">
                             <v-card
-                              width="120"
                               flat
                               height="120"
                               :style="active?'border: 2px solid #47a5ad':''"
                             >
-
-
-
-
                             <div class="d-flex  justify-space-around">
                               <div>
                                 <v-img
@@ -554,8 +556,10 @@
                <div class="ma-2">
                <div class="d-flex  justify-center">
                 PERSIANA
-
                </div>
+               <!-- <div v-if="order.type == 'celular'" class="d-flex  justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;">
+                  {{mxCurrencyFormat.format(roundToOneDecimal((findCelularPrice + motorCelularPrice ) * order.count_same_blinds))}} MXN
+               </div> -->
                <div v-if="order.type == 'horizontal-madera-2'" class="d-flex  justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;">
                   {{mxCurrencyFormat.format(roundToOneDecimal(findWoodPrice * order.count_same_blinds))}} MXN
                </div>
@@ -614,45 +618,9 @@
 
            </div>
            <div v-else>
-             <span style="font-size: 1em">
-                  3.Seleccione las medidas (El mínimo a cobrar es 1.0 x
-                  1.0)</span>
-                <v-text-field
-                  dense
-                  type="number"
-                  label="Ancho"
-                  class="ma-1"
-                  hide-details
-                  :disabled="!order.celular_type"
-                  :placeholder="widthMargins"
-                  outlined
-                  color="#47a5ad"
-                  background-color="white"
-                  v-model.number="order.canvas[0].width"
-                  :rules="[
-                    ...widthCelularRules(order.celular_type),
-                  ]"
-                ></v-text-field>
-
-                <v-text-field
-                  class="ma-1"
-                  hide-details
-                  :disabled="!order.celular_type"
-                  :rules="[
-                    ...heightCelularRules(order.celular_type),
-                  ]"
-                  dense
-                  type="number"
-                  label="Alto"
-                  background-color="white"
-                  :placeholder="heightMargins"
-                  outlined
-                  color="#47a5ad"
-                  v-model.number="order.canvas[0].height"
-                ></v-text-field>
                  <span>4. Seleccione modo de accionamiento</span>
                   <v-radio-group
-                  :disabled="!order.canvas[0].width && !order.canvas[0].height"
+                   :disabled="!order.celular_type"
                   row
                   :mandatory="false"
                   :rules="[(v) => !!v || 'Requerido']"
@@ -709,7 +677,7 @@
                         PERSIANA
                     </div>
                     <div class="d-flex  justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
-                        {{mxCurrencyFormat.format(roundToOneDecimal(unitaryPrice * order.count_same_blinds) + parseFloat(extraEnrollablePrice) + parseFloat(extraVerticalPrice))}} MXN
+                        {{mxCurrencyFormat.format(roundToOneDecimal((findCelularPrice + motorCelularPrice()) * order.count_same_blinds) + parseFloat(extraEnrollablePrice) + parseFloat(extraVerticalPrice))}} MXN
                     </div>
 
                     <v-divider></v-divider>
@@ -718,13 +686,13 @@
                          MOTOR y CONTROL/GALERÍA:
                     </div>
                     <div v-if="order.motor.motor > 0 && order.motor.control == null" class="d-flex justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
-                         {{mxCurrencyFormat.format($store.getters.getMotor(order.motor.motor).price)}} MXN
+                         {{mxCurrencyFormat.format(order.motor.price)}} MXN
                     </div>
                     <div v-else-if="order.motor.motor == 0 && order.motor.control != null" class="d-flex justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
                          {{mxCurrencyFormat.format(order.motor.control.price)}} MXN
                     </div>
                     <div v-else-if="order.motor.control != null && order.motor.motor > 0" class="d-flex justify-center overline" style="color: #47a5ad; font-size: 1.5em !important;line-height: normal;" >
-                         {{mxCurrencyFormat.format(parseFloat($store.getters.getMotor(order.motor.motor).price) + parseFloat(order.motor.control.price))}} MXN
+                         {{mxCurrencyFormat.format(order.motor.price + order.motor.control.price)}} MXN
                     </div>
                 </div>
 
@@ -970,7 +938,7 @@
               </div>
 
             </v-card-subtitle>
-            <v-row class="mx-3" v-if="order.celular_type == 'Muelle/Cordón'" >
+            <v-row class="mx-3" v-if="order.celular_type == 'Normal'" >
 
               <v-col class="pa-0" cols="6" >
                 <div v-if="order.celular_drive == 'Muelle'">
@@ -1001,7 +969,7 @@
                 :items="variants"
                 item-text="name"
                 item-value="slug"
-                @change="chargeColors()"
+                @change="chargeColors(); findCelularPrices()"
                 outlined
                 color="#47a5ad"
                 background-color="white"
@@ -1024,8 +992,43 @@
                 background-color="white"
                 label="Color"
               ></v-autocomplete>
+              <span style="font-size: 1em">
+                  7.Seleccione las medidas (El mínimo a cobrar es 1.0 x
+                  1.0)</span>
+                <v-text-field
+                  dense
+                  type="number"
+                  label="Ancho"
+                  class="ma-1"
+                  hide-details
+
+                  :placeholder="widthCelularMargins"
+                  outlined
+                  color="#47a5ad"
+                  background-color="white"
+                  v-model.number="order.canvas[0].width"
+                  :rules="[
+                    ...widthCelularRules(order.celular_type),
+                  ]"
+                ></v-text-field>
+
+                <v-text-field
+                  class="ma-1"
+                  hide-details
+                  :rules="[
+                    ...heightCelularRules(order.celular_type),
+                  ]"
+                  dense
+                  type="number"
+                  label="Alto"
+                  background-color="white"
+                  :placeholder="heightCelularMargins"
+                  outlined
+                  color="#47a5ad"
+                  v-model.number="order.canvas[0].height"
+                ></v-text-field>
                 <span style="font-size: 1em">
-                  7. Marco
+                  8. Marco
                 </span>
                 <v-radio-group
                 style="max-width: 244px;"
@@ -1088,7 +1091,7 @@
                   :items="celular_variants"
                   item-text="title"
                   return-object
-                  @change="chargeCelularColors()"
+                  @change="chargeCelularColors(); findCelularPrices()"
                   outlined
                   color="#47a5ad"
                   background-color="white"
@@ -1192,7 +1195,44 @@
               </v-col>
               <v-col cols="12">
                 <span style="font-size: 1em">
-                  7 .Marco
+                  7.Seleccione las medidas (El mínimo a cobrar es 1.0 x
+                  1.0)</span>
+                <v-text-field
+                  dense
+                  type="number"
+                  label="Ancho"
+                  class="ma-1"
+                  hide-details
+
+                  :placeholder="widthCelularMargins"
+                  outlined
+                  color="#47a5ad"
+                  background-color="white"
+                  v-model.number="order.canvas[0].width"
+                  :rules="[
+                    ...widthCelularRules(order.celular_type),
+                  ]"
+                ></v-text-field>
+
+                <v-text-field
+                  class="ma-1"
+                  hide-details
+                  :rules="[
+                    ...heightCelularRules(order.celular_type),
+                  ]"
+                  dense
+                  type="number"
+                  label="Alto"
+                  background-color="white"
+                  :placeholder="heightCelularMargins"
+                  outlined
+                  color="#47a5ad"
+                  v-model.number="order.canvas[0].height"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <span style="font-size: 1em">
+                  8. Marco
                 </span>
                 <v-radio-group
                 style="max-width: 244px;"
@@ -1234,7 +1274,7 @@
                     clearable
                     clear-icon="mdi-close-circle"
                     label="Canal(es) de Control Remoto"
-                    :items="controls"
+                    :items="controls.filter(c => c.channel == '1' || c.channel == '6')"
                     item-text="description"
                     return-object
                     v-model="order.motor.control"
@@ -1307,7 +1347,7 @@
         </v-card>
       </v-dialog>
 
-      <v-dialog v-model="sellerPrint" persistent max-width="390">
+      <v-dialog v-model="sellerPrint" persistent>
         <v-card>
           <v-card-title class="px-4 py-2 justify-center">
            Opciones de impresión
@@ -1723,11 +1763,40 @@ import woodMotorized from '../utils/woodMatrixTwo';
 const FileDownload = require('js-file-download');
 
 import pdf from 'vue-pdf';
+import axios from 'axios';
 
 export default {
   name: "Quoter",
   data() {
     return {
+      maxCelularHeight: 0,
+      minCelularHeight: 0,
+      maxCelularWidth: 0,
+      minCelularWidth: 0,
+      widthCelularMargins: null,
+      heightCelularMargins: null,
+        celularPosibilities : [
+          {name : 'ronoco', v : 'romance-noite', t : 'Normal', d : 'Cordón'},
+          {name : 'ronoco', v : 'romance-noite', t : 'Normal', d : 'Motor'},
+          {name : 'rotrmu', v : 'romance-traslucida', t : 'Normal', d : 'Muelle'},
+          {name : 'rotrco', v : 'romance-traslucida', t : 'Normal', d : 'Cordón'},
+          {name : 'rotrco', v : 'romance-traslucida', t : 'Normal', d : 'Motor'},
+          {name : 'ronomu', v : 'romance-traslucida', t : 'Normal', d : 'Muelle'},
+          {name : 'rodnco', v : 'romance', t : 'Día y Noche', d : 'Cordón'},
+          {name : 'rodnco', v : 'romance', t : 'Día y Noche', d : 'Motor'},
+          {name : 'rodnmu', v : 'romance', t : 'Día y Noche', d : 'Muelle'},
+          {name : 'bonoco', v : 'bolero-traslucida', t : 'Normal', d : 'Cordón'},
+          {name : 'bonoco', v : 'bolero-traslucida', t : 'Normal', d : 'Motor'},
+          {name : 'bonomu', v : 'bolero-traslucida', t : 'Normal', d : 'Muelle'},
+          {name : 'botrco', v : 'bolero-traslucida', t : 'Normal', d : 'Cordón'},
+          {name : 'botrco', v : 'bolero-traslucida', t : 'Normal', d : 'Motor'},
+          {name : 'botrmu', v : 'bolero-traslucida', t : 'Normal', d : 'Muelle'},
+          {name : 'bodnco', v : 'bolero', t : 'Día y Noche', d : 'Cordón'},
+          {name : 'bodnco', v : 'bolero', t : 'Día y Noche', d : 'Motor'},
+          {name : 'bodnmu', v : 'bolero', t : 'Día y Noche', d : 'Muelle'},
+          {name : 'sonocm', v : 'solis', t : 'Normal'},
+          {name : 'sodncm', v : 'solis', t : 'Día y Noche'},
+        ],
         savedBlindMessage: false,
         savedorderMessage:false,
         isSendindEmailToAnotherAccount: false,
@@ -1772,14 +1841,14 @@ export default {
       disabledFrameRadio: true,
       disabledCommentText: true,
       celular_variants: [
-        {title:'CELULAR BOLERO 25 MM (3.66 MM)', day: 'BOLERO TRASLUCIDA', night: 'BOLERO BLACKOUT'},
-        {title:'CELULAR ROMANCE 25 MM (3.66 MM)', day: 'ROMANCE TRASLUCIDA', night: 'ROMANCE BLACKOUT'},
-        {title:'CELULAR SOLIS 38 MM 118\'\' (3.00)', day: 'SOLIS TRASLUCIDA', night: 'SOLIS TRASLUCIDA'},
+        {title:'CELULAR BOLERO 25 MM', day: 'bolero-traslucida', night: 'bolero-privee'},
+        {title:'CELULAR ROMANCE 38 MM', day: 'romance-traslucida', night: 'romance-noite'},
+        {title:'CELULAR SOLIS 38 MM', day: 'solis', night: 'solis'},
       ],
       celularDialog: false,
       celulares: [
         { title: "Día y Noche", img: "/img/cotizador/celulares/dianoche.png" },
-        { title: "Muelle/Cordón", img: "/img/cotizador/celulares/Muelle.png" },
+        { title: "Normal", img: "/img/cotizador/celulares/Muelle.png" },
       ],
       flexibaletHeights:[],
       showButtonDialog: false,
@@ -1945,6 +2014,38 @@ export default {
     };
   },
   methods: {
+
+    findCelularPrices(){
+      if(this.order.celular_variant != null){
+        console.log()
+        this.celularPosibilities.forEach(file => {
+          if(this.order.celular_type == file.t && (this.order.celular_drive == file.d || file.d == undefined) && this.order.celular_variant.day.includes(file.v)){
+            this.$store.dispatch('getMatrix',file.name).then(res => {
+              this.widthCelularMargins = this.matrix[0].w+' a ' + this.matrix[this.matrix.length -1].w
+              this.heightCelularMargins = this.matrix[0].h+' a ' + this.matrix[this.matrix.length -1].h
+              this.minCelularHeight = this.matrix[0].h
+              this.maxCelularHeight = this.matrix[this.matrix.length -1].h
+              this.minCelularWidth = this.matrix[0].w
+              this.maxCelularWidth = this.matrix[this.matrix.length -1].w
+            })
+          }
+        });
+      }else if(this.order.variant != null){
+        this.celularPosibilities.forEach(file => {
+          if(this.order.celular_type == file.t && (this.order.celular_drive == file.d || file.d == undefined) && this.order.variant.includes(file.v) ){
+
+            this.$store.dispatch('getMatrix',file.name).then(res => {
+              this.widthCelularMargins = this.matrix[0].w+' a ' + this.matrix[this.matrix.length -1].w
+              this.heightCelularMargins = this.matrix[0].h+' a ' + this.matrix[this.matrix.length -1].h
+              this.minCelularHeight = this.matrix[0].h
+              this.maxCelularHeight = this.matrix[this.matrix.length -1].h
+              this.minCelularWidth = this.matrix[0].w
+              this.maxCelularWidth = this.matrix[this.matrix.length -1].w
+            })
+          }
+        });
+      }
+    },
       fnCancelFromPrintOptions(){
         this.sellerPrint = false;
         this.resetSelectedUser('cancelar');
@@ -1980,7 +2081,6 @@ export default {
       },
     roundToOneDecimal (value ) {
       return Math.round(value * 10) / 10
-
     },
 
     downloadButtonPdfAuth(){
@@ -2264,8 +2364,8 @@ export default {
 
     chargeCelularColors(){
         // let variants = this.$store.state.productsModule.variants.filter(v => v.name.includes(this.order.celular_variant))
-        const variant1 = this.$store.state.productsModule.variants.find(v => v.name.includes(this.order.celular_variant.day))
-        const variant2 = this.$store.state.productsModule.variants.find(v => v.name.includes(this.order.celular_variant.night))
+        const variant1 = this.$store.state.productsModule.variants.find(v => v.slug.includes(this.order.celular_variant.day))
+        const variant2 = this.$store.state.productsModule.variants.find(v => v.slug.includes(this.order.celular_variant.night))
 
         this.$store.dispatch("getRelatedColors", {'slug': variant1.slug, 'type':this.order.type}).then(()=>{
             this.order.variant = variant1.slug
@@ -2419,10 +2519,23 @@ export default {
     motorCelularPrice(){
       let price = 0
       if(this.order.motor.motor){
-        price += parseFloat(this.$store.getters.getMotor(this.order.motor.motor).price)
+        if(this.order.celular_type == 'Día y Noche'){
+          this.order.motor.price = 29700
+          price += 29700
+        }else if(this.order.celular_type == 'Normal'){
+           this.order.motor.price = 26000
+          price += 26000
+        }
+        //price += parseFloat(this.$store.getters.getMotor(this.order.motor.motor).price)
       }
       if(this.order.motor.control){
-        price += parseFloat(this.order.motor.control.price)
+        if(this.order.motor.channel == '1'){
+          this.order.motor.control.price = 490
+          price += 490
+        }else if(this.order.motor.channel == '6'){
+           this.order.motor.control.price = 1480
+          price += 1480
+        }
       }
       return price
     },
@@ -2435,8 +2548,9 @@ export default {
             this.order.price = this.roundToOneDecimal(this.findWoodPrice)
           }else if(this.order.type == 'celular'){
 
-            this.order.price = this.roundToOneDecimal(this.unitaryPrice)
+            this.order.price = this.roundToOneDecimal(this.findCelularPrice)
             this.order.motor.price = this.roundToOneDecimal(this.motorCelularPrice())
+            this.order.base_price = this.order.price
 
           }else if(this.order.type == 'vertical'){
             this.order.extraVertical = this.extraVerticalPrice;
@@ -2582,18 +2696,18 @@ export default {
 
     },
 
-    widthCelularRules(type){
+    widthCelularRules(){
       let n = parseFloat(this.order.canvas[0].width);
         return (
-          (!isNaN(n) && n >= 0.60 && n <= 3) ||
+          (n >= this.minCelularWidth && n <= this.maxCelularWidth) ||
           "Requerido"
         );
     },
 
-    heightCelularRules(type){
+    heightCelularRules(){
       let n = parseFloat(this.order.canvas[0].height);
         return (
-          (!isNaN(n) && n >= 1 && n <= 3) ||
+          (n >= this.minCelularHeight && n <= this.maxCelularHeight) ||
           "Requerido"
         )
     },
@@ -2637,7 +2751,6 @@ export default {
         }
       });
 
-
     },
 
     selectColor(color) {
@@ -2675,17 +2788,18 @@ export default {
 
 
   computed: {
-      verifyUserSuperadminRole(){
-          if(this.user != null){
-              if(this.user.role === 'Superadministrador' || this.user.role === 'Administrador'){
-                  return true;
-              }
-              else{
-                  return false;
-              }
+
+    verifyUserSuperadminRole(){
+      if(this.user != null){
+          if(this.user.role === 'Superadministrador' || this.user.role === 'Administrador'){
+              return true;
           }
-          return false;
-      },
+          else{
+              return false;
+          }
+      }
+      return false;
+    },
       enableBtnPrintLogInAdmin(){
 
         // name: null,
@@ -2756,8 +2870,8 @@ export default {
 
       if(result[0]){
         if(this.order.motor_type == 'Manual' && this.order.motor.drive == 'cinta'){
-          let price =  this.order.base_price =
-          this.order.base_price = price
+          let price =  result[0].price + ( result[0].price * 0.15)
+          this.order.base_price = price  + (price * 0.15)
           return price
         }else{
           let price = result[0].price
@@ -2766,6 +2880,21 @@ export default {
         }
       }
     },
+    findCelularPrice(){
+      if(this.matrix.length > 0){
+        let result  =  this.matrix.find((p) => p.w >= this.order.canvas[0].width && p.h >= this.order.canvas[0].height)
+        if(result){
+          console.log(result)
+          let price = result.p
+          this.order.base_price = price
+          return price
+        }else{
+          return 0;
+        }
+      }
+      return 0;
+    },
+
 
     options () {
       return {
@@ -2905,6 +3034,7 @@ export default {
       controls: (state) => state.motorizationModule.controls,
       motorizations: (state) => state.motorizationModule.motorizations,
       user: (state) => state.user,
+      matrix: (state) => state.matrixModule.matrix
     }),
 
 
@@ -2920,33 +3050,7 @@ export default {
 
     unitaryPrice() {
 
-        if(this.order.variant2 != null){
-        let partialHeight  = this.order.canvas[0].height / 2
-        let price = 0
-        if (
-            this.order.canvas[0].width > 1 &&
-            partialHeight > 1
-          ) {
-            return parseFloat( (this.variant.price * this.order.canvas[0].width * partialHeight) +
-             (this.variantTwo.price * this.order.canvas[0].width * partialHeight));
-          } else if (this.order.canvas[0].width > 1) {
-            price =  parseFloat(
-              (this.variant.price * this.order.canvas[0].width) + (this.variantTwo.price * this.order.canvas[0].width)
-            );
-            return price
-          } else if (partialHeight > 1) {
-            price =  parseFloat(
-              (this.variant.price * partialHeight) + (this.variantTwo.price * partialHeight)
-            );
-            return price;
-          } else {
-
-            price = parseFloat(this.variant.price) + parseFloat(this.variantTwo.price)
-            return price;
-          }
-
-      }
-      else if (this.order.canvas.length > 0 && this.variant) {
+        if (this.order.canvas.length > 0 && this.variant) {
         this.order.base_price = this.variant.price;
         let price = 0;
         for (let index = 0; index < this.order.canvas.length; index++) {

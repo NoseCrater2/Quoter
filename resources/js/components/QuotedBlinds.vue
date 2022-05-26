@@ -327,7 +327,7 @@
 
                      <v-list-item class="overline" dense>
                       <v-list-item-title>Precio</v-list-item-title>
-                      <v-list-item-subtitle class="text-right">{{mxCurrencyFormat.format($store.getters.getMotor(o.motor.motor).price)}}MXN</v-list-item-subtitle>
+                      <v-list-item-subtitle class="text-right">{{mxCurrencyFormat.format(o.motor.price)}}MXN</v-list-item-subtitle>
                     </v-list-item>
                   </v-list-group>
 

@@ -36,7 +36,7 @@ function returnedOneTwoOrders($localIndex, $localorders) {
             $multiX2 = $localIndex * 2;
             return array_slice($localorders, ($multiX2 - 2), 2);
         }
-        $user = App\User::find(auth()->user()->id);
+        $user = App\User::find($orders['user']['id']);
         $date = new Carbon\Carbon;
         $total = 0;
         setlocale(LC_MONETARY, 'es_MX');
