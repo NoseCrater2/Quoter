@@ -11,6 +11,8 @@ use App\Imports\MotorizationImport;
 use App\Exports\MotorizationExport;
 use App\Http\Resources\IndexMotorizationResource;
 use App\Type;
+use Illuminate\Support\Facades\Validator;
+use App\ErrorMessages;
 
 class MotorizationController extends Controller
 {
@@ -21,7 +23,7 @@ class MotorizationController extends Controller
      */
     public function index()
     {
-        $motorizations = Motorization::select('id','code','canvas','system','width','height','price','via')
+        $motorizations = Motorization::select('id','code','canvas','system','width','height','price','via','type_id','line_id','motorization_type_id')
         ->addSelect(
             ['motorizationType' => MotorizationType::select('name')
             ->whereColumn('motorization_type_id', 'motorization_types.id')],
@@ -34,8 +36,9 @@ class MotorizationController extends Controller
             ['manufacturer' => Line::select('name')
             ->whereColumn('line_id', 'lines.id')],
         )
+        ->where('active',1)
         ->get();
-        return response(['data'=> $motorizations],200);  
+        return response(['data'=> $motorizations],200);
     }
 
     /**
@@ -90,7 +93,44 @@ class MotorizationController extends Controller
      */
     public function update(Request $request, Motorization $motorization)
     {
-        //
+        $data = $request->all();
+        $rules = [
+            'code' => 'required',
+            'canvas' => 'required',
+            'system' => 'required',
+            'width' => 'required',
+            'height' => 'required',
+            'price' => 'required|numeric',
+            'via' => 'required',
+            'motorization_type_id' => 'required|exists:motorization_types,id',
+            'line_id' => 'required|exists:lines,id',
+            'type_id' => 'required|exists:types,id',
+        ];
+
+        $validator= Validator::make($data,$rules, ErrorMessages::getMessages());
+        if($validator->fails()){
+            return response($validator->errors(),422);
+        }else{
+
+            $motorization->update($data);
+            return Motorization::select('id','code','canvas','system','width','height','price','via','type_id','line_id','motorization_type_id')
+            ->addSelect(
+                ['motorizationType' => MotorizationType::select('name')
+                ->whereColumn('motorization_type_id', 'motorization_types.id')],
+            )
+            ->addSelect(
+                ['type' => Type::select('name')
+                ->whereColumn('type_id', 'types.id')],
+            )
+            ->addSelect(
+                ['manufacturer' => Line::select('name')
+                ->whereColumn('line_id', 'lines.id')],
+            )
+            ->where('active',1)
+            ->where('id', $motorization->id)
+            ->first();
+        }
+
     }
 
     /**
@@ -126,6 +166,6 @@ class MotorizationController extends Controller
     {
         return IndexMotorizationResource::collection(
             Motorization::where('type_id', '=', $type->id)->get()
-        );   
+        );
     }
 }

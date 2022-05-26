@@ -18,6 +18,7 @@ use App\Type;
 use Carbon\Carbon;
 use Spatie\Searchable\Search;
 use Spatie\Searchable\ModelSearchAspect;
+use Illuminate\Support\Facades\DB;
 
 class VariantController extends Controller
 {
@@ -34,6 +35,7 @@ class VariantController extends Controller
             ->limit(1)],
         )
         ->with(['type:id,name,slug,product_id','line:id,slug','weave:id,slug','subweave:id,slug'])
+        ->where('active',1)
         ->orderBy('price','desc')
         ->get();
         return response(['data'=> $variants],200);
@@ -192,5 +194,32 @@ class VariantController extends Controller
        ->search($request->input('query'));
 
        return response()->json($results);
+    }
+
+    public function deactive(Request $request, Variant $variant)
+    {
+        $options = $request->all();
+        if($variant->active == 1){
+            $variant->active = 0;
+        }else if($variant->active == 0){
+            $variant->active = 1;
+        }
+        $variant->save();
+        $line_id = $options['line'];
+        $type_id = $options['type'];
+        $status = $variant->active;
+        DB::table('variants')
+        ->when($type_id, function ($query, $type_id) use ($status) {
+            $query->where('type_id', $type_id)->update(['active' => $status]);
+        })
+        ->when($line_id, function ($query, $line_id) use ($status){
+            $query->where('line_id', $line_id)->update(['active' => $status]);
+        });
+
+        $variants = Variant::
+        with(['type:id,name', 'line:id,name', 'weave:id,name', 'subweave:id,name'])
+        ->orderBy('price','desc')
+        ->get();
+        return response(['data'=> $variants],200);
     }
 }

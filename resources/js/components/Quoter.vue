@@ -3,7 +3,7 @@
       <v-dialog
         persistent
         v-model="pdfDialog"
-        width="auto"
+        max-width
       >
         <v-card height="100%">
           <v-toolbar
@@ -42,6 +42,13 @@
                 @click="downloadButtonPdfAuth()"
               >
               <v-icon>mdi-arrow-collapse-down</v-icon>
+              </v-btn>
+              <v-btn
+              icon
+              class="white--text"
+              href="https://wa.me/send?phone=5214451448055&attachment=c://users/angel/downloads/cobors-1.pdf" target="_blank"
+              >
+              <v-icon>mdi-whatsapp</v-icon>
               </v-btn>
             </v-toolbar-items>
           </v-toolbar>
@@ -994,7 +1001,7 @@
                   label="Ancho"
                   class="ma-1"
                   hide-details
-                 
+
                   :placeholder="widthCelularMargins"
                   outlined
                   color="#47a5ad"
@@ -1196,7 +1203,7 @@
                   label="Ancho"
                   class="ma-1"
                   hide-details
-                 
+
                   :placeholder="widthCelularMargins"
                   outlined
                   color="#47a5ad"
@@ -1340,7 +1347,7 @@
         </v-card>
       </v-dialog>
 
-      <v-dialog v-model="sellerPrint" persistent max-width="390">
+      <v-dialog v-model="sellerPrint" persistent>
         <v-card>
           <v-card-title class="px-4 py-2 justify-center">
            Opciones de impresión
@@ -2026,7 +2033,7 @@ export default {
       }else if(this.order.variant != null){
         this.celularPosibilities.forEach(file => {
           if(this.order.celular_type == file.t && (this.order.celular_drive == file.d || file.d == undefined) && this.order.variant.includes(file.v) ){
-            
+
             this.$store.dispatch('getMatrix',file.name).then(res => {
               this.widthCelularMargins = this.matrix[0].w+' a ' + this.matrix[this.matrix.length -1].w
               this.heightCelularMargins = this.matrix[0].h+' a ' + this.matrix[this.matrix.length -1].h
@@ -2074,7 +2081,6 @@ export default {
       },
     roundToOneDecimal (value ) {
       return Math.round(value * 10) / 10
-
     },
 
     downloadButtonPdfAuth(){
@@ -2358,8 +2364,8 @@ export default {
 
     chargeCelularColors(){
         // let variants = this.$store.state.productsModule.variants.filter(v => v.name.includes(this.order.celular_variant))
-        const variant1 = this.$store.state.productsModule.variants.find(v => v.name.includes(this.order.celular_variant.day))
-        const variant2 = this.$store.state.productsModule.variants.find(v => v.name.includes(this.order.celular_variant.night))
+        const variant1 = this.$store.state.productsModule.variants.find(v => v.slug.includes(this.order.celular_variant.day))
+        const variant2 = this.$store.state.productsModule.variants.find(v => v.slug.includes(this.order.celular_variant.night))
 
         this.$store.dispatch("getRelatedColors", {'slug': variant1.slug, 'type':this.order.type}).then(()=>{
             this.order.variant = variant1.slug
@@ -2864,8 +2870,8 @@ export default {
 
       if(result[0]){
         if(this.order.motor_type == 'Manual' && this.order.motor.drive == 'cinta'){
-          let price =  result[0].price
-          this.order.base_price = price
+          let price =  result[0].price + ( result[0].price * 0.15)
+          this.order.base_price = price  + (price * 0.15)
           return price
         }else{
           let price = result[0].price
@@ -2888,7 +2894,7 @@ export default {
       }
       return 0;
     },
-    
+
 
     options () {
       return {

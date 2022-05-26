@@ -35,7 +35,7 @@ class MotorizationImport implements WithHeadingRow, ToCollection, SkipsOnError, 
                 $typeM = MotorizationType::firstOrCreate([
                     'name' => $row['motorizacion'],
                 ],
-                ['slug' => $row['motorizacion']]  
+                ['slug' => $row['motorizacion']]
             );
             }
             $manufacturer = Line::firstOrCreate([
@@ -54,7 +54,7 @@ class MotorizationImport implements WithHeadingRow, ToCollection, SkipsOnError, 
                     'type_id' => $type->id,
                 ],
                 [
-                    'code' => $row['code'],
+                    'code' => $row['codigo'],
                     'canvas' => $row->has('lienzo') && $row['lienzo']?$row['lienzo']:0,
                     'system' => $row->has('sistema') && $row['sistema']?$row['sistema']:null,
                     'width' => $row->has('ancho') && $row['ancho']?$row['ancho']:0,
@@ -76,8 +76,8 @@ class MotorizationImport implements WithHeadingRow, ToCollection, SkipsOnError, 
             'codigo' => ['nullable'],
             'lienzo' => ['min:0', 'numeric'],
             'sistema' => ['nullable', 'string'],
-            'ancho' => ['numeric', 'min:0'],
-            'alto' => ['numeric', 'min:0'],
+            // 'ancho' => ['numeric', 'min:0'],
+            // 'alto' => ['numeric', 'min:0'],
             'precio' => ['numeric', 'min:0'],
             'via' => ['numeric', 'min:0'],
             'tipo' => ['string'],

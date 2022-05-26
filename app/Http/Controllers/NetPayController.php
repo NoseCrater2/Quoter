@@ -201,17 +201,23 @@ class NetPayController extends Controller
             'secretkey'=> $this->secretKey,
             'Content-Type' => 'application/json',
             'Authorization' => $this->secretKey,
-            'User-Agent' => 'ReadMe-API-Explorer'
+            // 'User-Agent' => 'ReadMe-API-Explorer'
 
         ];
 
-        $response = $client->request($method, $requestUrl,  [
-            'json' => $formParams,
-            'headers' => $headers,
-            'verify' => $this->verifySSL
-        ]);
+        $json_object = json_encode($formParams);
+        try {
+            $response = $client->request($method, $requestUrl,  [
+                'body' => $json_object,
+                'headers' => $headers,
+                'verify' => $this->verifySSL
+            ]);
 
-        $response = $response->getBody()->getContents();
+            $response = $response->getBody()->getContents();
+        } catch (\Exception $e) {
+            return response($e, 500);
+        }
+
     }
 
     public function deleteCard(Request $request, User $user)

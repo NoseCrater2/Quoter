@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +47,7 @@ Route::resource('variants', 'VariantController')->only('index','update');
 Route::resource('products', 'Api\ProductController')->only('index','show');
 
 Route::resource('motorization_types', 'MotorizationTypeController')->only('index','show');
-Route::resource('motorizations', 'MotorizationController')->only('index','show');
+Route::resource('motorizations', 'MotorizationController')->only('index','show','update');
 Route::get('getFilteredMotorizations/{type}', 'MotorizationController@getFilteredMotorizations');
 
 Route::resource('controls', 'ControlController')->only('index','show');
@@ -149,7 +151,9 @@ Route::middleware(['auth:sanctum'])->group(function()
     // Route::delete('users/{user}','UserController@destroy')->name('users.destroy');
     // Route::get('users/{user}/edit','UserController@edit')->name('users.edit');
     Route::delete('blinds/{blind}', 'BlindController@destroy');
+    Route::post('deactive/{variant}', 'VariantController@deactive');
 
+    Route::get('close-all-sessions', 'Api\AuthController@closeAllSesions');
 
 });
 
@@ -178,3 +182,13 @@ Route::get('bodnco', 'MatrixController@getBodnco');
 Route::get('bodnmu', 'MatrixController@getBodnmu');
 Route::get('sonocm', 'MatrixController@getSonocm');
 Route::get('sodncm', 'MatrixController@getSodncm');
+
+Route::get('download-catalogs/{id}', function ($id) {
+    $path = DB::table('catalogs')->where('id', $id)->first()->path;
+   return Storage::download($path);
+});
+
+Route::get('download-prices/{id}', function ($id) {
+    $path = DB::table('prices')->where('id', $id)->first()->path;
+   return Storage::download($path);
+});
