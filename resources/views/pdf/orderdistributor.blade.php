@@ -36,7 +36,13 @@ function returnedOneTwoOrders($localIndex, $localorders) {
             $multiX2 = $localIndex * 2;
             return array_slice($localorders, ($multiX2 - 2), 2);
         }
-        $user = App\User::find($orders['user']['id']);
+        $user = null; //Se declara usuario null
+        if(isset($orders['user']['id'])){ //Si el usuario que llega tiene id
+            $user = App\User::find($orders['user']['id']); //Existe y se busca en bd
+        }
+        else{
+            $user = $orders['user']; //No existe, y se asigna el que llega
+        }
         $date = new Carbon\Carbon;
         $total = 0;
         setlocale(LC_MONETARY, 'es_MX');

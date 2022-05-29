@@ -701,6 +701,17 @@
 
 
           </v-row>
+          <v-col cols="12" class="my-0">
+            <v-textarea
+            no-resize
+            :disabled="disabledCommentText"
+            v-model="order.motor.comment"
+            color="#47a5ad"
+            outlined
+            height="100"
+            label="Observaciones"
+            ></v-textarea>
+          </v-col>
           <v-row no-gutters>
             <v-col cols="12" md="4" sm="12">
               <v-btn
@@ -1281,14 +1292,15 @@
                     placeholder="Sin Control"
                   ></v-select>
               </v-col>
-              <v-col  cols="12">
+              <v-col cols="12" class="my-0">
                 <v-textarea
+                no-resize
                 :disabled="disabledCommentText"
                 v-model="order.motor.comment"
                 color="#47a5ad"
                 outlined
                 height="100"
-                label="Observaciones"
+                label="Observacioness"
                 ></v-textarea>
               </v-col>
             </v-row>
@@ -1738,6 +1750,15 @@
         </template>
       </v-snackbar>
       <v-snackbar
+      v-model="printedMessageObject.model"
+      :timeout="printedMessageObject.timeout"
+      >
+      <span class="ml-4">{{printedMessageObject.message}}</span>
+       <template v-slot:action>
+        <v-icon>mdi-error</v-icon>
+        </template>
+      </v-snackbar>
+      <v-snackbar
       v-model="savedorderMessage"
       :timeout="2000"
       >
@@ -1746,6 +1767,7 @@
         <v-icon>mdi-check</v-icon>
         </template>
       </v-snackbar>
+
   </v-container>
 </template>
 
@@ -1799,6 +1821,11 @@ export default {
         ],
         savedBlindMessage: false,
         savedorderMessage:false,
+        printedMessageObject: {
+          model: false,
+          message: '',
+          timeout: 2500
+        },
         isSendindEmailToAnotherAccount: false,
         isSendindEmailToLoginMyAccount: false,
         isPrintingSpecificClientFromDistributorDialog: false,
@@ -2163,7 +2190,10 @@ export default {
             this.downloadButtonPdf = response.data;
             this.pdfDialog = true;
         }).catch(()=>{
-
+            this.isPrintingSpecificClientFromDistributorDialog = false;
+            this.printedMessageObject.message = 'Ha ocurrido un error al generar el documento';
+            this.printedMessageObject.timeout = 2500;
+            this.printedMessageObject.model = true;
         })
       }
     },
@@ -2821,6 +2851,9 @@ export default {
           return Math.ceil(this.order.canvas[0].width) * 250
         }else if(this.order.cloth_holder === 'Galería Portatela'){
           return Math.ceil(this.order.canvas[0].width) * 120
+        }
+        else{
+          return 0
         }
       }else{
         return 0
