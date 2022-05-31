@@ -55,7 +55,7 @@
                               <span v-if="itemBlind.motor.motor != 0 && itemBlind.motor.motor != null">
                                   <span>
                                       {{$store.getters.getMotor(itemBlind.motor.motor).system+' // '+$store.getters.getMotor(itemBlind.motor.motor).motorizationType+' // '+$store.getters.getMotor(itemBlind.motor.motor).manufacturer+' '}}
-                                      <span>{{itemBlind.motor.price > 0 ? '(+$'+itemBlind.motor.price+') // ' : '// '}}</span>
+                                      <span>{{itemBlind.motor.price > 0 ? '(+$'+(itemBlind.motor.control != null ? (itemBlind.motor.price - itemBlind.motor.control.price) : (itemBlind.motor.price))+') // ' : '// '}}</span>
                                   </span>
                               </span>
 
@@ -75,7 +75,9 @@
                                   {{itemBlind.count_same_blinds > 1 ? 'CANTIDAD PERSIANAS ESTE TIPO: '+itemBlind.count_same_blinds : ''}}
                               </div>
                           </div>
-
+                          <div class="comment" v-if="itemBlind.comment != null">
+                              COMENTARIOS: {{itemBlind.comment}}
+                          </div>
                       </div>
                   </v-col>
                   <v-col cols="5" xl="3" lg="4" md="5" sm="5">
@@ -100,13 +102,6 @@
                               <span style="color: #47a5ad;">
                                   {{mxCurrencyFormat.format((itemBlind.count_same_blinds > 0 ? itemBlind.count_same_blinds : 1) *
                                       (parseFloat(itemBlind.discount_price) +
-                                      parseFloat(itemBlind.motor.price) +
-                                      parseFloat(itemBlind.motor.flexiballetPrice) +
-                                      parseFloat(itemBlind.motor.galleryPrice) +
-                                      parseFloat(itemBlind.motor.manufacturerPrice) +
-                                      parseFloat(itemBlind.motor.stringPrice) +
-                                      parseFloat(itemBlind.extraVertical) +
-                                      parseFloat(itemBlind.extraEnrollable) +
                                       parseFloat(itemBlind.installmentCharge))
                                   )}} MXN
                               </span>
@@ -173,7 +168,7 @@
                               <span v-if="itemBlind.motor.motor != 0 && itemBlind.motor.motor != null">
                                   <span>
                                       {{$store.getters.getMotor(itemBlind.motor.motor).system+' // '+$store.getters.getMotor(itemBlind.motor.motor).motorizationType+' // '+$store.getters.getMotor(itemBlind.motor.motor).manufacturer+' '}}
-                                      <span>{{itemBlind.motor.price > 0 ? '(+$'+itemBlind.motor.price+') // ' : '// '}}</span>
+                                      <span>{{itemBlind.motor.price > 0 ? '(+$'+(itemBlind.motor.control != null ? (itemBlind.motor.price - itemBlind.motor.control.price) : (itemBlind.motor.price))+') // ' : '// '}}</span>
                                   </span>
                               </span>
 
@@ -192,6 +187,9 @@
                               <div class="red--text">
                                   {{itemBlind.count_same_blinds > 1 ? 'CANTIDAD PERSIANAS ESTE TIPO: '+itemBlind.count_same_blinds : ''}}
                               </div>
+                          </div>
+                          <div class="comment" v-if="itemBlind.comment != null">
+                              COMENTARIOS: {{itemBlind.comment}}
                           </div>
 
                       </div>
@@ -218,13 +216,6 @@
                               <span style="color: #47a5ad;">
                                   {{mxCurrencyFormat.format((itemBlind.count_same_blinds > 0 ? itemBlind.count_same_blinds : 1) *
                                       (parseFloat(itemBlind.discount_price) +
-                                      parseFloat(itemBlind.motor.price) +
-                                      parseFloat(itemBlind.motor.flexiballetPrice) +
-                                      parseFloat(itemBlind.motor.galleryPrice) +
-                                      parseFloat(itemBlind.motor.manufacturerPrice) +
-                                      parseFloat(itemBlind.motor.stringPrice) +
-                                      parseFloat(itemBlind.extraVertical) +
-                                      parseFloat(itemBlind.extraEnrollable) +
                                       parseFloat(itemBlind.installmentCharge))
                                   )}} MXN
                               </span>
@@ -320,3 +311,11 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+    >>> .comment{
+        color: #009688 !important;
+        font-weight: bold !important;
+        bottom: 0 !important;
+    }
+</style>

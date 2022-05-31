@@ -275,7 +275,18 @@
                                                 ?>
                                                 <span>Precio (M<sup>2</sup>): ${{$orders['price']}} MXN {{$installmentCharge}} // Descuento: {{$orders['user']['discount_percent']}}% // M<sup>2</sup>: {{$resultWidhtXHeight}} //</span>
                                                 <?php
-                                                    $totaldiscount = $orders['price'] - (($orders['user']['discount_percent'] / 100) * $orders['price']);
+                                                    // $totaldiscount = $orders['price'] - (($orders['user']['discount_percent'] / 100) * $orders['price']);
+
+                                                    $orderSum = ($order['price'] +
+                                                    $order['motor']['price'] +
+                                                    $order['motor']['flexiballetPrice'] +
+                                                    $order['motor']['galleryPrice'] +
+                                                    $order['motor']['manufacturerPrice'] +
+                                                    $order['motor']['stringPrice'] +
+                                                    $order['extraVertical'] +
+                                                    $order['extraEnrollable']);
+
+                                                    $totaldiscount = $orderSum - (($orders['user']['discount_percent'] / 100) * $orderSum);
                                                 ?>
                                                 <span>Precio con Descto: ${{$totaldiscount}} MXN</span>
                                             </div>
@@ -314,16 +325,18 @@
                                             <span>TOTAL: </span>
                                             <span style="color: #47a5ad">
                                                 <?php
-                                                    $unitaryPrice = $totaldiscount +
-                                                    $order['motor']['price'] +
-                                                    $order['motor']['flexiballetPrice'] +
-                                                    $order['motor']['galleryPrice'] +
-                                                    $order['motor']['manufacturerPrice'] +
-                                                    $order['motor']['stringPrice'] +
-                                                    $order['extraVertical'] +
-                                                    $order['extraEnrollable'] +
-                                                    $order['installmentCharge'];
-                                                    $total += $unitaryPrice;
+                                                    // $unitaryPrice = $totaldiscount +
+                                                    // $order['motor']['price'] +
+                                                    // $order['motor']['flexiballetPrice'] +
+                                                    // $order['motor']['galleryPrice'] +
+                                                    // $order['motor']['manufacturerPrice'] +
+                                                    // $order['motor']['stringPrice'] +
+                                                    // $order['extraVertical'] +
+                                                    // $order['extraEnrollable'] +
+                                                    // $order['installmentCharge'];
+                                                    // $total += $unitaryPrice;
+                                                    $unitaryPrice = ($order['count_same_blinds'] <= 0 ? 1 : $order['count_same_blinds']) * ($totaldiscount + $order['installmentCharge']);
+                                                    $total += $unitaryPrice ;
                                                 ?>
                                                 $@priceFormat(round($unitaryPrice, 1, PHP_ROUND_HALF_UP)) MXN
                                             </span>
@@ -497,7 +510,17 @@
                                                 ?>
                                                 <span>Precio (M<sup>2</sup>): ${{$orders['price']}} MXN {{$installmentCharge}} // Descuento: {{$orders['user']['discount_percent']}}% // M<sup>2</sup>: {{$resultWidhtXHeight}} //</span>
                                                 <?php
-                                                    $totaldiscount = $orders['price'] - (($orders['user']['discount_percent'] / 100) * $orders['price']);
+                                                    // $totaldiscount = $orders['price'] - (($orders['user']['discount_percent'] / 100) * $orders['price']);
+                                                    $orderSum = ($order['price'] +
+                                                    $order['motor']['price'] +
+                                                    $order['motor']['flexiballetPrice'] +
+                                                    $order['motor']['galleryPrice'] +
+                                                    $order['motor']['manufacturerPrice'] +
+                                                    $order['motor']['stringPrice'] +
+                                                    $order['extraVertical'] +
+                                                    $order['extraEnrollable']);
+
+                                                    $totaldiscount = $orderSum - (($orders['user']['discount_percent'] / 100) * $orderSum);
                                                 ?>
                                                 <span>Precio con Descto: ${{$totaldiscount}} MXN</span>
                                             </div>
@@ -536,16 +559,19 @@
                                             <span>TOTAL: </span>
                                             <span style="color: #47a5ad">
                                                 <?php
-                                                    $unitaryPrice = $totaldiscount +
-                                                    $order['motor']['price'] +
-                                                    $order['motor']['flexiballetPrice'] +
-                                                    $order['motor']['galleryPrice'] +
-                                                    $order['motor']['manufacturerPrice'] +
-                                                    $order['motor']['stringPrice'] +
-                                                    $order['extraVertical'] +
-                                                    $order['extraEnrollable'] +
-                                                    $order['installmentCharge'];
-                                                    $total += $unitaryPrice;
+                                                    // $unitaryPrice = $totaldiscount +
+                                                    // $order['motor']['price'] +
+                                                    // $order['motor']['flexiballetPrice'] +
+                                                    // $order['motor']['galleryPrice'] +
+                                                    // $order['motor']['manufacturerPrice'] +
+                                                    // $order['motor']['stringPrice'] +
+                                                    // $order['extraVertical'] +
+                                                    // $order['extraEnrollable'] +
+                                                    // $order['installmentCharge'];
+                                                    // $total += $unitaryPrice;
+
+                                                    $unitaryPrice = ($order['count_same_blinds'] <= 0 ? 1 : $order['count_same_blinds']) * ($totaldiscount + $order['installmentCharge']);
+                                                    $total += $unitaryPrice ;
                                                 ?>
                                                 $@priceFormat(round($unitaryPrice, 1, PHP_ROUND_HALF_UP)) MXN
                                             </span>

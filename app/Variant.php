@@ -29,10 +29,14 @@ class Variant extends Model implements Searchable
         'whiteback',
     ];
 
-    
-    
-    
-    
+
+    protected $casts = [
+        'type_id' => 'integer',
+        'line_id' => 'integer',
+        'active' => 'integer'
+    ];
+
+
     public $timestamps = false;
     // protected $hidden = ['pivot'];
 
