@@ -43,13 +43,13 @@
               >
               <v-icon>mdi-arrow-collapse-down</v-icon>
               </v-btn>
-              <v-btn
+              <!-- <v-btn
               icon
               class="white--text"
               href="https://wa.me/send?phone=5214451448055&attachment=c://users/angel/downloads/cobors-1.pdf" target="_blank"
               >
               <v-icon>mdi-whatsapp</v-icon>
-              </v-btn>
+              </v-btn> -->
             </v-toolbar-items>
           </v-toolbar>
           <v-col cols="12" class="d-flex justify-center">
