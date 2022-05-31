@@ -14,4 +14,7 @@ class Control extends Model
         'channel',
         'manufacturer'
     ];
+    protected $casts = [
+        'price' => 'float'
+    ];
 }

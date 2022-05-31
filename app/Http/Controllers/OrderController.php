@@ -100,7 +100,8 @@ class OrderController extends Controller
                     $blind->base_price = $b['base_price'];
                     $blind->rotate = $b['rotate'];
                     $blind->canvas = $b['motor']['canvas'];
-                    $blind->comment = $b['motor']['comment'];
+                    // $blind->comment = $b['motor']['comment'];
+                    $blind->comment = $b['comment'];
                     $blind->drive = $b['motor']['drive'];
                     $blind->flexiballet_price = $b['motor']['flexiballetPrice'];
                     $blind->frame = $b['motor']['frame'];
@@ -115,7 +116,24 @@ class OrderController extends Controller
                     $blind->extraVertical = $b['extraVertical'];
 
                     // this.order.discount_price = this.order.price - ((this.user.discount_percent/100)*this.order.price)
-                    $blind->discount_price = $b['price'] - ((auth()->user()->discount_percent/100)*$b['price']);
+                    // $blind->discount_price = $b['price'] - ((auth()->user()->discount_percent/100)*$b['price']);
+                    $blind->discount_price = ($b['price'] +
+                        $b['motor']['price'] +
+                        $b['motor']['flexiballetPrice'] +
+                        $b['motor']['galleryPrice'] +
+                        $b['motor']['manufacturerPrice'] +
+                        $b['motor']['stringPrice'] +
+                        $b['extraVertical'] +
+                        $b['extraEnrollable']) -
+                        ((auth()->user()->discount_percent/100) * (
+                        $b['price'] +
+                        $b['motor']['price'] +
+                        $b['motor']['flexiballetPrice'] +
+                        $b['motor']['galleryPrice'] +
+                        $b['motor']['manufacturerPrice'] +
+                        $b['motor']['stringPrice'] +
+                        $b['extraVertical'] +
+                        $b['extraEnrollable']));
 
                     $blind->installmentCharge = $b['installmentCharge'];
 
@@ -201,7 +219,8 @@ class OrderController extends Controller
                 $blind->price = $b['price'];
                 $blind->rotate = $b['rotate'];
                 $blind->canvas = $b['motor']['canvas'];
-                $blind->comment = $b['motor']['comment'];
+                // $blind->comment = $b['motor']['comment'];
+                $blind->comment = $b['comment'];
                 $blind->drive = $b['motor']['drive'];
                 $blind->flexiballet_price = $b['motor']['flexiballetPrice'];
                 $blind->frame = $b['motor']['frame'];
@@ -215,7 +234,25 @@ class OrderController extends Controller
                 $blind->extraEnrollable = $b['extraEnrollable'];
                 $blind->extraVertical = $b['extraVertical'];
 
-                $blind->discount_price = $b['price'] - ((auth()->user()->discount_percent/100)*$b['price']);
+                // $blind->discount_price = $b['price'] - ((auth()->user()->discount_percent/100)*$b['price']);
+
+                $blind->discount_price = ($b['price'] +
+                $b['motor']['price'] +
+                $b['motor']['flexiballetPrice'] +
+                $b['motor']['galleryPrice'] +
+                $b['motor']['manufacturerPrice'] +
+                $b['motor']['stringPrice'] +
+                $b['extraVertical'] +
+                $b['extraEnrollable']) -
+                ((auth()->user()->discount_percent/100) * (
+                $b['price'] +
+                $b['motor']['price'] +
+                $b['motor']['flexiballetPrice'] +
+                $b['motor']['galleryPrice'] +
+                $b['motor']['manufacturerPrice'] +
+                $b['motor']['stringPrice'] +
+                $b['extraVertical'] +
+                $b['extraEnrollable']));
 
                 $blind->installmentCharge = $b['installmentCharge'];
 

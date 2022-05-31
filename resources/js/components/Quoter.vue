@@ -704,8 +704,7 @@
           <v-col cols="12" class="my-0">
             <v-textarea
             no-resize
-            :disabled="disabledCommentText"
-            v-model="order.motor.comment"
+            v-model="order.comment"
             color="#47a5ad"
             outlined
             height="100"
@@ -1048,7 +1047,6 @@
                 :disabled="disabledFrameRadio"
                 row
                 v-model="order.motor.frame"
-                @change="disabledCommentText = false"
                 >
                   <v-radio label="Fuera"  color="#47a5ad" value="fuera"></v-radio>
                   <v-radio label="Adentro"  color="#47a5ad" value="adentro"></v-radio>
@@ -1249,7 +1247,6 @@
                 style="max-width: 244px;"
                 @click:append="order.motor.frame = null"
                 :append-icon="order.motor.frame?'mdi-close-circle':undefined"
-                @change="disabledCommentText = false"
                 :disabled="disabledFrameRadio"
                 row
                 v-model="order.motor.frame"
@@ -1292,7 +1289,7 @@
                     placeholder="Sin Control"
                   ></v-select>
               </v-col>
-              <v-col cols="12" class="my-0">
+              <!-- <v-col cols="12" class="my-0">
                 <v-textarea
                 no-resize
                 :disabled="disabledCommentText"
@@ -1302,7 +1299,7 @@
                 height="100"
                 label="Observacioness"
                 ></v-textarea>
-              </v-col>
+              </v-col> -->
             </v-row>
             <v-card-actions>
               <v-btn dark @click="validateCelularDialog" color="#47a5ad">
@@ -1866,7 +1863,6 @@ export default {
       disabledCelularText: true,
       disabledDriveRadio: true,
       disabledFrameRadio: true,
-      disabledCommentText: true,
       celular_variants: [
         {title:'CELULAR BOLERO 25 MM', day: 'bolero-traslucida', night: 'bolero-privee'},
         {title:'CELULAR ROMANCE 38 MM', day: 'romance-traslucida', night: 'romance-noite'},
@@ -1913,6 +1909,7 @@ export default {
         motor_type: null,
         extraVertical: 0,
         extraEnrollable: 0,
+        comment: null,
         motor: {
           side_control: null,
           price: 0,
@@ -1969,6 +1966,7 @@ export default {
         motor_type: null,
         extraVertical: 0,
         extraEnrollable: 0,
+        comment: null,
         motor: {
           side_control: null,
           price: 0,
@@ -2389,7 +2387,6 @@ export default {
       this.celularDialog = false
       this.disabledSelectColor = true
       this.disabledFrameRadio = true
-      this.disabledCommentText = true
     },
 
     chargeCelularColors(){

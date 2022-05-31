@@ -444,7 +444,17 @@ function returnedOneTwoOrders($localIndex, $localorders) {
                                                 ?>
                                                  <span>Precio base (M<sup>2</sup>) ${{ $order['base_price'] }} //  M<sup>2</sup>: {{$resultWidhtXHeight}} // Precio Neto (M<sup>2</sup>): ${{$netPrice}} MXN {{$installmentCharge}} // Descuento: {{$orders['user']['discount_percent']}}% //</span>
                                                 <?php
-                                                    $totaldiscount = $order['price'] - (($orders['user']['discount_percent'] / 100) * $order['price']);
+                                                    // $totaldiscount = $order['price'] - (($orders['user']['discount_percent'] / 100) * $order['price']);
+                                                    $orderSum = ($order['price'] +
+                                                    $order['motor']['price'] +
+                                                    $order['motor']['flexiballetPrice'] +
+                                                    $order['motor']['galleryPrice'] +
+                                                    $order['motor']['manufacturerPrice'] +
+                                                    $order['motor']['stringPrice'] +
+                                                    $order['extraVertical'] +
+                                                    $order['extraEnrollable']);
+
+                                                    $totaldiscount = $orderSum - (($orders['user']['discount_percent'] / 100) * $orderSum);
                                                 ?>
                                                 <span>Precio neto con Descto: $@priceFormat(round($totaldiscount, 1, PHP_ROUND_HALF_UP)) MXN</span>
                                                 <?php
@@ -453,7 +463,18 @@ function returnedOneTwoOrders($localIndex, $localorders) {
                                                         $countSameBlinds = 'CANTIDAD PERSIANAS ESTE TIPO: '.$order['count_same_blinds'];
                                                     }
                                                 ?>
+                                                <?php
+                                                    if($order['count_same_blinds'] > 1){
+                                                        $countSameBlinds = 'CANTIDAD PERSIANAS ESTE TIPO: '.$order['count_same_blinds'];
+                                                    }
+                                                ?>
                                                 <div style="color:red">{{$countSameBlinds}}</div>
+                                                <?php
+                                                    $coments = $order['comment'];
+                                                ?>
+                                                @if ($coments != null)
+                                                    <div style="color:#009688">COMENTARIOS: {{$coments}}</div>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>
@@ -490,15 +511,17 @@ function returnedOneTwoOrders($localIndex, $localorders) {
                                             <span>TOTAL: </span>
                                             <span style="color: #47a5ad">
                                                 <?php
-                                                    $unitaryPrice = ($order['count_same_blinds'] <= 0 ? 1 : $order['count_same_blinds']) * ($totaldiscount +
-                                                    $order['motor']['price'] +
-                                                    $order['motor']['flexiballetPrice'] +
-                                                    $order['motor']['galleryPrice'] +
-                                                    $order['motor']['manufacturerPrice'] +
-                                                    $order['motor']['stringPrice'] +
-                                                    $order['extraVertical'] +
-                                                    $order['extraEnrollable'] +
-                                                    $order['installmentCharge']);
+                                                    // $unitaryPrice = ($order['count_same_blinds'] <= 0 ? 1 : $order['count_same_blinds']) * ($totaldiscount +
+                                                    // $order['motor']['price'] +
+                                                    // $order['motor']['flexiballetPrice'] +
+                                                    // $order['motor']['galleryPrice'] +
+                                                    // $order['motor']['manufacturerPrice'] +
+                                                    // $order['motor']['stringPrice'] +
+                                                    // $order['extraVertical'] +
+                                                    // $order['extraEnrollable'] +
+                                                    // $order['installmentCharge']);
+                                                    // $total += $unitaryPrice ;
+                                                    $unitaryPrice = ($order['count_same_blinds'] <= 0 ? 1 : $order['count_same_blinds']) * ($totaldiscount + $order['installmentCharge']);
                                                     $total += $unitaryPrice ;
                                                 ?>
                                                 $@priceFormat(round($unitaryPrice, 1, PHP_ROUND_HALF_UP)) MXN
@@ -683,7 +706,17 @@ function returnedOneTwoOrders($localIndex, $localorders) {
                                                 ?>
                                                 <span>Precio base (M<sup>2</sup>) ${{ $order['base_price'] }} //  M<sup>2</sup>: {{$resultWidhtXHeight}} // Precio Neto (M<sup>2</sup>): ${{$netPrice}} MXN {{$installmentCharge}} // Descuento: {{$orders['user']['discount_percent']}}% //</span>
                                                 <?php
-                                                    $totaldiscount = $order['price'] - (($orders['user']['discount_percent'] / 100) * $order['price']);
+                                                    // $totaldiscount = $order['price'] - (($orders['user']['discount_percent'] / 100) * $order['price']);
+                                                    $orderSum = ($order['price'] +
+                                                    $order['motor']['price'] +
+                                                    $order['motor']['flexiballetPrice'] +
+                                                    $order['motor']['galleryPrice'] +
+                                                    $order['motor']['manufacturerPrice'] +
+                                                    $order['motor']['stringPrice'] +
+                                                    $order['extraVertical'] +
+                                                    $order['extraEnrollable']);
+
+                                                    $totaldiscount = $orderSum - (($orders['user']['discount_percent'] / 100) * $orderSum);
                                                 ?>
                                                 <span>Precio neto con Descto: $@priceFormat(round($totaldiscount, 1, PHP_ROUND_HALF_UP)) MXN</span>
                                                 <?php
@@ -693,6 +726,12 @@ function returnedOneTwoOrders($localIndex, $localorders) {
                                                     }
                                                 ?>
                                                 <div style="color:red">{{$countSameBlinds}}</div>
+                                                <?php
+                                                    $coments = $order['comment'];
+                                                ?>
+                                                @if ($coments != null)
+                                                    <div style="color:#009688">COMENTARIOS: {{$coments}}</div>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>
@@ -729,15 +768,17 @@ function returnedOneTwoOrders($localIndex, $localorders) {
                                             <span>TOTAL: </span>
                                             <span style="color: #47a5ad">
                                                 <?php
-                                                    $unitaryPrice = ($order['count_same_blinds'] <= 0 ? 1 : $order['count_same_blinds']) * ($totaldiscount +
-                                                    $order['motor']['price'] +
-                                                    $order['motor']['flexiballetPrice'] +
-                                                    $order['motor']['galleryPrice'] +
-                                                    $order['motor']['manufacturerPrice'] +
-                                                    $order['motor']['stringPrice'] +
-                                                    $order['extraVertical'] +
-                                                    $order['extraEnrollable'] +
-                                                    $order['installmentCharge']);
+                                                    // $unitaryPrice = ($order['count_same_blinds'] <= 0 ? 1 : $order['count_same_blinds']) * ($totaldiscount +
+                                                    // $order['motor']['price'] +
+                                                    // $order['motor']['flexiballetPrice'] +
+                                                    // $order['motor']['galleryPrice'] +
+                                                    // $order['motor']['manufacturerPrice'] +
+                                                    // $order['motor']['stringPrice'] +
+                                                    // $order['extraVertical'] +
+                                                    // $order['extraEnrollable'] +
+                                                    // $order['installmentCharge']);
+                                                    // $total += $unitaryPrice ;
+                                                    $unitaryPrice = ($order['count_same_blinds'] <= 0 ? 1 : $order['count_same_blinds']) * ($totaldiscount + $order['installmentCharge']);
                                                     $total += $unitaryPrice ;
                                                 ?>
                                                 $@priceFormat(round($unitaryPrice, 1, PHP_ROUND_HALF_UP)) MXN

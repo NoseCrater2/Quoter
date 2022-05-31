@@ -351,17 +351,18 @@
                       <v-list-item-title>EXTRA</v-list-item-title>
                       <v-list-item-subtitle class="text-right">${{o.motor.flexiballetPrice}} MXN</v-list-item-subtitle>
                     </v-list-item>
-
-                    <v-alert
-                      text
-                      dense
-                      color="teal"
-                      icon="mdi-comment-account"
-                      border="left"
-                      v-if="o.motor.comment != null"
-                    >
-                      COMENTARIOS: {{o.motor.comment}}
-                    </v-alert>
+                    <div v-if="o.comment != null" class="mt-2">
+                      <v-divider class="mx-4 mb-2"></v-divider>
+                      <v-alert
+                        text
+                        dense
+                        color="teal"
+                        icon="mdi-comment-account"
+                        border="left"
+                      >
+                        COMENTARIOS: {{o.comment}}
+                      </v-alert>
+                    </div>
         </v-card>
       </v-tab-item>
     </v-tabs-items>
