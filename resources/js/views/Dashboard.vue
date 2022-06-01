@@ -107,7 +107,7 @@
                                 color="white">mdi-navigation</v-icon>
                             </v-list-item-avatar>
                             <v-list-item-content>
-                                <v-list-item-subtitle class="white--text" style="font-size: 1.5vw;-webkit-text-stroke-width: medium;">
+                                <v-list-item-subtitle class="white--text" style="font-size: 1.5vw;">
                                     <span>
                                         Cotiza todas las persianas desde tu smarthpone o tablet
                                     </span>
@@ -122,7 +122,7 @@
                                 color="white">mdi-navigation</v-icon>
                             </v-list-item-avatar>
                             <v-list-item-content>
-                                <v-list-item-subtitle class="white--text" style="font-size: 1.5vw;-webkit-text-stroke-width: medium;">
+                                <v-list-item-subtitle class="white--text" style="font-size: 1.5vw;">
                                     Guarda las cotizaciones y llévalas en tu bolsillo
                                 </v-list-item-subtitle>
                             </v-list-item-content>
@@ -134,7 +134,7 @@
                                 color="white">mdi-navigation</v-icon>
                             </v-list-item-avatar>
                             <v-list-item-content>
-                                <v-list-item-subtitle class="white--text" style="font-size: 1.5vw;-webkit-text-stroke-width: medium;">
+                                <v-list-item-subtitle class="white--text" style="font-size: 1.5vw;">
                                     Realiza los pagos de tus persianas desde la app
                                 </v-list-item-subtitle>
                             </v-list-item-content>
