@@ -707,7 +707,9 @@
             v-model="order.comment"
             color="#47a5ad"
             outlined
-            height="100"
+            height="150"
+            counter="280"
+            maxlength="280"
             label="Observaciones"
             ></v-textarea>
           </v-col>
