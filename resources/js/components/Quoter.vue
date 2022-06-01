@@ -43,13 +43,13 @@
               >
               <v-icon>mdi-arrow-collapse-down</v-icon>
               </v-btn>
-              <v-btn
+              <!-- <v-btn
               icon
               class="white--text"
               href="https://wa.me/send?phone=5214451448055&attachment=c://users/angel/downloads/cobors-1.pdf" target="_blank"
               >
               <v-icon>mdi-whatsapp</v-icon>
-              </v-btn>
+              </v-btn> -->
             </v-toolbar-items>
           </v-toolbar>
           <v-col cols="12" class="d-flex justify-center">
@@ -701,6 +701,16 @@
 
 
           </v-row>
+          <v-col cols="12" class="my-0">
+            <v-textarea
+            no-resize
+            v-model="order.comment"
+            color="#47a5ad"
+            outlined
+            height="100"
+            label="Observaciones"
+            ></v-textarea>
+          </v-col>
           <v-row no-gutters>
             <v-col cols="12" md="4" sm="12">
               <v-btn
@@ -1037,7 +1047,6 @@
                 :disabled="disabledFrameRadio"
                 row
                 v-model="order.motor.frame"
-                @change="disabledCommentText = false"
                 >
                   <v-radio label="Fuera"  color="#47a5ad" value="fuera"></v-radio>
                   <v-radio label="Adentro"  color="#47a5ad" value="adentro"></v-radio>
@@ -1238,7 +1247,6 @@
                 style="max-width: 244px;"
                 @click:append="order.motor.frame = null"
                 :append-icon="order.motor.frame?'mdi-close-circle':undefined"
-                @change="disabledCommentText = false"
                 :disabled="disabledFrameRadio"
                 row
                 v-model="order.motor.frame"
@@ -1281,16 +1289,17 @@
                     placeholder="Sin Control"
                   ></v-select>
               </v-col>
-              <v-col  cols="12">
+              <!-- <v-col cols="12" class="my-0">
                 <v-textarea
+                no-resize
                 :disabled="disabledCommentText"
                 v-model="order.motor.comment"
                 color="#47a5ad"
                 outlined
                 height="100"
-                label="Observaciones"
+                label="Observacioness"
                 ></v-textarea>
-              </v-col>
+              </v-col> -->
             </v-row>
             <v-card-actions>
               <v-btn dark @click="validateCelularDialog" color="#47a5ad">
@@ -1738,6 +1747,15 @@
         </template>
       </v-snackbar>
       <v-snackbar
+      v-model="printedMessageObject.model"
+      :timeout="printedMessageObject.timeout"
+      >
+      <span class="ml-4">{{printedMessageObject.message}}</span>
+       <template v-slot:action>
+        <v-icon>mdi-error</v-icon>
+        </template>
+      </v-snackbar>
+      <v-snackbar
       v-model="savedorderMessage"
       :timeout="2000"
       >
@@ -1746,6 +1764,7 @@
         <v-icon>mdi-check</v-icon>
         </template>
       </v-snackbar>
+
   </v-container>
 </template>
 
@@ -1799,6 +1818,11 @@ export default {
         ],
         savedBlindMessage: false,
         savedorderMessage:false,
+        printedMessageObject: {
+          model: false,
+          message: '',
+          timeout: 2500
+        },
         isSendindEmailToAnotherAccount: false,
         isSendindEmailToLoginMyAccount: false,
         isPrintingSpecificClientFromDistributorDialog: false,
@@ -1839,7 +1863,6 @@ export default {
       disabledCelularText: true,
       disabledDriveRadio: true,
       disabledFrameRadio: true,
-      disabledCommentText: true,
       celular_variants: [
         {title:'CELULAR BOLERO 25 MM', day: 'bolero-traslucida', night: 'bolero-privee'},
         {title:'CELULAR ROMANCE 38 MM', day: 'romance-traslucida', night: 'romance-noite'},
@@ -1886,6 +1909,7 @@ export default {
         motor_type: null,
         extraVertical: 0,
         extraEnrollable: 0,
+        comment: null,
         motor: {
           side_control: null,
           price: 0,
@@ -1942,6 +1966,7 @@ export default {
         motor_type: null,
         extraVertical: 0,
         extraEnrollable: 0,
+        comment: null,
         motor: {
           side_control: null,
           price: 0,
@@ -2163,7 +2188,10 @@ export default {
             this.downloadButtonPdf = response.data;
             this.pdfDialog = true;
         }).catch(()=>{
-
+            this.isPrintingSpecificClientFromDistributorDialog = false;
+            this.printedMessageObject.message = 'Ha ocurrido un error al generar el documento';
+            this.printedMessageObject.timeout = 2500;
+            this.printedMessageObject.model = true;
         })
       }
     },
@@ -2359,7 +2387,6 @@ export default {
       this.celularDialog = false
       this.disabledSelectColor = true
       this.disabledFrameRadio = true
-      this.disabledCommentText = true
     },
 
     chargeCelularColors(){
@@ -2821,6 +2848,9 @@ export default {
           return Math.ceil(this.order.canvas[0].width) * 250
         }else if(this.order.cloth_holder === 'Galería Portatela'){
           return Math.ceil(this.order.canvas[0].width) * 120
+        }
+        else{
+          return 0
         }
       }else{
         return 0

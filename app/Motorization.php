@@ -35,4 +35,10 @@ class Motorization extends Model
       return $this->belongsTo(Type::class);
      }
 
+     protected $casts = [
+        'motorization_type_id' => 'integer',
+        'line_id' => 'integer',
+        'type_id' => 'integer'
+    ];
+
 }

@@ -433,7 +433,7 @@
             label="Color"
           ></v-select>
         </v-col>
-        <v-col cols="12" class="my-0" >
+        <!-- <v-col cols="12" class="my-0" >
           <v-textarea
             v-model="motor.comment"
             color="#47a5ad"
@@ -441,7 +441,7 @@
             height="100"
             label="Observaciones">
           </v-textarea>
-        </v-col>
+        </v-col> -->
       </v-form>
       <v-card-actions>
         <v-btn dark @click="save()" color="#47a5ad">

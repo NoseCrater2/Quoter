@@ -99,7 +99,8 @@ export default {
             isMobile: false,
             persianas: [
                 {
-                    href: 'https://rollux.com.mx/img/pdfs/archivos/xBEgmFvqGbB2D5q2mtGxRvLpXdtC8kzuzxNghqd5.pdf',
+                    // href: 'https://rollux.com.mx/img/pdfs/archivos/xBEgmFvqGbB2D5q2mtGxRvLpXdtC8kzuzxNghqd5.pdf',
+                    route: {name: 'PriceListPromo'},
                     src: '/img/dashboard/slide3BuenFin.jpg'
                 },
                 {
