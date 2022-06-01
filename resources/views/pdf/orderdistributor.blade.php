@@ -283,7 +283,7 @@ function returnedOneTwoOrders($localIndex, $localorders) {
             @if (count($orders['orders'])%2 == 0)
                 @foreach (@returnedOneTwoOrders(($i + 1), $orders['orders']) as $key => $order)
                     <td style="height: 99px; border: 1px dashed black; width: 393px;">
-                        <table style="font-size: 7px; border: 1px solid #d1d3d4; background-color: #f1f1f2; margin-left: 8px; margin-right: 8px;">
+                        <table style="font-size: 6px; border: 1px solid #d1d3d4; background-color: #f1f1f2; margin-left: 8px; margin-right: 8px;">
                             <tbody>
                                 <tr>
                                     <td class="vertical" style="width: 7%; border-right: 1px solid #d1d3d4; background-color: #f1f1f2;">
@@ -294,7 +294,7 @@ function returnedOneTwoOrders($localIndex, $localorders) {
                                         </div>
                                     </td>
                                     <td style="width: 60%; background-color: white;">
-                                        <div style="text-transform: uppercase; margin-top: -34px;">
+                                        <div style="text-transform: uppercase; float:top !important;">
                                             <?php
                                                 $concat = $order['type'].' // '.$order['manufacturer'];
                                                 $concat2 = '';
@@ -473,8 +473,11 @@ function returnedOneTwoOrders($localIndex, $localorders) {
                                                     $coments = $order['comment'];
                                                 ?>
                                                 @if ($coments != null)
-                                                    <div style="color:#009688">COMENTARIOS: {{$coments}}</div>
+                                                    <div style="color:#009688; font-size: 4.85px;">{{$coments}}</div>
                                                 @endif
+                                                <!-- <div style="color:#009688; font-size: 4.4px;"> 280 caracteres permitidos
+                                                    Anim aute culpa sit tempor minim commodo ad irure velit mollit commodo. Anim aute culpa sit tempor minim commodo ad irure velit mollit commodo. Anim aute culpa sit tempor minim commodo ad irure velit mollit commodo. Anim aute culpa sit tempor minim commodo ad irure velit mollit commodo. Anim aute culpa sit tempo
+                                                </div> -->
                                             </div>
                                         </div>
                                     </td>
@@ -556,7 +559,7 @@ function returnedOneTwoOrders($localIndex, $localorders) {
                                         </div>
                                     </td>
                                     <td style="width: 60%; background-color: white;">
-                                        <div style="text-transform: uppercase; margin-top: -29px;">
+                                        <div style="text-transform: uppercase; float:top !important;">
                                             <?php
                                                 $concat = $order['type'].' // '.$order['manufacturer'];
                                                 $concat2 = '';
@@ -730,8 +733,11 @@ function returnedOneTwoOrders($localIndex, $localorders) {
                                                     $coments = $order['comment'];
                                                 ?>
                                                 @if ($coments != null)
-                                                    <div style="color:#009688">COMENTARIOS: {{$coments}}</div>
+                                                    <div style="color:#009688; font-size: 4.85px;">{{$coments}}</div>
                                                 @endif
+                                                <!-- <div style="color:#009688; font-size: 4.4px;"> 280 caracteres permitidos
+                                                    Anim aute culpa sit tempor minim commodo ad irure velit mollit commodo. Anim aute culpa sit tempor minim commodo ad irure velit mollit commodo. Anim aute culpa sit tempor minim commodo ad irure velit mollit commodo. Anim aute culpa sit tempor minim commodo ad irure velit mollit commodo. Anim aute culpa sit tempo
+                                                </div> -->
                                             </div>
                                         </div>
                                     </td>
