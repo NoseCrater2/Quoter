@@ -31,7 +31,7 @@
 
         <div class="mt-5">
             <div class="grey lighten-2 pa-5 text-center" style="font-size: 1.35rem">
-                Area del cliente
+                Área del cliente
             </div>
             <v-row class="grey lighten-3 pt-8 pb-11 mt-0" justify="center">
                 <v-col cols="12" xl="4" lg="4" md="4" sm="12" v-for="(itemClientArea, index) in clientArea" :key="index">
@@ -82,7 +82,81 @@
                     </div>
                 </v-card>
             </v-col>
+        </v-row>
+        <v-row style="background-color: #47a5ad" no-gutters>
+            <v-col cols="6" class="d-flex justify-center">
+                <v-img
+                style="position: absolute; z-index: 1;"
+                contain
+                src="/img/dashboard/mock-up-smartphone-vertical.png">
 
+                </v-img>
+            </v-col>
+            <v-col cols="6">
+                <v-card flat color="#47a5ad" class="white--text">
+                    <v-card-title class="mt-4" style="margin-left: -110px;">
+                        <span class="font-weight-thin" style="font-size: 2.5vw">Descarga la &nbsp; </span>
+                        <span class="font-weight-bold" style="font-size: 2.5vw">App de Rollux</span>
+                        <span style="margin-top: -15px">&reg;</span>
+                    </v-card-title>
+                    <v-card-text class="py-8 pl-0" style="max-width: 30vw">
+                        <v-list-item class="px-0" three-line>
+                            <v-list-item-avatar>
+                                <v-icon
+                                style="transform: rotate(90deg);"
+                                color="white">mdi-navigation</v-icon>
+                            </v-list-item-avatar>
+                            <v-list-item-content>
+                                <v-list-item-subtitle class="white--text" style="font-size: 1.5vw;-webkit-text-stroke-width: medium;">
+                                    <span>
+                                        Cotiza todas las persianas desde tu smarthpone o tablet
+                                    </span>
+
+                                </v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item class="px-0" three-line>
+                            <v-list-item-avatar>
+                                  <v-icon
+                                style="transform: rotate(90deg);"
+                                color="white">mdi-navigation</v-icon>
+                            </v-list-item-avatar>
+                            <v-list-item-content>
+                                <v-list-item-subtitle class="white--text" style="font-size: 1.5vw;-webkit-text-stroke-width: medium;">
+                                    Guarda las cotizaciones y llévalas en tu bolsillo
+                                </v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item class="px-0" three-line>
+                            <v-list-item-avatar>
+                                  <v-icon
+                                style="transform: rotate(90deg);"
+                                color="white">mdi-navigation</v-icon>
+                            </v-list-item-avatar>
+                            <v-list-item-content>
+                                <v-list-item-subtitle class="white--text" style="font-size: 1.5vw;-webkit-text-stroke-width: medium;">
+                                    Realiza los pagos de tus persianas desde la app
+                                </v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </v-card-text>
+
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-row style="background:  #E0E0E0" class="pb-10" justify="end" no-gutters>
+            <v-col cols="6" >
+                 <v-card-text class="pl-13">
+                        <p class="font-weight-bold" style="font-size: 2vw">
+                            DESCÁRGALA HOY MISMO
+                        </p>
+                        <a href="https://play.google.com/store/apps/details?id=grupo.lidhber.rollux.app" target="blank">
+                            <img src="/img/dashboard/disponible-en-google-play-badge.svg" alt="">
+                        </a>
+                        <!-- </v-btn> -->
+
+                    </v-card-text>
+            </v-col>
         </v-row>
     </div>
 </template>
@@ -179,3 +253,6 @@ export default {
     }
 }
 </script>
+<style>
+
+</style>
