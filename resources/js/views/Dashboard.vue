@@ -109,7 +109,7 @@
                             <v-list-item-content>
                                 <v-list-item-subtitle class="white--text" style="font-size: 1.5vw;">
                                     <span>
-                                        Cotiza todas las persianas desde tu smarthpone o tablet
+                                        Cotiza todas las persianas desde tu smartphone o tablet
                                     </span>
 
                                 </v-list-item-subtitle>
