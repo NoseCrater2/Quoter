@@ -23,8 +23,16 @@ class ProductController extends Controller
     public function index()
     {
 
+        // $products = Product::with(['types' => function ($query) {
+        //     $query->with(['weaves:slug,name','lines:id,slug,name']);
+        // }])->get();
+        // return response(['data'=> $products],200);
+
         $products = Product::with(['types' => function ($query) {
-            $query->with(['weaves:slug,name','lines:id,slug,name']);
+            $query->with(['weaves:slug,name'])
+            ->with(['lines' => function ($query) {
+                $query->where('active',1);
+            }]);
         }])->get();
         return response(['data'=> $products],200);
 
